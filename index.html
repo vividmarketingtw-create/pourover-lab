@@ -23,26 +23,28 @@
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
 <meta name="apple-mobile-web-app-title" content="手沖咖啡實驗室">
-<link href="https://fonts.googleapis.com/css2?family=Noto+Sans+TC:wght@300;400;500;700&family=Playfair+Display:ital,wght@0,400;0,700;0,900;1,400&family=DM+Sans:wght@400;500;700&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Noto+Sans+TC:wght@300;400;500;700&family=Playfair+Display:ital,wght@0,400;0,700;0,900;1,400&family=DM+Sans:wght@400;500;700&family=Space+Mono:wght@400;700&family=Cormorant+Garamond:ital,wght@0,400;0,700;1,400&display=swap" rel="stylesheet">
 <style>
 
   * { margin: 0; padding: 0; box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
   :root {
     --surface: #1A1714; --surface-2: #242019; --surface-3: #2E2922;
     --copper: #B87D56; --copper-light: #D4A574;
-    --text-primary: #E8DDD0; --text-secondary: rgba(226,201,166,0.55);
+    --text-primary: #E8DDD0; --text-secondary: rgba(226,201,166,0.7);
     --border: rgba(200,149,108,0.12); --border-hover: rgba(200,149,108,0.25);
     --glow: rgba(200,149,108,0.08);
+    --cream: #F5EDE3; --cream-subtle: rgba(245,237,227,0.03);
   }
 
   body {
-    background: #0F0D0A;
+    background: linear-gradient(180deg, #1a1210 0%, #0d0b09 100%);
     display: flex; flex-direction: column; align-items: center;
     min-height: 100vh; padding: 20px;
     font-family: 'Noto Sans TC', 'DM Sans', -apple-system, sans-serif; overflow-x: hidden;
     transition: background-color 0.4s ease, color 0.4s ease;
     color: var(--text-primary);
     letter-spacing: 0.3px;
+    line-height: 1.75;
     -webkit-font-smoothing: antialiased;
   }
 
@@ -57,6 +59,11 @@
     height: 80px; background: linear-gradient(to bottom, transparent, var(--copper));
     transform: translateX(-50%); opacity: 0.3;
   }
+  .hero::after {
+    content: ''; position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%);
+    width: 500px; height: 500px; background: radial-gradient(circle, rgba(184,125,86,0.08) 0%, transparent 70%);
+    pointer-events: none; z-index: 1;
+  }
   .hero-badge {
     display: inline-block; padding: 6px 20px; border-radius: 0;
     border: 1px solid var(--border-hover); background: transparent;
@@ -64,28 +71,28 @@
     margin-bottom: 28px; text-transform: uppercase; font-weight: 500;
   }
   .hero h1 {
-    font-size: 3.2em; font-family: 'Playfair Display', serif;
+    font-size: 3.2em; font-family: 'Cormorant Garamond', 'Playfair Display', serif;
     color: var(--copper-light); line-height: 1.1; margin-bottom: 14px;
-    font-weight: 400; letter-spacing: -0.5px;
+    font-weight: 400; letter-spacing: -0.5px; position: relative; z-index: 2;
   }
   .hero-en {
     font-family: 'Playfair Display', serif; font-size: 1em;
     color: var(--text-secondary); letter-spacing: 3px;
-    margin-bottom: 24px; font-style: italic; font-weight: 400;
+    margin-bottom: 24px; font-style: italic; font-weight: 400; position: relative; z-index: 2;
   }
   .hero-tagline {
     font-size: 0.95em; color: var(--text-secondary); line-height: 1.9;
-    max-width: 460px; margin: 0 auto 36px; font-weight: 300;
+    max-width: 460px; margin: 0 auto 36px; font-weight: 300; position: relative; z-index: 2;
   }
   .hero-cta {
     display: inline-flex; align-items: center; gap: 8px;
-    padding: 14px 36px; border: 1px solid var(--copper); border-radius: 0;
+    padding: 14px 36px; border: 2px solid var(--copper); border-radius: 30px;
     background: transparent;
     color: var(--copper-light); font-weight: 500; font-size: 0.9em;
     cursor: pointer; transition: all 0.4s; font-family: inherit;
-    letter-spacing: 2px; text-transform: uppercase;
+    letter-spacing: 2px; text-transform: uppercase; position: relative; z-index: 2;
   }
-  .hero-cta:hover { background: var(--copper); color: #0F0D0A; }
+  .hero-cta:hover { background: var(--copper); color: #0F0D0A; box-shadow: 0 0 24px rgba(184,125,86,0.4); }
 
   /* Quick-start button */
   .quick-start-btn {
@@ -122,10 +129,35 @@
   }
   @keyframes float { 0%,100%{transform:translateY(0)} 50%{transform:translateY(8px)} }
 
+  /* Hero background SVG */
+  .hero-background-svg {
+    position: absolute; top: 20%; left: 50%; transform: translateX(-50%);
+    width: 120px; height: 200px; opacity: 0.25; pointer-events: none;
+    z-index: 0;
+  }
+  .dripper-svg {
+    width: 100%; height: 100%; color: var(--copper);
+  }
+  .water-stream {
+    animation: water-pour 2.5s ease-in-out infinite;
+    animation-delay: 0s;
+  }
+  .water-stream-2 {
+    animation: water-pour 2.5s ease-in-out infinite;
+    animation-delay: 0.5s;
+  }
+  @keyframes water-pour {
+    0% { opacity: 0; stroke-dashoffset: 40; stroke-dasharray: 10 40; }
+    10% { opacity: 0.6; }
+    50% { opacity: 0.5; }
+    90% { opacity: 0; }
+    100% { opacity: 0; }
+  }
+
   /* Steam animation */
   .steam-container {
     position: absolute; bottom: 60%; left: 50%; transform: translateX(-50%);
-    pointer-events: none;
+    pointer-events: none; z-index: 1;
   }
   .steam {
     position: absolute; width: 2px; background: rgba(184,125,86,0.15);
@@ -144,6 +176,7 @@
     transition: opacity 0.6s ease, transform 0.6s ease;
   }
   .section.visible { opacity: 1; transform: translateY(0); }
+  @keyframes sectionFadeIn { from { opacity: 0; transform: translateY(30px); } to { opacity: 1; transform: translateY(0); } }
   .section-label {
     display: inline-block; padding: 4px 0; border-radius: 0;
     background: transparent; color: var(--copper);
@@ -168,10 +201,10 @@
   }
   .story-step {
     text-align: center; padding: 20px 12px; border-radius: 3px;
-    background: var(--surface-2); border: 1px solid var(--border);
+    background: linear-gradient(135deg, var(--surface-2), rgba(245,237,227,0.02)); border: 1px solid var(--border);
     transition: all 0.3s;
   }
-  .story-step:hover { background: var(--surface-3); transform: translateY(-3px); border-color: var(--border-hover); }
+  .story-step:hover { background: var(--surface-3); transform: translateY(-4px); border-color: var(--border-hover); box-shadow: 0 12px 32px rgba(0,0,0,0.25); }
   .story-step-num {
     font-size: 0.7em; color: var(--copper); letter-spacing: 2px;
     text-transform: uppercase; margin-bottom: 8px;
@@ -217,7 +250,7 @@
   .about-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; margin-top: 20px; }
   .about-card {
     padding: 24px; border-radius: 3px;
-    background: var(--surface-2); border: 1px solid var(--border);
+    background: linear-gradient(135deg, var(--surface-2), rgba(245,237,227,0.02)); border: 1px solid var(--border);
   }
   .about-card-title { font-weight: 700; color: var(--copper-light); margin-bottom: 8px; font-size: 0.95em; }
   .about-card-text { font-size: 0.88em; color: var(--text-secondary); line-height: 1.7; }
@@ -226,10 +259,10 @@
   .exp-cards { display: grid; grid-template-columns: repeat(3, 1fr); gap: 16px; margin-top: 20px; }
   .exp-card {
     padding: 24px 18px; border-radius: 3px; text-align: center;
-    background: var(--surface-2); border: 1px solid var(--border);
+    background: linear-gradient(135deg, var(--surface-2), rgba(245,237,227,0.02)); border: 1px solid var(--border);
     transition: all 0.3s;
   }
-  .exp-card:hover { background: var(--surface-3); transform: translateY(-2px); border-color: var(--border-hover); }
+  .exp-card:hover { background: var(--surface-3); transform: translateY(-4px); border-color: var(--border-hover); box-shadow: 0 12px 32px rgba(0,0,0,0.25); }
   .exp-card-icon { font-size: 1.8em; margin-bottom: 10px; display: block; }
   .exp-card-title { font-weight: 700; color: var(--copper-light); font-size: 0.95em; margin-bottom: 6px; }
   .exp-card-text { font-size: 0.82em; color: var(--text-secondary); line-height: 1.6; }
@@ -242,7 +275,7 @@
   .section-divider::after {
     content: '◆'; position: absolute; left: 50%; top: -7px;
     transform: translateX(-50%); font-size: 8px; color: var(--copper);
-    background: #0F0D0A; padding: 0 8px;
+    background: #130f0c; padding: 0 8px;
   }
 
   /* Back to top */
@@ -254,7 +287,9 @@
     box-shadow: 0 2px 8px rgba(0,0,0,0.2);
     opacity: 0; transform: translateY(20px);
     transition: all 0.3s; display: flex; align-items: center; justify-content: center;
+    padding: 0;
   }
+  .back-to-top-icon { width: 20px; height: 20px; stroke: currentColor; }
   .back-to-top.show { opacity: 0.7; transform: translateY(0); }
   .back-to-top:hover { opacity: 1; border-color: var(--copper); }
 
@@ -281,7 +316,7 @@
   }
 
   .method-card {
-    background: var(--surface); border: 1px solid var(--border);
+    background: linear-gradient(135deg, var(--surface), rgba(245,237,227,0.02)); border: 1px solid var(--border);
     border-radius: 8px; padding: 18px; cursor: pointer;
     transition: all 0.35s ease; position: relative; overflow: hidden;
   }
@@ -305,7 +340,7 @@
   h2.selector-label, h2.calc-title { font-size: 0.85em; }
   .step-item.active-step { background: rgba(200,149,108,0.08); border-left-color: var(--copper); border-left-width: 4px; }
   .selector-card {
-    background: var(--surface); border: 1px solid var(--border);
+    background: linear-gradient(135deg, var(--surface), rgba(245,237,227,0.02)); border: 1px solid var(--border);
     border-radius: 8px; padding: 16px; margin-bottom: 16px;
   }
   .selector-row { display: flex; gap: 10px; margin-bottom: 10px; align-items: center; }
@@ -321,7 +356,7 @@
   .selector-row input::placeholder { color: var(--text-secondary); }
 
   .calc-panel {
-    background: var(--surface); border: 1px solid var(--border);
+    background: rgba(26, 23, 20, 0.6); border: 1px solid var(--border);
     border-radius: 4px; padding: 28px; margin: 24px 0;
     position: relative;
   }
@@ -342,10 +377,18 @@
   }
   .calc-item {
     background: var(--surface-2); border-radius: 3px; padding: 14px 10px; text-align: center;
-    border: 1px solid var(--border);
+    border: 1px solid var(--border); position: relative;
   }
-  .calc-value { font-size: 1.6em; font-weight: 700; color: var(--copper-light); font-family: 'DM Sans', sans-serif; letter-spacing: 1px; }
-  .calc-label { font-size: 0.7em; color: var(--text-secondary); margin-top: 6px; letter-spacing: 0.5px; }
+  .calc-item:not(:last-child)::after {
+    content: ''; position: absolute; right: 0; top: 15%; height: 70%;
+    width: 1px; background: var(--border);
+  }
+  .calc-value { font-size: 1.6em; font-weight: 700; color: var(--copper-light); font-family: 'Space Mono', 'DM Sans', monospace; letter-spacing: 1px; }
+  .calc-label { font-size: 0.7em; color: var(--text-secondary); margin-top: 6px; letter-spacing: 0.5px; display: flex; align-items: center; justify-content: center; gap: 4px; }
+  .calc-item:nth-child(1) .calc-label::before { content: '💧'; }
+  .calc-item:nth-child(2) .calc-label::before { content: '🌡'; }
+  .calc-item:nth-child(3) .calc-label::before { content: '⏱'; }
+  .calc-item:nth-child(4) .calc-label::before { content: '⚖️'; }
 
   .button-group { display: flex; gap: 10px; flex-wrap: wrap; }
   .btn-primary, .btn-secondary {
@@ -444,7 +487,7 @@
   .stepper-wrap input::-webkit-inner-spin-button,
   .stepper-wrap input::-webkit-outer-spin-button { -webkit-appearance: none; margin: 0; }
   .stepper-btn {
-    width: 36px; height: 36px; border: 1px solid var(--border-hover);
+    width: 44px; height: 44px; border: 1px solid var(--border-hover);
     background: var(--surface-2); color: var(--copper-light); font-size: 1.2em;
     cursor: pointer; transition: all 0.15s; display: flex; align-items: center;
     justify-content: center; flex-shrink: 0; font-family: inherit;
@@ -720,6 +763,13 @@
     .dose-btn { padding: 7px 2px; font-size: 0.8em; }
     .radar-svg { max-width: 200px; }
     .method-icon { width: 32px; height: 32px; }
+    .tab-nav { height: 72px; }
+    .tab-btn { font-size: 0.7em; gap: 4px; }
+    .tab-btn-icon { font-size: 1.4em; }
+  }
+  @media (max-width: 360px) {
+    .tab-btn { font-size: 0; padding: 4px; }
+    .tab-btn-icon { font-size: 1.5em; }
   }
 
   /* ===== TAB NAVIGATION ===== */
@@ -771,9 +821,9 @@
   .tab-btn:hover { color: var(--copper-light); }
 
   /* Tab content */
-  .tab-content { display: none; animation: tabFadeIn 0.3s ease; }
+  .tab-content { display: none; animation: tabFadeIn 0.4s ease-out; }
   .tab-content.active { display: block; }
-  @keyframes tabFadeIn { from { opacity: 0; transform: translateY(8px); } to { opacity: 1; transform: translateY(0); } }
+  @keyframes tabFadeIn { from { opacity: 0; transform: translateY(12px); } to { opacity: 1; transform: translateY(0); } }
 
   /* Micro-interactions: recipe panel & step stagger animations */
   @keyframes recipeFadeIn { from { opacity: 0; transform: translateY(12px); } to { opacity: 1; transform: translateY(0); } }
@@ -848,7 +898,7 @@
     background: var(--surface); border-radius: 3px; padding: 14px; text-align: center;
     border: 1px solid var(--border);
   }
-  .quick-result-value { font-size: 1.6em; font-weight: 700; color: var(--copper); line-height: 1.2; }
+  .quick-result-value { font-size: 1.6em; font-weight: 700; color: var(--copper); line-height: 1.2; font-family: 'Space Mono', 'DM Sans', monospace; }
   .quick-result-label { font-size: 0.75em; color: var(--text-secondary); margin-top: 4px; }
 
   .quick-steps-summary {
@@ -1188,7 +1238,7 @@
 </style>
 </head>
 <body>
-  <button class="back-to-top" id="backToTop" aria-label="回到頂部">↑</button>
+  <button class="back-to-top" id="backToTop" aria-label="回到頂部"><svg class="back-to-top-icon" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 5v14M5 12l7-7 7 7"/></svg></button>
 
   <!-- ===== DESKTOP SITE HEADER ===== -->
   <header class="site-header" id="siteHeader">
@@ -1219,6 +1269,19 @@
     <div class="tab-content active" id="homeTab">
       <!-- ===== HERO ===== -->
     <section class="hero" id="heroSection">
+      <div class="hero-background-svg">
+        <svg viewBox="0 0 120 200" xmlns="http://www.w3.org/2000/svg" class="dripper-svg">
+          <!-- V60 dripper outline -->
+          <path d="M35 40 L45 80 L75 80 L85 40 Z" fill="none" stroke="currentColor" stroke-width="1.2" opacity="0.3"/>
+          <!-- Dripper ridges -->
+          <path d="M40 50 Q60 55 80 50" fill="none" stroke="currentColor" stroke-width="0.8" opacity="0.2"/>
+          <path d="M38 60 Q60 65 82 60" fill="none" stroke="currentColor" stroke-width="0.8" opacity="0.2"/>
+          <path d="M36 70 Q60 75 84 70" fill="none" stroke="currentColor" stroke-width="0.8" opacity="0.2"/>
+          <!-- Water stream -->
+          <path class="water-stream" d="M60 20 Q58 30 58 40" fill="none" stroke="currentColor" stroke-width="2" opacity="0.5" stroke-linecap="round"/>
+          <path class="water-stream water-stream-2" d="M60 15 Q62 25 62 40" fill="none" stroke="currentColor" stroke-width="1.8" opacity="0.35" stroke-linecap="round" animation-delay="0.3s"/>
+        </svg>
+      </div>
       <div class="steam-container" id="steamContainer">
         <div class="steam" style="left: -8px; animation-delay: 0s; height: 60px;"></div>
         <div class="steam" style="left: -4px; animation-delay: 0.6s; height: 50px;"></div>
@@ -1231,7 +1294,7 @@
       <p class="hero-tagline">
         <span id="heroGreeting">每一次沖煮，都是一場關於味覺、時間與意念的探索。</span>
       </p>
-      <button class="hero-cta" id="heroCta">開始沖煮 →</button>
+      <button class="hero-cta" id="heroCta">快速沖一杯 →</button>
     </section>
 
     
@@ -1680,7 +1743,7 @@ const KNOWLEDGE_TIPS=[{condition:(r,p,d,f)=>r==='light',title:'淺焙豆小知�
 const METHOD_COMPARE={sweet:{difficulty:'中等',flavorProfile:'甜感突出、圓潤',suitableRoast:'中深焙、深焙',keyTechnique:'搖晃濾杯',pourStages:'4段'},kasuya:{difficulty:'中等',flavorProfile:'可調控甜酸比',suitableRoast:'淺焙、中焙',keyTechnique:'分段等待滴完',pourStages:'5段'},hoffmann:{difficulty:'入門',flavorProfile:'乾淨明亮',suitableRoast:'淺焙',keyTechnique:'攪拌+搖晃拉平',pourStages:'2段'},rao:{difficulty:'進階',flavorProfile:'醇厚有層次',suitableRoast:'中焙',keyTechnique:'螺旋渦流',pourStages:'連續'},onePour:{difficulty:'入門',flavorProfile:'乾淨穩定',suitableRoast:'中焙',keyTechnique:'單次不間斷注水',pourStages:'1段'},icedBrew:{difficulty:'中等',flavorProfile:'冰涼果香',suitableRoast:'淺焙',keyTechnique:'冰塊急速冷卻',pourStages:'2段'}};
 const GUIDE_CONTENT={sweet:{origin:'源自台灣咖啡社群，強調透過低溫和搖晃濾杯的方式，最大化咖啡的甜感表現。',concept:'利用搖晃濾杯增加萃取均勻度，配合較低水溫（約92°C），減少苦味物質溶出，凸顯甜感。',details:['第一段：快速注入約粉量3.5倍的水，立刻大幅搖晃濾杯約5秒','第二段：稍快速度注水至總水量60%，建立萃取基底','第三、四段：放慢注水速度，輕柔注入，避免過度攪拌','注水手法：中心注水為主，避免直接沖到濾紙'],suitableBean:'中深焙、蜜處理豆最能發揮此沖法的甜感特色；日曬豆也很適合',unsuitable:'極淺焙水洗豆（甜感不夠明顯，容易變得平淡）',faq:[{q:'太酸',a:'水溫提高2°C，或將研磨調細半格'},{q:'太苦',a:'水溫降低2°C，減少搖晃力度'},{q:'太淡',a:'增加粉量或將粉水比調至1:14'},{q:'風味模糊',a:'搖晃需更果斷有力，確保粉層均勻翻動'}]},kasuya:{origin:'由日本咖啡師粕谷哲（Tetsu Kasuya）發明，2016年世界沖煮杯（World Brewers Cup）冠軍配方。建議水溫92-93°C。',concept:'核心為「4:6法則」— 將總水量分為前40%和後60%。前40%（前兩段）決定甜酸比例：想更甜就增加第一段水量、想更酸就減少；後60%（後三段）平均分配，決定濃淡強度。',details:['研磨度比一般V60稍粗，接近法壓壺的粗細','每段注水後必須等水完全滴完再注下一段','由中心螺旋向外注水，避免直接沖濾紙','前兩段（40%）是風味關鍵，注水量分配決定甜酸比','後三段（60%）平均分配，控制濃度'],suitableBean:'日曬淺焙豆最能展現此沖法的精準控制力；各種處理法的淺中焙都適合',unsuitable:'深焙豆（分段等待容易過萃產生苦澀）',faq:[{q:'太酸',a:'第一段減少水量讓甜感上升'},{q:'太苦',a:'磨粗一格，或將水溫降低2°C'},{q:'總時間超過3:30',a:'研磨太細，需調粗'},{q:'風味不一致',a:'確認每段都等完全滴完再注下一段'}]},hoffmann:{origin:'由英國咖啡專家 James Hoffmann 提出，以簡潔的操作和高度均勻的萃取著稱。',concept:'透過充分悶蒸、兩段式注水、最後的攪拌與搖晃，達到咖啡粉的均勻萃取，追求乾淨明亮的風味。',details:['悶蒸：注入粉量2倍的水，輕輕旋轉濾杯讓所有咖啡粉濕潤，等待45秒','第一次主注水：在45秒時開始，注水至總水量60%，約30秒內完成','第二次主注水：注水至總水量100%，約30秒內完成','攪拌：注水完成後，用攪拌棒順時針、逆時針各攪拌一圈','搖晃：輕搖濾杯讓粉床平整，等待自然滴完','注水手法：穩定的中心繞圈注水，保持適中高度和水流'],suitableBean:'水洗淺焙豆最能展現乾淨明亮的風味；厭氧處理豆也適合用簡潔的流程展現複雜度',unsuitable:'深焙豆（高水溫容易萃取過度）',faq:[{q:'太酸',a:'研磨調細半格，或延長總沖煮時間'},{q:'太苦',a:'減少攪拌力度，或水溫降低2°C'},{q:'太淡',a:'粉水比從1:16.7改為1:15'},{q:'滴完時間太長',a:'研磨太細，需調粗'}]},rao:{origin:'由美國咖啡專家 Scott Rao 提出，強調透過持續的螺旋攪拌達到高萃取率和均勻萃取。',concept:'注水時製造明顯的螺旋渦流，讓水均勻通過所有咖啡粉，追求層次豐富、有厚度的口感。',details:['悶蒸：注入粉量2倍的水，等待45秒讓CO2充分釋放','主注水：從中心開始，以螺旋方式由內向外繞圈，保持穩定的水流和高度','渦流的關鍵：注水時水柱要能在粉床上製造可見的旋轉渦流','收尾：注水完成後輕搖濾杯讓粉床平整','目標時間：整體沖煮在3分鐘左右完成'],suitableBean:'中焙豆最能展現平衡醇厚的特色；適合追求高萃取率的進階沖煮者',unsuitable:'極淺焙豆（容易過度攪拌導致澀感）',faq:[{q:'太苦/澀',a:'降低注水高度，減緩渦流強度'},{q:'太酸',a:'增加注水高度，讓渦流更明顯'},{q:'風味雜亂',a:'保持螺旋的一致性，不要忽快忽慢'},{q:'總時間太短',a:'研磨太粗，需調細'}]},onePour:{origin:'最簡約的手沖方式，去除複雜的分段注水，用一次穩定的注水完成萃取。',concept:'減少人為變數，讓水自然均勻通過咖啡粉層。操作越簡單，變數越少，出品越穩定。',details:['悶蒸30秒後，以穩定的水流一次注完剩餘水量','水流保持細且穩定，由中心緩慢向外繞圈','不需要暫停、不需要分段、不需要攪拌','全程保持相同的注水高度和速度'],suitableBean:'中焙豆最適合，容錯範圍大；也適合作為新豆子的「基準測試」沖法',unsuitable:'需要精細控制甜酸比的場景（用Kasuya更好）',faq:[{q:'太淡',a:'放慢注水速度，讓水與粉接觸更久'},{q:'太苦',a:'加快注水速度，減少浸泡時間'},{q:'風味單調',a:'一刀流的特色就是乾淨穩定，想要更多層次可嘗試其他沖法'}]},icedBrew:{origin:'Flash Brew（急速冷卻法）是日式冰咖啡的延伸，透過將熱咖啡直接沖在冰塊上，達到急速冷卻的效果。',concept:'核心原則：總水量的40%用冰塊替代，僅用60%的熱水進行高濃度萃取，咖啡液滴入冰塊後稀釋至正常濃度。急速冷卻能保留更多花果香氣。粉水比1:15是含冰塊的總液量。',details:['總水量的40%用冰塊替代，放在下壺中','用剩餘60%的熱水進行沖煮（水溫96°C，盡量高溫）','研磨比一般手沖細一格，彌補水量減少導致的萃取不足','悶蒸用粉量2.5倍的水（比一般多一點），確保充分萃取','沖完後輕搖杯子讓殘餘冰塊融化均勻'],suitableBean:'淺焙水洗豆的花果香在冰手沖中表現最驚豔；日曬淺焙的莓果調性也很適合',unsuitable:'深焙豆（冰鎮後苦味會更突出）',faq:[{q:'太淡/水感',a:'增加粉量（如1:13），或減少冰塊比例至35%'},{q:'太酸/尖銳',a:'研磨再細半格，或延長主注水時間'},{q:'冰塊融不完',a:'正常現象，可以保留作為飲用時的冰塊'},{q:'不夠冰',a:'確保冰塊是實心冰塊而非碎冰，保冷效果更好'}]}};
 const RECOMMENDATIONS={'light-washed':{method:'hoffmann',reason:'淺焙水洗豆適合用簡潔的沖法來展現清爽明亮的風味。Hoffmann法透過充分悶蒸和均勻萃取，能最好地凸顯花香和果酸。'},'light-natural':{method:'kasuya',reason:'淺焙日曬豆風味豐富，用Kasuya 4:6法能精準控制前40%的甜酸比，充分發揮莓果和蜜甜特色。'},'light-honey':{method:'kasuya',reason:'淺焙蜜處理豆的甜感明顯，Kasuya 4:6法能精準平衡蜜甜與酸質，展現蜜處理的層次。'},'light-anaerobic':{method:'hoffmann',reason:'淺焙厭氧豆風味獨特強烈，Hoffmann法的簡潔流程能乾淨地呈現複雜發酵風味，不會過度干擾。'},'medium-washed':{method:'onePour',reason:'中焙水洗豆是最經典的組合，一刀流以簡單穩定著稱，容錯範圍大，適合練習和實驗。'},'medium-natural':{method:'sweet',reason:'中焙日曬豆甜感豐富，搖晃濾杯法能進一步放大甜感，帶出圓潤的水果調性。'},'medium-honey':{method:'rao',reason:'中焙蜜處理豆質地醇厚，Scott Rao的螺旋渦流法能均勻萃取，展現蜜處理的飽滿口感和層次。'},'medium-anaerobic':{method:'onePour',reason:'中焙厭氧豆風味已經很複雜，一刀流的極簡操作反而能穩定呈現，避免過度萃取導致風味混亂。'},'dark-washed':{method:'sweet',reason:'深焙水洗豆用搖晃濾杯法能強化甜感，低溫沖煮減少苦澀，帶出焦糖和巧克力調性。'},'dark-natural':{method:'sweet',reason:'深焙日曬豆甜度高，搖晃濾杯法搭配低溫能最大化甜感，避免過萃的苦膩。'},'dark-honey':{method:'sweet',reason:'深焙蜜處理豆口感圓潤，搖晃濾杯法能凸顯黑糖般的甜感，是深焙蜜處理的最佳搭配。'},'dark-anaerobic':{method:'onePour',reason:'深焙厭氧豆風味濃郁，一刀流的簡潔操作能避免過度萃取，讓發酵風味保持乾淨。'},'light-anaerobic_natural':{method:'hoffmann',reason:'淺焙厭氧日曬豆風味獨特強烈，Hoffmann法的簡潔流程能乾淨地呈現複雜發酵風味，不會過度干擾。'},'light-anaerobic_washed':{method:'hoffmann',reason:'淺焙厭氧水洗豆風味獨特強烈，Hoffmann法的簡潔流程能乾淨地呈現複雜發酵風味，不會過度干擾。'},'medium-anaerobic_natural':{method:'onePour',reason:'中焙厭氧日曬豆風味已經很複雜，一刀流的極簡操作反而能穩定呈現，避免過度萃取導致風味混亂。'},'medium-anaerobic_washed':{method:'onePour',reason:'中焙厭氧水洗豆風味已經很複雜，一刀流的極簡操作反而能穩定呈現，避免過度萃取導致風味混亂。'},'dark-anaerobic_natural':{method:'onePour',reason:'深焙厭氧日曬豆風味濃郁，一刀流的簡潔操作能避免過度萃取，讓發酵風味保持乾淨。'},'dark-anaerobic_washed':{method:'onePour',reason:'深焙厭氧水洗豆風味濃郁，一刀流的簡潔操作能避免過度萃取，讓發酵風味保持乾淨。'},default:{method:'onePour',reason:'一刀流穩定易掌控，是發現新豆子特色的最佳起點。'}};
-const METHOD_ICONS={sweet:`<svg class="method-icon" viewBox="0 0 40 40"><path d="M12 8h16l-2 20H14L12 8z" fill="none" stroke="currentColor" stroke-width="1.5"/><path d="M10 8h20" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/><path d="M18 3c0 3 4 3 4 5" fill="none" stroke="currentColor" stroke-width="1" opacity=".5"/><path d="M20 14c-2 4 2 4 0 8" fill="none" stroke="currentColor" stroke-width="1" stroke-dasharray="2 1" opacity=".6"/></svg>`,kasuya:`<svg class="method-icon" viewBox="0 0 40 40"><path d="M12 8h16l-2 20H14L12 8z" fill="none" stroke="currentColor" stroke-width="1.5"/><path d="M10 8h20" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/><line x1="14" y1="14" x2="26" y2="14" stroke="currentColor" stroke-width=".8" stroke-dasharray="2 2" opacity=".4"/><line x1="14.5" y1="18" x2="25.5" y2="18" stroke="currentColor" stroke-width=".8" stroke-dasharray="2 2" opacity=".4"/><text x="30" y="12" font-size="6" fill="currentColor" opacity=".5">4</text><text x="30" y="22" font-size="6" fill="currentColor" opacity=".5">6</text></svg>`,hoffmann:`<svg class="method-icon" viewBox="0 0 40 40"><path d="M12 8h16l-2 20H14L12 8z" fill="none" stroke="currentColor" stroke-width="1.5"/><path d="M10 8h20" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/><circle cx="20" cy="18" r="4" fill="none" stroke="currentColor" stroke-width="1" stroke-dasharray="2 1" opacity=".5"/><path d="M16 32h8" stroke="currentColor" stroke-width="1" opacity=".4"/></svg>`,rao:`<svg class="method-icon" viewBox="0 0 40 40"><path d="M12 8h16l-2 20H14L12 8z" fill="none" stroke="currentColor" stroke-width="1.5"/><path d="M10 8h20" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/><path d="M20 12c-3 2-3 5 0 7s3 5 0 7" fill="none" stroke="currentColor" stroke-width="1" opacity=".5"/></svg>`,onePour:`<svg class="method-icon" viewBox="0 0 40 40"><path d="M12 8h16l-2 20H14L12 8z" fill="none" stroke="currentColor" stroke-width="1.5"/><path d="M10 8h20" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/><line x1="20" y1="3" x2="20" y2="15" stroke="currentColor" stroke-width="1.5" opacity=".5" stroke-linecap="round"/><circle cx="20" cy="3" r="1.5" fill="currentColor" opacity=".4"/></svg>`,icedBrew:`<svg class="method-icon" viewBox="0 0 40 40"><path d="M12 8h16l-2 20H14L12 8z" fill="none" stroke="currentColor" stroke-width="1.5"/><path d="M10 8h20" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/><rect x="16" y="20" width="4" height="4" rx="1" fill="none" stroke="currentColor" stroke-width=".8" opacity=".5"/><rect x="21" y="22" width="3" height="3" rx="1" fill="none" stroke="currentColor" stroke-width=".8" opacity=".5"/><path d="M18 3v4" stroke="currentColor" stroke-width="1" opacity=".3"/><path d="M22 2v5" stroke="currentColor" stroke-width="1" opacity=".3"/></svg>`};
+const METHOD_ICONS={sweet:`<svg class="method-icon" viewBox="0 0 40 40"><path d="M12 10h16l-2 18H14L12 10z" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/><path d="M10 10h20" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/><path d="M15 8c0-2 2-3 5-3s5 1 5 3" fill="none" stroke="currentColor" stroke-width="1.2" stroke-linecap="round"/><path d="M16 15c2 1 2 3 4 4s2 3 4 4" fill="none" stroke="currentColor" stroke-width="1" opacity=".6" stroke-linecap="round"/></svg>`,kasuya:`<svg class="method-icon" viewBox="0 0 40 40"><path d="M12 10h16l-2 18H14L12 10z" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/><path d="M10 10h20" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/><path d="M15 8c0-2 2-3 5-3s5 1 5 3" fill="none" stroke="currentColor" stroke-width="1.2" stroke-linecap="round"/><line x1="14" y1="14" x2="26" y2="14" stroke="currentColor" stroke-width=".9" opacity=".5" stroke-linecap="round"/><line x1="14" y1="18" x2="26" y2="18" stroke="currentColor" stroke-width=".9" opacity=".5" stroke-linecap="round"/><line x1="14" y1="22" x2="26" y2="22" stroke="currentColor" stroke-width=".9" opacity=".5" stroke-linecap="round"/></svg>`,hoffmann:`<svg class="method-icon" viewBox="0 0 40 40"><path d="M12 10h16l-2 18H14L12 10z" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/><path d="M10 10h20" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/><path d="M15 8c0-2 2-3 5-3s5 1 5 3" fill="none" stroke="currentColor" stroke-width="1.2" stroke-linecap="round"/><circle cx="20" cy="17" r="3.5" fill="none" stroke="currentColor" stroke-width="1" opacity=".6"/><path d="M20 13.5v7M16.5 17h7" stroke="currentColor" stroke-width=".8" opacity=".5" stroke-linecap="round"/></svg>`,rao:`<svg class="method-icon" viewBox="0 0 40 40"><path d="M12 10h16l-2 18H14L12 10z" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/><path d="M10 10h20" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/><path d="M15 8c0-2 2-3 5-3s5 1 5 3" fill="none" stroke="currentColor" stroke-width="1.2" stroke-linecap="round"/><path d="M20 13c-2 1.5-2 3.5 0 5c2 1.5 2 3.5 0 5" fill="none" stroke="currentColor" stroke-width="1.2" opacity=".6" stroke-linecap="round"/><path d="M20 13.5c2 1.5 2 3.5 0 5c-2 1.5-2 3.5 0 5" fill="none" stroke="currentColor" stroke-width=".9" opacity=".4" stroke-linecap="round"/></svg>`,onePour:`<svg class="method-icon" viewBox="0 0 40 40"><path d="M12 10h16l-2 18H14L12 10z" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/><path d="M10 10h20" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/><path d="M15 8c0-2 2-3 5-3s5 1 5 3" fill="none" stroke="currentColor" stroke-width="1.2" stroke-linecap="round"/><line x1="20" y1="4" x2="20" y2="10" stroke="currentColor" stroke-width="1.5" opacity=".7" stroke-linecap="round"/><circle cx="20" cy="3" r="1.2" fill="currentColor" opacity=".5"/></svg>`,icedBrew:`<svg class="method-icon" viewBox="0 0 40 40"><path d="M12 10h16l-2 18H14L12 10z" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/><path d="M10 10h20" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/><path d="M15 8c0-2 2-3 5-3s5 1 5 3" fill="none" stroke="currentColor" stroke-width="1.2" stroke-linecap="round"/><rect x="15" y="19" width="3.5" height="3.5" rx="0.5" fill="none" stroke="currentColor" stroke-width="1" opacity=".6"/><rect x="21.5" y="21" width="3" height="3" rx="0.5" fill="none" stroke="currentColor" stroke-width="1" opacity=".5"/><path d="M17 2c0 1.5 1 2 1.5 3" fill="none" stroke="currentColor" stroke-width=".8" opacity=".4" stroke-linecap="round"/><path d="M23 1c0 1.5 1 2.5 1.5 4" fill="none" stroke="currentColor" stroke-width=".8" opacity=".4" stroke-linecap="round"/></svg>`};
 const FLAVOR_PROFILES={sweet:{acidity:3,bitterness:2,sweetness:9,body:7,aroma:6},kasuya:{acidity:7,bitterness:2,sweetness:6,body:5,aroma:8},hoffmann:{acidity:8,bitterness:2,sweetness:5,body:4,aroma:9},rao:{acidity:5,bitterness:3,sweetness:5,body:8,aroma:7},onePour:{acidity:5,bitterness:3,sweetness:5,body:6,aroma:5},icedBrew:{acidity:8,bitterness:1,sweetness:6,body:3,aroma:9}};
 const STEP_TIPS={bloom:'看到咖啡粉膨脹像漢堡？表示豆子新鮮度很好！',pour:'水柱粗細像筷子，保持穩定不要忽快忽慢',wait:'耐心等待，好風味需要時間',final:'如果看到白泡沫，下次試試提早 10 秒移開濾杯'};
 const FLAVOR_DESCRIPTIONS={sweet:'像溫熱蜂蜜水般的圓潤甜感，飽滿不膩——獻給偏好甜韻的你。',kasuya:'前半段的果酸與後半段的甜感形成對話，像水果塔一樣層次分明。',hoffmann:'像一杯乾淨的紅茶，花香浮在前端，尾韻明亮而細緻。',rao:'厚實如可可，帶有堅果的溫暖感，適合喜歡有「份量感」的咖啡。',onePour:'均衡穩定的日常味道，像一位可靠的老朋友，每次見面都很舒服。',icedBrew:'果汁般的爆發力！花香與果酸在冰鎮中被完美凝結，清爽如夏日的第一口沁涼。'};
@@ -1725,7 +1788,7 @@ function toggleDarkMode(){}
 function renderCompareModal(){const cmg=document.getElementById('compareMethodGrid');cmg.innerHTML=Object.entries(BREW_METHODS).map(([k,m])=>`<button class="compare-method-btn" data-method="${k}">${m.title.split(' · ')[0]}<br><small>${m.badge}</small></button>`).join('');document.querySelectorAll('.compare-method-btn').forEach(btn=>{btn.onclick=function(){const method=this.dataset.method;if(selectedCompareMethods.includes(method)){selectedCompareMethods=selectedCompareMethods.filter(m=>m!==method);this.classList.remove('selected')}else if(selectedCompareMethods.length<2){selectedCompareMethods.push(method);this.classList.add('selected')}else{const oldMethod=selectedCompareMethods.shift();document.querySelectorAll('.compare-method-btn').forEach(b=>{if(b.dataset.method===oldMethod)b.classList.remove('selected')});selectedCompareMethods.push(method);this.classList.add('selected')}updateCompareResult()}});document.getElementById('compareResult').innerHTML='<div class="compare-empty">選擇沖法開始比較</div>'}
 function updateCompareResult(){const cr=document.getElementById('compareResult');if(selectedCompareMethods.length===0){cr.innerHTML='<div class="compare-empty">選擇沖法開始比較</div>';return}const m=selectedCompareMethods.map(k=>({key:k,data:BREW_METHODS[k]})),hr=`<tr class="compare-header"><th>項目</th>${m.map(x=>`<th>${x.data.title.split(' · ')[0]}</th>`).join('')}</tr>`,rows=[{label:'難易度',values:m.map(x=>METHOD_COMPARE[x.key].difficulty)},{label:'風味走向',values:m.map(x=>METHOD_COMPARE[x.key].flavorProfile)},{label:'適合烘焙度',values:m.map(x=>METHOD_COMPARE[x.key].suitableRoast)},{label:'核心技巧',values:m.map(x=>METHOD_COMPARE[x.key].keyTechnique)},{label:'注水段數',values:m.map(x=>METHOD_COMPARE[x.key].pourStages)},{label:'粉水比',values:m.map(x=>`1:${x.data.ratio}`)},{label:'水溫',values:m.map(x=>x.data.temp)},{label:'預期時間',values:m.map(x=>x.data.time)}];cr.innerHTML=`<table class="compare-table">${hr}${rows.map(row=>`<tr><td><strong>${row.label}</strong></td>${row.values.map(val=>`<td>${val}</td>`).join('')}</tr>`).join('')}</table>`;renderCompareRadar()}
 /* Hero CTA & scroll */
-document.getElementById('heroCta').addEventListener('click',()=>{document.getElementById('toolSection').scrollIntoView({behavior:'smooth',block:'start'})});
+document.getElementById('heroCta').addEventListener('click',()=>{window.location.hash='#quick'});
 /* Section fade-in on scroll */
 const sectionObserver=new IntersectionObserver((entries)=>{entries.forEach(e=>{if(e.isIntersecting){e.target.classList.add('visible');sectionObserver.unobserve(e.target)}})},{threshold:0.1,rootMargin:'0px 0px -50px 0px'});
 document.querySelectorAll('.section').forEach(s=>sectionObserver.observe(s));
