@@ -23,134 +23,151 @@
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
 <meta name="apple-mobile-web-app-title" content="手沖咖啡實驗室">
-<link href="https://fonts.googleapis.com/css2?family=Noto+Serif+TC:wght@400;700;900&family=Playfair+Display:wght@700;900&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Noto+Sans+TC:wght@300;400;500;700&family=Playfair+Display:ital,wght@0,400;0,700;0,900;1,400&family=DM+Sans:wght@400;500;700&display=swap" rel="stylesheet">
 <style>
 
   * { margin: 0; padding: 0; box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
   :root {
-    --cream: #F5EFE0; --brown-dark: #2C1A0E; --brown-mid: #5C3317;
-    --brown-light: #A0622A; --amber: #D4892A; --gold: #E8B86D; --warm-white: #FBF6EE;
+    --surface: #1A1714; --surface-2: #242019; --surface-3: #2E2922;
+    --copper: #B87D56; --copper-light: #D4A574;
+    --text-primary: #E8DDD0; --text-secondary: rgba(226,201,166,0.55);
+    --border: rgba(200,149,108,0.12); --border-hover: rgba(200,149,108,0.25);
+    --glow: rgba(200,149,108,0.08);
   }
 
   body {
-    background: var(--brown-dark);
+    background: var(--surface);
     display: flex; flex-direction: column; align-items: center;
     min-height: 100vh; padding: 20px;
-    font-family: 'Noto Serif TC', serif; overflow-x: hidden;
-    transition: background-color 0.3s ease, color 0.3s ease;
-    color: var(--gold);
+    font-family: 'Noto Sans TC', 'DM Sans', -apple-system, sans-serif; overflow-x: hidden;
+    transition: background-color 0.4s ease, color 0.4s ease;
+    color: var(--text-primary);
+    letter-spacing: 0.3px;
+    -webkit-font-smoothing: antialiased;
   }
 
   body.light-mode {
-    background: var(--cream);
-    color: var(--brown-dark);
+    background: #F8F5F0;
+    color: #1A1714;
+    --surface: #FFFFFF; --surface-2: #F2EDE6; --surface-3: #EBE4DA;
+    --copper: #9B7352; --copper-light: #B8906E;
+    --text-primary: #1A1714; --text-secondary: rgba(26,23,20,0.5);
+    --border: rgba(155,115,82,0.15); --border-hover: rgba(155,115,82,0.3);
+    --glow: rgba(155,115,82,0.06);
   }
 
-  body.light-mode .page-h1 { color: var(--brown-dark); }
-  body.light-mode .page-sub { color: rgba(44,26,14,0.6); }
-  body.light-mode .selector-label { color: var(--brown-mid); }
-  body.light-mode .selector-row label { color: var(--brown-dark); }
+  body.light-mode .page-h1 { color: #1A1714; }
+  body.light-mode .page-sub { color: rgba(26,23,20,0.55); }
+  body.light-mode .selector-label { color: #4A3828; }
+  body.light-mode .selector-row label { color: #1A1714; }
   body.light-mode .method-card {
-    background: rgba(212,137,42,0.05); border-color: rgba(212,137,42,0.2);
+    background: var(--surface); border-color: var(--border);
+    box-shadow: 0 1px 3px rgba(0,0,0,0.04);
   }
-  body.light-mode .method-card:hover { background: rgba(212,137,42,0.15); }
-  body.light-mode .method-card.active { background: rgba(212,137,42,0.25); border-color: rgba(212,137,42,0.6); }
-  body.light-mode .method-name { color: var(--brown-dark); }
-  body.light-mode .method-ratio { color: rgba(44,26,14,0.7); }
+  body.light-mode .method-card:hover { background: var(--surface-2); border-color: var(--border-hover); }
+  body.light-mode .method-card.active { background: rgba(160,117,80,0.1); border-color: var(--copper); }
+  body.light-mode .method-name { color: #1A1714; }
+  body.light-mode .method-ratio { color: rgba(26,23,20,0.55); }
   body.light-mode .selector-card {
-    background: rgba(255,255,255,0.5); border-color: rgba(212,137,42,0.15);
+    background: var(--surface); border-color: var(--border);
+    box-shadow: 0 1px 3px rgba(0,0,0,0.04);
   }
   body.light-mode .selector-card input, body.light-mode .selector-card select {
-    background: rgba(255,255,255,0.7); color: var(--brown-dark);
+    background: var(--surface-2); color: #1A1714; border-color: var(--border);
   }
-  body.light-mode .calc-panel { background: rgba(255,255,255,0.4); }
-  body.light-mode .timer-display { background: linear-gradient(135deg, rgba(212,137,42,0.08), rgba(160,98,42,0.1)); color: var(--brown-dark); }
-  body.light-mode .btn-primary { color: var(--brown-dark); }
-  body.light-mode .dose-btn { color: var(--brown-mid); border-color: rgba(160,98,42,0.25); }
-  body.light-mode .dose-btn.active { color: var(--brown-dark); background: rgba(212,137,42,0.25); }
-  body.light-mode .rest-skip-btn { color: var(--brown-mid); }
-  body.light-mode .timer-ctrl-btn { color: var(--brown-dark); }
-  body.light-mode .step-item { color: var(--brown-dark); border-left-color: rgba(212,137,42,0.3); }
-  body.light-mode .guide-card { background: rgba(212,137,42,0.08); border-color: rgba(212,137,42,0.2); }
-  body.light-mode .guide-section-title { color: var(--brown-dark); }
-  body.light-mode .knowledge-tip { background: rgba(212,137,42,0.08); border-color: rgba(212,137,42,0.2); }
-  body.light-mode .knowledge-tip-title { color: var(--brown-dark); }
-  body.light-mode .knowledge-tip-text { color: rgba(44,26,14,0.75); }
-  body.light-mode .compare-table { background: rgba(255,255,255,0.4); }
-  body.light-mode .compare-table td { border-color: rgba(212,137,42,0.15); }
-  body.light-mode .compare-header { background: rgba(212,137,42,0.15); color: var(--brown-dark); }
-  body.light-mode .modal-content { background: var(--cream); border-color: rgba(212,137,42,0.3); }
-  body.light-mode .modal-header { color: var(--brown-dark); }
+  body.light-mode .calc-panel { background: var(--surface); box-shadow: 0 2px 8px rgba(0,0,0,0.04); }
+  body.light-mode .timer-display { background: linear-gradient(135deg, rgba(160,117,80,0.06), rgba(155,115,82,0.08)); color: #1A1714; }
+  body.light-mode .btn-primary { color: #FFF; background: var(--copper); }
+  body.light-mode .dose-btn { color: #4A3828; border-color: var(--border); background: var(--surface); }
+  body.light-mode .dose-btn.active { color: #FFF; background: var(--copper); border-color: var(--copper); }
+  body.light-mode .rest-skip-btn { color: #4A3828; }
+  body.light-mode .timer-ctrl-btn { color: #1A1714; }
+  body.light-mode .step-item { color: #1A1714; border-left-color: rgba(155,115,82,0.25); }
+  body.light-mode .guide-card { background: var(--surface); border-color: var(--border); }
+  body.light-mode .guide-section-title { color: #1A1714; }
+  body.light-mode .knowledge-tip { background: var(--surface); border-color: var(--border); }
+  body.light-mode .knowledge-tip-title { color: #1A1714; }
+  body.light-mode .knowledge-tip-text { color: rgba(26,23,20,0.7); }
+  body.light-mode .compare-table { background: var(--surface); }
+  body.light-mode .compare-table td { border-color: var(--border); }
+  body.light-mode .compare-header { background: rgba(155,115,82,0.1); color: #1A1714; }
+  body.light-mode .modal-content { background: #F8F5F0; border-color: var(--border); }
+  body.light-mode .modal-header { color: #1A1714; }
 
   /* Hero section */
   .hero {
-    text-align: center; padding: 80px 20px 50px; position: relative;
+    text-align: center; padding: 100px 20px 60px; position: relative;
     min-height: 70vh; display: flex; flex-direction: column;
     justify-content: center; align-items: center;
   }
   .hero-badge {
-    display: inline-block; padding: 6px 18px; border-radius: 20px;
-    border: 1px solid rgba(212,137,42,0.3); background: rgba(212,137,42,0.1);
-    color: var(--gold); font-size: 0.8em; letter-spacing: 1px;
-    margin-bottom: 20px; text-transform: uppercase;
+    display: inline-block; padding: 6px 20px; border-radius: 2px;
+    border: 1px solid var(--border-hover); background: transparent;
+    color: var(--copper-light); font-size: 0.72em; letter-spacing: 4px;
+    margin-bottom: 24px; text-transform: uppercase; font-weight: 500;
   }
   .hero h1 {
-    font-size: 3.2em; font-family: 'Playfair Display', serif;
-    color: var(--gold); line-height: 1.15; margin-bottom: 12px;
-    text-shadow: 0 2px 8px rgba(0,0,0,0.3);
+    font-size: 3.4em; font-family: 'Playfair Display', serif;
+    color: var(--copper-light); line-height: 1.1; margin-bottom: 14px;
+    font-weight: 400; letter-spacing: -0.5px;
   }
   .hero-en {
-    font-family: 'Playfair Display', serif; font-size: 1.1em;
-    color: rgba(232,184,109,0.55); letter-spacing: 3px;
-    margin-bottom: 20px; font-style: italic;
+    font-family: 'Playfair Display', serif; font-size: 1em;
+    color: var(--text-secondary); letter-spacing: 3px;
+    margin-bottom: 24px; font-style: italic; font-weight: 400;
   }
   .hero-tagline {
-    font-size: 1.05em; color: rgba(232,184,109,0.7); line-height: 1.8;
-    max-width: 480px; margin: 0 auto 30px;
+    font-size: 0.95em; color: var(--text-secondary); line-height: 1.9;
+    max-width: 460px; margin: 0 auto 36px; font-weight: 300;
   }
   .hero-cta {
     display: inline-flex; align-items: center; gap: 8px;
-    padding: 14px 32px; border: none; border-radius: 30px;
-    background: linear-gradient(135deg, var(--amber), var(--gold));
-    color: var(--brown-dark); font-weight: 700; font-size: 1.05em;
-    cursor: pointer; transition: all 0.3s; font-family: inherit;
-    box-shadow: 0 4px 20px rgba(212,137,42,0.35);
+    padding: 14px 36px; border: 1px solid var(--copper); border-radius: 0;
+    background: transparent;
+    color: var(--copper-light); font-weight: 500; font-size: 0.9em;
+    cursor: pointer; transition: all 0.4s; font-family: inherit;
+    letter-spacing: 2px; text-transform: uppercase;
   }
-  .hero-cta:hover { transform: translateY(-3px); box-shadow: 0 8px 30px rgba(212,137,42,0.45); }
+  .hero-cta:hover { background: var(--copper); color: #0F0D0A; }
+  body.light-mode .hero-cta { border-color: var(--copper); color: var(--copper); }
+  body.light-mode .hero-cta:hover { background: var(--copper); color: #FFF; }
 
   /* Quick-start button */
   .quick-start-btn {
-    width: 100%; padding: 12px 20px; margin-bottom: 15px;
-    border: none; border-radius: 12px;
-    background: linear-gradient(135deg, var(--amber), var(--gold));
-    color: var(--brown-dark); font-weight: 700; font-size: 0.95em;
+    width: 100%; padding: 14px 20px; margin-bottom: 15px;
+    border: 1px solid var(--copper); border-radius: 4px;
+    background: transparent;
+    color: var(--copper-light); font-weight: 500; font-size: 0.9em;
     cursor: pointer; transition: all 0.3s; font-family: inherit;
-    box-shadow: 0 4px 15px rgba(212,137,42,0.3);
+    letter-spacing: 1px;
   }
   .quick-start-btn:hover {
-    transform: translateY(-2px); box-shadow: 0 6px 25px rgba(212,137,42,0.4);
+    background: rgba(184,125,86,0.1);
+  }
+  .quick-start-btn.qs-active {
+    background: rgba(184,125,86,0.08); border-style: dashed;
   }
   body.light-mode .quick-start-btn {
-    color: var(--brown-dark);
+    color: var(--copper); border-color: var(--copper);
   }
 
   /* Start Timer Button */
   .btn-start-timer {
     display: inline-block; padding: 12px 24px; border: none; border-radius: 12px;
-    background: linear-gradient(135deg, var(--amber), var(--gold));
-    color: var(--brown-dark); font-weight: 700; font-size: 0.95em;
+    background: linear-gradient(135deg, var(--copper), var(--copper-light));
+    color: #2E2922; font-weight: 700; font-size: 0.95em;
     cursor: pointer; transition: all 0.3s; font-family: inherit;
-    box-shadow: 0 4px 15px rgba(212,137,42,0.3);
+    box-shadow: 0 4px 15px rgba(184,125,86,0.3);
   }
   .btn-start-timer:hover {
-    transform: translateY(-2px); box-shadow: 0 6px 25px rgba(212,137,42,0.4);
+    transform: translateY(-2px); box-shadow: 0 6px 25px rgba(184,125,86,0.4);
   }
   body.light-mode .btn-start-timer {
-    color: var(--brown-dark);
+    color: #2E2922;
   }
 
   .hero-scroll-hint {
-    margin-top: 40px; color: rgba(232,184,109,0.3); font-size: 0.8em;
+    margin-top: 40px; color: var(--text-secondary); font-size: 0.8em;
     animation: float 2s ease-in-out infinite;
   }
   @keyframes float { 0%,100%{transform:translateY(0)} 50%{transform:translateY(8px)} }
@@ -161,7 +178,7 @@
     pointer-events: none;
   }
   .steam {
-    position: absolute; width: 2px; background: rgba(232,184,109,0.15);
+    position: absolute; width: 2px; background: rgba(184,125,86,0.15);
     border-radius: 50%; animation: steam-rise 3s ease-in infinite;
   }
   @keyframes steam-rise {
@@ -178,26 +195,28 @@
   }
   .section.visible { opacity: 1; transform: translateY(0); }
   .section-label {
-    display: inline-block; padding: 4px 14px; border-radius: 15px;
-    background: rgba(212,137,42,0.12); color: var(--amber);
-    font-size: 0.75em; letter-spacing: 2px; text-transform: uppercase;
-    margin-bottom: 12px;
+    display: inline-block; padding: 4px 0; border-radius: 0;
+    background: transparent; color: var(--copper);
+    font-size: 0.68em; letter-spacing: 4px; text-transform: uppercase;
+    margin-bottom: 10px; font-weight: 500;
+    border-bottom: 1px solid var(--border-hover);
   }
   .section-title {
-    font-family: 'Playfair Display', serif; font-size: 1.8em;
-    color: var(--gold); margin-bottom: 8px;
+    font-family: 'Playfair Display', serif; font-size: 1.7em;
+    color: var(--copper-light); margin-bottom: 10px; font-weight: 400;
+    letter-spacing: -0.3px;
   }
   .section-sub {
-    color: rgba(232,184,109,0.6); font-size: 0.95em;
-    line-height: 1.7; margin-bottom: 30px; max-width: 600px;
+    color: var(--text-secondary); font-size: 0.9em;
+    line-height: 1.8; margin-bottom: 32px; max-width: 560px; font-weight: 300;
   }
-  body.light-mode .section-title { color: var(--brown-dark); }
-  body.light-mode .section-sub { color: rgba(44,26,14,0.6); }
-  body.light-mode .section-label { color: var(--brown-mid); }
-  body.light-mode .hero h1 { color: var(--brown-dark); }
-  body.light-mode .hero-en { color: rgba(44,26,14,0.5); }
-  body.light-mode .hero-tagline { color: rgba(44,26,14,0.6); }
-  body.light-mode .hero-badge { color: var(--brown-mid); border-color: rgba(160,98,42,0.3); }
+  body.light-mode .section-title { color: #1A1714; }
+  body.light-mode .section-sub { color: rgba(26,23,20,0.55); }
+  body.light-mode .section-label { color: var(--copper); border-bottom-color: var(--border); }
+  body.light-mode .hero h1 { color: #1A1714; }
+  body.light-mode .hero-en { color: rgba(26,23,20,0.4); }
+  body.light-mode .hero-tagline { color: rgba(26,23,20,0.5); }
+  body.light-mode .hero-badge { color: var(--copper); border-color: var(--border-hover); }
 
   /* Story steps */
   .story-steps {
@@ -205,20 +224,20 @@
     margin: 30px 0 10px;
   }
   .story-step {
-    text-align: center; padding: 20px 12px; border-radius: 12px;
-    background: rgba(160,98,42,0.1); border: 1px solid rgba(212,137,42,0.15);
+    text-align: center; padding: 20px 12px; border-radius: 3px;
+    background: var(--surface-2); border: 1px solid var(--border);
     transition: all 0.3s;
   }
-  .story-step:hover { background: rgba(160,98,42,0.2); transform: translateY(-3px); }
+  .story-step:hover { background: var(--surface-3); transform: translateY(-3px); border-color: var(--border-hover); }
   .story-step-num {
-    font-size: 0.7em; color: var(--amber); letter-spacing: 2px;
+    font-size: 0.7em; color: var(--copper); letter-spacing: 2px;
     text-transform: uppercase; margin-bottom: 8px;
   }
   .story-step-icon { font-size: 2em; margin-bottom: 8px; display: block; }
-  .story-step-title { font-weight: 700; color: var(--gold); font-size: 0.95em; margin-bottom: 4px; }
-  .story-step-desc { font-size: 0.8em; color: rgba(232,184,109,0.5); line-height: 1.5; }
-  body.light-mode .story-step { background: rgba(212,137,42,0.06); }
-  body.light-mode .story-step-title { color: var(--brown-dark); }
+  .story-step-title { font-weight: 700; color: var(--copper-light); font-size: 0.95em; margin-bottom: 4px; }
+  .story-step-desc { font-size: 0.8em; color: var(--text-secondary); line-height: 1.5; }
+  body.light-mode .story-step { background: var(--surface-2); }
+  body.light-mode .story-step-title { color: #2E2922; }
   body.light-mode .story-step-desc { color: rgba(44,26,14,0.5); }
 
   /* Story CTA buttons */
@@ -227,33 +246,33 @@
     margin: 35px 0 10px; max-width: 600px;
   }
   .story-cta-btn {
-    padding: 20px 16px; border: 2px solid rgba(212,137,42,0.3);
-    border-radius: 16px; background: rgba(160,98,42,0.1);
+    padding: 20px 16px; border: 1px solid var(--border-hover);
+    border-radius: 3px; background: var(--surface-2);
     cursor: pointer; transition: all 0.3s; font-family: inherit;
-    text-align: center; color: var(--gold); font-size: 1.05em; font-weight: 700;
+    text-align: center; color: var(--copper-light); font-size: 1.05em; font-weight: 700;
     display: flex; flex-direction: column; align-items: center; gap: 8px;
   }
   .story-cta-btn:hover {
-    background: rgba(212,137,42,0.2); border-color: var(--amber);
-    transform: translateY(-3px); box-shadow: 0 6px 20px rgba(212,137,42,0.2);
+    background: var(--surface-3); border-color: var(--copper);
+    transform: translateY(-3px); box-shadow: 0 6px 20px rgba(184,125,86,0.15);
   }
-  .story-cta-quick { border-color: rgba(212,137,42,0.5); background: rgba(212,137,42,0.15); }
+  .story-cta-quick { border-color: var(--copper); background: rgba(184,125,86,0.1); }
   .story-cta-sub {
-    font-size: 0.72em; font-weight: 400; color: rgba(232,184,109,0.55);
+    font-size: 0.72em; font-weight: 400; color: var(--text-secondary);
     display: block;
   }
   body.light-mode .story-cta-btn {
-    background: rgba(212,137,42,0.06); color: var(--brown-dark);
+    background: var(--surface); color: #2E2922; border-color: var(--border);
   }
   body.light-mode .story-cta-sub { color: rgba(44,26,14,0.45); }
-  body.light-mode .story-cta-btn:hover { background: rgba(212,137,42,0.15); }
+  body.light-mode .story-cta-btn:hover { background: rgba(184,125,86,0.15); }
   @media (max-width: 600px) {
     .story-cta-group { grid-template-columns: 1fr; max-width: 100%; }
   }
 
   /* Quick method popular badge */
   .quick-popular-badge {
-    font-size: 0.65em; background: var(--amber); color: var(--brown-dark);
+    font-size: 0.65em; background: var(--copper); color: #2E2922;
     padding: 2px 8px; border-radius: 10px; font-weight: 600;
     position: absolute; top: -6px; right: -6px;
   }
@@ -262,68 +281,68 @@
   /* About section */
   .about-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; margin-top: 20px; }
   .about-card {
-    padding: 24px; border-radius: 12px;
-    background: rgba(160,98,42,0.1); border: 1px solid rgba(212,137,42,0.15);
+    padding: 24px; border-radius: 3px;
+    background: var(--surface-2); border: 1px solid var(--border);
   }
-  .about-card-title { font-weight: 700; color: var(--gold); margin-bottom: 8px; font-size: 0.95em; }
-  .about-card-text { font-size: 0.88em; color: rgba(232,184,109,0.65); line-height: 1.7; }
-  body.light-mode .about-card { background: rgba(212,137,42,0.06); }
-  body.light-mode .about-card-title { color: var(--brown-dark); }
+  .about-card-title { font-weight: 700; color: var(--copper-light); margin-bottom: 8px; font-size: 0.95em; }
+  .about-card-text { font-size: 0.88em; color: var(--text-secondary); line-height: 1.7; }
+  body.light-mode .about-card { background: var(--surface-2); }
+  body.light-mode .about-card-title { color: #2E2922; }
   body.light-mode .about-card-text { color: rgba(44,26,14,0.6); }
 
   /* Experience section */
   .exp-cards { display: grid; grid-template-columns: repeat(3, 1fr); gap: 16px; margin-top: 20px; }
   .exp-card {
-    padding: 24px 18px; border-radius: 12px; text-align: center;
-    background: rgba(160,98,42,0.1); border: 1px solid rgba(212,137,42,0.15);
+    padding: 24px 18px; border-radius: 3px; text-align: center;
+    background: var(--surface-2); border: 1px solid var(--border);
     transition: all 0.3s;
   }
-  .exp-card:hover { background: rgba(160,98,42,0.2); transform: translateY(-2px); }
+  .exp-card:hover { background: var(--surface-3); transform: translateY(-2px); border-color: var(--border-hover); }
   .exp-card-icon { font-size: 1.8em; margin-bottom: 10px; display: block; }
-  .exp-card-title { font-weight: 700; color: var(--gold); font-size: 0.95em; margin-bottom: 6px; }
-  .exp-card-text { font-size: 0.82em; color: rgba(232,184,109,0.55); line-height: 1.6; }
-  body.light-mode .exp-card { background: rgba(212,137,42,0.06); }
-  body.light-mode .exp-card-title { color: var(--brown-dark); }
+  .exp-card-title { font-weight: 700; color: var(--copper-light); font-size: 0.95em; margin-bottom: 6px; }
+  .exp-card-text { font-size: 0.82em; color: var(--text-secondary); line-height: 1.6; }
+  body.light-mode .exp-card { background: var(--surface-2); }
+  body.light-mode .exp-card-title { color: #2E2922; }
   body.light-mode .exp-card-text { color: rgba(44,26,14,0.5); }
 
   /* Section divider */
   .section-divider {
-    width: 60px; height: 1px; background: rgba(212,137,42,0.25);
+    width: 60px; height: 1px; background: rgba(184,125,86,0.25);
     margin: 0 auto 50px; position: relative;
   }
   .section-divider::after {
     content: ''; position: absolute; left: 50%; top: -3px;
     transform: translateX(-50%); width: 6px; height: 6px;
-    border-radius: 50%; background: var(--amber);
+    border-radius: 50%; background: var(--copper);
   }
 
   /* Back to top */
   .back-to-top {
     position: fixed; bottom: 24px; right: 24px; z-index: 100;
-    width: 44px; height: 44px; border-radius: 50%;
-    background: rgba(212,137,42,0.85); color: var(--brown-dark);
-    border: none; font-size: 1.2em; cursor: pointer;
-    box-shadow: 0 3px 12px rgba(0,0,0,0.3);
+    width: 36px; height: 36px; border-radius: 50%;
+    background: var(--surface-2); color: var(--copper-light);
+    border: 1px solid var(--border); font-size: 0.9em; cursor: pointer;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.2);
     opacity: 0; transform: translateY(20px);
     transition: all 0.3s; display: flex; align-items: center; justify-content: center;
   }
-  .back-to-top.show { opacity: 1; transform: translateY(0); }
-  .back-to-top:hover { background: var(--gold); transform: translateY(-2px); }
+  .back-to-top.show { opacity: 0.7; transform: translateY(0); }
+  .back-to-top:hover { opacity: 1; border-color: var(--copper); }
 
   .page-h1 {
-    font-size: 2.5em; font-family: 'Playfair Display', serif; margin: 30px 0 10px;
-    color: var(--gold); text-align: center;
+    font-size: 2.2em; font-family: 'Playfair Display', serif; margin: 30px 0 10px;
+    color: var(--copper-light); text-align: center; font-weight: 400;
   }
-  .page-sub { color: rgba(232, 184, 109, 0.7); text-align: center; margin-bottom: 30px; }
-  .page-container { max-width: 900px; width: 100%; margin: 0 auto; }
+  .page-sub { color: var(--text-secondary); text-align: center; margin-bottom: 30px; font-weight: 300; font-size: 0.92em; }
+  .page-container { max-width: 680px; width: 100%; margin: 0 auto; }
 
   .mode-toggle {
     position: fixed; top: 20px; right: 20px; z-index: 100;
-    background: rgba(0,0,0,0.3); border: none; color: var(--gold);
-    padding: 10px 15px; border-radius: 50px; cursor: pointer;
-    font-size: 1em; transition: background 0.3s;
+    background: var(--surface-2); border: 1px solid var(--border); color: var(--copper-light);
+    padding: 8px 14px; border-radius: 3px; cursor: pointer;
+    font-size: 0.9em; transition: all 0.3s;
   }
-  .mode-toggle:hover { background: rgba(0,0,0,0.5); }
+  .mode-toggle:hover { border-color: var(--copper); }
 
   .method-grid {
     display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
@@ -338,48 +357,54 @@
   }
 
   .method-card {
-    background: rgba(160, 98, 42, 0.2); border: 2px solid rgba(212,137,42,0.4);
-    border-radius: 12px; padding: 15px; cursor: pointer;
-    transition: all 0.3s ease; position: relative; overflow: hidden;
+    background: var(--surface); border: 1px solid var(--border);
+    border-radius: 8px; padding: 18px; cursor: pointer;
+    transition: all 0.35s ease; position: relative; overflow: hidden;
   }
   .method-card:hover {
-    background: rgba(160, 98, 42, 0.4); border-color: rgba(212,137,42,0.8); transform: translateY(-2px);
+    background: var(--surface-2); border-color: var(--border-hover); transform: translateY(-2px);
+    box-shadow: 0 8px 24px rgba(0,0,0,0.2);
   }
   .method-card.active {
-    background: rgba(212,137,42,0.3); border-color: var(--amber); box-shadow: 0 0 20px rgba(212,137,42,0.3);
+    background: var(--surface-2); border-color: var(--copper);
+    box-shadow: 0 0 0 1px var(--copper), 0 8px 24px rgba(0,0,0,0.2);
   }
-  .method-badge { font-size: 0.75em; background: rgba(212,137,42,0.4); color: var(--warm-white);
-    padding: 4px 10px; border-radius: 20px; display: inline-block; margin-bottom: 8px;
+  .method-badge { font-size: 0.65em; background: transparent; color: var(--copper);
+    padding: 3px 10px; border-radius: 2px; display: inline-block; margin-bottom: 8px;
+    border: 1px solid var(--border-hover); letter-spacing: 1px; text-transform: uppercase; font-weight: 500;
   }
-  .method-name { font-size: 1.1em; font-weight: 700; color: var(--gold); margin-bottom: 5px; }
-  .method-ratio { font-size: 0.85em; color: rgba(232,184,109,0.6); margin-bottom: 3px; }
-  .method-desc { font-size: 0.8em; color: rgba(232,184,109,0.5); line-height: 1.4; }
+  .method-name { font-size: 1.05em; font-weight: 500; color: var(--copper-light); margin-bottom: 5px; }
+  .method-ratio { font-size: 0.82em; color: var(--text-secondary); margin-bottom: 3px; font-weight: 300; }
+  .method-desc { font-size: 0.78em; color: var(--text-secondary); line-height: 1.5; font-weight: 300; }
 
-  .selector-label { color: rgba(232,184,109,0.6); font-size: 0.9em; margin-top: 20px; margin-bottom: 8px; font-weight: normal; }
-  h2.selector-label, h2.calc-title { font-size: 0.95em; }
-  .step-item.active-step { background: rgba(212,137,42,0.12); border-left-color: var(--amber); border-left-width: 4px; }
-  body.light-mode .step-item.active-step { background: rgba(212,137,42,0.1); }
+  .selector-label { color: var(--text-secondary); font-size: 0.82em; margin-top: 24px; margin-bottom: 10px; font-weight: 500; letter-spacing: 1px; text-transform: uppercase; }
+  h2.selector-label, h2.calc-title { font-size: 0.85em; }
+  .step-item.active-step { background: rgba(200,149,108,0.08); border-left-color: var(--copper); border-left-width: 4px; }
+  body.light-mode .step-item.active-step { background: rgba(155,115,82,0.06); }
   .selector-card {
-    background: rgba(160, 98, 42, 0.15); border: 1px solid rgba(212,137,42,0.2);
-    border-radius: 8px; padding: 12px; margin-bottom: 15px;
+    background: var(--surface); border: 1px solid var(--border);
+    border-radius: 8px; padding: 16px; margin-bottom: 16px;
   }
   .selector-row { display: flex; gap: 10px; margin-bottom: 10px; align-items: center; }
-  .selector-row label { flex: 1; font-size: 0.9em; color: rgba(232,184,109,0.7); }
+  .selector-row label { flex: 1; font-size: 0.85em; color: var(--text-secondary); font-weight: 400; }
   .selector-row input, .selector-row select {
-    flex: 1; padding: 8px; border: 1px solid rgba(212,137,42,0.3);
-    background: rgba(160, 98, 42, 0.2); color: var(--gold); border-radius: 6px;
-    font-family: inherit; font-size: 16px;
+    flex: 1; padding: 10px 12px; border: 1px solid var(--border);
+    background: var(--surface-2); color: var(--text-primary); border-radius: 4px;
+    font-family: inherit; font-size: 16px; transition: border-color 0.2s;
   }
-  .selector-row input::placeholder { color: rgba(232,184,109,0.3); }
+  .selector-row input:focus, .selector-row select:focus {
+    outline: none; border-color: var(--copper);
+  }
+  .selector-row input::placeholder { color: var(--text-secondary); }
 
   .calc-panel {
-    background: rgba(160, 98, 42, 0.15); border: 1px solid rgba(212,137,42,0.2);
-    border-radius: 8px; padding: 20px; margin: 20px 0;
+    background: var(--surface); border: 1px solid var(--border);
+    border-radius: 8px; padding: 24px; margin: 24px 0;
   }
-  .calc-title { font-size: 0.9em; color: rgba(232,184,109,0.6); margin-bottom: 12px; }
+  .calc-title { font-size: 0.85em; color: var(--copper-light); margin-bottom: 16px; font-weight: 500; letter-spacing: 1px; }
   .grind-visual {
-    margin-bottom: 15px; padding: 15px; background: rgba(212,137,42,0.06);
-    border-radius: 8px; border: 1px solid rgba(212,137,42,0.15);
+    margin-bottom: 15px; padding: 15px; background: var(--surface-2);
+    border-radius: 3px; border: 1px solid var(--border);
   }
 
   .calc-grid {
@@ -387,80 +412,88 @@
     gap: 12px; margin-bottom: 15px;
   }
   .calc-item {
-    background: rgba(0,0,0,0.2); border-radius: 6px; padding: 10px; text-align: center;
+    background: var(--surface-2); border-radius: 3px; padding: 10px; text-align: center;
+    border: 1px solid var(--border);
   }
-  .calc-value { font-size: 1.5em; font-weight: 700; color: var(--amber); }
-  .calc-label { font-size: 0.75em; color: rgba(232,184,109,0.5); margin-top: 5px; }
+  .calc-value { font-size: 1.5em; font-weight: 700; color: var(--copper); }
+  .calc-label { font-size: 0.75em; color: var(--text-secondary); margin-top: 5px; }
 
   .button-group { display: flex; gap: 10px; flex-wrap: wrap; }
   .btn-primary, .btn-secondary {
-    padding: 10px 16px; border: none; border-radius: 6px;
-    cursor: pointer; font-family: inherit; font-size: 0.9em;
-    transition: all 0.3s ease;
+    padding: 10px 20px; border: none; border-radius: 3px;
+    cursor: pointer; font-family: inherit; font-size: 0.85em;
+    transition: all 0.3s ease; letter-spacing: 0.5px;
   }
   .btn-primary {
-    background: var(--amber); color: var(--brown-dark); font-weight: 600;
+    background: var(--copper); color: #0F0D0A; font-weight: 600;
   }
-  .btn-primary:hover { background: var(--gold); transform: translateY(-2px); }
+  .btn-primary:hover { background: var(--copper-light); }
   .btn-secondary {
-    background: rgba(212,137,42,0.3); color: var(--gold); border: 1px solid rgba(212,137,42,0.5);
+    background: transparent; color: var(--copper-light); border: 1px solid var(--border-hover);
   }
-  .btn-secondary:hover { background: rgba(212,137,42,0.5); }
+  .btn-secondary:hover { background: rgba(184,125,86,0.1); border-color: var(--copper); }
 
   /* Rest days skip button */
   .rest-skip-btn {
-    padding: 6px 14px; border-radius: 20px; border: 1px solid rgba(212,137,42,0.4);
-    background: rgba(212,137,42,0.15); color: var(--gold); font-size: 0.8em;
+    padding: 6px 14px; border-radius: 3px; border: 1px solid var(--border-hover);
+    background: transparent; color: var(--copper-light); font-size: 0.8em;
     cursor: pointer; transition: all 0.2s; white-space: nowrap; font-family: inherit;
   }
-  .rest-skip-btn:hover, .rest-skip-btn.active { background: rgba(212,137,42,0.35); border-color: var(--amber); }
+  .rest-skip-btn:hover, .rest-skip-btn.active { background: rgba(184,125,86,0.15); border-color: var(--copper); }
 
   /* Dose quick buttons */
   .dose-quick-btns {
     display: flex; gap: 8px; margin-bottom: 15px; flex-wrap: wrap;
   }
   .dose-btn {
-    flex: 1; min-width: 50px; padding: 8px 4px; border-radius: 20px;
-    border: 1px solid rgba(212,137,42,0.3); background: rgba(212,137,42,0.08);
-    color: rgba(232,184,109,0.7); font-size: 0.85em; font-weight: 600;
-    cursor: pointer; transition: all 0.2s; font-family: inherit; text-align: center;
+    flex: 1; min-width: 50px; padding: 10px 4px; border-radius: 4px;
+    border: 1px solid var(--border); background: var(--surface);
+    color: var(--text-secondary); font-size: 0.82em; font-weight: 500;
+    cursor: pointer; transition: all 0.25s; font-family: inherit; text-align: center;
+    display: flex; flex-direction: column; align-items: center; gap: 2px;
   }
-  .dose-btn:hover { background: rgba(212,137,42,0.2); color: var(--gold); }
+  .dose-hint {
+    display: block; font-size: 0.65em; font-weight: 300;
+    color: var(--text-secondary); line-height: 1; opacity: 0.6;
+  }
+  body.light-mode .dose-hint { color: rgba(26,23,20,0.35); }
+  .dose-btn:hover { background: var(--surface-2); color: var(--text-primary); }
   .dose-btn.active {
-    background: rgba(212,137,42,0.35); color: var(--gold);
-    border-color: var(--amber); box-shadow: 0 0 8px rgba(212,137,42,0.2);
+    background: var(--copper); color: #0F0D0A;
+    border-color: var(--copper); font-weight: 600;
   }
+  .dose-btn.active .dose-hint { color: rgba(15,13,10,0.5); opacity: 1; }
 
   /* Start timer button */
   .btn-start-timer {
     display: inline-flex; align-items: center; gap: 8px;
-    padding: 12px 28px; border: none; border-radius: 30px;
-    background: linear-gradient(135deg, var(--amber), var(--gold));
-    color: var(--brown-dark); font-weight: 700; font-size: 1em;
+    padding: 14px 32px; border: 1px solid var(--copper); border-radius: 3px;
+    background: var(--copper);
+    color: #0F0D0A; font-weight: 600; font-size: 0.9em;
     cursor: pointer; transition: all 0.3s; font-family: inherit;
-    box-shadow: 0 4px 15px rgba(212,137,42,0.3);
+    letter-spacing: 1px;
   }
-  .btn-start-timer:hover { transform: translateY(-2px); box-shadow: 0 6px 20px rgba(212,137,42,0.4); }
+  .btn-start-timer:hover { background: var(--copper-light); border-color: var(--copper-light); }
   .btn-start-icon { font-size: 0.85em; }
 
   /* Timer redesign */
   .timer-display {
-    background: linear-gradient(135deg, rgba(212,137,42,0.12), rgba(160,98,42,0.18));
-    border: 1px solid rgba(212,137,42,0.25); border-radius: 16px;
+    background: var(--surface);
+    border: 1px solid var(--border); border-radius: 8px;
     padding: 30px 20px 25px; text-align: center; margin: 20px 0;
-    color: var(--gold);
+    color: var(--text-primary);
   }
   .timer-display.timer-sticky {
     position: sticky; top: 0; z-index: 90;
-    backdrop-filter: blur(16px); -webkit-backdrop-filter: blur(16px);
-    background: linear-gradient(135deg, rgba(30,18,8,0.92), rgba(45,28,12,0.95));
-    border-radius: 0 0 16px 16px; margin-top: 0;
-    box-shadow: 0 4px 20px rgba(0,0,0,0.3);
-    padding: 15px 20px 12px;
+    backdrop-filter: blur(20px); -webkit-backdrop-filter: blur(20px);
+    background: rgba(15,13,10,0.92);
+    border-radius: 0 0 8px 8px; margin-top: 0;
+    box-shadow: 0 4px 24px rgba(0,0,0,0.4);
+    padding: 15px 20px 12px; border-color: transparent;
   }
   body.light-mode .timer-display.timer-sticky {
-    background: linear-gradient(135deg, rgba(255,252,245,0.95), rgba(248,240,225,0.95));
-    box-shadow: 0 4px 20px rgba(0,0,0,0.08);
+    background: rgba(248,245,240,0.95);
+    box-shadow: 0 4px 20px rgba(0,0,0,0.06);
   }
   .timer-display.timer-sticky .timer-ring-wrap { width: 100px; height: 100px; margin-bottom: 8px; }
   .timer-display.timer-sticky .timer-time { font-size: 1.6em; }
@@ -470,10 +503,10 @@
   }
   .timer-ring { width: 100%; height: 100%; transform: rotate(-90deg); }
   .timer-ring-bg {
-    fill: none; stroke: rgba(212,137,42,0.15); stroke-width: 6;
+    fill: none; stroke: rgba(184,125,86,0.15); stroke-width: 6;
   }
   .timer-ring-progress {
-    fill: none; stroke: var(--amber); stroke-width: 6;
+    fill: none; stroke: var(--copper); stroke-width: 6;
     stroke-linecap: round; stroke-dasharray: 326.73; stroke-dashoffset: 326.73;
     transition: stroke-dashoffset 0.8s ease;
   }
@@ -482,14 +515,14 @@
     text-align: center;
   }
   .timer-time { font-size: 2.4em; font-weight: 700; letter-spacing: 2px; font-family: 'Courier New', monospace; line-height: 1; }
-  .timer-label { font-size: 0.8em; color: rgba(232,184,109,0.6); margin-top: 4px; }
+  .timer-label { font-size: 0.8em; color: var(--text-secondary); margin-top: 4px; }
   .timer-controls { display: flex; gap: 12px; justify-content: center; }
   .timer-ctrl-btn {
-    width: 48px; height: 48px; border-radius: 50%; border: 1px solid rgba(212,137,42,0.3);
-    background: rgba(212,137,42,0.12); color: var(--gold); font-size: 1.3em;
+    width: 48px; height: 48px; border-radius: 50%; border: 1px solid var(--border-hover);
+    background: var(--surface-2); color: var(--copper-light); font-size: 1.3em;
     cursor: pointer; transition: all 0.2s; display: flex; align-items: center; justify-content: center;
   }
-  .timer-ctrl-btn:hover { background: rgba(212,137,42,0.3); transform: scale(1.08); }
+  .timer-ctrl-btn:hover { background: rgba(184,125,86,0.15); transform: scale(1.08); border-color: var(--copper); }
 
   /* Stepper +/- buttons */
   .stepper-wrap { display: flex; align-items: center; gap: 0; flex: 1; }
@@ -497,46 +530,46 @@
   .stepper-wrap input::-webkit-inner-spin-button,
   .stepper-wrap input::-webkit-outer-spin-button { -webkit-appearance: none; margin: 0; }
   .stepper-btn {
-    width: 36px; height: 36px; border: 1px solid rgba(212,137,42,0.3);
-    background: rgba(212,137,42,0.12); color: var(--gold); font-size: 1.2em;
+    width: 36px; height: 36px; border: 1px solid var(--border-hover);
+    background: var(--surface-2); color: var(--copper-light); font-size: 1.2em;
     cursor: pointer; transition: all 0.15s; display: flex; align-items: center;
     justify-content: center; flex-shrink: 0; font-family: inherit;
   }
-  .stepper-btn:first-child { border-radius: 6px 0 0 6px; }
-  .stepper-btn:last-child { border-radius: 0 6px 6px 0; }
-  .stepper-btn:hover { background: rgba(212,137,42,0.3); }
+  .stepper-btn:first-child { border-radius: 3px 0 0 3px; }
+  .stepper-btn:last-child { border-radius: 0 3px 3px 0; }
+  .stepper-btn:hover { background: rgba(184,125,86,0.2); border-color: var(--copper); }
   .stepper-btn:active { transform: scale(0.92); }
-  body.light-mode .stepper-btn { color: var(--brown-dark); }
+  body.light-mode .stepper-btn { color: #2E2922; }
 
   /* Slider styling */
   input[type="range"] {
     -webkit-appearance: none; appearance: none; height: 6px; border-radius: 3px;
-    background: linear-gradient(90deg, rgba(212,137,42,0.3), rgba(212,137,42,0.5));
+    background: linear-gradient(90deg, rgba(184,125,86,0.3), rgba(184,125,86,0.5));
     outline: none; cursor: pointer;
   }
   input[type="range"]::-webkit-slider-thumb {
     -webkit-appearance: none; width: 22px; height: 22px; border-radius: 50%;
-    background: var(--amber); border: 2px solid var(--gold);
-    box-shadow: 0 2px 6px rgba(212,137,42,0.4); cursor: pointer; transition: transform 0.15s;
+    background: var(--copper); border: 2px solid var(--copper);
+    box-shadow: 0 2px 6px rgba(184,125,86,0.4); cursor: pointer; transition: transform 0.15s;
   }
   input[type="range"]::-webkit-slider-thumb:hover { transform: scale(1.2); }
   input[type="range"]::-moz-range-thumb {
     width: 22px; height: 22px; border-radius: 50%;
-    background: var(--amber); border: 2px solid var(--gold);
-    box-shadow: 0 2px 6px rgba(212,137,42,0.4); cursor: pointer;
+    background: var(--copper); border: 2px solid var(--copper);
+    box-shadow: 0 2px 6px rgba(184,125,86,0.4); cursor: pointer;
   }
   body.light-mode input[type="range"] {
-    background: linear-gradient(90deg, rgba(160,98,42,0.2), rgba(160,98,42,0.35));
+    background: linear-gradient(90deg, rgba(184,125,86,0.15), rgba(184,125,86,0.25));
   }
 
   /* Ratio slider */
   .ratio-row { display: flex; align-items: center; gap: 10px; margin-bottom: 12px; }
-  .ratio-row label { flex-shrink: 0; font-size: 0.9em; color: rgba(232,184,109,0.7); }
+  .ratio-row label { flex-shrink: 0; font-size: 0.9em; color: var(--text-secondary); }
   .ratio-value {
-    min-width: 52px; text-align: center; font-weight: 700; color: var(--amber);
+    min-width: 52px; text-align: center; font-weight: 700; color: var(--copper);
     font-size: 0.95em;
   }
-  body.light-mode .ratio-row label { color: var(--brown-dark); }
+  body.light-mode .ratio-row label { color: #2E2922; }
 
   /* Method icon */
   .method-icon { width: 40px; height: 40px; margin-bottom: 6px; opacity: 0.85; }
@@ -545,61 +578,61 @@
   /* Radar chart */
   .radar-wrap {
     margin: 15px 0; padding: 15px; text-align: center;
-    background: rgba(160,98,42,0.1); border: 1px solid rgba(212,137,42,0.2);
-    border-radius: 8px;
+    background: var(--surface-2); border: 1px solid var(--border);
+    border-radius: 3px;
   }
-  .radar-title { font-size: 0.85em; color: rgba(232,184,109,0.6); margin-bottom: 8px; }
+  .radar-title { font-size: 0.85em; color: var(--text-secondary); margin-bottom: 8px; }
   .radar-svg { max-width: 240px; margin: 0 auto; display: block; }
   .radar-desc {
     font-size: 0.88em; font-style: italic; text-align: center;
-    color: rgba(232,184,109,0.6); margin-top: 12px;
+    color: var(--text-secondary); margin-top: 12px;
   }
-  body.light-mode .radar-wrap { background: rgba(212,137,42,0.06); }
+  body.light-mode .radar-wrap { background: var(--surface-2); }
   body.light-mode .radar-desc { color: rgba(44,26,14,0.55); }
 
   .steps-container {
-    background: rgba(160, 98, 42, 0.15); border: 1px solid rgba(212,137,42,0.2);
-    border-radius: 8px; padding: 20px; margin: 20px 0;
+    background: var(--surface-2); border: 1px solid var(--border);
+    border-radius: 3px; padding: 20px; margin: 20px 0;
   }
   .steps-group-title {
-    font-size: 0.95em; font-weight: 600; color: var(--gold); margin-top: 15px; margin-bottom: 10px;
+    font-size: 0.95em; font-weight: 600; color: var(--copper-light); margin-top: 15px; margin-bottom: 10px;
   }
   .steps-group-title:first-child { margin-top: 0; }
   .steps-group-title::before {
     content: ''; display: inline-block; width: 8px; height: 8px;
-    border-radius: 50%; margin-right: 8px; background: var(--amber);
+    border-radius: 50%; margin-right: 8px; background: var(--copper);
   }
-  .steps-group-title.amber::before { background: var(--amber); }
+  .steps-group-title.amber::before { background: var(--copper); }
   .steps-group-title.green::before { background: #22C55E; }
 
   .step-item {
-    border-left: 3px solid rgba(212,137,42,0.4); padding-left: 15px; margin-bottom: 12px;
-    padding-bottom: 12px; color: rgba(232,184,109,0.8);
+    border-left: 2px solid var(--border-hover); padding-left: 18px; margin-bottom: 16px;
+    padding-bottom: 14px; color: var(--text-primary);
   }
-  .step-num { font-weight: 700; color: var(--amber); margin-bottom: 4px; font-size: 1em; }
-  .step-time { font-size: 0.9em; color: rgba(212,137,42,0.6); }
-  .step-title { font-size: 1.1em; font-weight: 600; color: var(--gold); margin: 4px 0; }
-  .step-note { font-size: 0.95em; color: rgba(232,184,109,0.6); line-height: 1.5; margin-top: 4px; }
-  .step-water { display: flex; align-items: center; gap: 8px; margin-top: 6px; flex-wrap: wrap; }
-  .step-water-pour { background: rgba(212,137,42,0.25); color: var(--gold); font-weight: 700; font-size: 1em; padding: 4px 12px; border-radius: 12px; white-space: nowrap; }
-  .step-water-cum { font-size: 0.9em; color: rgba(232,184,109,0.7); white-space: nowrap; }
-  .step-water-bar { height: 6px; border-radius: 3px; background: rgba(212,137,42,0.12); flex: 1; min-width: 60px; overflow: hidden; box-shadow: inset 0 1px 2px rgba(0,0,0,0.1); }
-  .step-water-bar-fill { height: 100%; border-radius: 3px; background: linear-gradient(90deg, var(--amber), var(--gold)); transition: width 0.5s ease; box-shadow: 0 0 6px rgba(212,137,42,0.3); }
-  body.light-mode .step-water-pour { background: rgba(139,90,43,0.15); color: var(--brown-dark); }
+  .step-num { font-weight: 500; color: var(--copper); margin-bottom: 4px; font-size: 0.8em; letter-spacing: 1px; text-transform: uppercase; }
+  .step-time { font-size: 0.82em; color: var(--text-secondary); font-weight: 300; }
+  .step-title { font-size: 1em; font-weight: 500; color: var(--copper-light); margin: 4px 0; }
+  .step-note { font-size: 0.88em; color: var(--text-secondary); line-height: 1.6; margin-top: 4px; font-weight: 300; }
+  .step-water { display: flex; align-items: center; gap: 8px; margin-top: 8px; flex-wrap: wrap; }
+  .step-water-pour { background: var(--surface-2); color: var(--copper-light); font-weight: 600; font-size: 0.9em; padding: 4px 14px; border-radius: 3px; white-space: nowrap; border: 1px solid var(--border); }
+  .step-water-cum { font-size: 0.82em; color: var(--text-secondary); white-space: nowrap; font-weight: 300; }
+  .step-water-bar { height: 4px; border-radius: 2px; background: var(--border); flex: 1; min-width: 60px; overflow: hidden; }
+  .step-water-bar-fill { height: 100%; border-radius: 2px; background: linear-gradient(90deg, var(--copper), var(--copper-light)); transition: width 0.5s ease; }
+  body.light-mode .step-water-pour { background: rgba(139,90,43,0.15); color: #2E2922; }
   body.light-mode .step-water-cum { color: rgba(139,90,43,0.6); }
 
   .guide-card {
-    background: rgba(212,137,42,0.1); border: 1px solid rgba(212,137,42,0.3);
-    border-radius: 8px; padding: 0; margin: 20px 0; overflow: hidden;
+    background: var(--surface); border: 1px solid var(--border);
+    border-radius: 6px; padding: 0; margin: 20px 0; overflow: hidden;
   }
   .guide-header {
-    background: rgba(212,137,42,0.2); padding: 15px; cursor: pointer;
+    background: var(--surface-2); padding: 16px 18px; cursor: pointer;
     display: flex; justify-content: space-between; align-items: center;
     transition: background 0.3s;
   }
-  .guide-header:hover { background: rgba(212,137,42,0.3); }
-  .guide-header-text { font-weight: 600; color: var(--gold); font-size: 0.95em; }
-  .guide-toggle { color: var(--amber); font-size: 1.2em; transition: transform 0.3s; }
+  .guide-header:hover { background: var(--surface-3); }
+  .guide-header-text { font-weight: 600; color: var(--copper-light); font-size: 0.95em; }
+  .guide-toggle { color: var(--copper); font-size: 1.2em; transition: transform 0.3s; }
   .guide-toggle.open { transform: rotate(180deg); }
   .guide-content {
     max-height: 0; overflow: hidden; transition: max-height 0.4s ease;
@@ -609,45 +642,45 @@
     max-height: 3000px; padding: 15px;
   }
   .guide-section {
-    margin-bottom: 15px; color: rgba(232,184,109,0.8);
+    margin-bottom: 15px; color: var(--text-primary);
   }
   .guide-section-title {
-    font-weight: 600; color: var(--gold); font-size: 0.9em; margin-bottom: 6px;
+    font-weight: 600; color: var(--copper-light); font-size: 0.9em; margin-bottom: 6px;
   }
   .guide-section-text {
-    font-size: 0.85em; line-height: 1.6; color: rgba(232,184,109,0.75);
+    font-size: 0.85em; line-height: 1.6; color: var(--text-secondary);
   }
   .guide-section ul {
     list-style: none; padding-left: 0; margin-top: 6px;
   }
   .guide-section li {
     font-size: 0.85em; line-height: 1.5; margin-bottom: 4px;
-    color: rgba(232,184,109,0.75); padding-left: 20px; position: relative;
+    color: var(--text-secondary); padding-left: 20px; position: relative;
   }
   .guide-section li::before {
-    content: '•'; position: absolute; left: 8px; color: var(--amber);
+    content: '•'; position: absolute; left: 8px; color: var(--copper);
   }
 
   .knowledge-tip {
-    background: rgba(212,137,42,0.08); border: 1px solid rgba(212,137,42,0.25);
-    border-radius: 6px; padding: 0; margin-bottom: 10px; overflow: hidden;
+    background: var(--surface-2); border: 1px solid var(--border);
+    border-radius: 3px; padding: 0; margin-bottom: 10px; overflow: hidden;
   }
   .knowledge-tip-header {
     padding: 10px 12px; cursor: pointer; display: flex;
     justify-content: space-between; align-items: center;
     transition: background 0.2s;
   }
-  .knowledge-tip-header:hover { background: rgba(212,137,42,0.12); }
+  .knowledge-tip-header:hover { background: var(--surface-3); }
   .knowledge-tip-title {
-    font-size: 0.85em; font-weight: 600; color: var(--amber);
+    font-size: 0.85em; font-weight: 600; color: var(--copper);
     display: flex; align-items: center; gap: 6px;
   }
   .knowledge-tip-title::before { content: '💡'; font-size: 1em; }
-  .knowledge-tip-toggle { color: rgba(212,137,42,0.6); font-size: 0.9em; }
+  .knowledge-tip-toggle { color: var(--text-secondary); font-size: 0.9em; }
   .knowledge-tip-toggle.open { transform: rotate(180deg); }
   .knowledge-tip-text {
     max-height: 0; overflow: hidden; transition: max-height 0.3s;
-    color: rgba(232,184,109,0.7); font-size: 0.8em; line-height: 1.5;
+    color: var(--text-secondary); font-size: 0.8em; line-height: 1.5;
   }
   .knowledge-tip-text.open {
     max-height: 500px; padding: 0 12px 10px 12px;
@@ -658,31 +691,32 @@
     margin: 20px 0;
   }
   .journal-card {
-    background: rgba(212,137,42,0.08); border: 1px solid rgba(212,137,42,0.2);
-    border-radius: 8px; padding: 15px; margin-bottom: 15px;
+    background: var(--surface-2); border: 1px solid var(--border);
+    border-radius: 3px; padding: 15px; margin-bottom: 15px;
   }
   .journal-rate {
     margin-bottom: 12px;
   }
   .journal-rate-label {
-    font-size: 0.9em; color: rgba(232,184,109,0.8); display: block; margin-bottom: 8px;
+    font-size: 0.9em; color: var(--text-primary); display: block; margin-bottom: 8px;
   }
   .journal-stars {
     display: flex; gap: 8px; justify-content: center;
   }
   .journal-star-btn {
     background: none; border: none; font-size: 2em; cursor: pointer;
-    color: rgba(212,137,42,0.4); transition: all 0.2s;
+    color: var(--border-hover); transition: all 0.2s;
   }
   .journal-star-btn:hover, .journal-star-btn.active {
-    color: var(--amber); transform: scale(1.15);
+    color: var(--copper); transform: scale(1.15);
   }
   .journal-note {
-    width: 100%; padding: 10px; border: 1px solid rgba(212,137,42,0.2);
-    background: rgba(0,0,0,0.1); color: var(--gold); border-radius: 6px;
+    width: 100%; padding: 10px; border: 1px solid var(--border);
+    background: var(--surface); color: var(--text-primary); border-radius: 3px;
     font-family: inherit; font-size: 0.9em; resize: vertical; margin-bottom: 10px;
   }
-  .journal-note::placeholder { color: rgba(232,184,109,0.4); }
+  .journal-note:focus { border-color: var(--copper); outline: none; }
+  .journal-note::placeholder { color: var(--text-secondary); }
   .journal-save-btn {
     width: 100%;
   }
@@ -690,45 +724,45 @@
     margin-top: 15px;
   }
   .journal-entry {
-    background: rgba(212,137,42,0.06); border: 1px solid rgba(212,137,42,0.15);
-    border-radius: 6px; padding: 10px; margin-bottom: 8px; font-size: 0.85em;
+    background: var(--surface); border: 1px solid var(--border);
+    border-radius: 3px; padding: 10px; margin-bottom: 8px; font-size: 0.85em;
   }
   .journal-entry-header {
     display: flex; justify-content: space-between; align-items: center;
-    margin-bottom: 6px; color: rgba(232,184,109,0.8);
+    margin-bottom: 6px; color: var(--text-primary);
   }
-  .journal-entry-date { font-size: 0.8em; color: rgba(232,184,109,0.5); }
-  .journal-entry-stars { color: var(--amber); }
-  .journal-entry-note { color: rgba(232,184,109,0.7); line-height: 1.4; }
+  .journal-entry-date { font-size: 0.8em; color: var(--text-secondary); }
+  .journal-entry-stars { color: var(--copper); }
+  .journal-entry-note { color: var(--text-secondary); line-height: 1.4; }
 
-  body.light-mode .journal-card { background: rgba(212,137,42,0.06); border-color: rgba(212,137,42,0.15); }
-  body.light-mode .journal-note { background: rgba(255,255,255,0.5); color: var(--brown-dark); }
+  body.light-mode .journal-card { background: var(--surface-2); border-color: var(--border); }
+  body.light-mode .journal-note { background: var(--surface); color: #2E2922; }
   body.light-mode .journal-note::placeholder { color: rgba(44,26,14,0.4); }
-  body.light-mode .journal-entry { background: rgba(212,137,42,0.04); border-color: rgba(212,137,42,0.12); }
-  body.light-mode .journal-entry-header { color: var(--brown-mid); }
-  body.light-mode .journal-entry-note { color: var(--brown-dark); }
+  body.light-mode .journal-entry { background: var(--surface); border-color: var(--border); }
+  body.light-mode .journal-entry-header { color: #2E2922; }
+  body.light-mode .journal-entry-note { color: #2E2922; }
 
   .compare-button-group {
     display: flex; gap: 10px; margin: 15px 0; justify-content: center;
   }
   .modal-overlay {
     display: none; position: fixed; top: 0; left: 0; right: 0; bottom: 0;
-    background: rgba(0,0,0,0.7); z-index: 200; justify-content: center;
+    background: rgba(0,0,0,0.75); backdrop-filter: blur(4px); z-index: 200; justify-content: center;
     align-items: center; padding: 20px;
   }
   .modal-overlay.active { display: flex; }
   .modal-content {
-    background: var(--brown-dark); border-radius: 12px; padding: 25px;
+    background: var(--surface); border-radius: 8px; padding: 28px;
     max-width: 900px; width: 100%; max-height: 85vh; overflow-y: auto;
-    border: 2px solid rgba(212,137,42,0.3);
+    border: 1px solid var(--border);
   }
   .modal-header {
-    font-size: 1.3em; font-weight: 600; color: var(--gold);
+    font-size: 1.15em; font-weight: 400; color: var(--copper-light);
     margin-bottom: 20px; display: flex; justify-content: space-between;
-    align-items: center;
+    align-items: center; font-family: 'Playfair Display', serif;
   }
   .modal-close {
-    background: none; border: none; color: var(--gold); font-size: 1.5em;
+    background: none; border: none; color: var(--copper-light); font-size: 1.5em;
     cursor: pointer; padding: 0; width: 30px; height: 30px;
   }
   .compare-selector {
@@ -736,28 +770,28 @@
     gap: 10px; margin-bottom: 20px;
   }
   .compare-method-btn {
-    padding: 10px; border: 2px solid rgba(212,137,42,0.3);
-    background: rgba(160,98,42,0.15); color: var(--gold);
-    border-radius: 6px; cursor: pointer; transition: all 0.2s;
+    padding: 10px; border: 1px solid var(--border-hover);
+    background: var(--surface-2); color: var(--copper-light);
+    border-radius: 3px; cursor: pointer; transition: all 0.2s;
     font-size: 0.85em; text-align: center;
   }
-  .compare-method-btn:hover { border-color: rgba(212,137,42,0.6); }
+  .compare-method-btn:hover { border-color: var(--copper); background: var(--surface-3); }
   .compare-method-btn.selected {
-    background: rgba(212,137,42,0.4); border-color: var(--amber);
+    background: rgba(184,125,86,0.2); border-color: var(--copper);
   }
   .compare-table {
     width: 100%; border-collapse: collapse; margin-top: 15px;
-    background: rgba(160,98,42,0.15); border-radius: 6px; overflow: hidden;
+    background: var(--surface-2); border-radius: 3px; overflow: hidden;
   }
   .compare-table th, .compare-table td {
-    padding: 12px; text-align: left; border: 1px solid rgba(212,137,42,0.2);
+    padding: 12px; text-align: left; border: 1px solid var(--border);
     font-size: 0.85em;
   }
-  .compare-header { background: rgba(212,137,42,0.25); color: var(--gold); font-weight: 600; }
-  .compare-table td { color: rgba(232,184,109,0.8); }
-  .compare-empty { text-align: center; color: rgba(232,184,109,0.4); padding: 30px 0; }
+  .compare-header { background: var(--surface-3); color: var(--copper-light); font-weight: 600; }
+  .compare-table td { color: var(--text-primary); }
+  .compare-empty { text-align: center; color: var(--text-secondary); padding: 30px 0; }
 
-  .footer { margin-top: 40px; text-align: center; color: rgba(232,184,109,0.5);
+  .footer { margin-top: 40px; text-align: center; color: var(--text-secondary);
     font-size: 0.8em; padding-bottom: 20px;
   }
 
@@ -799,46 +833,47 @@
     }
     .site-header-logo { font-size: 1.4em; pointer-events: auto; cursor: pointer; }
     .site-header-title {
-      font-family: 'Playfair Display', serif; font-size: 1.1em;
-      font-weight: 700; color: var(--gold); pointer-events: auto;
+      font-family: 'Playfair Display', serif; font-size: 1.05em;
+      font-weight: 400; color: var(--copper-light); pointer-events: auto;
+      letter-spacing: 0.5px;
     }
     .site-header-sub {
-      font-size: 0.72em; color: rgba(232,184,109,0.45);
-      letter-spacing: 1px;
+      font-size: 0.65em; color: var(--text-secondary);
+      letter-spacing: 2px; text-transform: uppercase; font-weight: 300;
     }
-    body.light-mode .site-header-title { color: var(--brown-dark); }
-    body.light-mode .site-header-sub { color: rgba(44,26,14,0.4); }
+    body.light-mode .site-header-title { color: #1A1714; }
+    body.light-mode .site-header-sub { color: rgba(26,23,20,0.4); }
     .tab-nav { padding-left: 280px; }
   }
 
   .tab-nav {
     position: fixed; bottom: 0; left: 0; right: 0; z-index: 200;
-    background: rgba(44, 26, 14, 0.97);
-    backdrop-filter: blur(12px); -webkit-backdrop-filter: blur(12px);
-    border-top: 1px solid rgba(212,137,42,0.2);
+    background: rgba(15,13,10,0.96);
+    backdrop-filter: blur(20px); -webkit-backdrop-filter: blur(20px);
+    border-top: 1px solid var(--border);
     display: flex; justify-content: space-around; align-items: stretch;
-    height: 72px; padding: 0; padding-bottom: env(safe-area-inset-bottom, 0);
+    height: 68px; padding: 0; padding-bottom: env(safe-area-inset-bottom, 0);
   }
   body.light-mode .tab-nav {
-    background: rgba(245,239,224,0.97);
-    border-top-color: rgba(160,98,42,0.2);
+    background: rgba(248,245,240,0.96);
+    border-top-color: var(--border);
   }
   .tab-btn {
     display: flex; flex-direction: column; align-items: center;
-    justify-content: center; flex: 1; gap: 4px;
-    background: none; border: none; border-top: 3px solid transparent;
-    color: rgba(232,184,109,0.5); font-size: 0.68em; padding: 8px 4px;
-    cursor: pointer; transition: all 0.3s; font-family: inherit;
+    justify-content: center; flex: 1; gap: 3px;
+    background: none; border: none; border-top: 2px solid transparent;
+    color: rgba(226,201,166,0.35); font-size: 0.65em; padding: 8px 4px;
+    cursor: pointer; transition: all 0.3s; font-family: 'DM Sans', sans-serif;
     text-decoration: none; -webkit-tap-highlight-color: transparent;
-    white-space: nowrap;
+    white-space: nowrap; letter-spacing: 0.5px; font-weight: 500;
   }
-  .tab-btn-icon { font-size: 1.5em; line-height: 1; }
+  .tab-btn-icon { font-size: 1.3em; line-height: 1; }
   .tab-btn.active {
-    color: var(--gold); border-top-color: var(--amber);
+    color: var(--copper-light); border-top-color: var(--copper);
   }
-  .tab-btn:hover { color: var(--gold); }
-  body.light-mode .tab-btn { color: rgba(44,26,14,0.4); }
-  body.light-mode .tab-btn.active { color: var(--brown-dark); border-top-color: var(--amber); }
+  .tab-btn:hover { color: var(--copper-light); }
+  body.light-mode .tab-btn { color: rgba(26,23,20,0.35); }
+  body.light-mode .tab-btn.active { color: var(--copper); border-top-color: var(--copper); }
 
   /* Tab content */
   .tab-content { display: none; animation: tabFadeIn 0.3s ease; }
@@ -871,92 +906,93 @@
   }
   .quick-brew-header h2 {
     font-family: 'Playfair Display', serif; font-size: 1.8em;
-    color: var(--gold); margin-bottom: 8px;
+    color: var(--copper-light); margin-bottom: 8px;
   }
   .quick-brew-header p {
-    color: rgba(232,184,109,0.6); font-size: 0.95em;
+    color: var(--text-secondary); font-size: 0.95em;
   }
-  body.light-mode .quick-brew-header h2 { color: var(--brown-dark); }
+  body.light-mode .quick-brew-header h2 { color: #2E2922; }
   body.light-mode .quick-brew-header p { color: rgba(44,26,14,0.5); }
 
   .quick-method-grid {
     display: grid; grid-template-columns: repeat(3, 1fr); gap: 10px; margin: 15px 0;
   }
   .quick-method-card {
-    background: rgba(160,98,42,0.15); border: 2px solid rgba(212,137,42,0.25);
-    border-radius: 12px; padding: 14px 8px; cursor: pointer;
+    background: var(--surface); border: 1px solid var(--border);
+    border-radius: 6px; padding: 14px 8px; cursor: pointer;
     transition: all 0.3s; text-align: center;
   }
   .quick-method-card:hover {
-    background: rgba(160,98,42,0.3); border-color: rgba(212,137,42,0.6);
-    transform: translateY(-2px);
+    background: var(--surface-2); border-color: var(--border-hover);
+    transform: translateY(-2px); box-shadow: 0 4px 16px rgba(0,0,0,0.15);
   }
   .quick-method-card.active {
-    background: rgba(212,137,42,0.25); border-color: var(--amber);
-    box-shadow: 0 0 15px rgba(212,137,42,0.25);
+    background: var(--surface-2); border-color: var(--copper);
+    box-shadow: 0 0 0 1px var(--copper);
   }
   .quick-method-card .method-icon { width: 36px; height: 36px; margin: 0 auto 6px; display: block; }
-  .quick-method-name { font-size: 0.85em; font-weight: 700; color: var(--gold); }
-  body.light-mode .quick-method-card { background: rgba(212,137,42,0.06); border-color: rgba(212,137,42,0.15); }
-  body.light-mode .quick-method-card.active { background: rgba(212,137,42,0.2); border-color: var(--amber); }
-  body.light-mode .quick-method-name { color: var(--brown-dark); }
+  .quick-method-name { font-size: 0.82em; font-weight: 500; color: var(--copper-light); }
+  body.light-mode .quick-method-card { background: var(--surface); border-color: var(--border); }
+  body.light-mode .quick-method-card.active { background: rgba(155,115,82,0.08); border-color: var(--copper); }
+  body.light-mode .quick-method-name { color: #1A1714; }
 
   .quick-dose-section {
-    background: rgba(160,98,42,0.12); border: 1px solid rgba(212,137,42,0.2);
-    border-radius: 12px; padding: 18px; margin: 15px 0;
+    background: var(--surface); border: 1px solid var(--border);
+    border-radius: 6px; padding: 18px; margin: 15px 0;
   }
-  .quick-dose-label { font-size: 0.9em; color: rgba(232,184,109,0.7); margin-bottom: 10px; display: block; }
-  body.light-mode .quick-dose-section { background: rgba(212,137,42,0.06); }
-  body.light-mode .quick-dose-label { color: var(--brown-mid); }
+  .quick-dose-label { font-size: 0.9em; color: var(--text-secondary); margin-bottom: 10px; display: block; }
+  body.light-mode .quick-dose-section { background: var(--surface-2); }
+  body.light-mode .quick-dose-label { color: rgba(26,23,20,0.6); }
 
   .quick-results {
-    background: linear-gradient(135deg, rgba(212,137,42,0.12), rgba(160,98,42,0.18));
-    border: 1px solid rgba(212,137,42,0.3); border-radius: 16px;
+    background: var(--surface-2);
+    border: 1px solid var(--border); border-radius: 3px;
     padding: 24px 18px; margin: 20px 0; animation: tabFadeIn 0.4s ease;
   }
   .quick-results-title {
     font-family: 'Playfair Display', serif; font-size: 1.2em;
-    color: var(--gold); margin-bottom: 16px; text-align: center;
+    color: var(--copper-light); margin-bottom: 16px; text-align: center;
   }
   .quick-results-grid {
     display: grid; grid-template-columns: repeat(2, 1fr); gap: 12px; margin-bottom: 18px;
   }
   .quick-result-item {
-    background: rgba(0,0,0,0.2); border-radius: 10px; padding: 14px; text-align: center;
+    background: var(--surface); border-radius: 3px; padding: 14px; text-align: center;
+    border: 1px solid var(--border);
   }
-  .quick-result-value { font-size: 1.6em; font-weight: 700; color: var(--amber); line-height: 1.2; }
-  .quick-result-label { font-size: 0.75em; color: rgba(232,184,109,0.5); margin-top: 4px; }
-  body.light-mode .quick-results { background: linear-gradient(135deg, rgba(212,137,42,0.08), rgba(160,98,42,0.1)); }
-  body.light-mode .quick-results-title { color: var(--brown-dark); }
-  body.light-mode .quick-result-item { background: rgba(255,255,255,0.4); }
+  .quick-result-value { font-size: 1.6em; font-weight: 700; color: var(--copper); line-height: 1.2; }
+  .quick-result-label { font-size: 0.75em; color: var(--text-secondary); margin-top: 4px; }
+  body.light-mode .quick-results { background: var(--surface-2); }
+  body.light-mode .quick-results-title { color: #2E2922; }
+  body.light-mode .quick-result-item { background: var(--surface); }
 
   .quick-steps-summary {
-    border-top: 1px solid rgba(212,137,42,0.2); padding-top: 16px;
+    border-top: 1px solid var(--border); padding-top: 16px;
   }
   .quick-steps-summary h4 {
-    font-size: 0.88em; color: rgba(232,184,109,0.7); margin-bottom: 10px;
+    font-size: 0.88em; color: var(--text-secondary); margin-bottom: 10px;
   }
   .quick-step-row {
     display: flex; align-items: center; gap: 10px; padding: 8px 0;
-    border-bottom: 1px solid rgba(212,137,42,0.08); font-size: 0.88em;
+    border-bottom: 1px solid var(--border); font-size: 0.88em;
   }
   .quick-step-num {
     width: 24px; height: 24px; border-radius: 50%;
-    background: rgba(212,137,42,0.25); color: var(--gold);
+    background: rgba(184,125,86,0.15); color: var(--copper-light);
     display: flex; align-items: center; justify-content: center;
     font-size: 0.75em; font-weight: 700; flex-shrink: 0;
   }
-  .quick-step-text { color: rgba(232,184,109,0.8); flex: 1; }
-  .quick-step-water { color: var(--amber); font-weight: 600; white-space: nowrap; }
+  .quick-step-text { color: var(--text-primary); flex: 1; }
+  .quick-step-water { color: var(--copper); font-weight: 600; white-space: nowrap; }
 
   .quick-goto-tools {
     display: block; text-align: center; margin: 20px auto; padding: 12px 24px;
-    background: none; border: 1px solid rgba(212,137,42,0.3); border-radius: 30px;
-    color: var(--gold); font-size: 0.9em; cursor: pointer;
+    background: transparent; border: 1px solid var(--border-hover); border-radius: 3px;
+    color: var(--copper-light); font-size: 0.9em; cursor: pointer;
     transition: all 0.3s; font-family: inherit;
   }
-  .quick-goto-tools:hover { background: rgba(212,137,42,0.15); border-color: var(--amber); }
-  body.light-mode .quick-goto-tools { color: var(--brown-mid); }
+  .quick-goto-tools:hover { background: rgba(184,125,86,0.1); border-color: var(--copper); }
+  body.light-mode .quick-goto-tools { color: rgba(26,23,20,0.6); }
 
   /* ===== KNOWLEDGE TAB ===== */
   .knowledge-header {
@@ -964,12 +1000,12 @@
   }
   .knowledge-header h2 {
     font-family: 'Playfair Display', serif; font-size: 1.8em;
-    color: var(--gold); margin-bottom: 8px;
+    color: var(--copper-light); margin-bottom: 8px;
   }
   .knowledge-header p {
-    color: rgba(232,184,109,0.6); font-size: 0.95em;
+    color: var(--text-secondary); font-size: 0.95em;
   }
-  body.light-mode .knowledge-header h2 { color: var(--brown-dark); }
+  body.light-mode .knowledge-header h2 { color: #2E2922; }
   body.light-mode .knowledge-header p { color: rgba(44,26,14,0.5); }
 
   .method-overview-grid {
@@ -977,29 +1013,29 @@
     gap: 14px; margin: 20px 0;
   }
   .method-overview-card {
-    background: rgba(160,98,42,0.12); border: 1px solid rgba(212,137,42,0.2);
-    border-radius: 12px; padding: 18px; transition: all 0.3s;
+    background: var(--surface-2); border: 1px solid var(--border);
+    border-radius: 3px; padding: 18px; transition: all 0.3s; cursor: pointer;
   }
-  .method-overview-card:hover { background: rgba(160,98,42,0.2); transform: translateY(-2px); }
-  .method-overview-name { font-weight: 700; color: var(--gold); font-size: 1em; margin-bottom: 6px; }
-  .method-overview-info { font-size: 0.82em; color: rgba(232,184,109,0.6); line-height: 1.6; }
+  .method-overview-card:hover { background: var(--surface-3); transform: translateY(-2px); border-color: var(--border-hover); }
+  .method-overview-name { font-weight: 700; color: var(--copper-light); font-size: 1em; margin-bottom: 6px; }
+  .method-overview-info { font-size: 0.82em; color: var(--text-secondary); line-height: 1.6; }
   .method-overview-info span { display: block; margin-bottom: 2px; }
-  body.light-mode .method-overview-card { background: rgba(212,137,42,0.06); }
-  body.light-mode .method-overview-name { color: var(--brown-dark); }
+  body.light-mode .method-overview-card { background: var(--surface-2); }
+  body.light-mode .method-overview-name { color: #2E2922; }
 
   /* Try it button for method overview */
-  .quick-goto-tools {
-    border: 1px solid rgba(212,137,42,0.3); background: rgba(212,137,42,0.1);
-    color: var(--gold); border-radius: 8px; cursor: pointer;
+  .method-overview-card .quick-goto-tools {
+    border: 1px solid var(--border-hover); background: transparent;
+    color: var(--copper-light); border-radius: 3px; cursor: pointer;
     transition: all 0.3s; font-family: inherit; font-weight: 600;
   }
-  .quick-goto-tools:hover {
-    background: rgba(212,137,42,0.2); border-color: var(--amber);
+  .method-overview-card .quick-goto-tools:hover {
+    background: rgba(184,125,86,0.1); border-color: var(--copper);
   }
-  body.light-mode .quick-goto-tools {
-    background: rgba(212,137,42,0.06); color: var(--brown-dark);
+  body.light-mode .method-overview-card .quick-goto-tools {
+    background: transparent; color: rgba(26,23,20,0.6);
   }
-  body.light-mode .quick-goto-tools:hover { background: rgba(212,137,42,0.15); }
+  body.light-mode .method-overview-card .quick-goto-tools:hover { background: rgba(184,125,86,0.08); }
 
   /* Adjust existing elements for SPA */
   .back-to-top { bottom: calc(72px + env(safe-area-inset-bottom, 0) + 16px); }
@@ -1009,17 +1045,17 @@
     .tab-nav {
       position: fixed; top: 0; bottom: auto;
       height: 56px; border-top: none;
-      border-bottom: 1px solid rgba(212,137,42,0.2);
+      border-bottom: 1px solid var(--border);
       justify-content: center; gap: 0;
       padding-bottom: 0;
     }
     .tab-btn {
       flex-direction: row; gap: 8px; flex: 0 0 auto;
-      padding: 0 28px; font-size: 0.9em;
-      border-top: none; border-bottom: 3px solid transparent;
-      white-space: nowrap;
+      padding: 0 28px; font-size: 0.82em;
+      border-top: none; border-bottom: 2px solid transparent;
+      white-space: nowrap; letter-spacing: 1px;
     }
-    .tab-btn.active { border-top: none; border-bottom-color: var(--amber); }
+    .tab-btn.active { border-top: none; border-bottom-color: var(--copper); }
     .tab-btn-icon { font-size: 1.1em; }
     body { padding-bottom: 20px; padding-top: 66px; }
     .back-to-top { bottom: 24px; }
@@ -1037,7 +1073,7 @@
 
   /* Focus Mode */
   body.focus-mode {
-    background: var(--brown-dark);
+    background: var(--surface);
   }
   body.focus-mode .timer-display {
     position: fixed;
@@ -1069,14 +1105,14 @@
   body.focus-mode .current-step-display {
     font-size: 2em;
     font-weight: 700;
-    color: var(--gold);
+    color: var(--copper-light);
     margin-bottom: 40px;
     text-align: center;
   }
   body.focus-mode .step-progress-bar {
     width: 300px;
     height: 12px;
-    background: rgba(212,137,42,0.2);
+    background: rgba(184,125,86,0.2);
     border-radius: 6px;
     overflow: hidden;
     margin: 30px 0 0;
@@ -1084,7 +1120,7 @@
   }
   body.focus-mode .step-progress-bar-fill {
     height: 100%;
-    background: linear-gradient(90deg, var(--amber), var(--gold));
+    background: linear-gradient(90deg, var(--copper), var(--copper-light));
     width: 0%;
     transition: width 0.1s linear;
   }
@@ -1096,30 +1132,30 @@
   }
   body.focus-mode .focus-exit-btn {
     padding: 12px 24px;
-    border: none;
-    border-radius: 6px;
-    background: rgba(212,137,42,0.3);
-    color: var(--gold);
+    border: 1px solid var(--border-hover);
+    border-radius: 3px;
+    background: var(--surface-2);
+    color: var(--copper-light);
     font-size: 0.9em;
     cursor: pointer;
     transition: all 0.2s;
     font-family: inherit;
   }
   body.focus-mode .focus-exit-btn:hover {
-    background: rgba(212,137,42,0.5);
+    background: var(--surface-3); border-color: var(--copper);
   }
   body.focus-mode #toolsTab {
     opacity: 0.2;
     pointer-events: none;
   }
   body.light-mode.focus-mode .timer-display {
-    background: linear-gradient(135deg, rgba(245,239,224,0.8), rgba(212,137,42,0.1));
+    background: var(--surface);
   }
   body.light-mode.focus-mode .timer-time {
-    color: var(--brown-dark);
+    color: #2E2922;
   }
   body.light-mode.focus-mode .current-step-display {
-    color: var(--brown-dark);
+    color: #2E2922;
   }
   /* Water Temperature Input */
   .temp-row {
@@ -1131,7 +1167,7 @@
   .temp-row label {
     flex-shrink: 0;
     font-size: 0.9em;
-    color: rgba(232,184,109,0.7);
+    color: var(--text-secondary);
     min-width: 80px;
   }
   .temp-row .stepper-wrap {
@@ -1139,12 +1175,12 @@
   }
   .temp-suggestion {
     font-size: 0.75em;
-    color: rgba(232,184,109,0.5);
+    color: var(--text-secondary);
     margin-top: 4px;
     font-style: italic;
   }
   body.light-mode .temp-row label {
-    color: var(--brown-dark);
+    color: #2E2922;
   }
   body.light-mode .temp-suggestion {
     color: rgba(44,26,14,0.5);
@@ -1158,28 +1194,29 @@
   .ratio-input-wrap input[type="number"] {
     width: 60px;
     padding: 6px;
-    border: 1px solid rgba(212,137,42,0.3);
-    background: rgba(160,98,42,0.2);
-    color: var(--gold);
-    border-radius: 4px;
+    border: 1px solid var(--border-hover);
+    background: var(--surface-2);
+    color: var(--copper-light);
+    border-radius: 3px;
     font-family: 'Courier New', monospace;
     font-size: 0.9em;
     text-align: center;
   }
+  .ratio-input-wrap input[type="number"]:focus { border-color: var(--copper); outline: none; }
   .ratio-input-wrap input[type="number"]::placeholder {
-    color: rgba(232,184,109,0.3);
+    color: var(--text-secondary);
   }
   body.light-mode .ratio-input-wrap input[type="number"] {
     background: rgba(255,255,255,0.6);
-    color: var(--brown-dark);
+    color: #2E2922;
   }
   /* Fresh Bean Note */
   .fresh-bean-note {
     margin: 15px 0;
     padding: 12px;
-    background: rgba(212,137,42,0.12);
-    border-left: 3px solid var(--amber);
-    border-radius: 4px;
+    background: var(--surface-2);
+    border-left: 3px solid var(--copper);
+    border-radius: 3px;
     display: none;
   }
   .fresh-bean-note.show {
@@ -1192,11 +1229,11 @@
   }
   .fresh-bean-note-text {
     font-size: 0.88em;
-    color: rgba(232,184,109,0.85);
+    color: var(--text-primary);
   }
   body.light-mode .fresh-bean-note {
-    background: rgba(212,137,42,0.08);
-    border-left-color: rgba(212,137,42,0.6);
+    background: rgba(184,125,86,0.08);
+    border-left-color: rgba(184,125,86,0.6);
   }
   body.light-mode .fresh-bean-note-text {
     color: rgba(44,26,14,0.75);
@@ -1207,7 +1244,7 @@
     align-items: center;
     gap: 6px;
     font-size: 0.85em;
-    color: var(--amber);
+    color: var(--copper);
     margin: 0 12px;
   }
   .wake-lock-indicator.active {
@@ -1218,9 +1255,9 @@
     width: 44px;
     height: 44px;
     border-radius: 50%;
-    border: 1px solid rgba(212,137,42,0.3);
-    background: rgba(212,137,42,0.12);
-    color: var(--gold);
+    border: 1px solid var(--border-hover);
+    background: var(--surface-2);
+    color: var(--copper-light);
     font-size: 1.2em;
     cursor: pointer;
     transition: all 0.2s;
@@ -1229,24 +1266,24 @@
     justify-content: center;
   }
   .voice-toggle-btn:hover {
-    background: rgba(212,137,42,0.3);
+    background: rgba(184,125,86,0.15); border-color: var(--copper);
   }
   .voice-toggle-btn.active {
-    background: rgba(212,137,42,0.3);
-    border-color: var(--amber);
+    background: rgba(184,125,86,0.15);
+    border-color: var(--copper);
   }
   /* Compare Radar Chart */
   .compare-radar-wrap {
     margin: 20px 0;
     padding: 20px;
-    background: rgba(160,98,42,0.1);
-    border: 1px solid rgba(212,137,42,0.2);
-    border-radius: 8px;
+    background: var(--surface-2);
+    border: 1px solid var(--border);
+    border-radius: 3px;
   }
   .compare-radar-title {
     font-size: 0.9em;
     font-weight: 600;
-    color: var(--gold);
+    color: var(--copper-light);
     margin-bottom: 15px;
     text-align: center;
   }
@@ -1267,7 +1304,7 @@
   }
   .compare-radar-legend {
     font-size: 0.8em;
-    color: rgba(232,184,109,0.7);
+    color: var(--text-secondary);
     margin-top: 10px;
     display: flex;
     gap: 20px;
@@ -1284,10 +1321,10 @@
     border-radius: 2px;
   }
   body.light-mode .compare-radar-wrap {
-    background: rgba(212,137,42,0.06);
+    background: var(--surface-2);
   }
   body.light-mode .compare-radar-title {
-    color: var(--brown-dark);
+    color: #2E2922;
   }
   body.light-mode .compare-radar-legend {
     color: rgba(44,26,14,0.6);
@@ -1432,25 +1469,25 @@
         </div>
       </div>
       <div style="text-align:center;margin-top:30px;">
-        <p style="color:rgba(232,184,109,0.6);font-size:0.95em;margin-bottom:16px;font-style:italic;">每一杯手沖，都是一場安靜的實驗。</p>
+        <p style="color:var(--text-secondary);font-size:0.95em;margin-bottom:16px;font-style:italic;">每一杯手沖，都是一場安靜的實驗。</p>
         <button class="hero-cta" onclick="window.location.hash='#quick'" style="font-size:0.95em;padding:12px 28px;">開始你的第一杯 →</button>
       </div>
     </section>
       <div class="section-divider"></div>
       <div class="footer">
-      <p style="font-family: 'Playfair Display', serif; font-size: 1.1em; color: var(--gold); margin-bottom: 8px;">PourOver Lab</p>
-      <p style="font-size: 0.8em; color: rgba(232,184,109,0.4); letter-spacing: 1px;">手沖咖啡的感官實驗室</p>
+      <p style="font-family: 'Playfair Display', serif; font-size: 1.1em; color: var(--copper-light); margin-bottom: 8px;">PourOver Lab</p>
+      <p style="font-size: 0.8em; color: var(--text-secondary); letter-spacing: 1px;">手沖咖啡的感官實驗室</p>
       <div style="display:flex;gap:20px;justify-content:center;margin-top:16px;flex-wrap:wrap;">
-        <a href="#home" style="color:rgba(232,184,109,0.5);font-size:0.82em;text-decoration:none;">首頁</a>
-        <a href="#quick" style="color:rgba(232,184,109,0.5);font-size:0.82em;text-decoration:none;">快速沖煮</a>
-        <a href="#tools" style="color:rgba(232,184,109,0.5);font-size:0.82em;text-decoration:none;">進階工具</a>
-        <a href="#knowledge" style="color:rgba(232,184,109,0.5);font-size:0.82em;text-decoration:none;">知識庫</a>
+        <a href="#home" style="color:var(--text-secondary);font-size:0.82em;text-decoration:none;">首頁</a>
+        <a href="#quick" style="color:var(--text-secondary);font-size:0.82em;text-decoration:none;">快速沖煮</a>
+        <a href="#tools" style="color:var(--text-secondary);font-size:0.82em;text-decoration:none;">進階工具</a>
+        <a href="#knowledge" style="color:var(--text-secondary);font-size:0.82em;text-decoration:none;">知識庫</a>
       </div>
       <p style="margin-top:12px;font-size:0.78em;">每次沖煮都是一場實驗。調整、嘗試、發現最適合你的風味。</p>
-      <div style="margin-top:16px;padding-top:12px;border-top:1px solid rgba(232,184,109,0.12);">
-        <p style="font-size:0.72em;color:rgba(232,184,109,0.3);">本站沖煮參數僅供參考，實際風味會因豆子、器材、水質等因素而異。</p>
-        <p style="font-size:0.72em;color:rgba(232,184,109,0.3);margin-top:4px;">主要針對 Hario V60 等錐形濾杯設計，使用其他濾杯請適當調整參數。</p>
-        <p style="font-size:0.72em;color:rgba(232,184,109,0.25);margin-top:8px;">&copy; 2025 PourOver Lab. All rights reserved.</p>
+      <div style="margin-top:16px;padding-top:12px;border-top:1px solid var(--border);">
+        <p style="font-size:0.72em;color:var(--text-secondary);opacity:0.6;">本站沖煮參數僅供參考，實際風味會因豆子、器材、水質等因素而異。</p>
+        <p style="font-size:0.72em;color:var(--text-secondary);opacity:0.6;margin-top:4px;">主要針對 Hario V60 等錐形濾杯設計，使用其他濾杯請適當調整參數。</p>
+        <p style="font-size:0.72em;color:var(--text-secondary);opacity:0.5;margin-top:8px;">&copy; 2025 PourOver Lab. All rights reserved.</p>
       </div>
     </div>
     </div>
@@ -1473,10 +1510,10 @@
           <button class="stepper-btn" data-target="quickDoseInput" data-delta="0.5">+</button>
         </div>
         <div class="dose-quick-btns" id="quickDoseBtns">
-          <button class="dose-btn" data-dose="15">15g</button>
-          <button class="dose-btn" data-dose="18">18g</button>
-          <button class="dose-btn active" data-dose="20">20g</button>
-          <button class="dose-btn" data-dose="25">25g</button>
+          <button class="dose-btn" data-dose="15">15g<span class="dose-hint">約一杯</span></button>
+          <button class="dose-btn active" data-dose="20">20g<span class="dose-hint">一大杯</span></button>
+          <button class="dose-btn" data-dose="30">30g<span class="dose-hint">約兩杯</span></button>
+          <button class="dose-btn" data-dose="40">40g<span class="dose-hint">多人份</span></button>
         </div>
       </div>
 
@@ -1528,7 +1565,7 @@
       <div class="selector-row">
         <label for="flavorPref">風味偏好 (0=酸甜 ←→ 100=醇厚)</label>
         <input type="range" id="flavorPref" value="50" min="0" max="100" style="flex: 1;">
-        <span id="flavorValue" style="width: 40px; text-align: center; color: var(--gold);">50</span>
+        <span id="flavorValue" style="width: 40px; text-align: center; color: var(--copper-light);">50</span>
       </div>
     </div>
 
@@ -1537,9 +1574,9 @@
 
     <!-- 推薦結果 -->
     <div id="recommendationPanel" style="display:none;">
-      <div class="selector-card" style="border-color: rgba(212,137,42,0.5); background: rgba(212,137,42,0.1);">
-        <div style="color: var(--gold); font-weight: 600; margin-bottom: 10px;">💡 推薦沖法</div>
-        <div id="recommendationText" style="color: rgba(232,184,109,0.8); font-size: 0.9em; line-height: 1.6;"></div>
+      <div class="selector-card" style="border-color: var(--border-hover); background: var(--surface-2);">
+        <div style="color: var(--copper-light); font-weight: 600; margin-bottom: 10px;">💡 推薦沖法</div>
+        <div id="recommendationText" style="color: var(--text-primary); font-size: 0.9em; line-height: 1.6;"></div>
       </div>
     </div>
 
@@ -1549,7 +1586,7 @@
 
     <!-- 計算面板 (moved before guide) -->
     <div class="calc-panel" id="calcPanel" style="display:none;">
-      <h2 class="calc-title">⚙️ 沖煮參數</h2>
+      <h2 class="calc-title">你的沖煮配方</h2>
       <div class="selector-row" style="margin-bottom: 8px;">
         <label for="doseInput">咖啡粉量 (g)</label>
         <div class="stepper-wrap">
@@ -1559,10 +1596,10 @@
         </div>
       </div>
       <div class="dose-quick-btns" id="doseQuickBtns">
-        <button class="dose-btn" data-dose="15">15g</button>
-        <button class="dose-btn" data-dose="18">18g</button>
-        <button class="dose-btn active" data-dose="20">20g</button>
-        <button class="dose-btn" data-dose="25">25g</button>
+        <button class="dose-btn" data-dose="15">15g<span class="dose-hint">約一杯</span></button>
+        <button class="dose-btn active" data-dose="20">20g<span class="dose-hint">一大杯</span></button>
+        <button class="dose-btn" data-dose="30">30g<span class="dose-hint">約兩杯</span></button>
+        <button class="dose-btn" data-dose="40">40g<span class="dose-hint">多人份</span></button>
       </div>
       <div class="selector-row">
         <label for="currentTemp">水溫 (°C)</label>
@@ -1583,6 +1620,12 @@
         </div>
         <span class="ratio-value" id="ratioValue">1:15</span>
       </div>
+      <div class="dose-quick-btns" style="margin-top:8px;">
+        <button class="dose-btn ratio-preset" data-ratio="14">1:14</button>
+        <button class="dose-btn ratio-preset" data-ratio="15">1:15</button>
+        <button class="dose-btn ratio-preset" data-ratio="16">1:16</button>
+        <button class="dose-btn ratio-preset" data-ratio="17">1:17</button>
+      </div>
       <div class="grind-visual" id="grindVisual" style="display:none;"></div>
       <div class="calc-grid" id="calcGrid"></div>
       <div class="radar-wrap" id="radarWrap" style="display:none;">
@@ -1602,7 +1645,7 @@
       <span class="fresh-bean-note-text">偵測到豆子極新鮮，已自動增加悶蒸時間以利排氣</span>
     </div>
     <div class="steps-container" id="stepsContainer" style="display:none;">
-      <h2 style="font-size: 0.95em; font-weight: 600; color: var(--gold); margin-bottom: 15px;">📋 沖煮步驟</h2>
+      <h2 style="font-size: 0.95em; font-weight: 600; color: var(--copper-light); margin-bottom: 15px;">📋 沖煮步驟</h2>
       <div id="stepsContent"></div>
     </div>
 
@@ -1680,32 +1723,32 @@
         <div class="section-title">入門器材建議</div>
         <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(260px,1fr));gap:16px;margin-top:20px;">
           <div class="selector-card">
-            <h4 style="color:var(--gold);margin-bottom:8px;">濾杯</h4>
-            <p style="color:rgba(232,184,109,0.7);font-size:0.9em;line-height:1.6;">
+            <h4 style="color:var(--copper-light);margin-bottom:8px;">濾杯</h4>
+            <p style="color:var(--text-secondary);font-size:0.9em;line-height:1.6;">
               <strong>Hario V60</strong>（本站預設）— 錐形設計、螺旋肋骨，流速快且可控性高。適合所有本站沖法。<br>
               <strong>Kalita Wave</strong> — 平底三孔設計，流速穩定，容錯範圍大，適合新手。<br>
               <strong>Origami</strong> — 可搭配錐形或波浪濾紙，變化性最高。
             </p>
           </div>
           <div class="selector-card">
-            <h4 style="color:var(--gold);margin-bottom:8px;">磨豆機</h4>
-            <p style="color:rgba(232,184,109,0.7);font-size:0.9em;line-height:1.6;">
+            <h4 style="color:var(--copper-light);margin-bottom:8px;">磨豆機</h4>
+            <p style="color:var(--text-secondary);font-size:0.9em;line-height:1.6;">
               <strong>入門推薦</strong>：手搖磨豆機（如 C2、1Zpresso Q2）— 研磨均勻度佳，CP值高。<br>
               <strong>進階推薦</strong>：電動錐刀磨豆機 — 一致性更高，適合追求精準的沖煮者。<br>
               <strong>關鍵原則</strong>：研磨均勻度比價格更重要，刀盤銳利度影響風味乾淨度。
             </p>
           </div>
           <div class="selector-card">
-            <h4 style="color:var(--gold);margin-bottom:8px;">手沖壺</h4>
-            <p style="color:rgba(232,184,109,0.7);font-size:0.9em;line-height:1.6;">
+            <h4 style="color:var(--copper-light);margin-bottom:8px;">手沖壺</h4>
+            <p style="color:var(--text-secondary);font-size:0.9em;line-height:1.6;">
               <strong>細嘴壺</strong>（推薦）— 水流控制精準，適合分段注水法。<br>
               <strong>鶴嘴壺</strong> — 水流範圍大，適合一刀流或大水流沖法。<br>
               <strong>溫控壺</strong> — 可設定精確水溫，省去溫度計的麻煩。
             </p>
           </div>
           <div class="selector-card">
-            <h4 style="color:var(--gold);margin-bottom:8px;">電子秤</h4>
-            <p style="color:rgba(232,184,109,0.7);font-size:0.9em;line-height:1.6;">
+            <h4 style="color:var(--copper-light);margin-bottom:8px;">電子秤</h4>
+            <p style="color:var(--text-secondary);font-size:0.9em;line-height:1.6;">
               <strong>基本需求</strong>：精度0.1g、附計時功能。<br>
               <strong>進階功能</strong>：自動計時、注水流速顯示、藍牙連接APP。<br>
               <strong>重要提醒</strong>：秤比溫度計更重要 — 粉量和水量的精準度直接影響風味。
@@ -1720,36 +1763,36 @@
       <section class="section visible" id="flavorWheelSection">
         <div class="section-label">風味語言</div>
         <div class="section-title">認識咖啡風味</div>
-        <p style="color:rgba(232,184,109,0.65);font-size:0.92em;line-height:1.7;margin:16px 0;">
+        <p style="color:var(--text-secondary);font-size:0.92em;line-height:1.7;margin:16px 0;">
           SCA（精品咖啡協會）風味輪是描述咖啡風味的通用語言。學會辨識這些風味，能幫助你更精準地調整沖煮參數。
         </p>
         <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(240px,1fr));gap:16px;margin-top:16px;">
           <div class="selector-card" style="border-left:3px solid #E8B86D;">
             <h4 style="color:#E8B86D;margin-bottom:6px;">花香 / 果香</h4>
-            <p style="color:rgba(232,184,109,0.65);font-size:0.85em;line-height:1.6;">
+            <p style="color:var(--text-secondary);font-size:0.85em;line-height:1.6;">
               茉莉、玫瑰、柑橘、莓果、熱帶水果等。通常出現在淺焙豆，是前段萃取的主角。水溫偏高、沖煮時間較短時更容易感受到。
             </p>
           </div>
           <div class="selector-card" style="border-left:3px solid #C07830;">
             <h4 style="color:#C07830;margin-bottom:6px;">甜感 / 焦糖</h4>
-            <p style="color:rgba(232,184,109,0.65);font-size:0.85em;line-height:1.6;">
+            <p style="color:var(--text-secondary);font-size:0.85em;line-height:1.6;">
               蜂蜜、焦糖、黑糖、楓糖、巧克力等。中段萃取的核心風味，中焙豆最為突出。搖晃法和略低水溫有助於凸顯甜感。
             </p>
           </div>
           <div class="selector-card" style="border-left:3px solid #8B4513;">
             <h4 style="color:#C49A6C;margin-bottom:6px;">堅果 / 可可</h4>
-            <p style="color:rgba(232,184,109,0.65);font-size:0.85em;line-height:1.6;">
+            <p style="color:var(--text-secondary);font-size:0.85em;line-height:1.6;">
               杏仁、榛果、花生、可可、烘烤麵包等。中深焙的代表風味，通常帶有醇厚的口感。粉水比1:14-1:15可強化這類風味。
             </p>
           </div>
           <div class="selector-card" style="border-left:3px solid #6B3A2A;">
             <h4 style="color:#A0785C;margin-bottom:6px;">辛香 / 草本</h4>
-            <p style="color:rgba(232,184,109,0.65);font-size:0.85em;line-height:1.6;">
+            <p style="color:var(--text-secondary);font-size:0.85em;line-height:1.6;">
               肉桂、丁香、薄荷、香草等。特殊處理法（如厭氧）或特定產區豆常見。這些風味往往在冷卻後更明顯。
             </p>
           </div>
         </div>
-        <p style="color:rgba(232,184,109,0.45);font-size:0.8em;margin-top:16px;line-height:1.5;">
+        <p style="color:var(--text-secondary);font-size:0.8em;margin-top:16px;line-height:1.5;">
           提示：品嚐時可分三階段感受 — 入口時的第一印象（酸質、花香）、中段的主體風味（甜感、果味）、以及餘韻（回甘、巧克力感）。隨著咖啡溫度下降，不同風味會依序浮現。
         </p>
       </section>
@@ -1768,7 +1811,7 @@
         <span>比較沖法</span>
         <button class="modal-close" id="compareCloseBtn">&times;</button>
       </div>
-      <div style="color: rgba(232,184,109,0.6); font-size: 0.9em; margin-bottom: 15px;">選擇最多2種沖法進行比較</div>
+      <div style="color: var(--text-secondary); font-size: 0.9em; margin-bottom: 15px;">選擇最多2種沖法進行比較</div>
       <div class="compare-selector" id="compareMethodGrid"></div>
       <div id="compareResult"></div>
     </div>
@@ -1776,7 +1819,7 @@
 
   <script>
 
-const BREW_METHODS={sweet:{badge:'超高甜感',title:'超高甜感 · 搖晃濾杯法',desc:'透過搖晃增加甜感<br>圓潤飽滿 · 風味明顯',ratio:16,temp:'92°C',grind:'中細研磨',time:'2:45',buildSummary:(d,t)=>[{label:'第一段',value:Math.round(d*3.5),unit:'g'},{label:'第二段至',value:Math.round(t*0.6),unit:'g'},{label:'總水量',value:t,unit:'g'},{label:'目標時間',value:'2:45',unit:''}],buildSteps:(d,t)=>{const s1=Math.round(d*3.5),s2=Math.round(t*0.6)-s1,s34=t-Math.round(t*0.6),s3=Math.round(s34/2),s4=s34-s3;return{groups:[{label:'四段注水 + 搖晃',color:'amber',steps:[{num:1,time:'0:00',title:'第一段：快速注水 + 大幅搖晃',note:'此沖法不使用傳統悶蒸，而是透過搖晃取代 — 快速注入後立刻大幅搖晃濾杯約5秒，同時完成排氣和均勻萃取',water:s1,cum:s1,duration:0},{num:2,time:'0:10',title:'第二段：稍快速度注水',note:'稍快速度注水，建立萃取基底',water:s2,cum:Math.round(t*0.6),duration:10},{num:3,time:'0:40',title:'第三段：放慢注水',note:'放慢注水，輕柔注入避免過度攪拌',water:s3,cum:Math.round(t*0.6)+s3,duration:40},{num:4,time:'1:20',title:'第四段：輕注收尾',note:'中心注水為主，輕注收尾',water:s4,cum:t,duration:20},{num:5,time:'注完後',title:'等待滴完',note:'不再搖晃，靜待自然滴完即可',water:0,cum:t,duration:90}]}]}}},kasuya:{badge:'卡薩亞',title:'Kasuya 4:6 · 世界冠軍法',desc:'精準控制甜酸比<br>可調性強 · 競賽配方',ratio:15,temp:'92°C',grind:'中粗研磨',time:'3:15',buildSummary:(d,t)=>[{label:'第一段',value:Math.round(t*0.2),unit:'g'},{label:'第二段',value:Math.round(t*0.2),unit:'g'},{label:'後三段',value:t-2*Math.round(t*0.2),unit:'g'},{label:'總水量',value:t,unit:'g'},{label:'目標時間',value:'3:15',unit:''}],buildSteps:(d,t)=>{const s1=Math.round(t*0.2),s2=Math.round(t*0.2),rest=t-s1-s2,s3=Math.round(rest/3),s4=Math.round(rest/3),s5=rest-s3-s4;return{groups:[{label:'五段注水法',color:'amber',steps:[{num:1,time:'0:00',title:'第一段（前40%決定甜酸）',note:'4:6法不使用傳統悶蒸，第一段注水即兼具排氣功能 — 注入後等水完全滴完再進下一段，此段水量控制著甜酸平衡',water:s1,cum:s1,duration:0},{num:2,time:'0:45',title:'第二段（前40%決定甜酸）',note:'甜酸比的關鍵段 — 想更甜可增加此段水量，想更酸則減少',water:s2,cum:s1+s2,duration:45},{num:3,time:'1:30',title:'第三段（後60%控制濃度）',note:'開始控制濃度，等待滴完',water:s3,cum:s1+s2+s3,duration:45},{num:4,time:'2:15',title:'第四段（後60%控制濃度）',note:'持續注水，等待滴完',water:s4,cum:s1+s2+s3+s4,duration:45},{num:5,time:'3:00',title:'第五段（後60%控制濃度）',note:'最後一段，完成沖煮',water:s5,cum:t,duration:45},{num:6,time:'注完後',title:'等待滴完',note:'靜待自然滴完即可',water:0,cum:t,duration:90}]}]}}},hoffmann:{badge:'霍夫曼',title:'James Hoffmann · 乾淨明亮法',desc:'簡潔均勻萃取<br>入門首選 · 明亮風味',ratio:16.7,temp:'93°C',grind:'中研磨',time:'3:00',buildSummary:(d,t)=>{const b=Math.round(d*2),f=Math.round(t*0.6);return[{label:'悶蒸水量',value:b,unit:'g'},{label:'注水至60%',value:f,unit:'g'},{label:'總水量',value:t,unit:'g'},{label:'目標時間',value:'3:00',unit:''}]},buildSteps:(d,t)=>{const b=Math.round(d*2),f=Math.round(t*0.6),s=t-f;return{groups:[{label:'悶蒸 + 兩段主注水',color:'amber',steps:[{num:1,time:'0:00',title:'悶蒸注水',note:'悶蒸是讓咖啡粉排出CO2的關鍵步驟 — 注入粉量2倍的水後，輕輕旋轉濾杯讓所有粉濕潤。看到粉層膨脹（像漢堡）表示豆子很新鮮！等待約45秒讓氣體充分排出',water:b,cum:b,duration:0},{num:2,time:'0:45',title:'第一次主注水',note:'穩定中心繞圈注水，約30秒內完成',water:f-b,cum:f,duration:45},{num:3,time:'1:15',title:'第二次主注水',note:'同樣手法繼續注水，約30秒內完成',water:s,cum:t,duration:30},{num:4,time:'1:45',title:'攪拌與搖晃',note:'用攪拌棒順時針、逆時針各攪拌一圈',water:0,cum:t,duration:0},{num:5,time:'注完後',title:'等待滴完',note:'靜待自然滴完，整體時間約3:00',water:0,cum:t,duration:90}]}]}}},rao:{badge:'雷歐',title:'Scott Rao · 螺旋渦流法',desc:'螺旋渦流均勻萃取<br>進階技巧 · 醇厚層次',ratio:15,temp:'91°C',grind:'中研磨',time:'3:00',buildSummary:(d,t)=>{const b=Math.round(d*2);return[{label:'悶蒸水量',value:b,unit:'g'},{label:'主注水',value:t-b,unit:'g'},{label:'總水量',value:t,unit:'g'},{label:'目標時間',value:'3:00',unit:''}]},buildSteps:(d,t)=>{const b=Math.round(d*2),m=t-b;return{groups:[{label:'悶蒸 + 螺旋連續注水',color:'amber',steps:[{num:1,time:'0:00',title:'悶蒸注水',note:'悶蒸讓CO2排出，為後續均勻萃取做準備 — 注入粉量2倍的水，等待45秒讓氣體充分釋放。如果粉層膨脹明顯，表示豆子排氣旺盛，可等到50秒',water:b,cum:b,duration:0},{num:2,time:'0:45',title:'螺旋渦流注水',note:'從中心開始，以螺旋方式由內向外繞圈注水',water:m,cum:t,duration:90},{num:3,time:'注完後',title:'收尾與等待',note:'輕搖濾杯讓粉床平整，靜待自然滴完',water:0,cum:t,duration:90}]}]}}},onePour:{badge:'一刀流',title:'一刀流 · 單次注水法',desc:'極簡操作，穩定出品<br>新手友善 · 單次注水',ratio:15,temp:'92°C',grind:'中細研磨',time:'2:30',buildSummary:(d,t)=>{const b=Math.round(d*2);return[{label:'悶蒸水量',value:b,unit:'g'},{label:'主注水',value:t-b,unit:'g'},{label:'目標時間',value:'2:30',unit:''},{label:'總水量',value:t,unit:'g'}]},buildSteps:(d,t)=>{const b=Math.round(d*2);return{groups:[{label:'悶蒸 + 單次注水',color:'amber',steps:[{num:1,time:'0:00',title:'悶蒸注水',note:'悶蒸是排出咖啡粉中CO2的步驟，讓後續注水能均勻接觸咖啡粉 — 注入粉量2倍的水，等待30秒讓粉充分濕潤排氣',water:b,cum:b,duration:0},{num:2,time:'0:30',title:'一次注水完成',note:'穩定、不間斷地持續注水',water:t-b,cum:t,duration:30},{num:3,time:'注完後',title:'等待滴完',note:'不攪拌、不搖晃，等待自然滴完',water:0,cum:t,duration:90}]}]}}},icedBrew:{badge:'冰手沖',title:'Flash Brew 冰手沖',desc:'40%冰塊+60%熱水沖煮<br>急速冷卻 · 果香爆發',ratio:15,temp:'96°C',grind:'中細偏細',time:'2:30',buildSummary:(d,t)=>{const i=Math.round(t*0.4),h=t-i,b=Math.round(d*2.5);return[{label:'冰塊量',value:i,unit:'g'},{label:'熱水量',value:h,unit:'g'},{label:'悶蒸水量',value:b,unit:'g'},{label:'總液量',value:t,unit:'g'}]},buildSteps:(d,t)=>{const i=Math.round(t*0.4),h=t-i,b=Math.round(d*2.5),m=h-b;return{groups:[{label:'準備 — 冰塊置入下壺',color:'green',steps:[{num:0,time:'準備',title:'放入冰塊（總水量的40%）',note:'在下壺中放入冰塊 — 冰塊會作為總水量的一部分，不是額外添加',water:i,cum:i,duration:-1}]},{label:'沖煮 — 高溫濃縮萃取',color:'amber',steps:[{num:1,time:'0:00',title:'悶蒸注水',note:'冰手沖使用高溫（96°C）悶蒸，目的是在水量較少的情況下最大化萃取 — 注入粉量2.5倍的水（比一般悶蒸多），等待30秒讓CO2排出',water:b,cum:b,duration:0},{num:2,time:'0:30',title:'主注水（僅用剩餘60%熱水）',note:'穩定注水至熱水用完，約60秒完成。注意：只用熱水沖煮，冰塊在下壺等待',water:m,cum:h,duration:30},{num:3,time:'注完後',title:'等待滴完並冷卻',note:'咖啡液滴入冰塊中急速冷卻，完成後輕搖杯子',water:0,cum:t,duration:90}]}]}}}};
+const BREW_METHODS={sweet:{badge:'超高甜感',title:'超高甜感 · 搖晃濾杯法',desc:'透過搖晃增加甜感<br>圓潤飽滿 · 風味明顯',ratio:16,temp:'92°C',grind:'中細研磨',time:'2:45',buildSummary:(d,t)=>[{label:'第一段',value:Math.round(d*3.5),unit:'g'},{label:'第二段至',value:Math.round(t*0.6),unit:'g'},{label:'總水量',value:t,unit:'g'},{label:'目標時間',value:'2:45',unit:''}],buildSteps:(d,t)=>{const s1=Math.round(d*3.5),s2=Math.round(t*0.6)-s1,s34=t-Math.round(t*0.6),s3=Math.round(s34/2),s4=s34-s3;return{groups:[{label:'四段注水 + 搖晃',color:'amber',steps:[{num:1,time:'0:00',title:'第一段：快速注水 + 大幅搖晃',note:'此沖法不使用傳統悶蒸，而是透過搖晃取代 — 快速注入後立刻大幅搖晃濾杯約5秒，同時完成排氣和均勻萃取',water:s1,cum:s1,duration:0},{num:2,time:'0:10',title:'第二段：稍快速度注水',note:'稍快速度注水，建立萃取基底',water:s2,cum:Math.round(t*0.6),duration:10},{num:3,time:'0:40',title:'第三段：放慢注水',note:'放慢注水，輕柔注入避免過度攪拌',water:s3,cum:Math.round(t*0.6)+s3,duration:40},{num:4,time:'1:20',title:'第四段：輕注收尾',note:'中心注水為主，輕注收尾',water:s4,cum:t,duration:20},{num:5,time:'注完後',title:'等待滴完',note:'不再搖晃，靜待咖啡液完全滴落後即可移除濾杯享用',water:0,cum:t,duration:90}]}]}}},kasuya:{badge:'卡薩亞',title:'Kasuya 4:6 · 世界冠軍法',desc:'精準控制甜酸比<br>可調性強 · 競賽配方',ratio:15,temp:'92°C',grind:'中粗研磨',time:'3:15',buildSummary:(d,t)=>[{label:'第一段',value:Math.round(t*0.2),unit:'g'},{label:'第二段',value:Math.round(t*0.2),unit:'g'},{label:'後三段',value:t-2*Math.round(t*0.2),unit:'g'},{label:'總水量',value:t,unit:'g'},{label:'目標時間',value:'3:15',unit:''}],buildSteps:(d,t)=>{const s1=Math.round(t*0.2),s2=Math.round(t*0.2),rest=t-s1-s2,s3=Math.round(rest/3),s4=Math.round(rest/3),s5=rest-s3-s4;return{groups:[{label:'五段注水法',color:'amber',steps:[{num:1,time:'0:00',title:'第一段（前40%決定甜酸）',note:'4:6法不使用傳統悶蒸，第一段注水即兼具排氣功能 — 注入後等水完全滴完再進下一段，此段水量控制著甜酸平衡',water:s1,cum:s1,duration:0},{num:2,time:'0:45',title:'第二段（前40%決定甜酸）',note:'甜酸比的關鍵段 — 想更甜可增加此段水量，想更酸則減少',water:s2,cum:s1+s2,duration:45},{num:3,time:'1:30',title:'第三段（後60%控制濃度）',note:'開始控制濃度，等待滴完',water:s3,cum:s1+s2+s3,duration:45},{num:4,time:'2:15',title:'第四段（後60%控制濃度）',note:'持續注水，等待滴完',water:s4,cum:s1+s2+s3+s4,duration:45},{num:5,time:'3:00',title:'第五段（後60%控制濃度）',note:'最後一段，完成沖煮',water:s5,cum:t,duration:45},{num:6,time:'注完後',title:'等待滴完',note:'靜待咖啡液完全滴落後即可移除濾杯享用',water:0,cum:t,duration:90}]}]}}},hoffmann:{badge:'霍夫曼',title:'James Hoffmann · 乾淨明亮法',desc:'簡潔均勻萃取<br>入門首選 · 明亮風味',ratio:16.7,temp:'93°C',grind:'中研磨',time:'3:00',buildSummary:(d,t)=>{const b=Math.round(d*2),f=Math.round(t*0.6);return[{label:'悶蒸水量',value:b,unit:'g'},{label:'注水至60%',value:f,unit:'g'},{label:'總水量',value:t,unit:'g'},{label:'目標時間',value:'3:00',unit:''}]},buildSteps:(d,t)=>{const b=Math.round(d*2),f=Math.round(t*0.6),s=t-f;return{groups:[{label:'悶蒸 + 兩段主注水',color:'amber',steps:[{num:1,time:'0:00',title:'悶蒸注水',note:'悶蒸是讓咖啡粉排出CO2的關鍵步驟 — 注入粉量2倍的水後，輕輕旋轉濾杯讓所有粉濕潤。看到粉層膨脹（像漢堡）表示豆子很新鮮！等待約45秒讓氣體充分排出',water:b,cum:b,duration:0},{num:2,time:'0:45',title:'第一次主注水',note:'穩定中心繞圈注水，約30秒內完成',water:f-b,cum:f,duration:45},{num:3,time:'1:15',title:'第二次主注水',note:'同樣手法繼續注水，約30秒內完成',water:s,cum:t,duration:30},{num:4,time:'1:45',title:'攪拌與搖晃',note:'用攪拌棒順時針、逆時針各攪拌一圈',water:0,cum:t,duration:0},{num:5,time:'注完後',title:'等待滴完',note:'靜待咖啡液完全滴落，整體時間約3:00，即可移除濾杯享用',water:0,cum:t,duration:90}]}]}}},rao:{badge:'雷歐',title:'Scott Rao · 螺旋渦流法',desc:'螺旋渦流均勻萃取<br>進階技巧 · 醇厚層次',ratio:15,temp:'91°C',grind:'中研磨',time:'3:00',buildSummary:(d,t)=>{const b=Math.round(d*2);return[{label:'悶蒸水量',value:b,unit:'g'},{label:'主注水',value:t-b,unit:'g'},{label:'總水量',value:t,unit:'g'},{label:'目標時間',value:'3:00',unit:''}]},buildSteps:(d,t)=>{const b=Math.round(d*2),m=t-b;return{groups:[{label:'悶蒸 + 螺旋連續注水',color:'amber',steps:[{num:1,time:'0:00',title:'悶蒸注水',note:'悶蒸讓CO2排出，為後續均勻萃取做準備 — 注入粉量2倍的水，等待45秒讓氣體充分釋放。如果粉層膨脹明顯，表示豆子排氣旺盛，可等到50秒',water:b,cum:b,duration:0},{num:2,time:'0:45',title:'螺旋渦流注水',note:'從中心開始，以螺旋方式由內向外繞圈注水',water:m,cum:t,duration:90},{num:3,time:'注完後',title:'收尾與等待',note:'輕搖濾杯讓粉床平整，靜待自然滴完',water:0,cum:t,duration:90}]}]}}},onePour:{badge:'一刀流',title:'一刀流 · 單次注水法',desc:'極簡操作，穩定出品<br>新手友善 · 單次注水',ratio:15,temp:'92°C',grind:'中細研磨',time:'2:30',buildSummary:(d,t)=>{const b=Math.round(d*2);return[{label:'悶蒸水量',value:b,unit:'g'},{label:'主注水',value:t-b,unit:'g'},{label:'目標時間',value:'2:30',unit:''},{label:'總水量',value:t,unit:'g'}]},buildSteps:(d,t)=>{const b=Math.round(d*2);return{groups:[{label:'悶蒸 + 單次注水',color:'amber',steps:[{num:1,time:'0:00',title:'悶蒸注水',note:'悶蒸是排出咖啡粉中CO2的步驟，讓後續注水能均勻接觸咖啡粉 — 注入粉量2倍的水，等待30秒讓粉充分濕潤排氣',water:b,cum:b,duration:0},{num:2,time:'0:30',title:'一次注水完成',note:'穩定、不間斷地持續注水',water:t-b,cum:t,duration:30},{num:3,time:'注完後',title:'等待滴完',note:'不攪拌、不搖晃，靜待咖啡液完全滴落後移除濾杯',water:0,cum:t,duration:90}]}]}}},icedBrew:{badge:'冰手沖',title:'Flash Brew 冰手沖',desc:'40%冰塊+60%熱水沖煮<br>急速冷卻 · 果香爆發',ratio:15,temp:'96°C',grind:'中細偏細',time:'2:30',buildSummary:(d,t)=>{const i=Math.round(t*0.4),h=t-i,b=Math.round(d*2.5);return[{label:'冰塊量',value:i,unit:'g'},{label:'熱水量',value:h,unit:'g'},{label:'悶蒸水量',value:b,unit:'g'},{label:'總液量',value:t,unit:'g'}]},buildSteps:(d,t)=>{const i=Math.round(t*0.4),h=t-i,b=Math.round(d*2.5),m=h-b;return{groups:[{label:'準備 — 冰塊置入下壺',color:'green',steps:[{num:0,time:'準備',title:'放入冰塊（總水量的40%）',note:'在下壺中放入冰塊 — 冰塊會作為總水量的一部分，不是額外添加',water:i,cum:i,duration:-1}]},{label:'沖煮 — 高溫濃縮萃取',color:'amber',steps:[{num:1,time:'0:00',title:'悶蒸注水',note:'冰手沖使用高溫（96°C）悶蒸，目的是在水量較少的情況下最大化萃取 — 注入粉量2.5倍的水（比一般悶蒸多），等待30秒讓CO2排出',water:b,cum:b,duration:0},{num:2,time:'0:30',title:'主注水（僅用剩餘60%熱水）',note:'穩定注水至熱水用完，約60秒完成。注意：只用熱水沖煮，冰塊在下壺等待',water:m,cum:h,duration:30},{num:3,time:'注完後',title:'等待滴完並冷卻',note:'咖啡液滴入冰塊中急速冷卻，完成後輕搖杯子',water:0,cum:t,duration:90}]}]}}}};
 
 const KNOWLEDGE_TIPS=[{condition:(r,p,d,f)=>r==='light',title:'淺焙豆小知識',text:'淺焙豆密度較高，需要較高水溫（90°C以上）才能有效萃取。如果覺得酸味太尖銳，試試提高水溫而不是加長時間。'},{condition:(r,p,d,f)=>r==='dark',title:'深焙豆小知識',text:'深焙豆結構疏鬆，萃取速度快。降低水溫和加粗研磨是避免苦澀的關鍵。整體沖煮時間建議比淺焙短15-20%。'},{condition:(r,p,d,f)=>p==='natural',title:'日曬豆小知識',text:'日曬處理讓果肉糖分滲入豆體，甜度高但容易過萃變膩。建議研磨比同烘焙度的水洗豆粗半格到一格。'},{condition:(r,p,d,f)=>p==='anaerobic_natural'||p==='anaerobic_washed',title:'厭氧豆小知識',text:'厭氧發酵豆風味強烈獨特，建議略降水溫（降1-2°C）和略粗研磨，避免風味過於衝擊。用簡潔的沖法更能展現複雜度。'},{condition:(r,p,d,f)=>p==='honey',title:'蜜處理豆小知識',text:'蜜處理依果膠保留量分黃蜜、紅蜜、黑蜜。黑蜜接近日曬的豐富度，黃蜜接近水洗的乾淨感。可用標準研磨度作為起點。'},{condition:(r,p,d,f)=>r==='light'&&d<7,title:'養豆提醒',text:'淺焙豆建議養豆7-14天。目前天數較短，CO2仍在大量釋放，悶蒸會膨脹劇烈，可延長悶蒸時間至45-50秒讓排氣更充分。'},{condition:(r,p,d,f)=>r==='dark'&&d>14,title:'新鮮度提醒',text:'深焙豆最佳賞味期較短（烘焙後4-14天）。超過14天風味可能已開始衰減，建議磨細半格並適當提高水溫來補償。'},{condition:(r,p,d,f)=>f<30,title:'追求明亮風味',text:'偏好酸甜明亮的風味時，萃取率控制在18-20%最理想。可以用較高水溫搭配較短沖煮時間，保留前段的果酸和花香。'},{condition:(r,p,d,f)=>f>70,title:'追求醇厚風味',text:'偏好醇厚飽滿時，可以將粉水比降至1:14-1:15，並適當延長沖煮時間。中段的焦糖和巧克力風味會更明顯。'},{condition:(r,p,d,f)=>r==='light'&&p==='natural',title:'淺焙日曬組合',text:'這是風味最豐富的組合之一！建議用Kasuya 4:6法，透過前40%的分配來精準控制莓果甜感和明亮酸質的比例。'},{condition:(r,p,d,f)=>r==='medium'&&p==='washed',title:'中焙水洗組合',text:'最經典的組合，容錯範圍大。任何沖法都能有好表現，很適合作為練習和對比實驗的基準。'}];
 const METHOD_COMPARE={sweet:{difficulty:'中等',flavorProfile:'甜感突出、圓潤',suitableRoast:'中深焙、深焙',keyTechnique:'搖晃濾杯',pourStages:'4段'},kasuya:{difficulty:'中等',flavorProfile:'可調控甜酸比',suitableRoast:'淺焙、中焙',keyTechnique:'分段等待滴完',pourStages:'5段'},hoffmann:{difficulty:'入門',flavorProfile:'乾淨明亮',suitableRoast:'淺焙',keyTechnique:'攪拌+搖晃拉平',pourStages:'2段'},rao:{difficulty:'進階',flavorProfile:'醇厚有層次',suitableRoast:'中焙',keyTechnique:'螺旋渦流',pourStages:'連續'},onePour:{difficulty:'入門',flavorProfile:'乾淨穩定',suitableRoast:'中焙',keyTechnique:'單次不間斷注水',pourStages:'1段'},icedBrew:{difficulty:'中等',flavorProfile:'冰涼果香',suitableRoast:'淺焙',keyTechnique:'冰塊急速冷卻',pourStages:'2段'}};
@@ -1785,7 +1828,7 @@ const RECOMMENDATIONS={'light-washed':{method:'hoffmann',reason:'淺焙水洗豆
 const METHOD_ICONS={sweet:`<svg class="method-icon" viewBox="0 0 40 40"><path d="M12 8h16l-2 20H14L12 8z" fill="none" stroke="currentColor" stroke-width="1.5"/><path d="M10 8h20" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/><path d="M18 3c0 3 4 3 4 5" fill="none" stroke="currentColor" stroke-width="1" opacity=".5"/><path d="M20 14c-2 4 2 4 0 8" fill="none" stroke="currentColor" stroke-width="1" stroke-dasharray="2 1" opacity=".6"/></svg>`,kasuya:`<svg class="method-icon" viewBox="0 0 40 40"><path d="M12 8h16l-2 20H14L12 8z" fill="none" stroke="currentColor" stroke-width="1.5"/><path d="M10 8h20" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/><line x1="14" y1="14" x2="26" y2="14" stroke="currentColor" stroke-width=".8" stroke-dasharray="2 2" opacity=".4"/><line x1="14.5" y1="18" x2="25.5" y2="18" stroke="currentColor" stroke-width=".8" stroke-dasharray="2 2" opacity=".4"/><text x="30" y="12" font-size="6" fill="currentColor" opacity=".5">4</text><text x="30" y="22" font-size="6" fill="currentColor" opacity=".5">6</text></svg>`,hoffmann:`<svg class="method-icon" viewBox="0 0 40 40"><path d="M12 8h16l-2 20H14L12 8z" fill="none" stroke="currentColor" stroke-width="1.5"/><path d="M10 8h20" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/><circle cx="20" cy="18" r="4" fill="none" stroke="currentColor" stroke-width="1" stroke-dasharray="2 1" opacity=".5"/><path d="M16 32h8" stroke="currentColor" stroke-width="1" opacity=".4"/></svg>`,rao:`<svg class="method-icon" viewBox="0 0 40 40"><path d="M12 8h16l-2 20H14L12 8z" fill="none" stroke="currentColor" stroke-width="1.5"/><path d="M10 8h20" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/><path d="M20 12c-3 2-3 5 0 7s3 5 0 7" fill="none" stroke="currentColor" stroke-width="1" opacity=".5"/></svg>`,onePour:`<svg class="method-icon" viewBox="0 0 40 40"><path d="M12 8h16l-2 20H14L12 8z" fill="none" stroke="currentColor" stroke-width="1.5"/><path d="M10 8h20" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/><line x1="20" y1="3" x2="20" y2="15" stroke="currentColor" stroke-width="1.5" opacity=".5" stroke-linecap="round"/><circle cx="20" cy="3" r="1.5" fill="currentColor" opacity=".4"/></svg>`,icedBrew:`<svg class="method-icon" viewBox="0 0 40 40"><path d="M12 8h16l-2 20H14L12 8z" fill="none" stroke="currentColor" stroke-width="1.5"/><path d="M10 8h20" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/><rect x="16" y="20" width="4" height="4" rx="1" fill="none" stroke="currentColor" stroke-width=".8" opacity=".5"/><rect x="21" y="22" width="3" height="3" rx="1" fill="none" stroke="currentColor" stroke-width=".8" opacity=".5"/><path d="M18 3v4" stroke="currentColor" stroke-width="1" opacity=".3"/><path d="M22 2v5" stroke="currentColor" stroke-width="1" opacity=".3"/></svg>`};
 const FLAVOR_PROFILES={sweet:{acidity:3,bitterness:2,sweetness:9,body:7,aroma:6},kasuya:{acidity:7,bitterness:2,sweetness:6,body:5,aroma:8},hoffmann:{acidity:8,bitterness:2,sweetness:5,body:4,aroma:9},rao:{acidity:5,bitterness:3,sweetness:5,body:8,aroma:7},onePour:{acidity:5,bitterness:3,sweetness:5,body:6,aroma:5},icedBrew:{acidity:8,bitterness:1,sweetness:6,body:3,aroma:9}};
 const STEP_TIPS={bloom:'看到咖啡粉膨脹像漢堡？表示豆子新鮮度很好！',pour:'水柱粗細像筷子，保持穩定不要忽快忽慢',wait:'耐心等待，好風味需要時間',final:'如果看到白泡沫，下次試試提早 10 秒移開濾杯'};
-const FLAVOR_DESCRIPTIONS={sweet:'像一杯溫熱的蜂蜜水，甜感圓潤、口感飽滿，適合喜歡「甜而不膩」的人。',kasuya:'前半段的果酸與後半段的甜感形成對話，像水果塔一樣層次分明。',hoffmann:'像一杯乾淨的紅茶，花香浮在前端，尾韻明亮而細緻。',rao:'厚實如可可，帶有堅果的溫暖感，適合喜歡有「份量感」的咖啡。',onePour:'均衡穩定的日常味道，像一位可靠的老朋友，每次見面都很舒服。',icedBrew:'果汁感爆發！花香和果酸被冰鎮鎖住，清爽得像夏天的第一口冰茶。'};
+const FLAVOR_DESCRIPTIONS={sweet:'像溫熱蜂蜜水般的圓潤甜感，飽滿不膩——獻給偏好甜韻的你。',kasuya:'前半段的果酸與後半段的甜感形成對話，像水果塔一樣層次分明。',hoffmann:'像一杯乾淨的紅茶，花香浮在前端，尾韻明亮而細緻。',rao:'厚實如可可，帶有堅果的溫暖感，適合喜歡有「份量感」的咖啡。',onePour:'均衡穩定的日常味道，像一位可靠的老朋友，每次見面都很舒服。',icedBrew:'果汁般的爆發力！花香與果酸在冰鎮中被完美凝結，清爽如夏日的第一口沁涼。'};
 const GRIND_LEVELS={sweet:'中細',kasuya:'中粗',hoffmann:'中',rao:'中',onePour:'中細',icedBrew:'中細偏細'};
 const FAQ_DATA=[{q:'為什麼我的咖啡總是苦的？',a:'苦味通常來自「過度萃取」— 最常見的三個原因是：<br><br><strong>1. 水溫太高：</strong>先試試降低 2°C。深焙豆建議控制在 88-90°C 之間。<br><strong>2. 研磨太細：</strong>調粗半格，讓水流通過速度加快。<br><strong>3. 沖煮時間太長：</strong>如果水滴得很慢，也是研磨太細的徵兆。<br><br>另外，粉水比也會影響 — 粉太多水太少同樣會偏苦。建議從 1:15 的粉水比開始嘗試。'},{q:'研磨度怎麼調？',a:'每台磨豆機的刻度都不太一樣，所以沒有一個萬用數字。不過有個好用的起點：<br><br>把研磨度調到大約像<strong>細砂糖到白砂糖之間</strong>的粗細，這通常就是手沖的「中細研磨」。之後再根據味道微調 — 喝起來太淡就磨細一點，太苦就磨粗一點。<br><br>小技巧：每次只調半格，沖完後記錄味道差異，慢慢就能找到你的最佳刻度。'},{q:'養豆幾天才夠？',a:'剛烘好的豆子 CO2 太多，悶蒸會劇烈膨脹，但萃取出來的風味反而不佳。建議的養豆天數：<br><br><strong>淺焙：</strong>7-14 天（密度高，排氣較慢）<br><strong>中焙：</strong>5-10 天<br><strong>深焙：</strong>3-7 天（結構疏鬆，排氣較快）<br><br>一個簡單的判斷方式：悶蒸時如果膨脹劇烈到冒大泡泡，表示豆子還太新鮮，可以再等幾天。最佳賞味期通常在烘焙後 7-21 天之間。'},{q:'濾紙要不要先沖濕？',a:'建議先用熱水沖濕濾紙，主要有兩個好處：<br><br><strong>1. 去除紙味：</strong>未漂白濾紙的紙味較明顯，沖濕可大幅降低。即使是高品質漂白濾紙（如 Hario 白色），紙味已很淡，但預濕仍有幫助。<br><strong>2. 預熱濾杯：</strong>讓濾杯和下壺溫度提高，避免沖煮過程中熱量流失。<br><br>這個步驟只需要 10 秒，卻對風味乾淨度有明顯提升。記得沖完後倒掉預熱水再開始沖煮。'},{q:'為什麼同樣的豆子每次沖出來味道都不一樣？',a:'手沖的變數比你想像的多：水溫、研磨度、注水速度、注水高度、水質、甚至當天的氣溫濕度都會影響。<br><br>最重要的一個原則：<strong>每次只調整一個變數</strong>，才能找到差異的原因。建議善用本站的參數設定功能，把每次沖煮的條件固定下來，就能大幅提升穩定度。<br><br>如果你發現味道有明顯波動，最常見的原因是研磨度不夠穩定 — 這通常跟磨豆機的品質有關。'},{q:'可以用自來水沖嗎？',a:'可以，但建議用過濾水會有明顯差別。<br><br>自來水中的氯會帶來異味，而礦物質含量（水質軟硬度）也會影響萃取效果。理想的沖煮水 TDS 值約在 <strong>75-150 ppm</strong> 之間。<br><br>值得注意的是，純水（TDS 太低）其實也不適合，會讓咖啡味道單調扁平。如果你所在地區水質較硬，用濾水器會有明顯改善；如果用的是逆滲透水，可以考慮加入少量礦泉水調和。'},{q:'什麼是悶蒸？為什麼很重要？',a:'悶蒸是手沖的第一步 — 用少量熱水（通常是粉量的 2-3 倍）浸濕咖啡粉，等待 30-45 秒。<br><br><strong>目的：</strong>釋放咖啡粉中的二氧化碳（CO2）。如果跳過悶蒸直接注水，CO2 會阻擋水與咖啡粉的接觸，導致萃取不均勻。<br><br><strong>如何判斷悶蒸完成：</strong>觀察粉層 — 當膨脹停止、表面氣泡開始消退，就是開始注水的好時機。新鮮的豆子膨脹會很明顯（像漢堡），放久的豆子可能幾乎不膨脹。'},{q:'手沖需要準備什麼器材？',a:'最基本的手沖裝備包括：<br><br><strong>必備：</strong>濾杯（推薦 Hario V60）、濾紙、手沖壺（細口壺）、磨豆機、電子秤、計時器<br><strong>建議加購：</strong>溫度計（或溫控手沖壺）<br><br>本站的六種沖法主要針對錐形濾杯（V60 類型）設計。如果你使用的是梯形濾杯（如 Kalita Wave）或其他類型，參數可能需要微調 — 通常研磨度可以粗一點點，沖煮時間會略長。'}];
 let selectedMethod=null,timerInterval=null,timerSeconds=0,timerRunning=false,selectedCompareMethods=[],currentStepDurations=[],customRatio=null;
@@ -1794,34 +1837,34 @@ function autoAdjustTemp(){const r=document.getElementById('roastLevel').value;co
 function requestWakeLock(){if('wakeLock' in navigator){navigator.wakeLock.request('screen').then(lock=>{wakeLock=lock;console.log('Wake Lock acquired')}).catch(err=>{console.log('Wake Lock request failed',err)})}}
 function releaseWakeLock(){if(wakeLock){wakeLock.release().then(()=>{wakeLock=null;console.log('Wake Lock released')}).catch(err=>{console.log('Wake Lock release failed',err)})}}
 function speakStep(stepTitle){if(!voiceEnabled||!('speechSynthesis' in window))return;const u=new SpeechSynthesisUtterance(stepTitle);u.lang='zh-TW';u.rate=0.9;speechSynthesis.cancel();speechSynthesis.speak(u)}
-function enterFocusMode(){document.body.classList.add('focus-mode');document.getElementById('timerDisplay').style.position='fixed'}
+function enterFocusMode(){document.body.classList.add('focus-mode')}
 function exitFocusMode(){document.body.classList.remove('focus-mode');document.getElementById('timerDisplay').style.position='relative';releaseWakeLock();document.getElementById('wakeLockIndicator').classList.remove('active')}
-function renderCompareRadar(){if(selectedCompareMethods.length!==2)return;const m1=selectedCompareMethods[0],m2=selectedCompareMethods[1];const p1=FLAVOR_PROFILES[m1],p2=FLAVOR_PROFILES[m2];if(!p1||!p2)return;const cr=document.getElementById('compareResult');const existingRadar=cr.querySelector('.compare-radar-wrap');if(existingRadar)existingRadar.remove();const radarWrap=document.createElement('div');radarWrap.className='compare-radar-wrap';radarWrap.innerHTML=`<div class="compare-radar-title">風味雷達圖對比</div><div class="compare-radar-container"><div class="compare-radar-item"><svg class="compare-radar-svg" id="compareRadar1" viewBox="0 0 240 210"></svg><div style="font-size:0.85em;font-weight:600;color:var(--amber);margin-top:8px;">${BREW_METHODS[m1].title.split(' · ')[0]}</div></div><div class="compare-radar-item"><svg class="compare-radar-svg" id="compareRadar2" viewBox="0 0 240 210"></svg><div style="font-size:0.85em;font-weight:600;color:#4ECDC4;margin-top:8px;">${BREW_METHODS[m2].title.split(' · ')[0]}</div></div></div><div class="compare-radar-legend"><div class="compare-radar-legend-item"><div class="compare-radar-legend-color" style="background:var(--amber);"></div><span>${BREW_METHODS[m1].title.split(' · ')[0]}</span></div><div class="compare-radar-legend-item"><div class="compare-radar-legend-color" style="background:#4ECDC4;"></div><span>${BREW_METHODS[m2].title.split(' · ')[0]}</span></div></div>`;cr.insertBefore(radarWrap,cr.firstChild);setTimeout(()=>{drawCompareRadar(m1,p1,'compareRadar1','var(--amber)');drawCompareRadar(m2,p2,'compareRadar2','#4ECDC4')},0)}
-function drawCompareRadar(methodKey,profile,svgId,color){const svg=document.getElementById(svgId);if(!svg)return;const cx=120,cy=105,r=80,labels=['酸度','苦度','甜度','體脂感','香氣'],keys=['acidity','bitterness','sweetness','body','aroma'],n=5;let gridLines='',axisLines='',labelEls='';for(let ring=2;ring<=10;ring+=2){let pts=[];for(let i=0;i<n;i++){const a=Math.PI*2*i/n-Math.PI/2,x=cx+r*(ring/10)*Math.cos(a),y=cy+r*(ring/10)*Math.sin(a);pts.push(`${x},${y}`)}gridLines+=`<polygon points="${pts.join(' ')}" fill="none" stroke="rgba(212,137,42,${ring===10?0.3:0.12})" stroke-width="${ring===10?1:0.5}"/>`}for(let i=0;i<n;i++){const a=Math.PI*2*i/n-Math.PI/2,x=cx+r*Math.cos(a),y=cy+r*Math.sin(a),lx=cx+(r+16)*Math.cos(a),ly=cy+(r+16)*Math.sin(a);axisLines+=`<line x1="${cx}" y1="${cy}" x2="${x}" y2="${y}" stroke="rgba(212,137,42,0.2)" stroke-width="0.5"/>`;labelEls+=`<text x="${lx}" y="${ly}" text-anchor="middle" dominant-baseline="central" fill="currentColor" font-size="10" opacity="0.7">${labels[i]}</text>`}let dataPts=[];for(let i=0;i<n;i++){const a=Math.PI*2*i/n-Math.PI/2,v=profile[keys[i]]/10,x=cx+r*v*Math.cos(a),y=cy+r*v*Math.sin(a);dataPts.push(`${x},${y}`)}const dataPolygon=`<polygon points="${dataPts.join(' ')}" fill="${color}" opacity="0.2" stroke="${color}" stroke-width="2"/>`;let dots='';for(let i=0;i<n;i++){const a=Math.PI*2*i/n-Math.PI/2,v=profile[keys[i]]/10,x=cx+r*v*Math.cos(a),y=cy+r*v*Math.sin(a);dots+=`<circle cx="${x}" cy="${y}" r="3.5" fill="${color}"/>`}svg.innerHTML=gridLines+axisLines+dataPolygon+dots+labelEls}
+function renderCompareRadar(){if(selectedCompareMethods.length!==2)return;const m1=selectedCompareMethods[0],m2=selectedCompareMethods[1];const p1=FLAVOR_PROFILES[m1],p2=FLAVOR_PROFILES[m2];if(!p1||!p2)return;const cr=document.getElementById('compareResult');const existingRadar=cr.querySelector('.compare-radar-wrap');if(existingRadar)existingRadar.remove();const radarWrap=document.createElement('div');radarWrap.className='compare-radar-wrap';radarWrap.innerHTML=`<div class="compare-radar-title">風味雷達圖對比</div><div class="compare-radar-container"><div class="compare-radar-item"><svg class="compare-radar-svg" id="compareRadar1" viewBox="0 0 240 210"></svg><div style="font-size:0.85em;font-weight:600;color:var(--copper);margin-top:8px;">${BREW_METHODS[m1].title.split(' · ')[0]}</div></div><div class="compare-radar-item"><svg class="compare-radar-svg" id="compareRadar2" viewBox="0 0 240 210"></svg><div style="font-size:0.85em;font-weight:600;color:#4ECDC4;margin-top:8px;">${BREW_METHODS[m2].title.split(' · ')[0]}</div></div></div><div class="compare-radar-legend"><div class="compare-radar-legend-item"><div class="compare-radar-legend-color" style="background:var(--copper);"></div><span>${BREW_METHODS[m1].title.split(' · ')[0]}</span></div><div class="compare-radar-legend-item"><div class="compare-radar-legend-color" style="background:#4ECDC4;"></div><span>${BREW_METHODS[m2].title.split(' · ')[0]}</span></div></div>`;cr.insertBefore(radarWrap,cr.firstChild);setTimeout(()=>{drawCompareRadar(m1,p1,'compareRadar1','var(--copper)');drawCompareRadar(m2,p2,'compareRadar2','#4ECDC4')},0)}
+function drawCompareRadar(methodKey,profile,svgId,color){const svg=document.getElementById(svgId);if(!svg)return;const cx=120,cy=105,r=80,labels=['酸度','苦度','甜度','體脂感','香氣'],keys=['acidity','bitterness','sweetness','body','aroma'],n=5;let gridLines='',axisLines='',labelEls='';for(let ring=2;ring<=10;ring+=2){let pts=[];for(let i=0;i<n;i++){const a=Math.PI*2*i/n-Math.PI/2,x=cx+r*(ring/10)*Math.cos(a),y=cy+r*(ring/10)*Math.sin(a);pts.push(`${x},${y}`)}gridLines+=`<polygon points="${pts.join(' ')}" fill="none" stroke="rgba(184,125,86,${ring===10?0.3:0.12})" stroke-width="${ring===10?1:0.5}"/>`}for(let i=0;i<n;i++){const a=Math.PI*2*i/n-Math.PI/2,x=cx+r*Math.cos(a),y=cy+r*Math.sin(a),lx=cx+(r+16)*Math.cos(a),ly=cy+(r+16)*Math.sin(a);axisLines+=`<line x1="${cx}" y1="${cy}" x2="${x}" y2="${y}" stroke="rgba(184,125,86,0.2)" stroke-width="0.5"/>`;labelEls+=`<text x="${lx}" y="${ly}" text-anchor="middle" dominant-baseline="central" fill="currentColor" font-size="10" opacity="0.7">${labels[i]}</text>`}let dataPts=[];for(let i=0;i<n;i++){const a=Math.PI*2*i/n-Math.PI/2,v=profile[keys[i]]/10,x=cx+r*v*Math.cos(a),y=cy+r*v*Math.sin(a);dataPts.push(`${x},${y}`)}const dataPolygon=`<polygon points="${dataPts.join(' ')}" fill="${color}" opacity="0.2" stroke="${color}" stroke-width="2"/>`;let dots='';for(let i=0;i<n;i++){const a=Math.PI*2*i/n-Math.PI/2,v=profile[keys[i]]/10,x=cx+r*v*Math.cos(a),y=cy+r*v*Math.sin(a);dots+=`<circle cx="${x}" cy="${y}" r="3.5" fill="${color}"/>`}svg.innerHTML=gridLines+axisLines+dataPolygon+dots+labelEls}
 
 function init(){renderMethodCards();attachEventListeners();updateRecommendation();updateKnowledgeTips();updateGreeting();renderFAQ();const jn=document.getElementById('journalStars');jn.innerHTML='12345'.split('').map((n,i)=>`<button class="journal-star-btn" data-rating="${parseInt(n)}" aria-label="評分${n}星">★</button>`).join('');document.querySelectorAll('.journal-star-btn').forEach(b=>{b.addEventListener('click',(e)=>{const r=parseInt(e.target.dataset.rating);document.querySelectorAll('.journal-star-btn').forEach((sb,idx)=>sb.classList.toggle('active',idx<r));document.currentRating=r})});document.getElementById('journalSaveBtn').addEventListener('click',()=>{if(!selectedMethod){alert('請先開始沖煮');return}const entry={date:new Date().toLocaleDateString('zh-TW'),method:BREW_METHODS[selectedMethod].title.split(' · ')[0],dose:parseFloat(document.getElementById('doseInput').value),ratio:getEffectiveRatio(BREW_METHODS[selectedMethod]),rating:document.currentRating||0,note:document.getElementById('journalNote').value};const hist=JSON.parse(localStorage.getItem('brewJournal')||'[]');hist.push(entry);localStorage.setItem('brewJournal',JSON.stringify(hist));alert('紀錄已儲存！');document.getElementById('journalNote').value='';document.querySelectorAll('.journal-star-btn').forEach(b=>b.classList.remove('active'));document.currentRating=0;renderJournalHistory()})}
 function renderMethodCards(){const g=document.getElementById('methodGrid');g.innerHTML='';Object.entries(BREW_METHODS).forEach(([k,m])=>{const c=document.createElement('div');c.className='method-card';c.innerHTML=`${METHOD_ICONS[k]||''}<div class="method-badge">${m.badge}</div><div class="method-name">${m.title.split(' · ')[0]}</div><div class="method-ratio">${m.ratio}:1 · ${m.time}</div><div class="method-desc">${m.desc}</div>`;c.addEventListener('click',()=>selectMethod(k,m));g.appendChild(c)})}
-function selectMethod(k,m){selectedMethod=k;customRatio=null;const tempVal=m.temp.replace('°C','').replace('℃','');if(tempVal)document.getElementById('currentTemp').value=tempVal;updateTempSuggestion();document.querySelectorAll('.method-card').forEach(c=>c.classList.remove('active'));if(event&&event.target){const card=event.target.closest('.method-card');if(card)card.classList.add('active')}document.getElementById('calcPanel').style.display='block';document.getElementById('calcPanel').classList.remove('recipe-animate');void document.getElementById('calcPanel').offsetWidth;document.getElementById('calcPanel').classList.add('recipe-animate');document.getElementById('stepsContainer').style.display='block';document.getElementById('stepsContainer').classList.remove('recipe-animate');void document.getElementById('stepsContainer').offsetWidth;document.getElementById('stepsContainer').classList.add('recipe-animate');const rs=document.getElementById('ratioSlider');rs.value=m.ratio;document.getElementById('ratioValue').textContent='1:'+m.ratio;showGuide(k,m);updateCalcPanel(m);updateSteps(m);renderRadar(k);renderGrindVisual(k);document.getElementById('radarWrap').style.display='block';setTimeout(()=>{document.getElementById('calcPanel').scrollIntoView({behavior:'smooth',block:'start'})},100)}
+function selectMethod(k,m){if(!m)m=BREW_METHODS[k];selectedMethod=k;customRatio=null;const tempVal=m.temp.replace('°C','').replace('℃','');if(tempVal)document.getElementById('currentTemp').value=tempVal;updateTempSuggestion();document.querySelectorAll('.method-card').forEach(c=>c.classList.remove('active'));if(event&&event.target){const card=event.target.closest('.method-card');if(card)card.classList.add('active')}document.getElementById('calcPanel').style.display='block';document.getElementById('calcPanel').classList.remove('recipe-animate');void document.getElementById('calcPanel').offsetWidth;document.getElementById('calcPanel').classList.add('recipe-animate');document.getElementById('stepsContainer').style.display='block';document.getElementById('stepsContainer').classList.remove('recipe-animate');void document.getElementById('stepsContainer').offsetWidth;document.getElementById('stepsContainer').classList.add('recipe-animate');const rs=document.getElementById('ratioSlider');rs.value=m.ratio;document.getElementById('ratioValue').textContent='1:'+m.ratio;showGuide(k,m);updateCalcPanel(m);updateSteps(m);renderRadar(k);renderGrindVisual(k);document.getElementById('radarWrap').style.display='block';setTimeout(()=>{document.getElementById('calcPanel').scrollIntoView({behavior:'smooth',block:'start'})},100)}
 function getEffectiveRatio(m){return customRatio!==null?customRatio:m.ratio}
 function updateCalcPanel(m){const d=parseFloat(document.getElementById('doseInput').value)||20,r=getEffectiveRatio(m),t=Math.round(d*r),s=m.buildSummary(d,t),g=document.getElementById('calcGrid');g.innerHTML=s.map(i=>`<div class="calc-item"><div class="calc-value">${i.value}</div><div class="calc-label">${i.label}</div>${i.unit?`<div class="calc-label">${i.unit}</div>`:''}</div>`).join('')}
 function updateSteps(m){const d=parseFloat(document.getElementById('doseInput').value)||20,r=getEffectiveRatio(m),t=Math.round(d*r),sd=m.buildSteps(d,t);let bloomTimeAddition=0;const skipRest=document.getElementById('restDaysSkipBtn').classList.contains('active'),restDays=skipRest?7:(parseInt(document.getElementById('restDays').value)||7);if(restDays<=3&&!skipRest){bloomTimeAddition=10;document.getElementById('freshBeanNote').classList.add('show')}else{document.getElementById('freshBeanNote').classList.remove('show')}currentStepBloomTime=bloomTimeAddition;let h='';currentStepDurations=[];let cumTime=0;sd.groups.forEach(g=>{h+=`<div class="steps-group-title ${g.color}">${g.label}</div>`;g.steps.forEach(s=>{cumTime+=(s.duration||0);currentStepDurations.push(cumTime);let wb='';if(s.water>0){const pct=Math.round((s.cum/t)*100);wb=`<div class="step-water"><div class="step-water-pour">+${s.water}g</div><div class="step-water-cum">累計 ${s.cum}g / ${t}g</div><div class="step-water-bar"><div class="step-water-bar-fill" style="width:${pct}%"></div></div></div>`}h+=`<div class="step-item" data-step-idx="${currentStepDurations.length-1}"><div class="step-num">步驟 ${s.num}</div><div class="step-time">${s.time}</div><div class="step-title">${s.title}</div>${wb}<div class="step-note">${s.note}</div></div>`})});document.getElementById('stepsContent').innerHTML=h}
 function showGuide(k,m){const g=GUIDE_CONTENT[k],gd=[{title:'方法起源',text:g.origin},{title:'核心理念',text:g.concept},{title:'操作細節',text:g.details.join('\n')},{title:'適合豆子',text:g.suitableBean},{title:'不太適合',text:g.unsuitable},{title:'常見問題',text:g.faq.map(f=>`${f.q}: ${f.a}`).join('\n')}],gc=document.getElementById('guideContainer');gc.innerHTML=`<div class="guide-card"><div class="guide-header"><div class="guide-header-text">沖法指南</div><div class="guide-toggle">▼</div></div><div class="guide-content">${gd.map(s=>`<div class="guide-section"><div class="guide-section-title">${s.title}</div><div class="guide-section-text">${s.text.includes('\n')?'<ul>'+s.text.split('\n').map(l=>`<li>${l}</li>`).join('')+'</ul>':s.text.replace(/\n/g,'<br>')}</div></div>`).join('')}</div></div>`;const h=gc.querySelector('.guide-header'),c=gc.querySelector('.guide-content'),t=gc.querySelector('.guide-toggle');h.addEventListener('click',()=>{c.classList.toggle('open');t.classList.toggle('open')})}
 function renderAllGuides(){const gc=document.getElementById('guideContainer');if(!gc)return;let html='';const guideNames={sweet:'超高甜感法',kasuya:'Kasuya 4:6法',hoffmann:'James Hoffmann法',rao:'Scott Rao法',onePour:'一刀流',icedBrew:'Flash Brew 冰手沖'};Object.entries(GUIDE_CONTENT).forEach(([k,g])=>{const gd=[{title:'方法起源',text:g.origin},{title:'核心理念',text:g.concept},{title:'操作細節',text:g.details.join('\n')},{title:'適合豆子',text:g.suitableBean},{title:'不太適合',text:g.unsuitable},{title:'常見問題',text:g.faq.map(f=>`${f.q}: ${f.a}`).join('\n')}];html+=`<div class="guide-card" data-guide="${k}"><div class="guide-header"><div class="guide-header-text">${guideNames[k]||k} 沖法指南</div><div class="guide-toggle">▼</div></div><div class="guide-content">${gd.map(s=>`<div class="guide-section"><div class="guide-section-title">${s.title}</div><div class="guide-section-text">${s.text.includes('\n')?'<ul>'+s.text.split('\n').map(l=>`<li>${l}</li>`).join('')+'</ul>':s.text.replace(/\n/g,'<br>')}</div></div>`).join('')}</div></div>`});gc.innerHTML=html;gc.querySelectorAll('.guide-header').forEach(h=>{const c=h.nextElementSibling,t=h.querySelector('.guide-toggle');h.addEventListener('click',()=>{c.classList.toggle('open');t.classList.toggle('open')})})}
-function updateRecommendation(){const r=document.getElementById('roastLevel').value,p=document.getElementById('processing').value;let k=r+'-'+p;if(!RECOMMENDATIONS[k])k='default';const rec=RECOMMENDATIONS[k],rp=document.getElementById('recommendationPanel'),rt=document.getElementById('recommendationText');let recText=`<strong>${BREW_METHODS[rec.method].title}</strong><br>${rec.reason}`;const month=new Date().getMonth()+1,isSummer=month>=5&&month<=9;if(isSummer&&rec.method!=='icedBrew'){recText+='<br><br><em style="color:rgba(232,184,109,0.7);font-size:0.9em;">🌞 夏日提醒：也可以試試冰手沖，用同一支豆子感受不同的清涼風味！</em>'}else if((month>=11||month<=2)&&!isSummer){recText+='<br><br><em style="color:rgba(232,184,109,0.7);font-size:0.9em;">❄️ 冬日提醒：可以將水溫提高 1-2°C，讓風味更飽滿溫暖。</em>'}rp.style.display='block';rt.innerHTML=recText}
+function updateRecommendation(){const r=document.getElementById('roastLevel').value,p=document.getElementById('processing').value;let k=r+'-'+p;if(!RECOMMENDATIONS[k])k='default';const rec=RECOMMENDATIONS[k],rp=document.getElementById('recommendationPanel'),rt=document.getElementById('recommendationText');let recText=`<strong>${BREW_METHODS[rec.method].title}</strong><br>${rec.reason}`;const month=new Date().getMonth()+1,isSummer=month>=5&&month<=9;if(isSummer&&rec.method!=='icedBrew'){recText+='<br><br><em style="color:var(--text-secondary);font-size:0.9em;">🌞 夏日提醒：也可以試試冰手沖，用同一支豆子感受不同的清涼風味！</em>'}else if((month>=11||month<=2)&&!isSummer){recText+='<br><br><em style="color:var(--text-secondary);font-size:0.9em;">❄️ 冬日提醒：可以將水溫提高 1-2°C，讓風味更飽滿溫暖。</em>'}rp.style.display='block';rt.innerHTML=recText}
 function updateKnowledgeTips(){const r=document.getElementById('roastLevel').value,p=document.getElementById('processing').value,skipRest=document.getElementById('restDaysSkipBtn').classList.contains('active'),d=skipRest?7:(parseInt(document.getElementById('restDays').value)||7),f=parseInt(document.getElementById('flavorPref').value),mt=KNOWLEDGE_TIPS.filter(t=>t.condition(r,p,d,f)).slice(0,2),ktc=document.getElementById('knowledgeTipsContainer');if(mt.length===0){ktc.innerHTML='';return}ktc.innerHTML=mt.map((t,i)=>`<div class="knowledge-tip" id="tip-${i}"><div class="knowledge-tip-header"><div class="knowledge-tip-title">${t.title}</div><div class="knowledge-tip-toggle">▼</div></div><div class="knowledge-tip-text">${t.text}</div></div>`).join('');mt.forEach((_,i)=>{const el=document.getElementById(`tip-${i}`),h=el.querySelector('.knowledge-tip-header'),c=el.querySelector('.knowledge-tip-text'),tg=el.querySelector('.knowledge-tip-toggle');h.addEventListener('click',()=>{c.classList.toggle('open');tg.classList.toggle('open')})})}
-function attachEventListeners(){document.getElementById('quickStartBtn').addEventListener('click',quickStart);document.getElementById('doseInput').addEventListener('input',()=>{recalcAll();updateDoseBtnActive()});document.getElementById('roastLevel').addEventListener('change',()=>{updateRecommendation();updateKnowledgeTips()});document.getElementById('processing').addEventListener('change',()=>{updateRecommendation();updateKnowledgeTips()});document.getElementById('restDays').addEventListener('input',()=>{document.getElementById('restDaysSkipBtn').classList.remove('active');document.getElementById('restDays').disabled=false;document.getElementById('restDays').style.opacity='1';updateKnowledgeTips()});document.getElementById('restDaysSkipBtn').addEventListener('click',()=>{const btn=document.getElementById('restDaysSkipBtn'),inp=document.getElementById('restDays');btn.classList.toggle('active');if(btn.classList.contains('active')){inp.disabled=true;inp.style.opacity='0.4'}else{inp.disabled=false;inp.style.opacity='1'}updateKnowledgeTips()});document.getElementById('flavorPref').addEventListener('input',(e)=>{document.getElementById('flavorValue').textContent=e.target.value;updateRecommendation();updateKnowledgeTips()});document.querySelectorAll('.dose-btn').forEach(btn=>{btn.addEventListener('click',()=>{const v=parseFloat(btn.dataset.dose);document.getElementById('doseInput').value=v;document.querySelectorAll('.dose-btn').forEach(b=>b.classList.remove('active'));btn.classList.add('active');recalcAll()})});document.querySelectorAll('.stepper-btn').forEach(btn=>{btn.addEventListener('click',()=>{const tid=btn.dataset.target,delta=parseFloat(btn.dataset.delta),inp=document.getElementById(tid);if(inp.disabled)return;let v=parseFloat(inp.value)||0;v=Math.max(parseFloat(inp.min),Math.min(parseFloat(inp.max),v+delta));inp.value=v;inp.dispatchEvent(new Event('input',{bubbles:true}))})});document.getElementById('ratioSlider').addEventListener('input',(e)=>{const v=parseFloat(e.target.value);customRatio=v;document.getElementById('ratioValue').textContent='1:'+v;recalcAll()});document.getElementById('startTimerBtn').addEventListener('click',startTimer);document.getElementById('pausePlayBtn').addEventListener('click',toggleTimer);document.getElementById('resetTimerBtn').addEventListener('click',resetTimer);document.getElementById('voiceToggleBtn').addEventListener('click',()=>{voiceEnabled=!voiceEnabled;const btn=document.getElementById('voiceToggleBtn');btn.textContent=voiceEnabled?'🔔':'🔕';btn.classList.toggle('active',voiceEnabled)});document.getElementById('currentTemp').addEventListener('input',()=>{updateTempSuggestion();updateCalcPanel(BREW_METHODS[selectedMethod])});document.getElementById('roastLevel').addEventListener('change',()=>{autoAdjustTemp();updateRecommendation();updateKnowledgeTips()});document.getElementById('manualRatioInput').addEventListener('input',(e)=>{const v=parseFloat(e.target.value);if(v>=12&&v<=18){customRatio=v;document.getElementById('ratioSlider').value=v;document.getElementById('ratioValue').textContent='1:'+v;recalcAll()}});document.getElementById('ratioSlider').addEventListener('input',(e)=>{const v=parseFloat(e.target.value);document.getElementById('manualRatioInput').value=v.toFixed(1);});document.getElementById('darkModeToggle').addEventListener('click',toggleDarkMode);document.getElementById('compareBtn').addEventListener('click',()=>{selectedCompareMethods=[];renderCompareModal();document.getElementById('compareModal').classList.add('active')});document.getElementById('compareCloseBtn').addEventListener('click',()=>{document.getElementById('compareModal').classList.remove('active')});document.getElementById('compareModal').addEventListener('click',(e)=>{if(e.target===document.getElementById('compareModal'))document.getElementById('compareModal').classList.remove('active')})}
+function attachEventListeners(){document.getElementById('quickStartBtn').addEventListener('click',quickStart);document.getElementById('doseInput').addEventListener('input',()=>{recalcAll();updateDoseBtnActive()});document.getElementById('roastLevel').addEventListener('change',()=>{updateRecommendation();updateKnowledgeTips()});document.getElementById('processing').addEventListener('change',()=>{updateRecommendation();updateKnowledgeTips()});document.getElementById('restDays').addEventListener('input',()=>{document.getElementById('restDaysSkipBtn').classList.remove('active');document.getElementById('restDays').disabled=false;document.getElementById('restDays').style.opacity='1';updateKnowledgeTips()});document.getElementById('restDaysSkipBtn').addEventListener('click',()=>{const btn=document.getElementById('restDaysSkipBtn'),inp=document.getElementById('restDays');btn.classList.toggle('active');if(btn.classList.contains('active')){inp.disabled=true;inp.style.opacity='0.4'}else{inp.disabled=false;inp.style.opacity='1'}updateKnowledgeTips()});document.getElementById('flavorPref').addEventListener('input',(e)=>{document.getElementById('flavorValue').textContent=e.target.value;updateRecommendation();updateKnowledgeTips()});document.querySelectorAll('.dose-btn').forEach(btn=>{btn.addEventListener('click',()=>{const v=parseFloat(btn.dataset.dose);document.getElementById('doseInput').value=v;document.querySelectorAll('.dose-btn').forEach(b=>b.classList.remove('active'));btn.classList.add('active');recalcAll()})});document.querySelectorAll('.stepper-btn').forEach(btn=>{btn.addEventListener('click',()=>{const tid=btn.dataset.target,delta=parseFloat(btn.dataset.delta),inp=document.getElementById(tid);if(inp.disabled)return;let v=parseFloat(inp.value)||0;v=Math.max(parseFloat(inp.min),Math.min(parseFloat(inp.max),v+delta));inp.value=v;inp.dispatchEvent(new Event('input',{bubbles:true}))})});document.getElementById('ratioSlider').addEventListener('input',(e)=>{const v=parseFloat(e.target.value);customRatio=v;document.getElementById('ratioValue').textContent='1:'+v;recalcAll()});document.getElementById('startTimerBtn').addEventListener('click',startTimer);document.getElementById('pausePlayBtn').addEventListener('click',toggleTimer);document.getElementById('resetTimerBtn').addEventListener('click',resetTimer);document.getElementById('voiceToggleBtn').addEventListener('click',()=>{voiceEnabled=!voiceEnabled;const btn=document.getElementById('voiceToggleBtn');btn.textContent=voiceEnabled?'🔔':'🔕';btn.classList.toggle('active',voiceEnabled)});document.getElementById('currentTemp').addEventListener('input',()=>{updateTempSuggestion();updateCalcPanel(BREW_METHODS[selectedMethod])});document.getElementById('roastLevel').addEventListener('change',()=>{autoAdjustTemp();updateRecommendation();updateKnowledgeTips()});document.getElementById('manualRatioInput').addEventListener('input',(e)=>{const v=parseFloat(e.target.value);if(v>=12&&v<=18){customRatio=v;document.getElementById('ratioSlider').value=v;document.getElementById('ratioValue').textContent='1:'+v;recalcAll()}});document.getElementById('ratioSlider').addEventListener('input',(e)=>{const v=parseFloat(e.target.value);document.getElementById('manualRatioInput').value=v.toFixed(1);});document.querySelectorAll('.ratio-preset').forEach(btn=>{btn.addEventListener('click',()=>{const v=parseFloat(btn.dataset.ratio);customRatio=v;document.getElementById('ratioSlider').value=v;document.getElementById('ratioValue').textContent='1:'+v;document.getElementById('manualRatioInput').value=v;document.querySelectorAll('.ratio-preset').forEach(b=>b.classList.remove('active'));btn.classList.add('active');recalcAll()})});document.getElementById('darkModeToggle').addEventListener('click',toggleDarkMode);document.getElementById('compareBtn').addEventListener('click',()=>{selectedCompareMethods=[];renderCompareModal();document.getElementById('compareModal').classList.add('active')});document.getElementById('compareCloseBtn').addEventListener('click',()=>{document.getElementById('compareModal').classList.remove('active')});document.getElementById('compareModal').addEventListener('click',(e)=>{if(e.target===document.getElementById('compareModal'))document.getElementById('compareModal').classList.remove('active')})}
 function updateDoseBtnActive(){const v=parseFloat(document.getElementById('doseInput').value);document.querySelectorAll('.dose-btn').forEach(b=>{b.classList.toggle('active',parseFloat(b.dataset.dose)===v)})}
-function renderRadar(k){const p=FLAVOR_PROFILES[k];if(!p)return;const svg=document.getElementById('radarSvg'),cx=120,cy=105,r=80,labels=['酸度','苦度','甜度','體脂感','香氣'],keys=['acidity','bitterness','sweetness','body','aroma'],n=5;let gridLines='',axisLines='',labelEls='';for(let ring=2;ring<=10;ring+=2){let pts=[];for(let i=0;i<n;i++){const a=Math.PI*2*i/n-Math.PI/2,x=cx+r*(ring/10)*Math.cos(a),y=cy+r*(ring/10)*Math.sin(a);pts.push(`${x},${y}`)}gridLines+=`<polygon points="${pts.join(' ')}" fill="none" stroke="rgba(212,137,42,${ring===10?0.3:0.12})" stroke-width="${ring===10?1:0.5}"/>`}for(let i=0;i<n;i++){const a=Math.PI*2*i/n-Math.PI/2,x=cx+r*Math.cos(a),y=cy+r*Math.sin(a),lx=cx+(r+16)*Math.cos(a),ly=cy+(r+16)*Math.sin(a);axisLines+=`<line x1="${cx}" y1="${cy}" x2="${x}" y2="${y}" stroke="rgba(212,137,42,0.2)" stroke-width="0.5"/>`;labelEls+=`<text x="${lx}" y="${ly}" text-anchor="middle" dominant-baseline="central" fill="currentColor" font-size="10" opacity="0.7">${labels[i]}</text>`}let dataPts=[];for(let i=0;i<n;i++){const a=Math.PI*2*i/n-Math.PI/2,v=p[keys[i]]/10,x=cx+r*v*Math.cos(a),y=cy+r*v*Math.sin(a);dataPts.push(`${x},${y}`)}const dataPolygon=`<polygon points="${dataPts.join(' ')}" fill="rgba(212,137,42,0.2)" stroke="var(--amber)" stroke-width="2"/>`;let dots='';for(let i=0;i<n;i++){const a=Math.PI*2*i/n-Math.PI/2,v=p[keys[i]]/10,x=cx+r*v*Math.cos(a),y=cy+r*v*Math.sin(a);dots+=`<circle cx="${x}" cy="${y}" r="3.5" fill="var(--amber)"/>`}svg.innerHTML=gridLines+axisLines+dataPolygon+dots+labelEls;const desc=FLAVOR_DESCRIPTIONS[k];if(desc){let descEl=document.querySelector('.radar-desc');if(!descEl){descEl=document.createElement('div');descEl.className='radar-desc';svg.parentNode.appendChild(descEl)}descEl.textContent=desc}}
+function renderRadar(k){const p=FLAVOR_PROFILES[k];if(!p)return;const svg=document.getElementById('radarSvg'),cx=120,cy=105,r=80,labels=['酸度','苦度','甜度','體脂感','香氣'],keys=['acidity','bitterness','sweetness','body','aroma'],n=5;let gridLines='',axisLines='',labelEls='';for(let ring=2;ring<=10;ring+=2){let pts=[];for(let i=0;i<n;i++){const a=Math.PI*2*i/n-Math.PI/2,x=cx+r*(ring/10)*Math.cos(a),y=cy+r*(ring/10)*Math.sin(a);pts.push(`${x},${y}`)}gridLines+=`<polygon points="${pts.join(' ')}" fill="none" stroke="rgba(184,125,86,${ring===10?0.3:0.12})" stroke-width="${ring===10?1:0.5}"/>`}for(let i=0;i<n;i++){const a=Math.PI*2*i/n-Math.PI/2,x=cx+r*Math.cos(a),y=cy+r*Math.sin(a),lx=cx+(r+16)*Math.cos(a),ly=cy+(r+16)*Math.sin(a);axisLines+=`<line x1="${cx}" y1="${cy}" x2="${x}" y2="${y}" stroke="rgba(184,125,86,0.2)" stroke-width="0.5"/>`;labelEls+=`<text x="${lx}" y="${ly}" text-anchor="middle" dominant-baseline="central" fill="currentColor" font-size="10" opacity="0.7">${labels[i]}</text>`}let dataPts=[];for(let i=0;i<n;i++){const a=Math.PI*2*i/n-Math.PI/2,v=p[keys[i]]/10,x=cx+r*v*Math.cos(a),y=cy+r*v*Math.sin(a);dataPts.push(`${x},${y}`)}const dataPolygon=`<polygon points="${dataPts.join(' ')}" fill="rgba(184,125,86,0.2)" stroke="var(--copper)" stroke-width="2"/>`;let dots='';for(let i=0;i<n;i++){const a=Math.PI*2*i/n-Math.PI/2,v=p[keys[i]]/10,x=cx+r*v*Math.cos(a),y=cy+r*v*Math.sin(a);dots+=`<circle cx="${x}" cy="${y}" r="3.5" fill="var(--copper)"/>`}svg.innerHTML=gridLines+axisLines+dataPolygon+dots+labelEls;const desc=FLAVOR_DESCRIPTIONS[k];if(desc){let descEl=document.querySelector('.radar-desc');if(!descEl){descEl=document.createElement('div');descEl.className='radar-desc';svg.parentNode.appendChild(descEl)}descEl.textContent=desc}}
 function recalcAll(){if(!selectedMethod)return;const m=BREW_METHODS[selectedMethod];updateCalcPanel(m);updateSteps(m)}
 function startTimer(){if(!selectedMethod){alert('請先選擇沖法');return}const td=document.getElementById('timerDisplay');td.style.display='block';td.classList.add('timer-sticky');document.getElementById('journalSection').style.display='block';renderJournalHistory();enterFocusMode();requestWakeLock();timerSeconds=0;timerRunning=true;updateTimerDisplay();timerInterval=setInterval(()=>{timerSeconds++;updateTimerDisplay()},1000)}
 function toggleTimer(){timerRunning=!timerRunning;document.getElementById('pausePlayBtn').textContent=timerRunning?'⏸':'▶';if(timerRunning){timerInterval=setInterval(()=>{timerSeconds++;updateTimerDisplay()},1000)}else{clearInterval(timerInterval)}}
 function resetTimer(){timerSeconds=0;timerRunning=false;document.getElementById('pausePlayBtn').textContent='⏸';clearInterval(timerInterval);const ring=document.getElementById('timerRingProgress');if(ring)ring.style.strokeDashoffset=326.73;updateTimerDisplay();const td=document.getElementById('timerDisplay');td.style.display='none';td.classList.remove('timer-sticky');document.querySelectorAll('.step-item.active-step').forEach(el=>el.classList.remove('active-step'));document.currentActiveStep=undefined;exitFocusMode()}
 function updateTimerDisplay(){const m=Math.floor(timerSeconds/60),s=timerSeconds%60;document.getElementById('timerTime').textContent=`${m}:${s.toString().padStart(2,'0')}`;const focusMode=document.body.classList.contains('focus-mode');if(focusMode){const activeStep=document.querySelector('.step-item.active-step');if(activeStep){const stepTitle=activeStep.querySelector('.step-title')?.textContent||'';let currentDisplay=document.querySelector('.current-step-display');if(!currentDisplay){currentDisplay=document.createElement('div');currentDisplay.className='current-step-display';const timerRing=document.querySelector('.timer-ring-wrap');if(timerRing)timerRing.parentNode.insertBefore(currentDisplay,timerRing)}currentDisplay.textContent=stepTitle;const stepProgressBar=document.querySelector('.step-progress-bar');if(stepProgressBar){const stepItem=parseInt(activeStep.dataset.stepIdx);const stepTime=currentStepDurations[stepItem]||0;const prevStepTime=stepItem>0?currentStepDurations[stepItem-1]:0;const stepDuration=stepTime-prevStepTime;const stepElapsed=timerSeconds-prevStepTime;const pct=stepDuration>0?Math.min(stepElapsed/stepDuration,1)*100:0;stepProgressBar.querySelector('.step-progress-bar-fill').style.width=pct+'%'}}}const ring=document.getElementById('timerRingProgress');if(ring&&currentStepDurations.length>0){const totalTime=currentStepDurations[currentStepDurations.length-1]||180;const pct=Math.min(timerSeconds/totalTime,1);const circumference=326.73;ring.style.strokeDashoffset=circumference*(1-pct)}if(currentStepDurations.length>0){let activeIdx=0;for(let i=0;i<currentStepDurations.length;i++){if(timerSeconds<currentStepDurations[i]){activeIdx=i;break}if(i===currentStepDurations.length-1)activeIdx=i}const prevActive=document.currentActiveStep;document.querySelectorAll('.step-item').forEach(el=>{const idx=parseInt(el.dataset.stepIdx);if(idx===activeIdx){el.classList.add('active-step');if(timerRunning&&prevActive!==activeIdx){el.scrollIntoView({behavior:'smooth',block:'center'});const stepTitle=el.querySelector('.step-title')?.textContent||'';let tipKey='wait';if(stepTitle.includes('悶蒸')||stepTitle.includes('bloom')){tipKey='bloom'}else if(stepTitle.includes('注水')||stepTitle.includes('pour')){tipKey='pour'}else if(stepTitle.includes('最後')||stepTitle.includes('最近')){tipKey='final'}const tip=STEP_TIPS[tipKey]||STEP_TIPS.wait;const label=document.getElementById('timerLabel');if(label)label.textContent=tip}}else{el.classList.remove('active-step')}});document.currentActiveStep=activeIdx}}
 
-function quickStart(){document.getElementById('roastLevel').value='medium';document.getElementById('processing').value='washed';document.getElementById('restDaysSkipBtn').classList.add('active');document.getElementById('restDays').disabled=true;document.getElementById('restDays').style.opacity='0.4';document.getElementById('flavorPref').value='50';document.getElementById('flavorValue').textContent='50';updateKnowledgeTips();updateRecommendation();selectMethod('onePour',BREW_METHODS.onePour);setTimeout(()=>{document.getElementById('calcPanel').scrollIntoView({behavior:'smooth',block:'start'})},100)}
-function renderGrindVisual(k){const grindLevel=GRIND_LEVELS[k];const grindMap={'細':'fine','中細':'medium-fine','中':'medium','中粗':'medium-coarse','粗':'coarse','中細偏細':'medium-fine','中粗':'medium-coarse'};const positions={fine:10,'medium-fine':30,medium:50,'medium-coarse':70,coarse:90};let pos=50;for(let [key,p] of Object.entries(positions)){if(grindLevel.includes(key.split('-')[0])||grindLevel===key){pos=p;break}}const gv=document.getElementById('grindVisual');gv.innerHTML=`<div style="display:flex;align-items:center;gap:15px;margin-bottom:10px;"><div style="flex:1;position:relative;height:40px;border-radius:20px;background:rgba(212,137,42,0.12);overflow:hidden;"><div style="position:absolute;display:flex;align-items:center;justify-content:space-between;width:100%;height:100%;padding:0 8px;"><span style="font-size:0.75em;color:rgba(232,184,109,0.5);">細</span><span style="font-size:0.75em;color:rgba(232,184,109,0.5);">粗</span></div><svg style="position:absolute;width:100%;height:100%;top:0;left:0;" viewBox="0 0 200 20"><circle cx="10" cy="10" r="2" fill="rgba(212,137,42,0.3)"/><circle cx="50" cy="10" r="3" fill="rgba(212,137,42,0.3)"/><circle cx="100" cy="10" r="4" fill="rgba(212,137,42,0.3)"/><circle cx="150" cy="10" r="5" fill="rgba(212,137,42,0.3)"/><circle cx="190" cy="10" r="6" fill="rgba(212,137,42,0.3)"/><circle cx="${(pos/100)*200}" cy="10" r="4.5" fill="var(--amber);" stroke="rgba(232,184,109,0.5)" stroke-width="0.5"/></svg></div></div><div style="text-align:center;font-size:0.9em;font-weight:600;color:var(--gold);min-width:60px;">${grindLevel}</div></div>`;gv.style.display='block'}
-function renderJournalHistory(){const hist=JSON.parse(localStorage.getItem('brewJournal')||'[]'),jh=document.getElementById('journalHistory');if(hist.length===0){jh.innerHTML='<div style="text-align:center;color:rgba(232,184,109,0.5);font-size:0.9em;padding:15px;">還沒有紀錄。開始沖煮並儲存你的第一筆筆記！</div>';return}jh.innerHTML='<div style="font-size:0.85em;margin-bottom:10px;color:rgba(232,184,109,0.7);">最近紀錄</div>'+hist.slice(-5).reverse().map(e=>`<div class="journal-entry"><div class="journal-entry-header"><div><strong>${e.method}</strong> · ${e.dose}g / 1:${e.ratio}</div><div class="journal-entry-date">${e.date}</div></div>${e.rating?`<div class="journal-entry-stars">${'★'.repeat(e.rating)}${'☆'.repeat(5-e.rating)}</div>`:''}<div class="journal-entry-note">${e.note||'(無筆記)'}</div></div>`).join('')}
-function renderFAQ(){const fl=document.getElementById('faqList');fl.innerHTML=FAQ_DATA.map((faq,idx)=>`<div class="knowledge-tip"><div class="knowledge-tip-header"><div class="knowledge-tip-title" style="font-weight:600;color:var(--gold);">${faq.q}</div><div class="knowledge-tip-toggle">▼</div></div><div class="knowledge-tip-text">${faq.a}</div></div>`).join('');document.querySelectorAll('#faqList .knowledge-tip-header').forEach((h,idx)=>{const c=h.nextElementSibling,t=h.querySelector('.knowledge-tip-toggle');h.addEventListener('click',()=>{c.classList.toggle('open');t.classList.toggle('open')})})}
+function quickStart(){const btn=document.getElementById('quickStartBtn');const isActive=btn.classList.contains('qs-active');if(isActive){btn.classList.remove('qs-active');btn.textContent='☕ 我是新手，幫我選';return}btn.classList.add('qs-active');btn.textContent='✕ 收合新手引導';document.getElementById('roastLevel').value='medium';document.getElementById('processing').value='washed';document.getElementById('restDaysSkipBtn').classList.add('active');document.getElementById('restDays').disabled=true;document.getElementById('restDays').style.opacity='0.4';document.getElementById('flavorPref').value='50';document.getElementById('flavorValue').textContent='50';updateKnowledgeTips();updateRecommendation();selectMethod('onePour',BREW_METHODS.onePour);setTimeout(()=>{document.getElementById('calcPanel').scrollIntoView({behavior:'smooth',block:'start'})},100)}
+function renderGrindVisual(k){const grindLevel=GRIND_LEVELS[k];const grindMap={'細':'fine','中細':'medium-fine','中':'medium','中粗':'medium-coarse','粗':'coarse','中細偏細':'medium-fine','中粗':'medium-coarse'};const positions={fine:10,'medium-fine':30,medium:50,'medium-coarse':70,coarse:90};let pos=50;for(let [key,p] of Object.entries(positions)){if(grindLevel.includes(key.split('-')[0])||grindLevel===key){pos=p;break}}const gv=document.getElementById('grindVisual');gv.innerHTML=`<div style="display:flex;align-items:center;gap:15px;margin-bottom:10px;"><div style="flex:1;position:relative;height:40px;border-radius:20px;background:var(--surface-2);overflow:hidden;"><div style="position:absolute;display:flex;align-items:center;justify-content:space-between;width:100%;height:100%;padding:0 8px;"><span style="font-size:0.75em;color:var(--text-secondary);">細</span><span style="font-size:0.75em;color:var(--text-secondary);">粗</span></div><svg style="position:absolute;width:100%;height:100%;top:0;left:0;" viewBox="0 0 200 20"><circle cx="10" cy="10" r="2" fill="rgba(184,125,86,0.3)"/><circle cx="50" cy="10" r="3" fill="rgba(184,125,86,0.3)"/><circle cx="100" cy="10" r="4" fill="rgba(184,125,86,0.3)"/><circle cx="150" cy="10" r="5" fill="rgba(184,125,86,0.3)"/><circle cx="190" cy="10" r="6" fill="rgba(184,125,86,0.3)"/><circle cx="${(pos/100)*200}" cy="10" r="4.5" fill="var(--copper);" stroke="rgba(184,125,86,0.5)" stroke-width="0.5"/></svg></div></div><div style="text-align:center;font-size:0.9em;font-weight:600;color:var(--copper-light);min-width:60px;">${grindLevel}</div></div>`;gv.style.display='block'}
+function renderJournalHistory(){const hist=JSON.parse(localStorage.getItem('brewJournal')||'[]'),jh=document.getElementById('journalHistory');if(hist.length===0){jh.innerHTML='<div style="text-align:center;color:var(--text-secondary);font-size:0.9em;padding:15px;">還沒有紀錄。開始沖煮並儲存你的第一筆筆記！</div>';return}jh.innerHTML='<div style="font-size:0.85em;margin-bottom:10px;color:var(--text-secondary);">最近紀錄</div>'+hist.slice(-5).reverse().map(e=>`<div class="journal-entry"><div class="journal-entry-header"><div><strong>${e.method}</strong> · ${e.dose}g / 1:${e.ratio}</div><div class="journal-entry-date">${e.date}</div></div>${e.rating?`<div class="journal-entry-stars">${'★'.repeat(e.rating)}${'☆'.repeat(5-e.rating)}</div>`:''}<div class="journal-entry-note">${e.note||'(無筆記)'}</div></div>`).join('')}
+function renderFAQ(){const fl=document.getElementById('faqList');fl.innerHTML=FAQ_DATA.map((faq,idx)=>`<div class="knowledge-tip"><div class="knowledge-tip-header"><div class="knowledge-tip-title" style="font-weight:600;color:var(--copper-light);">${faq.q}</div><div class="knowledge-tip-toggle">▼</div></div><div class="knowledge-tip-text">${faq.a}</div></div>`).join('');document.querySelectorAll('#faqList .knowledge-tip-header').forEach((h,idx)=>{const c=h.nextElementSibling,t=h.querySelector('.knowledge-tip-toggle');h.addEventListener('click',()=>{c.classList.toggle('open');t.classList.toggle('open')})})}
 function updateGreeting(){document.getElementById('heroGreeting').innerHTML='每一次沖煮，都是一場關於味覺、時間與意念的探索。'}
 function toggleDarkMode(){document.body.classList.toggle('light-mode');const isDark=!document.body.classList.contains('light-mode');localStorage.setItem('darkMode',isDark);document.getElementById('darkModeToggle').textContent=isDark?'🌙':'☀️'}
 function renderCompareModal(){const cmg=document.getElementById('compareMethodGrid');cmg.innerHTML=Object.entries(BREW_METHODS).map(([k,m])=>`<button class="compare-method-btn" data-method="${k}">${m.title.split(' · ')[0]}<br><small>${m.badge}</small></button>`).join('');document.querySelectorAll('.compare-method-btn').forEach(btn=>{btn.onclick=function(){const method=this.dataset.method;if(selectedCompareMethods.includes(method)){selectedCompareMethods=selectedCompareMethods.filter(m=>m!==method);this.classList.remove('selected')}else if(selectedCompareMethods.length<2){selectedCompareMethods.push(method);this.classList.add('selected')}else{const oldMethod=selectedCompareMethods.shift();document.querySelectorAll('.compare-method-btn').forEach(b=>{if(b.dataset.method===oldMethod)b.classList.remove('selected')});selectedCompareMethods.push(method);this.classList.add('selected')}updateCompareResult()}});document.getElementById('compareResult').innerHTML='<div class="compare-empty">選擇沖法開始比較</div>'}
@@ -1903,12 +1946,12 @@ function renderQuickMethodGrid() {
   let html = '';
   for (const [k, m] of Object.entries(BREW_METHODS)) {
     const icon = METHOD_ICONS[k] || '';
-    const badge = k === 'onePour' ? '<div class="quick-popular-badge">推薦</div>' : '';
+    const badge = '';
     html += '<div class="quick-method-card' + (k === currentQuickMethod ? ' active' : '') + '" data-method="' + k + '">' +
       badge +
       '<div class="method-icon">' + icon + '</div>' +
       '<div class="quick-method-name">' + (names[k] || m.badge) + '</div>' +
-      '<div class="quick-method-desc" style="font-size:0.72em;color:rgba(212,137,42,0.7);margin-top:2px;">' + (quickDescs[k] || '') + '</div></div>';
+      '<div class="quick-method-desc" style="font-size:0.72em;color:var(--text-secondary);margin-top:2px;">' + (quickDescs[k] || '') + '</div></div>';
   }
   grid.innerHTML = html;
 }
@@ -1964,12 +2007,12 @@ function renderMethodOverview() {
   for (const [k, m] of Object.entries(BREW_METHODS)) {
     const grind = GRIND_LEVELS ? GRIND_LEVELS[k] : m.grind;
     const flavor = FLAVOR_DESCRIPTIONS ? FLAVOR_DESCRIPTIONS[k] : '';
-    html += '<div class="method-overview-card">' +
+    html += '<div class="method-overview-card" style="cursor:pointer;" onclick="currentQuickMethod=\'' + k + '\';window.location.hash=\'#quick\';setTimeout(()=>{renderQuickMethodGrid();updateQuickBrewResults()},100)">' +
       '<div class="method-overview-name">' + m.title + '</div>' +
       '<div class="method-overview-info">' +
       '<span>粉水比 1:' + m.ratio + ' ｜ ' + m.temp + ' ｜ ' + m.time + '</span>' +
       '<span>研磨度：' + grind + '</span>' +
-      (flavor ? '<span style="margin-top:6px;font-style:italic;color:rgba(232,184,109,0.5);">' + flavor + '</span>' : '') +
+      (flavor ? '<span style="margin-top:6px;font-style:italic;color:var(--text-secondary);">' + flavor + '</span>' : '') +
       '</div>' +
       '<button class="quick-goto-tools" style="margin:10px 0 0;padding:8px 16px;font-size:0.82em;" onclick="currentQuickMethod=\'' + k + '\';window.location.hash=\'#quick\';setTimeout(()=>{renderQuickMethodGrid();updateQuickBrewResults()},100)">⚡ 試沖看看</button>' +
       '</div>';
