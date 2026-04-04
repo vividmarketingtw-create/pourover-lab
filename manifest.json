@@ -1,0 +1,21 @@
+{
+  "name": "手沖咖啡實驗室 | Pour Over Lab",
+  "short_name": "手沖實驗室",
+  "description": "精準計算、智慧推薦、完整指南 — 支援6種手沖咖啡沖法的互動工具",
+  "start_url": "/pourover-lab/",
+  "scope": "/pourover-lab/",
+  "display": "standalone",
+  "background_color": "#2C1A0E",
+  "theme_color": "#2C1A0E",
+  "orientation": "portrait-primary",
+  "icons": [
+    {
+      "src": "data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>☕</text></svg>",
+      "sizes": "any",
+      "type": "image/svg+xml",
+      "purpose": "any maskable"
+    }
+  ],
+  "categories": ["food", "utilities"],
+  "lang": "zh-TW"
+}
