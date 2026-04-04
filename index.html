@@ -134,6 +134,21 @@
     color: var(--brown-dark);
   }
 
+  /* Start Timer Button */
+  .btn-start-timer {
+    display: inline-block; padding: 12px 24px; border: none; border-radius: 12px;
+    background: linear-gradient(135deg, var(--amber), var(--gold));
+    color: var(--brown-dark); font-weight: 700; font-size: 0.95em;
+    cursor: pointer; transition: all 0.3s; font-family: inherit;
+    box-shadow: 0 4px 15px rgba(212,137,42,0.3);
+  }
+  .btn-start-timer:hover {
+    transform: translateY(-2px); box-shadow: 0 6px 25px rgba(212,137,42,0.4);
+  }
+  body.light-mode .btn-start-timer {
+    color: var(--brown-dark);
+  }
+
   .hero-scroll-hint {
     margin-top: 40px; color: rgba(232,184,109,0.3); font-size: 0.8em;
     animation: float 2s ease-in-out infinite;
@@ -205,6 +220,44 @@
   body.light-mode .story-step { background: rgba(212,137,42,0.06); }
   body.light-mode .story-step-title { color: var(--brown-dark); }
   body.light-mode .story-step-desc { color: rgba(44,26,14,0.5); }
+
+  /* Story CTA buttons */
+  .story-cta-group {
+    display: grid; grid-template-columns: 1fr 1fr; gap: 16px;
+    margin: 35px 0 10px; max-width: 600px;
+  }
+  .story-cta-btn {
+    padding: 20px 16px; border: 2px solid rgba(212,137,42,0.3);
+    border-radius: 16px; background: rgba(160,98,42,0.1);
+    cursor: pointer; transition: all 0.3s; font-family: inherit;
+    text-align: center; color: var(--gold); font-size: 1.05em; font-weight: 700;
+    display: flex; flex-direction: column; align-items: center; gap: 8px;
+  }
+  .story-cta-btn:hover {
+    background: rgba(212,137,42,0.2); border-color: var(--amber);
+    transform: translateY(-3px); box-shadow: 0 6px 20px rgba(212,137,42,0.2);
+  }
+  .story-cta-quick { border-color: rgba(212,137,42,0.5); background: rgba(212,137,42,0.15); }
+  .story-cta-sub {
+    font-size: 0.72em; font-weight: 400; color: rgba(232,184,109,0.55);
+    display: block;
+  }
+  body.light-mode .story-cta-btn {
+    background: rgba(212,137,42,0.06); color: var(--brown-dark);
+  }
+  body.light-mode .story-cta-sub { color: rgba(44,26,14,0.45); }
+  body.light-mode .story-cta-btn:hover { background: rgba(212,137,42,0.15); }
+  @media (max-width: 600px) {
+    .story-cta-group { grid-template-columns: 1fr; max-width: 100%; }
+  }
+
+  /* Quick method popular badge */
+  .quick-popular-badge {
+    font-size: 0.65em; background: var(--amber); color: var(--brown-dark);
+    padding: 2px 8px; border-radius: 10px; font-weight: 600;
+    position: absolute; top: -6px; right: -6px;
+  }
+  .quick-method-card { position: relative; overflow: visible; }
 
   /* About section */
   .about-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; margin-top: 20px; }
@@ -877,6 +930,20 @@
   body.light-mode .method-overview-card { background: rgba(212,137,42,0.06); }
   body.light-mode .method-overview-name { color: var(--brown-dark); }
 
+  /* Try it button for method overview */
+  .quick-goto-tools {
+    border: 1px solid rgba(212,137,42,0.3); background: rgba(212,137,42,0.1);
+    color: var(--gold); border-radius: 8px; cursor: pointer;
+    transition: all 0.3s; font-family: inherit; font-weight: 600;
+  }
+  .quick-goto-tools:hover {
+    background: rgba(212,137,42,0.2); border-color: var(--amber);
+  }
+  body.light-mode .quick-goto-tools {
+    background: rgba(212,137,42,0.06); color: var(--brown-dark);
+  }
+  body.light-mode .quick-goto-tools:hover { background: rgba(212,137,42,0.15); }
+
   /* Adjust existing elements for SPA */
   .back-to-top { bottom: calc(72px + env(safe-area-inset-bottom, 0) + 16px); }
   .hero { min-height: 65vh; }
@@ -1243,6 +1310,16 @@
           <div class="story-step-desc">風味雷達圖幫你理解，每次沖煮都是一場新發現</div>
         </div>
       </div>
+      <div class="story-cta-group">
+        <button class="story-cta-btn story-cta-quick" onclick="window.location.hash='#quick'">
+          ⚡ 快速沖一杯
+          <span class="story-cta-sub">選方法、設粉量、立即開始</span>
+        </button>
+        <button class="story-cta-btn story-cta-advanced" onclick="window.location.hash='#tools'">
+          🔧 進階參數設定
+          <span class="story-cta-sub">完整工具、計時器、風味分析</span>
+        </button>
+      </div>
     </section>
       <div class="section-divider"></div>
       <!-- ===== EXPERIENCE ===== -->
@@ -1267,6 +1344,9 @@
           <div class="exp-card-text">雷達圖呈現酸、甜、苦、體脂感、香氣五維風味</div>
         </div>
       </div>
+      <div style="text-align:center;margin-top:28px;">
+        <button class="hero-cta" onclick="window.location.hash='#quick'" style="font-size:0.95em;padding:12px 28px;">Start Brewing →</button>
+      </div>
     </section>
       <div class="section-divider"></div>
       <!-- ===== ABOUT ===== -->
@@ -1287,12 +1367,22 @@
           </div>
         </div>
       </div>
+      <div style="text-align:center;margin-top:30px;">
+        <p style="color:rgba(232,184,109,0.6);font-size:0.95em;margin-bottom:16px;font-style:italic;">每一杯手沖，都是一場安靜的實驗。</p>
+        <button class="hero-cta" onclick="window.location.hash='#quick'" style="font-size:0.95em;padding:12px 28px;">開始你的第一杯 →</button>
+      </div>
     </section>
       <div class="section-divider"></div>
       <div class="footer">
       <p style="font-family: 'Playfair Display', serif; font-size: 1.1em; color: var(--gold); margin-bottom: 8px;">PourOver Lab</p>
       <p style="font-size: 0.8em; color: rgba(232,184,109,0.4); letter-spacing: 1px;">A sensory coffee experience through pour-over rituals</p>
-      <p style="margin-top: 12px; font-size: 0.78em;">每次沖煮都是一場實驗。調整、嘗試、發現最適合你的風味。</p>
+      <div style="display:flex;gap:20px;justify-content:center;margin-top:16px;flex-wrap:wrap;">
+        <a href="#home" style="color:rgba(232,184,109,0.5);font-size:0.82em;text-decoration:none;">首頁</a>
+        <a href="#quick" style="color:rgba(232,184,109,0.5);font-size:0.82em;text-decoration:none;">快速沖煮</a>
+        <a href="#tools" style="color:rgba(232,184,109,0.5);font-size:0.82em;text-decoration:none;">進階工具</a>
+        <a href="#knowledge" style="color:rgba(232,184,109,0.5);font-size:0.82em;text-decoration:none;">知識庫</a>
+      </div>
+      <p style="margin-top:12px;font-size:0.78em;">每次沖煮都是一場實驗。調整、嘗試、發現最適合你的風味。</p>
     </div>
     </div>
 
@@ -1606,13 +1696,27 @@ let currentTab = 'home';
 
 function switchTab(tabName) {
   currentTab = tabName;
-  document.querySelectorAll('.tab-content').forEach(t => t.classList.remove('active'));
-  document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
-  const tab = document.getElementById(tabName + 'Tab');
-  const btn = document.querySelector('[data-tab="' + tabName + '"]');
-  if (tab) tab.classList.add('active');
-  if (btn) btn.classList.add('active');
-  window.scrollTo({ top: 0, behavior: 'smooth' });
+  const tabs = document.querySelectorAll('.tab-content');
+  tabs.forEach(t => {
+    if (t.classList.contains('active')) {
+      t.style.transition = 'opacity 0.3s ease-out';
+      t.style.opacity = '0';
+    }
+  });
+  setTimeout(() => {
+    tabs.forEach(t => t.classList.remove('active'));
+    document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+    const tab = document.getElementById(tabName + 'Tab');
+    const btn = document.querySelector('[data-tab="' + tabName + '"]');
+    if (tab) {
+      tab.classList.add('active');
+      tab.style.opacity = '0';
+      tab.style.transition = 'opacity 0.3s ease-in';
+      setTimeout(() => { tab.style.opacity = '1'; }, 10);
+    }
+    if (btn) btn.classList.add('active');
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+  }, 150);
 
   // Initialize tab content on first visit
   if (tabName === 'quick' && !document.getElementById('quickMethodGrid').innerHTML) {
@@ -1645,7 +1749,9 @@ function renderQuickMethodGrid() {
   let html = '';
   for (const [k, m] of Object.entries(BREW_METHODS)) {
     const icon = METHOD_ICONS[k] || '';
+    const badge = k === 'onePour' ? '<div class="quick-popular-badge">推薦</div>' : '';
     html += '<div class="quick-method-card' + (k === currentQuickMethod ? ' active' : '') + '" data-method="' + k + '">' +
+      badge +
       '<div class="method-icon">' + icon + '</div>' +
       '<div class="quick-method-name">' + (names[k] || m.badge) + '</div></div>';
   }
@@ -1685,6 +1791,9 @@ function updateQuickBrewResults() {
     '<div class="quick-result-item"><div class="quick-result-value">' + method.time + '</div><div class="quick-result-label">目標時間</div></div>' +
     '</div>' +
     '<div class="quick-steps-summary"><h4>沖煮步驟</h4>' + stepsHtml + '</div>' +
+    '<div style="text-align:center;margin-top:18px;">' +
+    '<button class="btn-start-timer" id="quickStartTimerBtn" style="font-size:0.95em;">▶ 直接開始計時</button>' +
+    '</div>' +
     '</div>';
 
   // Update quick dose buttons active state
@@ -1706,7 +1815,9 @@ function renderMethodOverview() {
       '<span>粉水比 1:' + m.ratio + ' ｜ ' + m.temp + ' ｜ ' + m.time + '</span>' +
       '<span>研磨度：' + grind + '</span>' +
       (flavor ? '<span style="margin-top:6px;font-style:italic;color:rgba(232,184,109,0.5);">' + flavor + '</span>' : '') +
-      '</div></div>';
+      '</div>' +
+      '<button class="quick-goto-tools" style="margin:10px 0 0;padding:8px 16px;font-size:0.82em;" onclick="currentQuickMethod=\'' + k + '\';window.location.hash=\'#quick\';setTimeout(()=>{renderQuickMethodGrid();updateQuickBrewResults()},100)">⚡ 試沖看看</button>' +
+      '</div>';
   }
   el.innerHTML = html;
 }
@@ -1762,6 +1873,22 @@ function renderMethodOverview() {
   // Quick goto tools button
   document.getElementById('quickGotoTools')?.addEventListener('click', () => {
     window.location.hash = '#tools';
+  });
+
+  // Quick start timer button
+  document.getElementById('quickBrewResults')?.addEventListener('click', (e) => {
+    if (e.target.id === 'quickStartTimerBtn' || e.target.closest('#quickStartTimerBtn')) {
+      const dose = parseFloat(document.getElementById('quickDoseInput').value) || 20;
+      const doseInput = document.getElementById('doseInput');
+      if (doseInput) doseInput.value = dose;
+      selectMethod(currentQuickMethod);
+      window.location.hash = '#tools';
+      setTimeout(() => {
+        startTimer();
+        const timerDisplay = document.getElementById('timerDisplay');
+        if (timerDisplay) timerDisplay.scrollIntoView({ behavior: 'smooth', block: 'center' });
+      }, 400);
+    }
   });
 
   // Knowledge compare button
