@@ -36,7 +36,7 @@
   }
 
   body {
-    background: var(--surface);
+    background: #0F0D0A;
     display: flex; flex-direction: column; align-items: center;
     min-height: 100vh; padding: 20px;
     font-family: 'Noto Sans TC', 'DM Sans', -apple-system, sans-serif; overflow-x: hidden;
@@ -46,68 +46,25 @@
     -webkit-font-smoothing: antialiased;
   }
 
-  body.light-mode {
-    background: #F8F5F0;
-    color: #1A1714;
-    --surface: #FFFFFF; --surface-2: #F2EDE6; --surface-3: #EBE4DA;
-    --copper: #9B7352; --copper-light: #B8906E;
-    --text-primary: #1A1714; --text-secondary: rgba(26,23,20,0.5);
-    --border: rgba(155,115,82,0.15); --border-hover: rgba(155,115,82,0.3);
-    --glow: rgba(155,115,82,0.06);
-  }
-
-  body.light-mode .page-h1 { color: #1A1714; }
-  body.light-mode .page-sub { color: rgba(26,23,20,0.55); }
-  body.light-mode .selector-label { color: #4A3828; }
-  body.light-mode .selector-row label { color: #1A1714; }
-  body.light-mode .method-card {
-    background: var(--surface); border-color: var(--border);
-    box-shadow: 0 1px 3px rgba(0,0,0,0.04);
-  }
-  body.light-mode .method-card:hover { background: var(--surface-2); border-color: var(--border-hover); }
-  body.light-mode .method-card.active { background: rgba(160,117,80,0.1); border-color: var(--copper); }
-  body.light-mode .method-name { color: #1A1714; }
-  body.light-mode .method-ratio { color: rgba(26,23,20,0.55); }
-  body.light-mode .selector-card {
-    background: var(--surface); border-color: var(--border);
-    box-shadow: 0 1px 3px rgba(0,0,0,0.04);
-  }
-  body.light-mode .selector-card input, body.light-mode .selector-card select {
-    background: var(--surface-2); color: #1A1714; border-color: var(--border);
-  }
-  body.light-mode .calc-panel { background: var(--surface); box-shadow: 0 2px 8px rgba(0,0,0,0.04); }
-  body.light-mode .timer-display { background: linear-gradient(135deg, rgba(160,117,80,0.06), rgba(155,115,82,0.08)); color: #1A1714; }
-  body.light-mode .btn-primary { color: #FFF; background: var(--copper); }
-  body.light-mode .dose-btn { color: #4A3828; border-color: var(--border); background: var(--surface); }
-  body.light-mode .dose-btn.active { color: #FFF; background: var(--copper); border-color: var(--copper); }
-  body.light-mode .rest-skip-btn { color: #4A3828; }
-  body.light-mode .timer-ctrl-btn { color: #1A1714; }
-  body.light-mode .step-item { color: #1A1714; border-left-color: rgba(155,115,82,0.25); }
-  body.light-mode .guide-card { background: var(--surface); border-color: var(--border); }
-  body.light-mode .guide-section-title { color: #1A1714; }
-  body.light-mode .knowledge-tip { background: var(--surface); border-color: var(--border); }
-  body.light-mode .knowledge-tip-title { color: #1A1714; }
-  body.light-mode .knowledge-tip-text { color: rgba(26,23,20,0.7); }
-  body.light-mode .compare-table { background: var(--surface); }
-  body.light-mode .compare-table td { border-color: var(--border); }
-  body.light-mode .compare-header { background: rgba(155,115,82,0.1); color: #1A1714; }
-  body.light-mode .modal-content { background: #F8F5F0; border-color: var(--border); }
-  body.light-mode .modal-header { color: #1A1714; }
-
   /* Hero section */
   .hero {
     text-align: center; padding: 100px 20px 60px; position: relative;
     min-height: 70vh; display: flex; flex-direction: column;
     justify-content: center; align-items: center;
   }
+  .hero::before {
+    content: ''; position: absolute; top: 0; left: 50%; width: 1px;
+    height: 80px; background: linear-gradient(to bottom, transparent, var(--copper));
+    transform: translateX(-50%); opacity: 0.3;
+  }
   .hero-badge {
-    display: inline-block; padding: 6px 20px; border-radius: 2px;
+    display: inline-block; padding: 6px 20px; border-radius: 0;
     border: 1px solid var(--border-hover); background: transparent;
-    color: var(--copper-light); font-size: 0.72em; letter-spacing: 4px;
-    margin-bottom: 24px; text-transform: uppercase; font-weight: 500;
+    color: var(--copper); font-size: 0.65em; letter-spacing: 5px;
+    margin-bottom: 28px; text-transform: uppercase; font-weight: 500;
   }
   .hero h1 {
-    font-size: 3.4em; font-family: 'Playfair Display', serif;
+    font-size: 3.2em; font-family: 'Playfair Display', serif;
     color: var(--copper-light); line-height: 1.1; margin-bottom: 14px;
     font-weight: 400; letter-spacing: -0.5px;
   }
@@ -129,8 +86,6 @@
     letter-spacing: 2px; text-transform: uppercase;
   }
   .hero-cta:hover { background: var(--copper); color: #0F0D0A; }
-  body.light-mode .hero-cta { border-color: var(--copper); color: var(--copper); }
-  body.light-mode .hero-cta:hover { background: var(--copper); color: #FFF; }
 
   /* Quick-start button */
   .quick-start-btn {
@@ -147,23 +102,18 @@
   .quick-start-btn.qs-active {
     background: rgba(184,125,86,0.08); border-style: dashed;
   }
-  body.light-mode .quick-start-btn {
-    color: var(--copper); border-color: var(--copper);
-  }
 
   /* Start Timer Button */
   .btn-start-timer {
-    display: inline-block; padding: 12px 24px; border: none; border-radius: 12px;
-    background: linear-gradient(135deg, var(--copper), var(--copper-light));
-    color: #2E2922; font-weight: 700; font-size: 0.95em;
+    display: inline-block; padding: 14px 32px; border: none; border-radius: 3px;
+    background: var(--copper);
+    color: #0F0D0A; font-weight: 600; font-size: 0.88em;
     cursor: pointer; transition: all 0.3s; font-family: inherit;
-    box-shadow: 0 4px 15px rgba(184,125,86,0.3);
+    letter-spacing: 1px; text-transform: uppercase;
   }
   .btn-start-timer:hover {
-    transform: translateY(-2px); box-shadow: 0 6px 25px rgba(184,125,86,0.4);
-  }
-  body.light-mode .btn-start-timer {
-    color: #2E2922;
+    background: var(--copper-light); transform: translateY(-1px);
+    box-shadow: 0 4px 20px rgba(184,125,86,0.25);
   }
 
   .hero-scroll-hint {
@@ -210,13 +160,6 @@
     color: var(--text-secondary); font-size: 0.9em;
     line-height: 1.8; margin-bottom: 32px; max-width: 560px; font-weight: 300;
   }
-  body.light-mode .section-title { color: #1A1714; }
-  body.light-mode .section-sub { color: rgba(26,23,20,0.55); }
-  body.light-mode .section-label { color: var(--copper); border-bottom-color: var(--border); }
-  body.light-mode .hero h1 { color: #1A1714; }
-  body.light-mode .hero-en { color: rgba(26,23,20,0.4); }
-  body.light-mode .hero-tagline { color: rgba(26,23,20,0.5); }
-  body.light-mode .hero-badge { color: var(--copper); border-color: var(--border-hover); }
 
   /* Story steps */
   .story-steps {
@@ -236,9 +179,6 @@
   .story-step-icon { font-size: 2em; margin-bottom: 8px; display: block; }
   .story-step-title { font-weight: 700; color: var(--copper-light); font-size: 0.95em; margin-bottom: 4px; }
   .story-step-desc { font-size: 0.8em; color: var(--text-secondary); line-height: 1.5; }
-  body.light-mode .story-step { background: var(--surface-2); }
-  body.light-mode .story-step-title { color: #2E2922; }
-  body.light-mode .story-step-desc { color: rgba(44,26,14,0.5); }
 
   /* Story CTA buttons */
   .story-cta-group {
@@ -261,11 +201,6 @@
     font-size: 0.72em; font-weight: 400; color: var(--text-secondary);
     display: block;
   }
-  body.light-mode .story-cta-btn {
-    background: var(--surface); color: #2E2922; border-color: var(--border);
-  }
-  body.light-mode .story-cta-sub { color: rgba(44,26,14,0.45); }
-  body.light-mode .story-cta-btn:hover { background: rgba(184,125,86,0.15); }
   @media (max-width: 600px) {
     .story-cta-group { grid-template-columns: 1fr; max-width: 100%; }
   }
@@ -286,9 +221,6 @@
   }
   .about-card-title { font-weight: 700; color: var(--copper-light); margin-bottom: 8px; font-size: 0.95em; }
   .about-card-text { font-size: 0.88em; color: var(--text-secondary); line-height: 1.7; }
-  body.light-mode .about-card { background: var(--surface-2); }
-  body.light-mode .about-card-title { color: #2E2922; }
-  body.light-mode .about-card-text { color: rgba(44,26,14,0.6); }
 
   /* Experience section */
   .exp-cards { display: grid; grid-template-columns: repeat(3, 1fr); gap: 16px; margin-top: 20px; }
@@ -301,19 +233,16 @@
   .exp-card-icon { font-size: 1.8em; margin-bottom: 10px; display: block; }
   .exp-card-title { font-weight: 700; color: var(--copper-light); font-size: 0.95em; margin-bottom: 6px; }
   .exp-card-text { font-size: 0.82em; color: var(--text-secondary); line-height: 1.6; }
-  body.light-mode .exp-card { background: var(--surface-2); }
-  body.light-mode .exp-card-title { color: #2E2922; }
-  body.light-mode .exp-card-text { color: rgba(44,26,14,0.5); }
 
   /* Section divider */
   .section-divider {
-    width: 60px; height: 1px; background: rgba(184,125,86,0.25);
+    width: 40px; height: 1px; background: var(--border-hover);
     margin: 0 auto 50px; position: relative;
   }
   .section-divider::after {
-    content: ''; position: absolute; left: 50%; top: -3px;
-    transform: translateX(-50%); width: 6px; height: 6px;
-    border-radius: 50%; background: var(--copper);
+    content: '◆'; position: absolute; left: 50%; top: -7px;
+    transform: translateX(-50%); font-size: 8px; color: var(--copper);
+    background: #0F0D0A; padding: 0 8px;
   }
 
   /* Back to top */
@@ -336,12 +265,7 @@
   .page-sub { color: var(--text-secondary); text-align: center; margin-bottom: 30px; font-weight: 300; font-size: 0.92em; }
   .page-container { max-width: 680px; width: 100%; margin: 0 auto; }
 
-  .mode-toggle {
-    position: fixed; top: 20px; right: 20px; z-index: 100;
-    background: var(--surface-2); border: 1px solid var(--border); color: var(--copper-light);
-    padding: 8px 14px; border-radius: 3px; cursor: pointer;
-    font-size: 0.9em; transition: all 0.3s;
-  }
+  
   .mode-toggle:hover { border-color: var(--copper); }
 
   .method-grid {
@@ -380,7 +304,6 @@
   .selector-label { color: var(--text-secondary); font-size: 0.82em; margin-top: 24px; margin-bottom: 10px; font-weight: 500; letter-spacing: 1px; text-transform: uppercase; }
   h2.selector-label, h2.calc-title { font-size: 0.85em; }
   .step-item.active-step { background: rgba(200,149,108,0.08); border-left-color: var(--copper); border-left-width: 4px; }
-  body.light-mode .step-item.active-step { background: rgba(155,115,82,0.06); }
   .selector-card {
     background: var(--surface); border: 1px solid var(--border);
     border-radius: 8px; padding: 16px; margin-bottom: 16px;
@@ -399,9 +322,15 @@
 
   .calc-panel {
     background: var(--surface); border: 1px solid var(--border);
-    border-radius: 8px; padding: 24px; margin: 24px 0;
+    border-radius: 4px; padding: 28px; margin: 24px 0;
+    position: relative;
   }
-  .calc-title { font-size: 0.85em; color: var(--copper-light); margin-bottom: 16px; font-weight: 500; letter-spacing: 1px; }
+  .calc-panel::before {
+    content: ''; position: absolute; top: 0; left: 24px; right: 24px;
+    height: 1px; background: linear-gradient(90deg, transparent, var(--copper), transparent);
+    opacity: 0.3;
+  }
+  .calc-title { font-size: 0.72em; color: var(--copper); margin-bottom: 20px; font-weight: 500; letter-spacing: 3px; text-transform: uppercase; }
   .grind-visual {
     margin-bottom: 15px; padding: 15px; background: var(--surface-2);
     border-radius: 3px; border: 1px solid var(--border);
@@ -412,11 +341,11 @@
     gap: 12px; margin-bottom: 15px;
   }
   .calc-item {
-    background: var(--surface-2); border-radius: 3px; padding: 10px; text-align: center;
+    background: var(--surface-2); border-radius: 3px; padding: 14px 10px; text-align: center;
     border: 1px solid var(--border);
   }
-  .calc-value { font-size: 1.5em; font-weight: 700; color: var(--copper); }
-  .calc-label { font-size: 0.75em; color: var(--text-secondary); margin-top: 5px; }
+  .calc-value { font-size: 1.6em; font-weight: 700; color: var(--copper-light); font-family: 'DM Sans', sans-serif; letter-spacing: 1px; }
+  .calc-label { font-size: 0.7em; color: var(--text-secondary); margin-top: 6px; letter-spacing: 0.5px; }
 
   .button-group { display: flex; gap: 10px; flex-wrap: wrap; }
   .btn-primary, .btn-secondary {
@@ -456,7 +385,6 @@
     display: block; font-size: 0.65em; font-weight: 300;
     color: var(--text-secondary); line-height: 1; opacity: 0.6;
   }
-  body.light-mode .dose-hint { color: rgba(26,23,20,0.35); }
   .dose-btn:hover { background: var(--surface-2); color: var(--text-primary); }
   .dose-btn.active {
     background: var(--copper); color: #0F0D0A;
@@ -464,17 +392,7 @@
   }
   .dose-btn.active .dose-hint { color: rgba(15,13,10,0.5); opacity: 1; }
 
-  /* Start timer button */
-  .btn-start-timer {
-    display: inline-flex; align-items: center; gap: 8px;
-    padding: 14px 32px; border: 1px solid var(--copper); border-radius: 3px;
-    background: var(--copper);
-    color: #0F0D0A; font-weight: 600; font-size: 0.9em;
-    cursor: pointer; transition: all 0.3s; font-family: inherit;
-    letter-spacing: 1px;
-  }
-  .btn-start-timer:hover { background: var(--copper-light); border-color: var(--copper-light); }
-  .btn-start-icon { font-size: 0.85em; }
+  /* (btn-start-timer defined above) */
 
   /* Timer redesign */
   .timer-display {
@@ -490,10 +408,6 @@
     border-radius: 0 0 8px 8px; margin-top: 0;
     box-shadow: 0 4px 24px rgba(0,0,0,0.4);
     padding: 15px 20px 12px; border-color: transparent;
-  }
-  body.light-mode .timer-display.timer-sticky {
-    background: rgba(248,245,240,0.95);
-    box-shadow: 0 4px 20px rgba(0,0,0,0.06);
   }
   .timer-display.timer-sticky .timer-ring-wrap { width: 100px; height: 100px; margin-bottom: 8px; }
   .timer-display.timer-sticky .timer-time { font-size: 1.6em; }
@@ -514,7 +428,7 @@
     position: absolute; top: 50%; left: 50%; transform: translate(-50%,-50%);
     text-align: center;
   }
-  .timer-time { font-size: 2.4em; font-weight: 700; letter-spacing: 2px; font-family: 'Courier New', monospace; line-height: 1; }
+  .timer-time { font-size: 2.4em; font-weight: 700; letter-spacing: 4px; font-family: 'DM Sans', 'Courier New', monospace; line-height: 1; color: var(--copper-light); }
   .timer-label { font-size: 0.8em; color: var(--text-secondary); margin-top: 4px; }
   .timer-controls { display: flex; gap: 12px; justify-content: center; }
   .timer-ctrl-btn {
@@ -539,27 +453,23 @@
   .stepper-btn:last-child { border-radius: 0 3px 3px 0; }
   .stepper-btn:hover { background: rgba(184,125,86,0.2); border-color: var(--copper); }
   .stepper-btn:active { transform: scale(0.92); }
-  body.light-mode .stepper-btn { color: #2E2922; }
 
   /* Slider styling */
   input[type="range"] {
-    -webkit-appearance: none; appearance: none; height: 6px; border-radius: 3px;
-    background: linear-gradient(90deg, rgba(184,125,86,0.3), rgba(184,125,86,0.5));
+    -webkit-appearance: none; appearance: none; height: 2px; border-radius: 1px;
+    background: var(--border-hover);
     outline: none; cursor: pointer;
   }
   input[type="range"]::-webkit-slider-thumb {
-    -webkit-appearance: none; width: 22px; height: 22px; border-radius: 50%;
-    background: var(--copper); border: 2px solid var(--copper);
-    box-shadow: 0 2px 6px rgba(184,125,86,0.4); cursor: pointer; transition: transform 0.15s;
+    -webkit-appearance: none; width: 16px; height: 16px; border-radius: 50%;
+    background: var(--copper); border: none;
+    box-shadow: 0 0 0 4px rgba(184,125,86,0.15); cursor: pointer; transition: all 0.2s;
   }
-  input[type="range"]::-webkit-slider-thumb:hover { transform: scale(1.2); }
+  input[type="range"]::-webkit-slider-thumb:hover { box-shadow: 0 0 0 6px rgba(184,125,86,0.25); transform: scale(1.1); }
   input[type="range"]::-moz-range-thumb {
-    width: 22px; height: 22px; border-radius: 50%;
-    background: var(--copper); border: 2px solid var(--copper);
-    box-shadow: 0 2px 6px rgba(184,125,86,0.4); cursor: pointer;
-  }
-  body.light-mode input[type="range"] {
-    background: linear-gradient(90deg, rgba(184,125,86,0.15), rgba(184,125,86,0.25));
+    width: 16px; height: 16px; border-radius: 50%;
+    background: var(--copper); border: none;
+    box-shadow: 0 0 0 4px rgba(184,125,86,0.15); cursor: pointer;
   }
 
   /* Ratio slider */
@@ -569,7 +479,6 @@
     min-width: 52px; text-align: center; font-weight: 700; color: var(--copper);
     font-size: 0.95em;
   }
-  body.light-mode .ratio-row label { color: #2E2922; }
 
   /* Method icon */
   .method-icon { width: 40px; height: 40px; margin-bottom: 6px; opacity: 0.85; }
@@ -587,8 +496,6 @@
     font-size: 0.88em; font-style: italic; text-align: center;
     color: var(--text-secondary); margin-top: 12px;
   }
-  body.light-mode .radar-wrap { background: var(--surface-2); }
-  body.light-mode .radar-desc { color: rgba(44,26,14,0.55); }
 
   .steps-container {
     background: var(--surface-2); border: 1px solid var(--border);
@@ -608,18 +515,22 @@
   .step-item {
     border-left: 2px solid var(--border-hover); padding-left: 18px; margin-bottom: 16px;
     padding-bottom: 14px; color: var(--text-primary);
+    transition: all 0.3s ease;
+  }
+  .step-item.active-step {
+    border-left-color: var(--copper); border-left-width: 3px;
+    background: rgba(184,125,86,0.06); border-radius: 0 4px 4px 0;
+    padding: 14px 16px 14px 18px; margin-left: -1px;
   }
   .step-num { font-weight: 500; color: var(--copper); margin-bottom: 4px; font-size: 0.8em; letter-spacing: 1px; text-transform: uppercase; }
   .step-time { font-size: 0.82em; color: var(--text-secondary); font-weight: 300; }
   .step-title { font-size: 1em; font-weight: 500; color: var(--copper-light); margin: 4px 0; }
   .step-note { font-size: 0.88em; color: var(--text-secondary); line-height: 1.6; margin-top: 4px; font-weight: 300; }
   .step-water { display: flex; align-items: center; gap: 8px; margin-top: 8px; flex-wrap: wrap; }
-  .step-water-pour { background: var(--surface-2); color: var(--copper-light); font-weight: 600; font-size: 0.9em; padding: 4px 14px; border-radius: 3px; white-space: nowrap; border: 1px solid var(--border); }
-  .step-water-cum { font-size: 0.82em; color: var(--text-secondary); white-space: nowrap; font-weight: 300; }
-  .step-water-bar { height: 4px; border-radius: 2px; background: var(--border); flex: 1; min-width: 60px; overflow: hidden; }
-  .step-water-bar-fill { height: 100%; border-radius: 2px; background: linear-gradient(90deg, var(--copper), var(--copper-light)); transition: width 0.5s ease; }
-  body.light-mode .step-water-pour { background: rgba(139,90,43,0.15); color: #2E2922; }
-  body.light-mode .step-water-cum { color: rgba(139,90,43,0.6); }
+  .step-water-pour { background: rgba(184,125,86,0.1); color: var(--copper); font-weight: 700; font-size: 0.88em; padding: 3px 12px; border-radius: 2px; white-space: nowrap; border: 1px solid rgba(184,125,86,0.2); letter-spacing: 0.5px; }
+  .step-water-cum { font-size: 0.78em; color: var(--text-secondary); white-space: nowrap; font-weight: 400; letter-spacing: 0.3px; }
+  .step-water-bar { height: 3px; border-radius: 1.5px; background: rgba(184,125,86,0.1); flex: 1; min-width: 60px; overflow: hidden; }
+  .step-water-bar-fill { height: 100%; border-radius: 1.5px; background: var(--copper); transition: width 0.5s ease; }
 
   .guide-card {
     background: var(--surface); border: 1px solid var(--border);
@@ -735,13 +646,6 @@
   .journal-entry-stars { color: var(--copper); }
   .journal-entry-note { color: var(--text-secondary); line-height: 1.4; }
 
-  body.light-mode .journal-card { background: var(--surface-2); border-color: var(--border); }
-  body.light-mode .journal-note { background: var(--surface); color: #2E2922; }
-  body.light-mode .journal-note::placeholder { color: rgba(44,26,14,0.4); }
-  body.light-mode .journal-entry { background: var(--surface); border-color: var(--border); }
-  body.light-mode .journal-entry-header { color: #2E2922; }
-  body.light-mode .journal-entry-note { color: #2E2922; }
-
   .compare-button-group {
     display: flex; gap: 10px; margin: 15px 0; justify-content: center;
   }
@@ -818,7 +722,6 @@
     .method-icon { width: 32px; height: 32px; }
   }
 
-
   /* ===== TAB NAVIGATION ===== */
   /* Desktop site header */
   .site-header {
@@ -841,8 +744,6 @@
       font-size: 0.65em; color: var(--text-secondary);
       letter-spacing: 2px; text-transform: uppercase; font-weight: 300;
     }
-    body.light-mode .site-header-title { color: #1A1714; }
-    body.light-mode .site-header-sub { color: rgba(26,23,20,0.4); }
     .tab-nav { padding-left: 280px; }
   }
 
@@ -853,10 +754,6 @@
     border-top: 1px solid var(--border);
     display: flex; justify-content: space-around; align-items: stretch;
     height: 68px; padding: 0; padding-bottom: env(safe-area-inset-bottom, 0);
-  }
-  body.light-mode .tab-nav {
-    background: rgba(248,245,240,0.96);
-    border-top-color: var(--border);
   }
   .tab-btn {
     display: flex; flex-direction: column; align-items: center;
@@ -872,8 +769,6 @@
     color: var(--copper-light); border-top-color: var(--copper);
   }
   .tab-btn:hover { color: var(--copper-light); }
-  body.light-mode .tab-btn { color: rgba(26,23,20,0.35); }
-  body.light-mode .tab-btn.active { color: var(--copper); border-top-color: var(--copper); }
 
   /* Tab content */
   .tab-content { display: none; animation: tabFadeIn 0.3s ease; }
@@ -911,8 +806,6 @@
   .quick-brew-header p {
     color: var(--text-secondary); font-size: 0.95em;
   }
-  body.light-mode .quick-brew-header h2 { color: #2E2922; }
-  body.light-mode .quick-brew-header p { color: rgba(44,26,14,0.5); }
 
   .quick-method-grid {
     display: grid; grid-template-columns: repeat(3, 1fr); gap: 10px; margin: 15px 0;
@@ -932,17 +825,12 @@
   }
   .quick-method-card .method-icon { width: 36px; height: 36px; margin: 0 auto 6px; display: block; }
   .quick-method-name { font-size: 0.82em; font-weight: 500; color: var(--copper-light); }
-  body.light-mode .quick-method-card { background: var(--surface); border-color: var(--border); }
-  body.light-mode .quick-method-card.active { background: rgba(155,115,82,0.08); border-color: var(--copper); }
-  body.light-mode .quick-method-name { color: #1A1714; }
 
   .quick-dose-section {
     background: var(--surface); border: 1px solid var(--border);
     border-radius: 6px; padding: 18px; margin: 15px 0;
   }
   .quick-dose-label { font-size: 0.9em; color: var(--text-secondary); margin-bottom: 10px; display: block; }
-  body.light-mode .quick-dose-section { background: var(--surface-2); }
-  body.light-mode .quick-dose-label { color: rgba(26,23,20,0.6); }
 
   .quick-results {
     background: var(--surface-2);
@@ -962,9 +850,6 @@
   }
   .quick-result-value { font-size: 1.6em; font-weight: 700; color: var(--copper); line-height: 1.2; }
   .quick-result-label { font-size: 0.75em; color: var(--text-secondary); margin-top: 4px; }
-  body.light-mode .quick-results { background: var(--surface-2); }
-  body.light-mode .quick-results-title { color: #2E2922; }
-  body.light-mode .quick-result-item { background: var(--surface); }
 
   .quick-steps-summary {
     border-top: 1px solid var(--border); padding-top: 16px;
@@ -992,7 +877,6 @@
     transition: all 0.3s; font-family: inherit;
   }
   .quick-goto-tools:hover { background: rgba(184,125,86,0.1); border-color: var(--copper); }
-  body.light-mode .quick-goto-tools { color: rgba(26,23,20,0.6); }
 
   /* ===== KNOWLEDGE TAB ===== */
   .knowledge-header {
@@ -1005,8 +889,6 @@
   .knowledge-header p {
     color: var(--text-secondary); font-size: 0.95em;
   }
-  body.light-mode .knowledge-header h2 { color: #2E2922; }
-  body.light-mode .knowledge-header p { color: rgba(44,26,14,0.5); }
 
   .method-overview-grid {
     display: grid; grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
@@ -1020,8 +902,6 @@
   .method-overview-name { font-weight: 700; color: var(--copper-light); font-size: 1em; margin-bottom: 6px; }
   .method-overview-info { font-size: 0.82em; color: var(--text-secondary); line-height: 1.6; }
   .method-overview-info span { display: block; margin-bottom: 2px; }
-  body.light-mode .method-overview-card { background: var(--surface-2); }
-  body.light-mode .method-overview-name { color: #2E2922; }
 
   /* Try it button for method overview */
   .method-overview-card .quick-goto-tools {
@@ -1032,10 +912,6 @@
   .method-overview-card .quick-goto-tools:hover {
     background: rgba(184,125,86,0.1); border-color: var(--copper);
   }
-  body.light-mode .method-overview-card .quick-goto-tools {
-    background: transparent; color: rgba(26,23,20,0.6);
-  }
-  body.light-mode .method-overview-card .quick-goto-tools:hover { background: rgba(184,125,86,0.08); }
 
   /* Adjust existing elements for SPA */
   .back-to-top { bottom: calc(72px + env(safe-area-inset-bottom, 0) + 16px); }
@@ -1059,7 +935,7 @@
     .tab-btn-icon { font-size: 1.1em; }
     body { padding-bottom: 20px; padding-top: 66px; }
     .back-to-top { bottom: 24px; }
-    .mode-toggle { top: 12px; }
+    
   }
 
   @media (max-width: 600px) {
@@ -1071,72 +947,65 @@
     .tab-btn-icon { font-size: 1.3em; }
   }
 
-  /* Focus Mode */
-  body.focus-mode {
-    background: var(--surface);
-  }
+  /* Focus Mode — timer stays sticky at top, steps remain visible below */
   body.focus-mode .timer-display {
     position: fixed;
-    top: 0;
-    left: 0;
+    top: 0; left: 0; right: 0;
     width: 100%;
-    height: 100vh;
+    height: auto;
     display: flex !important;
-    flex-direction: column;
+    flex-direction: row;
     align-items: center;
     justify-content: center;
-    background: linear-gradient(135deg, rgba(0,0,0,0.7), rgba(44,26,14,0.8));
+    gap: 16px;
+    background: rgba(15,13,10,0.97);
+    backdrop-filter: blur(20px);
+    -webkit-backdrop-filter: blur(20px);
     z-index: 1000;
-    padding: 0;
+    padding: 12px 20px;
     margin: 0;
     border-radius: 0;
+    border-bottom: 1px solid var(--border);
+    box-shadow: 0 4px 24px rgba(0,0,0,0.4);
   }
   body.focus-mode .timer-ring-wrap {
-    width: 240px;
-    height: 240px;
+    width: 56px; height: 56px; margin: 0; flex-shrink: 0;
   }
   body.focus-mode .timer-time {
-    font-size: 3.6em;
+    font-size: 1.8em;
   }
   body.focus-mode .timer-label {
-    font-size: 1.2em;
-    margin-top: 8px;
+    font-size: 0.75em; margin-top: 2px;
   }
   body.focus-mode .current-step-display {
-    font-size: 2em;
-    font-weight: 700;
+    font-size: 0.95em;
+    font-weight: 600;
     color: var(--copper-light);
-    margin-bottom: 40px;
-    text-align: center;
+    margin: 0;
+    text-align: left;
+    flex: 1;
+    min-width: 0;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
   }
   body.focus-mode .step-progress-bar {
-    width: 300px;
-    height: 12px;
-    background: rgba(184,125,86,0.2);
-    border-radius: 6px;
-    overflow: hidden;
-    margin: 30px 0 0;
-    position: relative;
-  }
-  body.focus-mode .step-progress-bar-fill {
-    height: 100%;
-    background: linear-gradient(90deg, var(--copper), var(--copper-light));
-    width: 0%;
-    transition: width 0.1s linear;
+    display: none;
   }
   body.focus-mode .focus-mode-controls {
-    margin-top: 40px;
+    margin: 0;
     display: flex;
-    gap: 20px;
+    gap: 8px;
     align-items: center;
+    flex-shrink: 0;
   }
   body.focus-mode .focus-exit-btn {
-    padding: 12px 24px;
+    padding: 6px 14px;
     border: 1px solid var(--border-hover);
     border-radius: 3px;
     background: var(--surface-2);
     color: var(--copper-light);
-    font-size: 0.9em;
+    font-size: 0.78em;
     cursor: pointer;
     transition: all 0.2s;
     font-family: inherit;
@@ -1144,18 +1013,31 @@
   body.focus-mode .focus-exit-btn:hover {
     background: var(--surface-3); border-color: var(--copper);
   }
+  body.focus-mode .timer-controls {
+    gap: 6px;
+  }
+  body.focus-mode .timer-ctrl-btn {
+    width: 36px; height: 36px; font-size: 1em;
+  }
+  body.focus-mode .timer-ring-inner {
+    position: absolute; top: 50%; left: 50%; transform: translate(-50%,-50%);
+  }
+  /* Push page content below the fixed timer bar */
+  body.focus-mode .page-container {
+    padding-top: 90px;
+  }
   body.focus-mode #toolsTab {
-    opacity: 0.2;
-    pointer-events: none;
+    opacity: 1;
+    pointer-events: auto;
   }
-  body.light-mode.focus-mode .timer-display {
-    background: var(--surface);
-  }
-  body.light-mode.focus-mode .timer-time {
-    color: #2E2922;
-  }
-  body.light-mode.focus-mode .current-step-display {
-    color: #2E2922;
+  /* Highlight the active step more prominently in focus mode */
+  body.focus-mode .step-item.active-step {
+    background: rgba(184,125,86,0.12);
+    border-left-color: var(--copper);
+    border-left-width: 3px;
+    padding: 14px 18px;
+    margin-left: -2px;
+    border-radius: 0 4px 4px 0;
   }
   /* Water Temperature Input */
   .temp-row {
@@ -1179,12 +1061,6 @@
     margin-top: 4px;
     font-style: italic;
   }
-  body.light-mode .temp-row label {
-    color: #2E2922;
-  }
-  body.light-mode .temp-suggestion {
-    color: rgba(44,26,14,0.5);
-  }
   /* Manual Ratio Input */
   .ratio-input-wrap {
     display: flex;
@@ -1206,10 +1082,6 @@
   .ratio-input-wrap input[type="number"]::placeholder {
     color: var(--text-secondary);
   }
-  body.light-mode .ratio-input-wrap input[type="number"] {
-    background: rgba(255,255,255,0.6);
-    color: #2E2922;
-  }
   /* Fresh Bean Note */
   .fresh-bean-note {
     margin: 15px 0;
@@ -1230,13 +1102,6 @@
   .fresh-bean-note-text {
     font-size: 0.88em;
     color: var(--text-primary);
-  }
-  body.light-mode .fresh-bean-note {
-    background: rgba(184,125,86,0.08);
-    border-left-color: rgba(184,125,86,0.6);
-  }
-  body.light-mode .fresh-bean-note-text {
-    color: rgba(44,26,14,0.75);
   }
   /* Wake Lock Indicator */
   .wake-lock-indicator {
@@ -1320,19 +1185,9 @@
     height: 12px;
     border-radius: 2px;
   }
-  body.light-mode .compare-radar-wrap {
-    background: var(--surface-2);
-  }
-  body.light-mode .compare-radar-title {
-    color: #2E2922;
-  }
-  body.light-mode .compare-radar-legend {
-    color: rgba(44,26,14,0.6);
-  }
 </style>
 </head>
 <body>
-  <button class="mode-toggle" id="darkModeToggle" aria-label="切換深色/淺色模式">🌙</button>
   <button class="back-to-top" id="backToTop" aria-label="回到頂部">↑</button>
 
   <!-- ===== DESKTOP SITE HEADER ===== -->
@@ -1847,12 +1702,12 @@ function renderMethodCards(){const g=document.getElementById('methodGrid');g.inn
 function selectMethod(k,m){if(!m)m=BREW_METHODS[k];selectedMethod=k;customRatio=null;const tempVal=m.temp.replace('°C','').replace('℃','');if(tempVal)document.getElementById('currentTemp').value=tempVal;updateTempSuggestion();document.querySelectorAll('.method-card').forEach(c=>c.classList.remove('active'));if(event&&event.target){const card=event.target.closest('.method-card');if(card)card.classList.add('active')}document.getElementById('calcPanel').style.display='block';document.getElementById('calcPanel').classList.remove('recipe-animate');void document.getElementById('calcPanel').offsetWidth;document.getElementById('calcPanel').classList.add('recipe-animate');document.getElementById('stepsContainer').style.display='block';document.getElementById('stepsContainer').classList.remove('recipe-animate');void document.getElementById('stepsContainer').offsetWidth;document.getElementById('stepsContainer').classList.add('recipe-animate');const rs=document.getElementById('ratioSlider');rs.value=m.ratio;document.getElementById('ratioValue').textContent='1:'+m.ratio;showGuide(k,m);updateCalcPanel(m);updateSteps(m);renderRadar(k);renderGrindVisual(k);document.getElementById('radarWrap').style.display='block';setTimeout(()=>{document.getElementById('calcPanel').scrollIntoView({behavior:'smooth',block:'start'})},100)}
 function getEffectiveRatio(m){return customRatio!==null?customRatio:m.ratio}
 function updateCalcPanel(m){const d=parseFloat(document.getElementById('doseInput').value)||20,r=getEffectiveRatio(m),t=Math.round(d*r),s=m.buildSummary(d,t),g=document.getElementById('calcGrid');g.innerHTML=s.map(i=>`<div class="calc-item"><div class="calc-value">${i.value}</div><div class="calc-label">${i.label}</div>${i.unit?`<div class="calc-label">${i.unit}</div>`:''}</div>`).join('')}
-function updateSteps(m){const d=parseFloat(document.getElementById('doseInput').value)||20,r=getEffectiveRatio(m),t=Math.round(d*r),sd=m.buildSteps(d,t);let bloomTimeAddition=0;const skipRest=document.getElementById('restDaysSkipBtn').classList.contains('active'),restDays=skipRest?7:(parseInt(document.getElementById('restDays').value)||7);if(restDays<=3&&!skipRest){bloomTimeAddition=10;document.getElementById('freshBeanNote').classList.add('show')}else{document.getElementById('freshBeanNote').classList.remove('show')}currentStepBloomTime=bloomTimeAddition;let h='';currentStepDurations=[];let cumTime=0;sd.groups.forEach(g=>{h+=`<div class="steps-group-title ${g.color}">${g.label}</div>`;g.steps.forEach(s=>{cumTime+=(s.duration||0);currentStepDurations.push(cumTime);let wb='';if(s.water>0){const pct=Math.round((s.cum/t)*100);wb=`<div class="step-water"><div class="step-water-pour">+${s.water}g</div><div class="step-water-cum">累計 ${s.cum}g / ${t}g</div><div class="step-water-bar"><div class="step-water-bar-fill" style="width:${pct}%"></div></div></div>`}h+=`<div class="step-item" data-step-idx="${currentStepDurations.length-1}"><div class="step-num">步驟 ${s.num}</div><div class="step-time">${s.time}</div><div class="step-title">${s.title}</div>${wb}<div class="step-note">${s.note}</div></div>`})});document.getElementById('stepsContent').innerHTML=h}
+function updateSteps(m){const d=parseFloat(document.getElementById('doseInput').value)||20,r=getEffectiveRatio(m),t=Math.round(d*r),sd=m.buildSteps(d,t);let bloomTimeAddition=0;const skipRest=document.getElementById('restDaysSkipBtn').classList.contains('active'),restDays=skipRest?7:(parseInt(document.getElementById('restDays').value)||7);if(restDays<=3&&!skipRest){bloomTimeAddition=10;document.getElementById('freshBeanNote').classList.add('show')}else{document.getElementById('freshBeanNote').classList.remove('show')}currentStepBloomTime=bloomTimeAddition;let h='';currentStepDurations=[];let cumTime=0;sd.groups.forEach(g=>{h+=`<div class="steps-group-title ${g.color}">${g.label}</div>`;g.steps.forEach(s=>{cumTime+=(s.duration||0);currentStepDurations.push(cumTime);let wb='';const pct=Math.round((s.cum/t)*100);if(s.water>0){wb=`<div class="step-water"><div class="step-water-pour">+${s.water}g</div><div class="step-water-cum">累計 ${s.cum}g / ${t}g</div><div class="step-water-bar"><div class="step-water-bar-fill" style="width:${pct}%"></div></div></div>`}else if(s.cum>0){wb=`<div class="step-water"><div class="step-water-cum" style="opacity:0.7;">維持 ${s.cum}g / ${t}g</div><div class="step-water-bar"><div class="step-water-bar-fill" style="width:${pct}%"></div></div></div>`}h+=`<div class="step-item" data-step-idx="${currentStepDurations.length-1}"><div class="step-num">步驟 ${s.num}</div><div class="step-time">${s.time}</div><div class="step-title">${s.title}</div>${wb}<div class="step-note">${s.note}</div></div>`})});document.getElementById('stepsContent').innerHTML=h}
 function showGuide(k,m){const g=GUIDE_CONTENT[k],gd=[{title:'方法起源',text:g.origin},{title:'核心理念',text:g.concept},{title:'操作細節',text:g.details.join('\n')},{title:'適合豆子',text:g.suitableBean},{title:'不太適合',text:g.unsuitable},{title:'常見問題',text:g.faq.map(f=>`${f.q}: ${f.a}`).join('\n')}],gc=document.getElementById('guideContainer');gc.innerHTML=`<div class="guide-card"><div class="guide-header"><div class="guide-header-text">沖法指南</div><div class="guide-toggle">▼</div></div><div class="guide-content">${gd.map(s=>`<div class="guide-section"><div class="guide-section-title">${s.title}</div><div class="guide-section-text">${s.text.includes('\n')?'<ul>'+s.text.split('\n').map(l=>`<li>${l}</li>`).join('')+'</ul>':s.text.replace(/\n/g,'<br>')}</div></div>`).join('')}</div></div>`;const h=gc.querySelector('.guide-header'),c=gc.querySelector('.guide-content'),t=gc.querySelector('.guide-toggle');h.addEventListener('click',()=>{c.classList.toggle('open');t.classList.toggle('open')})}
 function renderAllGuides(){const gc=document.getElementById('guideContainer');if(!gc)return;let html='';const guideNames={sweet:'超高甜感法',kasuya:'Kasuya 4:6法',hoffmann:'James Hoffmann法',rao:'Scott Rao法',onePour:'一刀流',icedBrew:'Flash Brew 冰手沖'};Object.entries(GUIDE_CONTENT).forEach(([k,g])=>{const gd=[{title:'方法起源',text:g.origin},{title:'核心理念',text:g.concept},{title:'操作細節',text:g.details.join('\n')},{title:'適合豆子',text:g.suitableBean},{title:'不太適合',text:g.unsuitable},{title:'常見問題',text:g.faq.map(f=>`${f.q}: ${f.a}`).join('\n')}];html+=`<div class="guide-card" data-guide="${k}"><div class="guide-header"><div class="guide-header-text">${guideNames[k]||k} 沖法指南</div><div class="guide-toggle">▼</div></div><div class="guide-content">${gd.map(s=>`<div class="guide-section"><div class="guide-section-title">${s.title}</div><div class="guide-section-text">${s.text.includes('\n')?'<ul>'+s.text.split('\n').map(l=>`<li>${l}</li>`).join('')+'</ul>':s.text.replace(/\n/g,'<br>')}</div></div>`).join('')}</div></div>`});gc.innerHTML=html;gc.querySelectorAll('.guide-header').forEach(h=>{const c=h.nextElementSibling,t=h.querySelector('.guide-toggle');h.addEventListener('click',()=>{c.classList.toggle('open');t.classList.toggle('open')})})}
 function updateRecommendation(){const r=document.getElementById('roastLevel').value,p=document.getElementById('processing').value;let k=r+'-'+p;if(!RECOMMENDATIONS[k])k='default';const rec=RECOMMENDATIONS[k],rp=document.getElementById('recommendationPanel'),rt=document.getElementById('recommendationText');let recText=`<strong>${BREW_METHODS[rec.method].title}</strong><br>${rec.reason}`;const month=new Date().getMonth()+1,isSummer=month>=5&&month<=9;if(isSummer&&rec.method!=='icedBrew'){recText+='<br><br><em style="color:var(--text-secondary);font-size:0.9em;">🌞 夏日提醒：也可以試試冰手沖，用同一支豆子感受不同的清涼風味！</em>'}else if((month>=11||month<=2)&&!isSummer){recText+='<br><br><em style="color:var(--text-secondary);font-size:0.9em;">❄️ 冬日提醒：可以將水溫提高 1-2°C，讓風味更飽滿溫暖。</em>'}rp.style.display='block';rt.innerHTML=recText}
 function updateKnowledgeTips(){const r=document.getElementById('roastLevel').value,p=document.getElementById('processing').value,skipRest=document.getElementById('restDaysSkipBtn').classList.contains('active'),d=skipRest?7:(parseInt(document.getElementById('restDays').value)||7),f=parseInt(document.getElementById('flavorPref').value),mt=KNOWLEDGE_TIPS.filter(t=>t.condition(r,p,d,f)).slice(0,2),ktc=document.getElementById('knowledgeTipsContainer');if(mt.length===0){ktc.innerHTML='';return}ktc.innerHTML=mt.map((t,i)=>`<div class="knowledge-tip" id="tip-${i}"><div class="knowledge-tip-header"><div class="knowledge-tip-title">${t.title}</div><div class="knowledge-tip-toggle">▼</div></div><div class="knowledge-tip-text">${t.text}</div></div>`).join('');mt.forEach((_,i)=>{const el=document.getElementById(`tip-${i}`),h=el.querySelector('.knowledge-tip-header'),c=el.querySelector('.knowledge-tip-text'),tg=el.querySelector('.knowledge-tip-toggle');h.addEventListener('click',()=>{c.classList.toggle('open');tg.classList.toggle('open')})})}
-function attachEventListeners(){document.getElementById('quickStartBtn').addEventListener('click',quickStart);document.getElementById('doseInput').addEventListener('input',()=>{recalcAll();updateDoseBtnActive()});document.getElementById('roastLevel').addEventListener('change',()=>{updateRecommendation();updateKnowledgeTips()});document.getElementById('processing').addEventListener('change',()=>{updateRecommendation();updateKnowledgeTips()});document.getElementById('restDays').addEventListener('input',()=>{document.getElementById('restDaysSkipBtn').classList.remove('active');document.getElementById('restDays').disabled=false;document.getElementById('restDays').style.opacity='1';updateKnowledgeTips()});document.getElementById('restDaysSkipBtn').addEventListener('click',()=>{const btn=document.getElementById('restDaysSkipBtn'),inp=document.getElementById('restDays');btn.classList.toggle('active');if(btn.classList.contains('active')){inp.disabled=true;inp.style.opacity='0.4'}else{inp.disabled=false;inp.style.opacity='1'}updateKnowledgeTips()});document.getElementById('flavorPref').addEventListener('input',(e)=>{document.getElementById('flavorValue').textContent=e.target.value;updateRecommendation();updateKnowledgeTips()});document.querySelectorAll('.dose-btn').forEach(btn=>{btn.addEventListener('click',()=>{const v=parseFloat(btn.dataset.dose);document.getElementById('doseInput').value=v;document.querySelectorAll('.dose-btn').forEach(b=>b.classList.remove('active'));btn.classList.add('active');recalcAll()})});document.querySelectorAll('.stepper-btn').forEach(btn=>{btn.addEventListener('click',()=>{const tid=btn.dataset.target,delta=parseFloat(btn.dataset.delta),inp=document.getElementById(tid);if(inp.disabled)return;let v=parseFloat(inp.value)||0;v=Math.max(parseFloat(inp.min),Math.min(parseFloat(inp.max),v+delta));inp.value=v;inp.dispatchEvent(new Event('input',{bubbles:true}))})});document.getElementById('ratioSlider').addEventListener('input',(e)=>{const v=parseFloat(e.target.value);customRatio=v;document.getElementById('ratioValue').textContent='1:'+v;recalcAll()});document.getElementById('startTimerBtn').addEventListener('click',startTimer);document.getElementById('pausePlayBtn').addEventListener('click',toggleTimer);document.getElementById('resetTimerBtn').addEventListener('click',resetTimer);document.getElementById('voiceToggleBtn').addEventListener('click',()=>{voiceEnabled=!voiceEnabled;const btn=document.getElementById('voiceToggleBtn');btn.textContent=voiceEnabled?'🔔':'🔕';btn.classList.toggle('active',voiceEnabled)});document.getElementById('currentTemp').addEventListener('input',()=>{updateTempSuggestion();updateCalcPanel(BREW_METHODS[selectedMethod])});document.getElementById('roastLevel').addEventListener('change',()=>{autoAdjustTemp();updateRecommendation();updateKnowledgeTips()});document.getElementById('manualRatioInput').addEventListener('input',(e)=>{const v=parseFloat(e.target.value);if(v>=12&&v<=18){customRatio=v;document.getElementById('ratioSlider').value=v;document.getElementById('ratioValue').textContent='1:'+v;recalcAll()}});document.getElementById('ratioSlider').addEventListener('input',(e)=>{const v=parseFloat(e.target.value);document.getElementById('manualRatioInput').value=v.toFixed(1);});document.querySelectorAll('.ratio-preset').forEach(btn=>{btn.addEventListener('click',()=>{const v=parseFloat(btn.dataset.ratio);customRatio=v;document.getElementById('ratioSlider').value=v;document.getElementById('ratioValue').textContent='1:'+v;document.getElementById('manualRatioInput').value=v;document.querySelectorAll('.ratio-preset').forEach(b=>b.classList.remove('active'));btn.classList.add('active');recalcAll()})});document.getElementById('darkModeToggle').addEventListener('click',toggleDarkMode);document.getElementById('compareBtn').addEventListener('click',()=>{selectedCompareMethods=[];renderCompareModal();document.getElementById('compareModal').classList.add('active')});document.getElementById('compareCloseBtn').addEventListener('click',()=>{document.getElementById('compareModal').classList.remove('active')});document.getElementById('compareModal').addEventListener('click',(e)=>{if(e.target===document.getElementById('compareModal'))document.getElementById('compareModal').classList.remove('active')})}
+function attachEventListeners(){document.getElementById('quickStartBtn').addEventListener('click',quickStart);document.getElementById('doseInput').addEventListener('input',()=>{recalcAll();updateDoseBtnActive()});document.getElementById('roastLevel').addEventListener('change',()=>{updateRecommendation();updateKnowledgeTips()});document.getElementById('processing').addEventListener('change',()=>{updateRecommendation();updateKnowledgeTips()});document.getElementById('restDays').addEventListener('input',()=>{document.getElementById('restDaysSkipBtn').classList.remove('active');document.getElementById('restDays').disabled=false;document.getElementById('restDays').style.opacity='1';updateKnowledgeTips()});document.getElementById('restDaysSkipBtn').addEventListener('click',()=>{const btn=document.getElementById('restDaysSkipBtn'),inp=document.getElementById('restDays');btn.classList.toggle('active');if(btn.classList.contains('active')){inp.disabled=true;inp.style.opacity='0.4'}else{inp.disabled=false;inp.style.opacity='1'}updateKnowledgeTips()});document.getElementById('flavorPref').addEventListener('input',(e)=>{document.getElementById('flavorValue').textContent=e.target.value;updateRecommendation();updateKnowledgeTips()});document.querySelectorAll('.dose-btn').forEach(btn=>{btn.addEventListener('click',()=>{const v=parseFloat(btn.dataset.dose);document.getElementById('doseInput').value=v;document.querySelectorAll('.dose-btn').forEach(b=>b.classList.remove('active'));btn.classList.add('active');recalcAll()})});document.querySelectorAll('.stepper-btn').forEach(btn=>{btn.addEventListener('click',()=>{const tid=btn.dataset.target,delta=parseFloat(btn.dataset.delta),inp=document.getElementById(tid);if(inp.disabled)return;let v=parseFloat(inp.value)||0;v=Math.max(parseFloat(inp.min),Math.min(parseFloat(inp.max),v+delta));inp.value=v;inp.dispatchEvent(new Event('input',{bubbles:true}))})});document.getElementById('ratioSlider').addEventListener('input',(e)=>{const v=parseFloat(e.target.value);customRatio=v;document.getElementById('ratioValue').textContent='1:'+v;recalcAll()});document.getElementById('startTimerBtn').addEventListener('click',startTimer);document.getElementById('pausePlayBtn').addEventListener('click',toggleTimer);document.getElementById('resetTimerBtn').addEventListener('click',resetTimer);document.getElementById('voiceToggleBtn').addEventListener('click',()=>{voiceEnabled=!voiceEnabled;const btn=document.getElementById('voiceToggleBtn');btn.textContent=voiceEnabled?'🔔':'🔕';btn.classList.toggle('active',voiceEnabled)});document.getElementById('currentTemp').addEventListener('input',()=>{updateTempSuggestion();updateCalcPanel(BREW_METHODS[selectedMethod])});document.getElementById('roastLevel').addEventListener('change',()=>{autoAdjustTemp();updateRecommendation();updateKnowledgeTips()});document.getElementById('manualRatioInput').addEventListener('input',(e)=>{const v=parseFloat(e.target.value);if(v>=12&&v<=18){customRatio=v;document.getElementById('ratioSlider').value=v;document.getElementById('ratioValue').textContent='1:'+v;recalcAll()}});document.getElementById('ratioSlider').addEventListener('input',(e)=>{const v=parseFloat(e.target.value);document.getElementById('manualRatioInput').value=v.toFixed(1);});document.querySelectorAll('.ratio-preset').forEach(btn=>{btn.addEventListener('click',()=>{const v=parseFloat(btn.dataset.ratio);customRatio=v;document.getElementById('ratioSlider').value=v;document.getElementById('ratioValue').textContent='1:'+v;document.getElementById('manualRatioInput').value=v;document.querySelectorAll('.ratio-preset').forEach(b=>b.classList.remove('active'));btn.classList.add('active');recalcAll()})});document.getElementById('compareBtn').addEventListener('click',()=>{selectedCompareMethods=[];renderCompareModal();document.getElementById('compareModal').classList.add('active')});document.getElementById('compareCloseBtn').addEventListener('click',()=>{document.getElementById('compareModal').classList.remove('active')});document.getElementById('compareModal').addEventListener('click',(e)=>{if(e.target===document.getElementById('compareModal'))document.getElementById('compareModal').classList.remove('active')})}
 function updateDoseBtnActive(){const v=parseFloat(document.getElementById('doseInput').value);document.querySelectorAll('.dose-btn').forEach(b=>{b.classList.toggle('active',parseFloat(b.dataset.dose)===v)})}
 function renderRadar(k){const p=FLAVOR_PROFILES[k];if(!p)return;const svg=document.getElementById('radarSvg'),cx=120,cy=105,r=80,labels=['酸度','苦度','甜度','體脂感','香氣'],keys=['acidity','bitterness','sweetness','body','aroma'],n=5;let gridLines='',axisLines='',labelEls='';for(let ring=2;ring<=10;ring+=2){let pts=[];for(let i=0;i<n;i++){const a=Math.PI*2*i/n-Math.PI/2,x=cx+r*(ring/10)*Math.cos(a),y=cy+r*(ring/10)*Math.sin(a);pts.push(`${x},${y}`)}gridLines+=`<polygon points="${pts.join(' ')}" fill="none" stroke="rgba(184,125,86,${ring===10?0.3:0.12})" stroke-width="${ring===10?1:0.5}"/>`}for(let i=0;i<n;i++){const a=Math.PI*2*i/n-Math.PI/2,x=cx+r*Math.cos(a),y=cy+r*Math.sin(a),lx=cx+(r+16)*Math.cos(a),ly=cy+(r+16)*Math.sin(a);axisLines+=`<line x1="${cx}" y1="${cy}" x2="${x}" y2="${y}" stroke="rgba(184,125,86,0.2)" stroke-width="0.5"/>`;labelEls+=`<text x="${lx}" y="${ly}" text-anchor="middle" dominant-baseline="central" fill="currentColor" font-size="10" opacity="0.7">${labels[i]}</text>`}let dataPts=[];for(let i=0;i<n;i++){const a=Math.PI*2*i/n-Math.PI/2,v=p[keys[i]]/10,x=cx+r*v*Math.cos(a),y=cy+r*v*Math.sin(a);dataPts.push(`${x},${y}`)}const dataPolygon=`<polygon points="${dataPts.join(' ')}" fill="rgba(184,125,86,0.2)" stroke="var(--copper)" stroke-width="2"/>`;let dots='';for(let i=0;i<n;i++){const a=Math.PI*2*i/n-Math.PI/2,v=p[keys[i]]/10,x=cx+r*v*Math.cos(a),y=cy+r*v*Math.sin(a);dots+=`<circle cx="${x}" cy="${y}" r="3.5" fill="var(--copper)"/>`}svg.innerHTML=gridLines+axisLines+dataPolygon+dots+labelEls;const desc=FLAVOR_DESCRIPTIONS[k];if(desc){let descEl=document.querySelector('.radar-desc');if(!descEl){descEl=document.createElement('div');descEl.className='radar-desc';svg.parentNode.appendChild(descEl)}descEl.textContent=desc}}
 function recalcAll(){if(!selectedMethod)return;const m=BREW_METHODS[selectedMethod];updateCalcPanel(m);updateSteps(m)}
@@ -1866,7 +1721,7 @@ function renderGrindVisual(k){const grindLevel=GRIND_LEVELS[k];const grindMap={'
 function renderJournalHistory(){const hist=JSON.parse(localStorage.getItem('brewJournal')||'[]'),jh=document.getElementById('journalHistory');if(hist.length===0){jh.innerHTML='<div style="text-align:center;color:var(--text-secondary);font-size:0.9em;padding:15px;">還沒有紀錄。開始沖煮並儲存你的第一筆筆記！</div>';return}jh.innerHTML='<div style="font-size:0.85em;margin-bottom:10px;color:var(--text-secondary);">最近紀錄</div>'+hist.slice(-5).reverse().map(e=>`<div class="journal-entry"><div class="journal-entry-header"><div><strong>${e.method}</strong> · ${e.dose}g / 1:${e.ratio}</div><div class="journal-entry-date">${e.date}</div></div>${e.rating?`<div class="journal-entry-stars">${'★'.repeat(e.rating)}${'☆'.repeat(5-e.rating)}</div>`:''}<div class="journal-entry-note">${e.note||'(無筆記)'}</div></div>`).join('')}
 function renderFAQ(){const fl=document.getElementById('faqList');fl.innerHTML=FAQ_DATA.map((faq,idx)=>`<div class="knowledge-tip"><div class="knowledge-tip-header"><div class="knowledge-tip-title" style="font-weight:600;color:var(--copper-light);">${faq.q}</div><div class="knowledge-tip-toggle">▼</div></div><div class="knowledge-tip-text">${faq.a}</div></div>`).join('');document.querySelectorAll('#faqList .knowledge-tip-header').forEach((h,idx)=>{const c=h.nextElementSibling,t=h.querySelector('.knowledge-tip-toggle');h.addEventListener('click',()=>{c.classList.toggle('open');t.classList.toggle('open')})})}
 function updateGreeting(){document.getElementById('heroGreeting').innerHTML='每一次沖煮，都是一場關於味覺、時間與意念的探索。'}
-function toggleDarkMode(){document.body.classList.toggle('light-mode');const isDark=!document.body.classList.contains('light-mode');localStorage.setItem('darkMode',isDark);document.getElementById('darkModeToggle').textContent=isDark?'🌙':'☀️'}
+function toggleDarkMode(){}
 function renderCompareModal(){const cmg=document.getElementById('compareMethodGrid');cmg.innerHTML=Object.entries(BREW_METHODS).map(([k,m])=>`<button class="compare-method-btn" data-method="${k}">${m.title.split(' · ')[0]}<br><small>${m.badge}</small></button>`).join('');document.querySelectorAll('.compare-method-btn').forEach(btn=>{btn.onclick=function(){const method=this.dataset.method;if(selectedCompareMethods.includes(method)){selectedCompareMethods=selectedCompareMethods.filter(m=>m!==method);this.classList.remove('selected')}else if(selectedCompareMethods.length<2){selectedCompareMethods.push(method);this.classList.add('selected')}else{const oldMethod=selectedCompareMethods.shift();document.querySelectorAll('.compare-method-btn').forEach(b=>{if(b.dataset.method===oldMethod)b.classList.remove('selected')});selectedCompareMethods.push(method);this.classList.add('selected')}updateCompareResult()}});document.getElementById('compareResult').innerHTML='<div class="compare-empty">選擇沖法開始比較</div>'}
 function updateCompareResult(){const cr=document.getElementById('compareResult');if(selectedCompareMethods.length===0){cr.innerHTML='<div class="compare-empty">選擇沖法開始比較</div>';return}const m=selectedCompareMethods.map(k=>({key:k,data:BREW_METHODS[k]})),hr=`<tr class="compare-header"><th>項目</th>${m.map(x=>`<th>${x.data.title.split(' · ')[0]}</th>`).join('')}</tr>`,rows=[{label:'難易度',values:m.map(x=>METHOD_COMPARE[x.key].difficulty)},{label:'風味走向',values:m.map(x=>METHOD_COMPARE[x.key].flavorProfile)},{label:'適合烘焙度',values:m.map(x=>METHOD_COMPARE[x.key].suitableRoast)},{label:'核心技巧',values:m.map(x=>METHOD_COMPARE[x.key].keyTechnique)},{label:'注水段數',values:m.map(x=>METHOD_COMPARE[x.key].pourStages)},{label:'粉水比',values:m.map(x=>`1:${x.data.ratio}`)},{label:'水溫',values:m.map(x=>x.data.temp)},{label:'預期時間',values:m.map(x=>x.data.time)}];cr.innerHTML=`<table class="compare-table">${hr}${rows.map(row=>`<tr><td><strong>${row.label}</strong></td>${row.values.map(val=>`<td>${val}</td>`).join('')}</tr>`).join('')}</table>`;renderCompareRadar()}
 /* Hero CTA & scroll */
@@ -1880,7 +1735,7 @@ window.addEventListener('scroll',()=>{btt.classList.toggle('show',window.scrollY
 btt.addEventListener('click',()=>{window.scrollTo({top:0,behavior:'smooth'})});
 /* Smooth scroll globally */
 document.documentElement.style.scrollBehavior='smooth';
-const darkMode=localStorage.getItem('darkMode')!=='false';if(!darkMode)document.body.classList.add('light-mode');document.getElementById('darkModeToggle').textContent=darkMode?'🌙':'☀️';
+/* Dark mode only - no toggle */
 init();
 if('serviceWorker' in navigator){navigator.serviceWorker.register('sw.js').catch(()=>{})}
   
@@ -1972,7 +1827,7 @@ function updateQuickBrewResults() {
       stepsHtml += '<div class="quick-step-row">' +
         '<div class="quick-step-num">' + (i + 1) + '</div>' +
         '<div class="quick-step-text">' + s.title + '</div>' +
-        (s.water > 0 ? '<div class="quick-step-water">+' + s.water + 'g</div>' : '<div class="quick-step-water">-</div>') +
+        (s.water > 0 ? '<div class="quick-step-water">+' + s.water + 'g（累計 ' + s.cum + 'g）</div>' : '<div class="quick-step-water" style="opacity:0.5;">' + s.cum + 'g</div>') +
         '</div>';
     }
   });
