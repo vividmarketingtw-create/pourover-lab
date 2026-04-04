@@ -4,7 +4,7 @@
 
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<meta name="description" content="手沖咖啡實驗室 - 支援多種沖法。即時計算水量、調整粉水比，含計時器和沖煮步驟指引。">
+<meta name="description" content="PourOver Lab — 手沖咖啡互動工具。支援六種世界級沖煮法，含計時器、風味分析、智慧推薦。">
 <meta name="keywords" content="手沖咖啡,沖煮法,Pour Over,Kasuya,Hoffmann,Scott Rao,咖啡計算器,粉水比,V60">
 <meta property="og:title" content="手沖咖啡實驗室 - 精準沖煮計算器 | Pour Over Lab">
 <meta property="og:description" content="手沖咖啡實驗室 - 支援多種沖法。即時計算水量、調整粉水比，含計時器和沖煮步驟指引。">
@@ -18,7 +18,7 @@
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="手沖咖啡實驗室 | Pour Over Lab">
 <meta name="twitter:description" content="精準計算、智慧推薦、完整指南 — 支援6種手沖咖啡沖法的互動工具">
-<title>手沖咖啡實驗室 | Pour Over Lab</title>
+<title>PourOver Lab — A sensory coffee experience</title>
 <link rel="manifest" href="manifest.json">
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
@@ -84,7 +84,7 @@
 
   /* Hero section */
   .hero {
-    text-align: center; padding: 60px 20px 40px; position: relative;
+    text-align: center; padding: 80px 20px 50px; position: relative;
     min-height: 70vh; display: flex; flex-direction: column;
     justify-content: center; align-items: center;
   }
@@ -97,10 +97,11 @@
   .hero h1 {
     font-size: 3.2em; font-family: 'Playfair Display', serif;
     color: var(--gold); line-height: 1.15; margin-bottom: 12px;
+    text-shadow: 0 2px 8px rgba(0,0,0,0.3);
   }
   .hero-en {
     font-family: 'Playfair Display', serif; font-size: 1.1em;
-    color: rgba(232,184,109,0.4); letter-spacing: 3px;
+    color: rgba(232,184,109,0.55); letter-spacing: 3px;
     margin-bottom: 20px; font-style: italic;
   }
   .hero-tagline {
@@ -179,7 +180,7 @@
   body.light-mode .section-sub { color: rgba(44,26,14,0.6); }
   body.light-mode .section-label { color: var(--brown-mid); }
   body.light-mode .hero h1 { color: var(--brown-dark); }
-  body.light-mode .hero-en { color: rgba(44,26,14,0.35); }
+  body.light-mode .hero-en { color: rgba(44,26,14,0.5); }
   body.light-mode .hero-tagline { color: rgba(44,26,14,0.6); }
   body.light-mode .hero-badge { color: var(--brown-mid); border-color: rgba(160,98,42,0.3); }
 
@@ -736,6 +737,7 @@
     color: rgba(232,184,109,0.5); font-size: 0.68em; padding: 8px 4px;
     cursor: pointer; transition: all 0.3s; font-family: inherit;
     text-decoration: none; -webkit-tap-highlight-color: transparent;
+    white-space: nowrap;
   }
   .tab-btn-icon { font-size: 1.5em; line-height: 1; }
   .tab-btn.active {
@@ -888,9 +890,10 @@
       padding-bottom: 0;
     }
     .tab-btn {
-      flex-direction: row; gap: 8px; flex: 0;
-      padding: 0 28px; font-size: 0.88em;
+      flex-direction: row; gap: 8px; flex: 0 0 auto;
+      padding: 0 28px; font-size: 0.9em;
       border-top: none; border-bottom: 3px solid transparent;
+      white-space: nowrap;
     }
     .tab-btn.active { border-top: none; border-bottom-color: var(--amber); }
     .tab-btn-icon { font-size: 1.1em; }
@@ -904,7 +907,7 @@
     .quick-results-grid { grid-template-columns: repeat(2, 1fr); gap: 8px; }
     .quick-result-value { font-size: 1.3em; }
     .method-overview-grid { grid-template-columns: 1fr; }
-    .tab-btn { font-size: 0.62em; }
+    .tab-btn { font-size: 0.72em; white-space: nowrap; }
     .tab-btn-icon { font-size: 1.3em; }
   }
 
@@ -1200,22 +1203,20 @@
         <div class="steam" style="left: 4px; animation-delay: 1.8s; height: 55px;"></div>
         <div class="steam" style="left: 8px; animation-delay: 2.4s; height: 65px;"></div>
       </div>
-      <div class="hero-badge">PourOver Lab</div>
       <h1>PourOver Lab</h1>
       <div class="hero-en">A sensory coffee experience through pour-over rituals</div>
       <p class="hero-tagline">
         <span id="heroGreeting">Explore taste, time, and intention in every cup.</span>
       </p>
-      <button class="hero-cta" id="heroCta">開始沖煮旅程 →</button>
-      <div class="hero-scroll-hint">↓ 向下探索</div>
+      <button class="hero-cta" id="heroCta">Start Brewing →</button>
     </section>
 
     
       <!-- ===== STORY STEPS ===== -->
     <section class="section" id="storySection">
       <div class="section-label">How it works</div>
-      <div class="section-title">四步完成你的手沖</div>
-      <div class="section-sub">不需要專業經驗，跟著實驗室的引導，從第一步開始。</div>
+      <div class="section-title">How It Works</div>
+      <div class="section-sub">四步驟，從選豆到品飲，跟著實驗室的引導開始你的手沖。</div>
       <div class="story-steps">
         <div class="story-step">
           <span class="story-step-num">Step 1</span>
@@ -1247,7 +1248,7 @@
       <!-- ===== EXPERIENCE ===== -->
     <section class="section" id="expSection">
       <div class="section-label">Experience</div>
-      <div class="section-title">你可以體驗什麼</div>
+      <div class="section-title">What You Get</div>
       <div class="section-sub">六種世界級沖煮法、智慧推薦引擎、風味視覺化 — 全部免費。</div>
       <div class="exp-cards">
         <div class="exp-card">
@@ -1271,7 +1272,7 @@
       <!-- ===== ABOUT ===== -->
     <section class="section" id="aboutSection">
       <div class="section-label">About</div>
-      <div class="section-title">為什麼做這個 Lab</div>
+      <div class="section-title">Why PourOver Lab</div>
       <div class="about-grid">
         <div class="about-card">
           <div class="about-card-title">起源</div>
@@ -1289,8 +1290,8 @@
     </section>
       <div class="section-divider"></div>
       <div class="footer">
-      <p style="font-family: 'Playfair Display', serif; font-size: 1.1em; color: var(--gold); margin-bottom: 8px;">手沖咖啡實驗室</p>
-      <p style="font-size: 0.8em; color: rgba(232,184,109,0.4); letter-spacing: 1px;">Pour Over Coffee Lab</p>
+      <p style="font-family: 'Playfair Display', serif; font-size: 1.1em; color: var(--gold); margin-bottom: 8px;">PourOver Lab</p>
+      <p style="font-size: 0.8em; color: rgba(232,184,109,0.4); letter-spacing: 1px;">A sensory coffee experience through pour-over rituals</p>
       <p style="margin-top: 12px; font-size: 0.78em;">每次沖煮都是一場實驗。調整、嘗試、發現最適合你的風味。</p>
     </div>
     </div>
@@ -1298,8 +1299,8 @@
     <!-- ========== TAB 2: QUICK BREW ========== -->
     <div class="tab-content" id="quickTab">
       <div class="quick-brew-header">
-        <h2>快速沖煮</h2>
-        <p>選方法、輸入粉量，馬上得到沖煮配方</p>
+        <h2>Quick Brew</h2>
+        <p>選方法、設粉量、即時取得配方</p>
       </div>
 
       <h3 class="selector-label">選擇沖法</h3>
@@ -1322,19 +1323,15 @@
 
       <div id="quickBrewResults"></div>
 
-      <button class="quick-goto-tools" id="quickGotoTools">想要更多自訂？進入完整工具 →</button>
+      <button class="quick-goto-tools" id="quickGotoTools">Need more control? Go to Advanced →</button>
     </div>
 
     <!-- ========== TAB 3: ADVANCED TOOLS ========== -->
     <div class="tab-content" id="toolsTab">
       <section class="section visible" id="toolSection">
         <div class="section-label">Brew Lab</div>
-        <div class="section-title">進階沖煮工具</div>
-        <div class="section-sub">調整豆子條件、自訂比例、使用計時器，打造你的完美配方。</div>
-
-      <div class="section-label">Brew Lab</div>
-      <div class="section-title">開始沖煮</div>
-      <div class="section-sub">選擇你的豆子條件，系統會推薦最適合的沖法。</div>
+        <div class="section-title">Advanced Brew Lab</div>
+        <div class="section-sub">完整參數設定、計時器、風味分析 — 打造你的專屬配方。</div>
 
     <!-- 豆子條件選擇 -->
     <div class="selector-card">
@@ -1496,8 +1493,8 @@
     <!-- ========== TAB 4: KNOWLEDGE ========== -->
     <div class="tab-content" id="knowledgeTab">
       <div class="knowledge-header">
-        <h2>咖啡知識庫</h2>
-        <p>認識沖法、解決疑難、探索風味世界</p>
+        <h2>Knowledge Base</h2>
+        <p>沖法百科、常見問題、風味探索</p>
       </div>
 
       <h3 class="selector-label" style="margin-top:10px;">六大沖法總覽</h3>
@@ -1508,7 +1505,7 @@
       <!-- FAQ Section -->
     <section class="section visible" id="faqSection">
       <div class="section-label">FAQ</div>
-      <div class="section-title">常見問題</div>
+      <div class="section-title">FAQ</div>
       <div id="faqList"></div>
     </section>
 
@@ -1583,7 +1580,7 @@ function quickStart(){document.getElementById('roastLevel').value='medium';docum
 function renderGrindVisual(k){const grindLevel=GRIND_LEVELS[k];const grindMap={'細':'fine','中細':'medium-fine','中':'medium','中粗':'medium-coarse','粗':'coarse','中細偏細':'medium-fine','中粗':'medium-coarse'};const positions={fine:10,'medium-fine':30,medium:50,'medium-coarse':70,coarse:90};let pos=50;for(let [key,p] of Object.entries(positions)){if(grindLevel.includes(key.split('-')[0])||grindLevel===key){pos=p;break}}const gv=document.getElementById('grindVisual');gv.innerHTML=`<div style="display:flex;align-items:center;gap:15px;margin-bottom:10px;"><div style="flex:1;position:relative;height:40px;border-radius:20px;background:rgba(212,137,42,0.12);overflow:hidden;"><div style="position:absolute;display:flex;align-items:center;justify-content:space-between;width:100%;height:100%;padding:0 8px;"><span style="font-size:0.75em;color:rgba(232,184,109,0.5);">細</span><span style="font-size:0.75em;color:rgba(232,184,109,0.5);">粗</span></div><svg style="position:absolute;width:100%;height:100%;top:0;left:0;" viewBox="0 0 200 20"><circle cx="10" cy="10" r="2" fill="rgba(212,137,42,0.3)"/><circle cx="50" cy="10" r="3" fill="rgba(212,137,42,0.3)"/><circle cx="100" cy="10" r="4" fill="rgba(212,137,42,0.3)"/><circle cx="150" cy="10" r="5" fill="rgba(212,137,42,0.3)"/><circle cx="190" cy="10" r="6" fill="rgba(212,137,42,0.3)"/><circle cx="${(pos/100)*200}" cy="10" r="4.5" fill="var(--amber);" stroke="rgba(232,184,109,0.5)" stroke-width="0.5"/></svg></div></div><div style="text-align:center;font-size:0.9em;font-weight:600;color:var(--gold);min-width:60px;">${grindLevel}</div></div>`;gv.style.display='block'}
 function renderJournalHistory(){const hist=JSON.parse(localStorage.getItem('brewJournal')||'[]'),jh=document.getElementById('journalHistory');if(hist.length===0){jh.innerHTML='<div style="text-align:center;color:rgba(232,184,109,0.5);font-size:0.9em;padding:15px;">還沒有紀錄。開始沖煮並儲存你的第一筆筆記！</div>';return}jh.innerHTML='<div style="font-size:0.85em;margin-bottom:10px;color:rgba(232,184,109,0.7);">最近紀錄</div>'+hist.slice(-5).reverse().map(e=>`<div class="journal-entry"><div class="journal-entry-header"><div><strong>${e.method}</strong> · ${e.dose}g / 1:${e.ratio}</div><div class="journal-entry-date">${e.date}</div></div>${e.rating?`<div class="journal-entry-stars">${'★'.repeat(e.rating)}${'☆'.repeat(5-e.rating)}</div>`:''}<div class="journal-entry-note">${e.note||'(無筆記)'}</div></div>`).join('')}
 function renderFAQ(){const fl=document.getElementById('faqList');fl.innerHTML=FAQ_DATA.map((faq,idx)=>`<div class="knowledge-tip"><div class="knowledge-tip-header"><div class="knowledge-tip-title" style="font-weight:600;color:var(--gold);">${faq.q}</div><div class="knowledge-tip-toggle">▼</div></div><div class="knowledge-tip-text">${faq.a}</div></div>`).join('');document.querySelectorAll('#faqList .knowledge-tip-header').forEach((h,idx)=>{const c=h.nextElementSibling,t=h.querySelector('.knowledge-tip-toggle');h.addEventListener('click',()=>{c.classList.toggle('open');t.classList.toggle('open')})})}
-function updateGreeting(){const h=new Date().getHours();let msg='';if(h<11){msg='Good morning. '}else if(h<14){msg='Afternoon ritual. '}else if(h<18){msg='A quiet moment. '}else{msg='Evening wind-down. '}document.getElementById('heroGreeting').innerHTML=msg+'Explore taste, time, and intention in every cup.'}
+function updateGreeting(){document.getElementById('heroGreeting').innerHTML='Explore taste, time, and intention in every cup.'}
 function toggleDarkMode(){document.body.classList.toggle('light-mode');const isDark=!document.body.classList.contains('light-mode');localStorage.setItem('darkMode',isDark);document.getElementById('darkModeToggle').textContent=isDark?'🌙':'☀️'}
 function renderCompareModal(){const cmg=document.getElementById('compareMethodGrid');cmg.innerHTML=Object.entries(BREW_METHODS).map(([k,m])=>`<button class="compare-method-btn" data-method="${k}">${m.title.split(' · ')[0]}<br><small>${m.badge}</small></button>`).join('');document.querySelectorAll('.compare-method-btn').forEach(btn=>{btn.addEventListener('click',()=>{const method=btn.dataset.method;if(selectedCompareMethods.includes(method)){selectedCompareMethods=selectedCompareMethods.filter(m=>m!==method);btn.classList.remove('selected')}else if(selectedCompareMethods.length<2){selectedCompareMethods.push(method);btn.classList.add('selected')}else{alert('最多只能選擇2種沖法');return}updateCompareResult()})})}
 function updateCompareResult(){const cr=document.getElementById('compareResult');if(selectedCompareMethods.length===0){cr.innerHTML='<div class="compare-empty">選擇沖法開始比較</div>';return}const m=selectedCompareMethods.map(k=>({key:k,data:BREW_METHODS[k]})),hr=`<tr class="compare-header"><th>項目</th>${m.map(x=>`<th>${x.data.title.split(' · ')[0]}</th>`).join('')}</tr>`,rows=[{label:'難易度',values:m.map(x=>METHOD_COMPARE[x.key].difficulty)},{label:'風味走向',values:m.map(x=>METHOD_COMPARE[x.key].flavorProfile)},{label:'適合烘焙度',values:m.map(x=>METHOD_COMPARE[x.key].suitableRoast)},{label:'核心技巧',values:m.map(x=>METHOD_COMPARE[x.key].keyTechnique)},{label:'注水段數',values:m.map(x=>METHOD_COMPARE[x.key].pourStages)},{label:'粉水比',values:m.map(x=>`1:${x.data.ratio}`)},{label:'水溫',values:m.map(x=>x.data.temp)},{label:'預期時間',values:m.map(x=>x.data.time)}];cr.innerHTML=`<table class="compare-table">${hr}${rows.map(row=>`<tr><td><strong>${row.label}</strong></td>${row.values.map(val=>`<td>${val}</td>`).join('')}</tr>`).join('')}</table>`;renderCompareRadar()}
