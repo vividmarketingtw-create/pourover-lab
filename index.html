@@ -11,7 +11,7 @@
 <meta property="og:url" content="https://vividmarketingtw-create.github.io/pourover-lab/">
 <link rel="canonical" href="https://vividmarketingtw-create.github.io/pourover-lab/">
 <meta name="theme-color" content="#2C1A0E">
-<title>手沖咖啡實驗室 | Pour Over Lab</title>
+<title>手沲咖啡實驗室 | Pour Over Lab</title>
 <link href="https://fonts.googleapis.com/css2?family=Noto+Serif+TC:wght@400;700;900&family=Playfair+Display:wght@700;900&display=swap" rel="stylesheet">
 <style>
   * { margin: 0; padding: 0; box-sizing: border-box; }
@@ -64,6 +64,7 @@
   }
 
   .page-header { animation-delay: 0.1s; }
+  .bean-selector { animation-delay: 0.15s; }
   .method-selector { animation-delay: 0.2s; }
   .calculator { animation-delay: 0.3s; }
   .timer-section { animation-delay: 0.4s; }
@@ -91,13 +92,152 @@
   .page-h1 { font-size: 34px; font-weight: 900; color: var(--warm-white); margin-bottom: 8px; transition: color 0.3s ease; }
   .page-sub { font-size: 13px; color: rgba(255,255,255,0.45); letter-spacing: 1px; transition: color 0.3s ease; }
 
+  /* Bean Selector Section */
+  .bean-selector { width: 100%; max-width: 820px; margin-bottom: 28px; }
+  .bean-section-title { font-size: 13px; letter-spacing: 2px; color: rgba(255,255,255,0.5); text-transform: uppercase; margin-bottom: 18px; text-align: center; font-weight: 700; transition: color 0.3s ease; }
+  body.light-mode .bean-section-title { color: rgba(44,26,14,0.5); }
+
+  /* Roast Level Cards */
+  .roast-cards { display: grid; grid-template-columns: repeat(4, 1fr); gap: 10px; margin-bottom: 20px; }
+  .roast-card {
+    background: rgba(255,255,255,0.05); border: 2px solid rgba(212,137,42,0.2);
+    border-radius: 12px; padding: 12px; text-align: center; cursor: pointer;
+    transition: all 0.3s ease; position: relative; min-height: 100px;
+  }
+  .roast-card:hover { border-color: rgba(212,137,42,0.4); transform: translateY(-2px); }
+  .roast-card.active { border-color: var(--amber); box-shadow: 0 4px 12px rgba(212,137,42,0.3); }
+
+  .roast-color-swatch {
+    width: 100%; height: 32px; border-radius: 8px; margin-bottom: 8px; transition: all 0.3s ease;
+  }
+  .roast-card.light .roast-color-swatch { background: linear-gradient(135deg, #D4B896, #C4956F); }
+  .roast-card.medium .roast-color-swatch { background: linear-gradient(135deg, #8B6F47, #6B5635); }
+  .roast-card.mediumDark .roast-color-swatch { background: linear-gradient(135deg, #5C3D1F, #4A2F15); }
+  .roast-card.dark .roast-color-swatch { background: linear-gradient(135deg, #3D2817, #2C1810); }
+
+  .roast-label { font-size: 11px; font-weight: 700; color: var(--warm-white); line-height: 1.3; transition: color 0.3s ease; }
+  body.light-mode .roast-label { color: var(--brown-dark); }
+  .roast-card.active .roast-label { color: var(--amber); font-weight: 900; }
+
+  /* Processing Method Tags */
+  .processing-section { margin-bottom: 18px; }
+  .processing-label { font-size: 11px; font-weight: 700; color: rgba(255,255,255,0.5); letter-spacing: 1px; margin-bottom: 10px; display: block; transition: color 0.3s ease; }
+  body.light-mode .processing-label { color: rgba(44,26,14,0.6); }
+
+  .processing-tags { display: flex; flex-wrap: wrap; gap: 8px; align-items: center; }
+  .processing-tag {
+    background: rgba(255,255,255,0.08); border: 1px solid rgba(212,137,42,0.3);
+    color: rgba(255,255,255,0.6); font-size: 11px; padding: 6px 12px; border-radius: 14px;
+    cursor: pointer; transition: all 0.2s ease; font-weight: 600;
+  }
+  .processing-tag:hover { border-color: rgba(212,137,42,0.5); color: var(--warm-white); }
+  .processing-tag.active { background: var(--amber); border-color: var(--amber); color: var(--brown-dark); }
+  body.light-mode .processing-tag { background: rgba(44,26,14,0.08); border-color: rgba(212,137,42,0.2); color: rgba(44,26,14,0.6); }
+  body.light-mode .processing-tag:hover { border-color: rgba(212,137,42,0.4); color: var(--brown-dark); }
+  body.light-mode .processing-tag.active { background: var(--amber); color: var(--brown-dark); }
+
+  /* Rest Days Slider */
+  .rest-days-section { margin-bottom: 18px; }
+  .rest-days-label { font-size: 11px; font-weight: 700; color: rgba(255,255,255,0.5); letter-spacing: 1px; margin-bottom: 8px; display: block; transition: color 0.3s ease; }
+  body.light-mode .rest-days-label { color: rgba(44,26,14,0.6); }
+
+  .rest-days-display { display: flex; align-items: center; gap: 12px; margin-bottom: 10px; font-size: 12px; }
+  .rest-days-value { font-size: 18px; font-weight: 900; color: var(--amber); font-family: 'Playfair Display', serif; }
+  .rest-days-note { color: rgba(255,255,255,0.6); transition: color 0.3s ease; }
+  body.light-mode .rest-days-note { color: rgba(44,26,14,0.6); }
+
+  .rest-days-indicator { display: flex; align-items: center; gap: 6px; font-size: 11px; }
+  .indicator-dot { width: 10px; height: 10px; border-radius: 50%; flex-shrink: 0; }
+  .indicator-dot.green { background: #4CAF50; }
+  .indicator-dot.yellow { background: #FFC107; }
+  .indicator-dot.orange { background: #FF9800; }
+
+  .rest-days-slider {
+    width: 100%; height: 6px; border-radius: 3px; background: rgba(212,137,42,0.2);
+    outline: none; -webkit-appearance: none; appearance: none; cursor: pointer;
+  }
+  .rest-days-slider::-webkit-slider-thumb {
+    -webkit-appearance: none; appearance: none; width: 18px; height: 18px;
+    border-radius: 50%; background: var(--amber); cursor: pointer;
+    transition: all 0.2s ease; box-shadow: 0 2px 6px rgba(212,137,42,0.4);
+  }
+  .rest-days-slider::-moz-range-thumb {
+    width: 18px; height: 18px; border-radius: 50%; background: var(--amber);
+    cursor: pointer; border: none; transition: all 0.2s ease;
+    box-shadow: 0 2px 6px rgba(212,137,42,0.4);
+  }
+  .rest-days-slider:hover::-webkit-slider-thumb { transform: scale(1.2); }
+  .rest-days-slider:hover::-moz-range-thumb { transform: scale(1.2); }
+
+  /* Flavor Preference Slider */
+  .flavor-section { margin-bottom: 18px; }
+  .flavor-label { font-size: 11px; font-weight: 700; color: rgba(255,255,255,0.5); letter-spacing: 1px; margin-bottom: 12px; display: block; transition: color 0.3s ease; }
+  body.light-mode .flavor-label { color: rgba(44,26,14,0.6); }
+
+  .flavor-slider-container { position: relative; }
+  .flavor-endpoints { display: flex; justify-content: space-between; margin-bottom: 8px; font-size: 10px; color: rgba(255,255,255,0.5); transition: color 0.3s ease; }
+  body.light-mode .flavor-endpoints { color: rgba(44,26,14,0.5); }
+
+  .flavor-slider {
+    width: 100%; height: 6px; border-radius: 3px; background: rgba(212,137,42,0.2);
+    outline: none; -webkit-appearance: none; appearance: none; cursor: pointer;
+  }
+  .flavor-slider::-webkit-slider-thumb {
+    -webkit-appearance: none; appearance: none; width: 18px; height: 18px;
+    border-radius: 50%; background: var(--amber); cursor: pointer;
+    transition: all 0.2s ease; box-shadow: 0 2px 6px rgba(212,137,42,0.4);
+  }
+  .flavor-slider::-moz-range-thumb {
+    width: 18px; height: 18px; border-radius: 50%; background: var(--amber);
+    cursor: pointer; border: none; transition: all 0.2s ease;
+    box-shadow: 0 2px 6px rgba(212,137,42,0.4);
+  }
+  .flavor-slider:hover::-webkit-slider-thumb { transform: scale(1.2); }
+  .flavor-slider:hover::-moz-range-thumb { transform: scale(1.2); }
+
+  /* Recommendation Badge and Reason */
+  .recommendation-container { margin-bottom: 16px; min-height: 50px; }
+  .recommendation-reason { font-size: 12px; color: rgba(255,255,255,0.7); text-align: center; padding: 10px; border-radius: 8px; background: rgba(212,137,42,0.1); border-left: 3px solid var(--amber); transition: all 0.3s ease; animation: fadeInSlide 0.4s ease-out forwards; opacity: 0; }
+  body.light-mode .recommendation-reason { color: rgba(44,26,14,0.7); background: rgba(212,137,42,0.05); }
+  .recommendation-reason.hidden { display: none; opacity: 0; }
+
+  /* Method Card Badge */
+  .method-card .recommendation-badge { position: absolute; top: 8px; right: 8px; background: var(--amber); color: var(--brown-dark); font-size: 11px; padding: 4px 8px; border-radius: 6px; font-weight: 700; opacity: 0; transform: scale(0.8); transition: all 0.3s ease; }
+  .method-card.recommended .recommendation-badge { opacity: 1; transform: scale(1); }
+
+  /* Parameter Suggestion Panel */
+  .param-suggestion-panel {
+    background: rgba(212,137,42,0.08); border: 1px solid rgba(212,137,42,0.2);
+    border-radius: 12px; padding: 16px; margin-bottom: 16px; transition: all 0.3s ease;
+    opacity: 0; max-height: 0; overflow: hidden;
+  }
+  .param-suggestion-panel.visible {
+    opacity: 1; max-height: 500px;
+    animation: fadeInSlide 0.4s ease-out forwards;
+  }
+  body.light-mode .param-suggestion-panel { background: rgba(212,137,42,0.05); border-color: rgba(212,137,42,0.15); }
+
+  .param-title { font-size: 12px; font-weight: 700; color: var(--amber); letter-spacing: 1px; margin-bottom: 12px; transition: color 0.3s ease; }
+  body.light-mode .param-title { color: var(--brown-light); }
+
+  .param-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 10px; }
+  .param-item { background: var(--brown-dark); border-radius: 10px; padding: 12px; transition: background 0.3s ease; }
+  body.light-mode .param-item { background: rgba(44,26,14,0.1); }
+
+  .param-item-label { font-size: 9px; color: var(--gold); letter-spacing: 1px; text-transform: uppercase; margin-bottom: 6px; display: block; transition: color 0.3s ease; }
+  .param-item-value { font-size: 13px; font-weight: 700; color: var(--warm-white); transition: color 0.3s ease; }
+  body.light-mode .param-item-value { color: var(--brown-dark); }
+
+  .param-item-note { font-size: 9px; color: rgba(255,255,255,0.4); margin-top: 4px; transition: color 0.3s ease; }
+  body.light-mode .param-item-note { color: rgba(44,26,14,0.5); }
+
   .method-selector { width: 100%; max-width: 820px; margin-bottom: 28px; }
   .selector-label { font-size: 10px; letter-spacing: 3px; color: rgba(255,255,255,0.4); text-transform: uppercase; margin-bottom: 12px; text-align: center; transition: color 0.3s ease; }
   .method-cards { display: grid; grid-template-columns: repeat(4,1fr); gap: 10px; }
   .method-card {
     background: rgba(255,255,255,0.05); border: 1px solid rgba(212,137,42,0.2);
     border-radius: 16px; padding: 16px 12px; text-align: center; cursor: pointer;
-    transition: all 0.3s ease, transform 0.2s ease;
+    transition: all 0.3s ease, transform 0.2s ease; position: relative;
     touch-action: manipulation;
   }
   .method-card:hover { background: rgba(212,137,42,0.1); border-color: rgba(212,137,42,0.5); transform: translateY(-4px); }
@@ -321,7 +461,9 @@
 
   @media (max-width: 700px) {
     .method-cards { grid-template-columns: repeat(2,1fr); }
+    .roast-cards { grid-template-columns: repeat(2, 1fr); }
     .summary-grid { grid-template-columns: repeat(2,1fr); }
+    .param-grid { grid-template-columns: 1fr; }
     .calc-method-desc { display: none; }
     .timer-display { font-size: 42px; }
     .adjust-grid { grid-template-columns: 1fr; }
@@ -336,12 +478,15 @@
     .timer-section { padding: 16px; border-radius: 18px; margin-bottom: 12px; }
     .timer-display { font-size: 36px; }
     .method-card { padding: 12px 8px; }
+    .roast-card { padding: 10px; }
     .method-name { font-size: 11px; }
     .input-row { padding: 14px 16px; }
     .total-num { font-size: 26px; }
     .share-button { padding: 10px 12px; font-size: 11px; }
     .timer-btn { padding: 8px 12px; font-size: 11px; min-height: 40px; }
     .preset-btn { padding: 8px 12px; min-height: 40px; }
+    .roast-cards { grid-template-columns: 1fr; }
+    .param-grid { grid-template-columns: 1fr; }
   }
 
   @media (prefers-color-scheme: dark) {
@@ -366,32 +511,101 @@
 <main>
 <div class="page-header">
   <div class="page-title">Pour Over Lab</div>
-  <h1 class="page-h1">手沖咖啡實驗室</h1>
+  <h1 class="page-h1">手沲咖啡實驗室</h1>
   <p class="page-sub">選擇沖法，輸入咖啡粉量，即時換算水量</p>
 </div>
 
+<section class="bean-selector" id="beanSelector">
+  <div class="bean-section-title">你的豆子</div>
+
+  <div>
+    <div class="selector-label" style="text-align: left; margin-bottom: 10px;">烘焙度</div>
+    <div class="roast-cards">
+      <div class="roast-card light" id="roast-light" onclick="selectRoast('light')">
+        <div class="roast-color-swatch"></div>
+        <div class="roast-label">淺焙</div>
+      </div>
+      <div class="roast-card medium" id="roast-medium" onclick="selectRoast('medium')">
+        <div class="roast-color-swatch"></div>
+        <div class="roast-label">中焙</div>
+      </div>
+      <div class="roast-card mediumDark" id="roast-mediumDark" onclick="selectRoast('mediumDark')">
+        <div class="roast-color-swatch"></div>
+        <div class="roast-label">中深焙</div>
+      </div>
+      <div class="roast-card dark" id="roast-dark" onclick="selectRoast('dark')">
+        <div class="roast-color-swatch"></div>
+        <div class="roast-label">深焙</div>
+      </div>
+    </div>
+  </div>
+
+  <div style="margin-top: 18px;">
+    <label class="processing-label">處理法</label>
+    <div class="processing-tags">
+      <div class="processing-tag" onclick="selectProcessing('skip')" id="processing-skip" style="background: rgba(255,255,255,0.08); border: 1px dashed rgba(212,137,42,0.3);">
+        不確定/略過
+      </div>
+      <div class="processing-tag" onclick="selectProcessing('washed')" id="processing-washed">水洗</div>
+      <div class="processing-tag" onclick="selectProcessing('natural')" id="processing-natural">日曬</div>
+      <div class="processing-tag" onclick="selectProcessing('honey')" id="processing-honey">蜜處理</div>
+      <div class="processing-tag" onclick="selectProcessing('anaerobic')" id="processing-anaerobic">厭氧</div>
+    </div>
+  </div>
+
+  <div class="rest-days-section" style="margin-top: 18px;">
+    <label class="rest-days-label">養豆天數</label>
+    <div class="rest-days-display">
+      <span class="rest-days-value" id="restDaysValue">7</span>
+      <span class="rest-days-note" id="restDaysNote">天</span>
+      <div class="rest-days-indicator" id="restDaysIndicator" style="margin-left: auto;">
+        <div class="indicator-dot yellow"></div>
+        <span id="restDaysStatus">養豆中</span>
+      </div>
+    </div>
+    <input type="range" id="restDaysSlider" class="rest-days-slider" min="1" max="30" step="1" value="7" oninput="updateRestDays()" aria-label="調整養豆天數">
+  </div>
+
+  <div class="flavor-section" style="margin-top: 18px; margin-bottom: 0;">
+    <label class="flavor-label">風味偏好</label>
+    <div class="flavor-endpoints">
+      <span>🍋 酸甜明亮</span>
+      <span>☕ 醇厚飽滿</span>
+    </div>
+    <input type="range" id="flavorSlider" class="flavor-slider" min="0" max="100" step="1" value="50" oninput="updateFlavorPreference()" aria-label="調整風味偏好">
+  </div>
+
+  <div class="recommendation-container" id="recommendationContainer" style="display: none; margin-top: 16px;">
+    <div class="recommendation-reason" id="recommendationReason"></div>
+  </div>
+</section>
+
 <nav class="method-selector" role="tablist">
-  <div class="selector-label">選擇你的沖法</div>
+  <div class="selector-label">選擇你的沲法</div>
   <div class="method-cards">
     <div class="method-card" onclick="selectMethod('sweet')" id="btn-sweet" role="tab" aria-selected="false" tabindex="0">
+      <div class="recommendation-badge">✦ 推薦</div>
       <div class="method-icon">🍯</div>
       <div class="method-name">超高甜感</div>
       <div class="method-ratio">1:15 · 4段注水</div>
       <span class="method-tag">搖晃濾杯</span>
     </div>
     <div class="method-card active" onclick="selectMethod('kasuya')" id="btn-kasuya" role="tab" aria-selected="true" tabindex="0">
+      <div class="recommendation-badge">✦ 推薦</div>
       <div class="method-icon">🏆</div>
       <div class="method-name">Kasuya 4:6</div>
       <div class="method-ratio">1:15 · 5段注水</div>
       <span class="method-tag">世界冠軍</span>
     </div>
     <div class="method-card" onclick="selectMethod('hoffmann')" id="btn-hoffmann" role="tab" aria-selected="false" tabindex="0">
+      <div class="recommendation-badge">✦ 推薦</div>
       <div class="method-icon">🌊</div>
       <div class="method-name">Hoffmann</div>
       <div class="method-ratio">1:16.7 · 2段注水</div>
       <span class="method-tag">攪拌拉平</span>
     </div>
     <div class="method-card" onclick="selectMethod('rao')" id="btn-rao" role="tab" aria-selected="false" tabindex="0">
+      <div class="recommendation-badge">✦ 推薦</div>
       <div class="method-icon">🌀</div>
       <div class="method-name">Scott Rao</div>
       <div class="method-ratio">1:16 · 連續注水</div>
@@ -402,9 +616,9 @@
 
 <section class="calculator" id="calculator" role="main">
   <div class="calc-method-header">
-    <span class="calc-method-badge" id="method-badge" aria-label="沖法標籤">世界冠軍</span>
-    <span class="calc-method-title" id="method-title" aria-label="沖法名稱">Tetsu Kasuya 4:6 法</span>
-    <span class="calc-method-desc" id="method-desc" aria-label="沖法描述">精準控制甜感與酸度<br>2016 世界沖煮杯冠軍</span>
+    <span class="calc-method-badge" id="method-badge" aria-label="沲法標籤">世界冠軍</span>
+    <span class="calc-method-title" id="method-title" aria-label="沲法名稱">Tetsu Kasuya 4:6 法</span>
+    <span class="calc-method-desc" id="method-desc" aria-label="沲法描述">精準控制甜感與酸度<br>2016 世界沲煮杯冠軍</span>
   </div>
   <div class="input-row">
     <label for="dose">咖啡粉</label>
@@ -424,6 +638,32 @@
     <button class="preset-btn" onclick="setDose(40)" aria-label="選擇40克咖啡粉">40g</button>
   </div>
 
+  <div class="param-suggestion-panel" id="paramSuggestionPanel">
+    <div class="param-title">沲煮參數建議</div>
+    <div class="param-grid">
+      <div class="param-item">
+        <span class="param-item-label">建議水溫</span>
+        <div class="param-item-value" id="suggestedTemp">93°C</div>
+        <div class="param-item-note" id="suggestedTempNote"></div>
+      </div>
+      <div class="param-item">
+        <span class="param-item-label">建議研磨度</span>
+        <div class="param-item-value" id="suggestedGrind">中粗研磨</div>
+        <div class="param-item-note" id="suggestedGrindNote"></div>
+      </div>
+      <div class="param-item">
+        <span class="param-item-label">建議悶蒸時間</span>
+        <div class="param-item-value" id="suggestedBloom">30-45秒</div>
+        <div class="param-item-note" id="suggestedBloomNote"></div>
+      </div>
+      <div class="param-item">
+        <span class="param-item-label">預期風味</span>
+        <div class="param-item-value" id="suggestedFlavor" style="font-size: 11px;">明亮酸質</div>
+        <div class="param-item-note" id="suggestedFlavorNote"></div>
+      </div>
+    </div>
+  </div>
+
   <div class="ratio-slider-section" id="ratioSliderSection">
     <div class="ratio-slider-label">粉水比率</div>
     <input type="range" id="ratioSlider" class="ratio-slider" min="14" max="18" step="0.5" value="15" oninput="updateRatio()" aria-label="調整粉水比率">
@@ -441,8 +681,8 @@
   <div class="tips-box" id="tips-box"></div>
 </section>
 
-<section class="timer-section" id="timerSection" role="region" aria-label="沖煮計時器">
-  <div class="timer-title">沖煮計時器</div>
+<section class="timer-section" id="timerSection" role="region" aria-label="沲煮計時器">
+  <div class="timer-title">沲煮計時器</div>
   <div class="step-timer-indicator" id="stepIndicator">準備開始...</div>
   <div class="timer-display" id="timerDisplay">0:00</div>
   <div class="timer-controls">
@@ -477,6 +717,37 @@
     navigator.serviceWorker.register('data:application/javascript;base64,c2VsZi5hZGRFdmVudExpc3RlbmVyKCdpbnN0YWxsJywgZXZlbnQgPT4gZXZlbnQud2FpdFVudGlsKHNlbGYuc2tpcFdhaXRpbmcoKSk7IHNlbGYuYWRkRXZlbnRMaXN0ZW5lcignYWN0aXZhdGUnLCBldmVudCA9PiBldmVudC53YWl0VW50aWwoY2xpZW50cy5jbGFpbSgpKSk7').catch(() => {});
   }
 
+  // Bean parameters data structure
+  const BEAN_PARAMS = {
+    light: { temp: '90-96°C', grind_fine: '中細研磨', grind_coarse: '中研磨', bloom: '30-45秒', flavor_bright: '柑橘、花香、明亮酸質', flavor_rich: '莓果、蜂蜜、圓潤甜感' },
+    medium: { temp: '88-92°C', grind_fine: '中研磨', grind_coarse: '中粗研磨', bloom: '30-40秒', flavor_bright: '堅果、柔和果酸、焦糖', flavor_rich: '巧克力、太妃糖、醇厚' },
+    mediumDark: { temp: '85-90°C', grind_fine: '中粗研磨', grind_coarse: '粗研磨', bloom: '25-35秒', flavor_bright: '黑巧克力、焦糖、微酸', flavor_rich: '煙燻、木質、厚實甜感' },
+    dark: { temp: '82-88°C', grind_fine: '粗研磨', grind_coarse: '極粗研磨', bloom: '20-30秒', flavor_bright: '烘烤穀物、焦糖、低酸', flavor_rich: '煙燻、黑巧克力、厚重尾韻' }
+  };
+
+  // Freshness status windows (optimal, aging, past prime)
+  const FRESHNESS_WINDOWS = {
+    light: { aging: [1, 9], optimal: [10, 28], past_prime: 29 },
+    medium: { aging: [1, 6], optimal: [7, 25], past_prime: 26 },
+    mediumDark: { aging: [1, 4], optimal: [5, 21], past_prime: 22 },
+    dark: { aging: [1, 3], optimal: [4, 14], past_prime: 15 }
+  };
+
+  // Recommendation rules
+  const RECOMMENDATION_RULES = {
+    'light-washed': 'hoffmann',
+    'light-natural': 'kasuya',
+    'light-honey': 'sweet',
+    'light-anaerobic': 'hoffmann',
+    'light-skip': 'hoffmann',
+    'medium-skip': 'rao',
+    'medium-any': 'rao',
+    'mediumDark-skip': 'sweet',
+    'mediumDark-any': 'sweet',
+    'dark-skip': 'sweet',
+    'dark-any': 'sweet'
+  };
+
   const METHODS = {
     sweet: {
       badge:'超高甜感', title:'超高甜感 Recipe', desc:'搖晃濾杯萃取甜感<br>4段注水法',
@@ -498,9 +769,9 @@
       buildAdjust:()=>null,
     },
     kasuya: {
-      badge:'世界冠軍', title:'Tetsu Kasuya 4:6 法', desc:'精準控制甜感與酸度<br>2016 世界沖煮杯冠軍',
+      badge:'世界冠軍', title:'Tetsu Kasuya 4:6 法', desc:'精準控制甜感與酸度<br>2016 世界沲煮杯冠軍',
       ratio:15, temp:'93°C', grind:'中粗研磨', time:'3:30',
-      tips:[{label:'水溫',text:'93°C，淺焙可到96°C'},{label:'研磨',text:'中粗研磨，比一般V60稍粗'},{label:'等待',text:'每段必須等水完全滴完再注下一段'},{label:'注水',text:'由中心螺旋向外，避免直接沖濾紙'}],
+      tips:[{label:'水溫',text:'93°C，淺焙可到96°C'},{label:'研磨',text:'中粗研磨，比一般V60稍粗'},{label:'等待',text:'每段必須等水完全滴完再注下一段'},{label:'注水',text:'由中心螺旋向外，避免直接沲濾紙'}],
       buildSummary:(dose,total)=>{
         const pA=Math.round(total*0.4),pB=total-pA,eB=Math.round(pB/3);
         return [{label:'前段 40%',value:pA,unit:'g'},{label:'後段 60%',value:pB,unit:'g'},{label:'後三段各',value:eB,unit:'g×3'},{label:'總水量',value:total,unit:'g'}];
@@ -580,6 +851,167 @@
   let timerRunning = false;
   let allSteps = [];
 
+  // Bean state
+  let selectedRoast = null;
+  let selectedProcessing = 'skip';
+  let restDays = 7;
+  let flavorPreference = 50; // 0 = bright, 100 = rich
+
+  // Initialize with skip selected
+  document.getElementById('processing-skip').classList.add('active');
+
+  function selectRoast(roast) {
+    selectedRoast = roast;
+    document.querySelectorAll('.roast-card').forEach(c => c.classList.remove('active'));
+    document.getElementById('roast-' + roast).classList.add('active');
+    updateRecommendations();
+    calculate();
+  }
+
+  function selectProcessing(processing) {
+    selectedProcessing = processing;
+    document.querySelectorAll('.processing-tag').forEach(t => t.classList.remove('active'));
+    document.getElementById('processing-' + processing).classList.add('active');
+    updateRecommendations();
+    calculate();
+  }
+
+  function updateRestDays() {
+    restDays = parseInt(document.getElementById('restDaysSlider').value);
+    document.getElementById('restDaysValue').textContent = restDays;
+    updateFreshnessStatus();
+    calculate();
+  }
+
+  function updateFreshnessStatus() {
+    if (!selectedRoast) return;
+
+    const windows = FRESHNESS_WINDOWS[selectedRoast];
+    const indicator = document.getElementById('restDaysIndicator');
+    const statusSpan = document.getElementById('restDaysStatus');
+    const dot = indicator.querySelector('.indicator-dot');
+
+    let status = '';
+    let dotColor = 'yellow';
+
+    if (restDays >= windows.aging[0] && restDays <= windows.aging[1]) {
+      status = '養豆中';
+      dotColor = 'yellow';
+    } else if (restDays >= windows.optimal[0] && restDays <= windows.optimal[1]) {
+      status = '最佳賞味期';
+      dotColor = 'green';
+    } else if (restDays >= windows.past_prime) {
+      status = '建議盡快使用';
+      dotColor = 'orange';
+    }
+
+    dot.className = 'indicator-dot ' + dotColor;
+    statusSpan.textContent = status;
+  }
+
+  function updateFlavorPreference() {
+    flavorPreference = parseInt(document.getElementById('flavorSlider').value);
+    updateRecommendations();
+  }
+
+  function updateRecommendations() {
+    if (!selectedRoast) {
+      document.getElementById('recommendationContainer').style.display = 'none';
+      document.querySelectorAll('.method-card').forEach(c => c.classList.remove('recommended'));
+      return;
+    }
+
+    // Determine recommendation based on rules
+    let recommendedMethod = null;
+
+    if (selectedProcessing === 'skip') {
+      recommendedMethod = RECOMMENDATION_RULES[selectedRoast + '-skip'];
+    } else {
+      recommendedMethod = RECOMMENDATION_RULES[selectedRoast + '-' + selectedProcessing];
+      if (!recommendedMethod) {
+        recommendedMethod = RECOMMENDATION_RULES[selectedRoast + '-any'];
+      }
+    }
+
+    // Adjust based on flavor preference
+    if (flavorPreference < 30 && (recommendedMethod === 'rao' || recommendedMethod === 'sweet')) {
+      recommendedMethod = 'hoffmann';
+    } else if (flavorPreference > 70 && (recommendedMethod === 'hoffmann' || recommendedMethod === 'kasuya')) {
+      recommendedMethod = 'rao';
+    }
+
+    // Update UI
+    document.querySelectorAll('.method-card').forEach(c => c.classList.remove('recommended'));
+    if (recommendedMethod) {
+      document.getElementById('btn-' + recommendedMethod).classList.add('recommended');
+      selectMethod(recommendedMethod);
+    }
+
+    // Show recommendation reason
+    const reasonEl = document.getElementById('recommendationReason');
+    const container = document.getElementById('recommendationContainer');
+
+    const roastLabel = {light:'淺焙', medium:'中焙', mediumDark:'中深焙', dark:'深焙'}[selectedRoast];
+    const processingLabel = {washed:'水洗', natural:'日曬', honey:'蜜處理', anaerobic:'厭氧', skip:''}[selectedProcessing];
+    const methodLabel = {sweet:'超高甜感', kasuya:'Kasuya 4:6', hoffmann:'Hoffmann', rao:'Scott Rao'}[recommendedMethod];
+
+    let reason = `推薦 ${methodLabel} — `;
+    if (processingLabel) {
+      reason += `${processingLabel}${roastLabel}適合`;
+    } else {
+      reason += `${roastLabel}豆`;
+    }
+
+    if (selectedRoast === 'light' && selectedProcessing === 'washed') reason += '乾淨明亮';
+    else if (selectedRoast === 'light' && selectedProcessing === 'natural') reason += '精準控制甜感';
+    else if (selectedRoast === 'light' && selectedProcessing === 'honey') reason += '放大花蜜感';
+    else if (selectedRoast === 'medium') reason += '平衡濃淡';
+    else if (selectedRoast === 'mediumDark') reason += '減少苦澀、放大甜感';
+    else if (selectedRoast === 'dark') reason += '低溫甜蜜';
+
+    reasonEl.textContent = reason;
+    container.style.display = 'block';
+  }
+
+  function updateParameterSuggestions() {
+    if (!selectedRoast) {
+      document.getElementById('paramSuggestionPanel').classList.remove('visible');
+      return;
+    }
+
+    const panel = document.getElementById('paramSuggestionPanel');
+    panel.classList.add('visible');
+
+    const params = BEAN_PARAMS[selectedRoast];
+    const isBright = flavorPreference < 50;
+
+    // Water temperature - based on roast only
+    document.getElementById('suggestedTemp').textContent = params.temp;
+    document.getElementById('suggestedTempNote').textContent = selectedRoast === 'light' ? '淺焙需高溫' : selectedRoast === 'dark' ? '深焙用低溫' : '';
+
+    // Grind - adjust based on method if hoffmann/rao (finer), kasuya (coarser)
+    let grindSuggestion = params.grind_fine;
+    if (currentMethod === 'kasuya' || currentMethod === 'sweet') {
+      grindSuggestion = params.grind_coarse;
+    }
+    document.getElementById('suggestedGrind').textContent = grindSuggestion;
+    document.getElementById('suggestedGrindNote').textContent = '';
+
+    // Bloom time - adjust based on rest days
+    let bloomTime = params.bloom;
+    if (restDays < FRESHNESS_WINDOWS[selectedRoast].optimal[0]) {
+      const recommendedMin = FRESHNESS_WINDOWS[selectedRoast].optimal[0];
+      bloomTime += ` (延長至 40-50秒，豆子排氣旺盛)`;
+    }
+    document.getElementById('suggestedBloom').textContent = bloomTime;
+    document.getElementById('suggestedBloomNote').textContent = '';
+
+    // Flavor profile
+    const flavorText = isBright ? params.flavor_bright : params.flavor_rich;
+    document.getElementById('suggestedFlavor').textContent = flavorText;
+    document.getElementById('suggestedFlavorNote').textContent = '';
+  }
+
   function selectMethod(id) {
     currentMethod = id;
     document.querySelectorAll('.method-card').forEach(c => c.classList.remove('active'));
@@ -588,6 +1020,7 @@
     selected.classList.add('active');
     selected.setAttribute('aria-selected', 'true');
     calculate();
+    updateParameterSuggestions();
     resetTimer();
   }
 
@@ -648,7 +1081,9 @@
       document.getElementById('adjust-grid').style.display = 'none';
     }
 
-    document.getElementById('tips-box').innerHTML = `<div class="tips-title">沖煮要訣 · ${m.temp} · ${m.grind} · 目標 ${m.time}</div>${m.tips.map(t=>`<div class="tip"><div class="tip-dot"></div><span><strong>${t.label}：</strong>${t.text}</span></div>`).join('')}`;
+    document.getElementById('tips-box').innerHTML = `<div class="tips-title">沲煮要訣 · ${m.temp} · ${m.grind} · 目標 ${m.time}</div>${m.tips.map(t=>`<div class="tip"><div class="tip-dot"></div><span><strong>${t.label}：</strong>${t.text}</span></div>`).join('')}`;
+
+    updateParameterSuggestions();
   }
 
   function startTimer() {
@@ -749,15 +1184,15 @@
     const m = METHODS[currentMethod];
     const stepsData = m.buildSteps(parseInt(dose), parseInt(water));
 
-    let recipe = `手沖咖啡配方 ☕\n`;
-    recipe += `沖法：${m.title}\n`;
+    let recipe = `手沲咖啡配方 ☕\n`;
+    recipe += `沲法：${m.title}\n`;
     recipe += `咖啡粉：${dose}克\n`;
     recipe += `水量：${water}克\n`;
     recipe += `粉水比：1:${customRatio.toFixed(1)}\n`;
     recipe += `水溫：${m.temp}\n`;
     recipe += `研磨度：${m.grind}\n`;
     recipe += `目標時間：${m.time}\n\n`;
-    recipe += `沖煮步驟：\n`;
+    recipe += `沲煮步驟：\n`;
 
     stepsData.groups.forEach(group => {
       recipe += `${group.label}\n`;
