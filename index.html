@@ -1395,24 +1395,27 @@
   }
   .qt-exit:hover { border-color: var(--copper); color: var(--copper-light); }
   .qt-method-name {
-    font-size: 0.88em;
+    font-size: 0.82em;
     color: var(--copper-light);
-    font-weight: 500;
+    font-weight: 400;
     flex: 1;
     text-align: center;
     padding-right: 60px;
+    letter-spacing: 1px;
+    font-family: 'Cormorant Garamond', 'Playfair Display', serif;
   }
   .qt-timer-section {
     display: flex;
     flex-direction: column;
     align-items: center;
-    padding: 28px 16px 12px;
+    padding: 24px 16px 8px;
     flex-shrink: 0;
+    position: relative;
   }
   .qt-ring-wrap {
     position: relative;
-    width: 150px; height: 150px;
-    margin-bottom: 18px;
+    width: 220px; height: 220px;
+    margin-bottom: 14px;
   }
   .qt-ring-wrap svg {
     width: 100%; height: 100%;
@@ -1420,17 +1423,28 @@
   }
   .qt-ring-bg {
     fill: none;
-    stroke: var(--surface-3);
-    stroke-width: 4;
+    stroke: rgba(192,138,92,0.08);
+    stroke-width: 3;
+  }
+  .qt-ring-outer {
+    fill: none;
+    stroke: rgba(192,138,92,0.04);
+    stroke-width: 1;
   }
   .qt-ring-progress {
     fill: none;
     stroke: var(--copper);
-    stroke-width: 4;
+    stroke-width: 3.5;
     stroke-linecap: round;
     stroke-dasharray: 326.73;
     stroke-dashoffset: 326.73;
-    transition: stroke-dashoffset 0.5s;
+    transition: stroke-dashoffset 0.8s cubic-bezier(0.25,0.46,0.45,0.94);
+    filter: drop-shadow(0 0 6px rgba(192,138,92,0.3));
+  }
+  .qt-ring-ticks {
+    fill: none;
+    stroke: rgba(192,138,92,0.12);
+    stroke-width: 0.5;
   }
   .qt-ring-inner {
     position: absolute;
@@ -1439,30 +1453,42 @@
     text-align: center;
   }
   .qt-time {
-    font-size: 2.4em;
+    font-size: 3em;
     font-weight: 300;
     font-family: 'Space Mono', monospace;
     color: var(--copper-light);
-    letter-spacing: 2px;
+    letter-spacing: 3px;
   }
   .qt-label {
-    font-size: 0.75em;
+    font-size: 0.7em;
     color: var(--text-secondary);
-    margin-top: 4px;
+    margin-top: 6px;
+    letter-spacing: 1px;
+    max-width: 160px;
+    line-height: 1.4;
+  }
+  .qt-step-indicator {
+    font-size: 0.6em;
+    color: var(--copper);
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    margin-bottom: 4px;
+    font-weight: 400;
   }
   .qt-current {
     text-align: center;
-    margin-bottom: 16px;
-    min-height: 48px;
+    margin-bottom: 12px;
+    min-height: 44px;
   }
   .qt-cur-title {
-    font-size: 1em;
-    font-weight: 600;
+    font-size: 0.95em;
+    font-weight: 500;
     color: var(--text-primary);
     margin-bottom: 4px;
+    letter-spacing: 0.3px;
   }
   .qt-cur-water {
-    font-size: 0.88em;
+    font-size: 0.85em;
     color: var(--text-secondary);
   }
   .qt-water-pour {
@@ -1471,22 +1497,22 @@
     margin-right: 6px;
   }
   .qt-controls {
-    display: flex; gap: 16px; margin-bottom: 4px;
+    display: flex; gap: 20px; margin-bottom: 4px;
   }
   .qt-ctrl-btn {
-    width: 52px; height: 52px;
+    width: 48px; height: 48px;
     border-radius: 50%;
-    border: 1px solid var(--border-hover);
-    background: var(--surface-2);
+    border: 1px solid rgba(192,138,92,0.2);
+    background: transparent;
     color: var(--copper-light);
-    font-size: 1.3em;
+    font-size: 1.2em;
     cursor: pointer;
-    transition: all 0.2s;
+    transition: all 0.3s;
     font-family: inherit;
     display: flex; align-items: center; justify-content: center;
   }
   .qt-ctrl-btn:hover {
-    background: var(--surface-3);
+    background: rgba(192,138,92,0.08);
     border-color: var(--copper);
   }
   .qt-ctrl-btn:active { transform: scale(0.92); }
@@ -1573,9 +1599,9 @@
     max-width: 100px;
   }
   @media (max-width: 600px) {
-    .qt-ring-wrap { width: 130px; height: 130px; }
-    .qt-time { font-size: 2em; }
-    .qt-timer-section { padding: 20px 12px 8px; }
+    .qt-ring-wrap { width: 180px; height: 180px; }
+    .qt-time { font-size: 2.4em; }
+    .qt-timer-section { padding: 16px 12px 6px; }
     .qt-method-name { padding-right: 40px; }
   }
 
@@ -2486,11 +2512,15 @@ function startQuickTimer(){
   let stepsHtml=allSteps.map((s,i)=>'<div class="qt-step'+(i===0?' active':'')+'" data-idx="'+i+'"><div class="qt-step-num"><span>'+s.num+'</span></div><div class="qt-step-info"><div class="qt-step-title">'+s.title+'</div><div class="qt-step-note">'+s.note+'</div>'+(s.water>0?'<div class="qt-step-water">+'+s.water+'g → 累計 '+s.cum+'g / '+water+'g</div>':s.cum>0?'<div class="qt-step-water" style="opacity:0.6;">維持 '+s.cum+'g / '+water+'g</div>':'')+'</div></div>').join('');
   const overlay=document.createElement('div');
   overlay.id='quickTimerOverlay';
-  overlay.innerHTML='<div class="qt-header"><button class="qt-exit" id="qtExit">✕ 結束</button><div class="qt-method-name">'+method.title+'</div></div><div class="qt-timer-section"><div class="qt-ring-wrap"><svg viewBox="0 0 120 120"><circle class="qt-ring-bg" cx="60" cy="60" r="52"/><circle class="qt-ring-progress" id="qtRingProgress" cx="60" cy="60" r="52"/></svg><div class="qt-ring-inner"><div class="qt-time" id="qtTime">0:00</div><div class="qt-label" id="qtLabel">開始沖煮</div></div></div><div class="qt-current" id="qtCurrent"></div><div class="qt-controls"><button class="qt-ctrl-btn" id="qtPause">⏸</button><button class="qt-ctrl-btn" id="qtReset">⟲</button></div></div><div class="qt-steps-list" id="qtStepsList">'+stepsHtml+'</div>';
+  // Generate tick marks for the timer ring
+  let tickMarks='';
+  for(let i=0;i<60;i++){const angle=(i*6)-90;const r1=i%5===0?56:57.5;const r2=60;const x1=60+r1*Math.cos(angle*Math.PI/180);const y1=60+r1*Math.sin(angle*Math.PI/180);const x2=60+r2*Math.cos(angle*Math.PI/180);const y2=60+r2*Math.sin(angle*Math.PI/180);tickMarks+='<line x1="'+x1.toFixed(1)+'" y1="'+y1.toFixed(1)+'" x2="'+x2.toFixed(1)+'" y2="'+y2.toFixed(1)+'" stroke="rgba(192,138,92,'+(i%5===0?'0.25':'0.08')+')" stroke-width="'+(i%5===0?'1':'0.5')+'"/>';}
+  const stepTotal=allSteps.length;
+  overlay.innerHTML='<div class="qt-header"><button class="qt-exit" id="qtExit">✕ 結束</button><div class="qt-method-name">'+method.title+'</div></div><div class="qt-timer-section"><div class="qt-ring-wrap"><svg viewBox="0 0 120 120"><circle class="qt-ring-outer" cx="60" cy="60" r="59"/>'+tickMarks+'<circle class="qt-ring-bg" cx="60" cy="60" r="52"/><circle class="qt-ring-progress" id="qtRingProgress" cx="60" cy="60" r="52"/></svg><div class="qt-ring-inner"><div class="qt-step-indicator" id="qtStepInd">STEP 1/'+stepTotal+'</div><div class="qt-time" id="qtTime">0:00</div><div class="qt-label" id="qtLabel">準備悶蒸注水</div></div></div><div class="qt-current" id="qtCurrent"></div><div class="qt-controls"><button class="qt-ctrl-btn" id="qtPause">⏸</button><button class="qt-ctrl-btn" id="qtReset">⟲</button></div></div><div class="qt-steps-list" id="qtStepsList">'+stepsHtml+'</div>';
   document.body.appendChild(overlay);
   let seconds=0,running=true,completed=false,qtInterval=null,prevActiveIdx=-1;
   requestWakeLock();
-  const STEP_TIPS_QT={bloom:'輕柔注水，讓咖啡粉均勻濕潤',pour:'保持穩定水流，注意水量',wait:'耐心等待，好風味需要時間',final:'即將完成，準備享受'};
+  const STEP_TIPS_QT={bloom:'注入悶蒸水量，讓咖啡粉均勻濕潤',pour:'保持穩定水流，注意水量',wait:'耐心等待，好風味需要時間',final:'即將完成，準備享受',shake:'搖晃濾杯，讓粉層均勻翻動'};
   function updateQtDisplay(){
     const m=Math.floor(seconds/60),s=seconds%60;
     document.getElementById('qtTime').textContent=m+':'+s.toString().padStart(2,'0');
@@ -2509,11 +2539,14 @@ function startQuickTimer(){
     else if(step.title.includes('注水')||step.title.includes('pour'))tipKey='pour';
     else if(step.title.includes('最後')||step.title.includes('收尾'))tipKey='final';
     document.getElementById('qtLabel').textContent=STEP_TIPS_QT[tipKey]||STEP_TIPS_QT.wait;
-    cur.innerHTML='<div class="qt-cur-title">步驟 '+step.num+' '+step.title+'</div>'+(step.water>0?'<div class="qt-cur-water"><span class="qt-water-pour">+'+step.water+'g</span>累計 '+step.cum+'g / '+water+'g</div>':step.cum>0?'<div class="qt-cur-water">維持 '+step.cum+'g / '+water+'g</div>':'');
+    const stepInd=document.getElementById('qtStepInd');
+    if(stepInd)stepInd.textContent='STEP '+(activeIdx+1)+'/'+stepTotal;
+    cur.innerHTML='<div class="qt-cur-title">'+step.title+'</div>'+(step.water>0?'<div class="qt-cur-water"><span class="qt-water-pour">+'+step.water+'g</span>累計 '+step.cum+'g / '+water+'g</div>':step.cum>0?'<div class="qt-cur-water">維持 '+step.cum+'g / '+water+'g</div>':'');
     if(!completed&&seconds>=qtDurations[qtDurations.length-1]){
       completed=true;clearInterval(qtInterval);running=false;
       if(navigator.vibrate)navigator.vibrate([200,100,200,100,300]);
       document.getElementById('qtLabel').textContent='沖煮完成！';
+      if(stepInd)stepInd.textContent='COMPLETE';
       document.getElementById('qtPause').textContent='✓';
       cur.innerHTML='<div class="qt-complete-msg"><div class="qt-complete-icon">☕</div><div class="qt-complete-title">沖煮完成</div><div class="qt-complete-sub">移除濾杯，享受你的咖啡</div></div>';
     }
