@@ -64,16 +64,16 @@
     justify-content: center; align-items: center;
   }
   .scroll-hint {
-    position: absolute; bottom: 24px; left: 50%; transform: translateX(-50%);
+    position: relative; bottom: auto; left: auto; transform: none;
     display: flex; flex-direction: column; align-items: center; gap: 8px;
     opacity: 0.4; animation: scrollHintPulse 3s ease-in-out infinite;
-    z-index: 2;
+    z-index: 2; margin-top: auto;
   }
   .scroll-hint span { font-size: 0.6em; color: var(--text-secondary); letter-spacing: 3px; text-transform: uppercase; }
   .scroll-hint svg { width: 16px; height: 16px; color: var(--copper); opacity: 0.7; }
   @keyframes scrollHintPulse {
-    0%, 100% { opacity: 0.3; transform: translateX(-50%) translateY(0); }
-    50% { opacity: 0.6; transform: translateX(-50%) translateY(6px); }
+    0%, 100% { opacity: 0.3; transform: translateY(0); }
+    50% { opacity: 0.6; transform: translateY(6px); }
   }
   .hero::before {
     content: ''; position: absolute; top: 0; left: 50%; width: 1px;
@@ -1998,21 +1998,36 @@
     body.focus-mode .timer-ring-wrap { width: 52px; height: 52px; min-width: 52px; }
   }
 
-  /* Floating quick timer button */
-  .quick-float-timer {
+  /* Floating quick timer button group */
+  .quick-float-group {
     position: fixed; bottom: calc(64px + env(safe-area-inset-bottom, 0) + 12px);
     left: 50%; transform: translateX(-50%); z-index: 150;
+    display: none; align-items: center; gap: 8px;
+  }
+  .quick-float-group.visible { display: flex; animation: tabFadeIn 0.3s ease-out; }
+  .quick-float-timer {
     background: var(--copper); color: #fff; border: none; border-radius: 28px;
-    padding: 12px 28px; font-size: 0.9em; font-weight: 600;
+    padding: 12px 24px; font-size: 0.88em; font-weight: 600;
     font-family: 'DM Sans', 'Noto Sans TC', sans-serif;
     box-shadow: 0 4px 20px rgba(184,125,86,0.4);
-    cursor: pointer; transition: all 0.3s; display: none;
+    cursor: pointer; transition: all 0.3s;
     letter-spacing: 0.5px;
+    display: flex; align-items: center; gap: 6px;
   }
-  .quick-float-timer:hover { transform: translateX(-50%) scale(1.05); box-shadow: 0 6px 24px rgba(184,125,86,0.5); }
-  .quick-float-timer.visible { display: flex; align-items: center; gap: 8px; animation: tabFadeIn 0.3s ease-out; }
+  .quick-float-timer:hover { transform: scale(1.05); box-shadow: 0 6px 24px rgba(184,125,86,0.5); }
+  .quick-float-free {
+    background: rgba(15,13,10,0.9); color: var(--copper-light);
+    border: 1px solid rgba(184,125,86,0.3); border-radius: 28px;
+    padding: 11px 18px; font-size: 0.82em; font-weight: 500;
+    font-family: 'DM Sans', 'Noto Sans TC', sans-serif;
+    box-shadow: 0 4px 16px rgba(0,0,0,0.3);
+    cursor: pointer; transition: all 0.3s;
+    backdrop-filter: blur(12px); -webkit-backdrop-filter: blur(12px);
+    display: flex; align-items: center; gap: 4px;
+  }
+  .quick-float-free:hover { border-color: var(--copper); transform: scale(1.05); }
   @media (min-width: 768px) {
-    .quick-float-timer { bottom: 24px; }
+    .quick-float-group { bottom: 24px; }
   }
 
 
@@ -2316,8 +2331,8 @@
       <p class="hero-tagline">
         <span id="heroGreeting">從水溫、粉水比到萃取時間，每一次沖煮，都是一場關於味覺、時間與意念的探索。</span>
       </p>
-      <p class="hero-sub" style="font-size:0.88em;color:var(--text-secondary);margin-top:-8px;margin-bottom:24px;font-weight:300;opacity:0.7;">讓每一杯咖啡，都更接近你想要的味道</p>
-      <div class="hero-cta-group" style="display:flex;gap:12px;justify-content:center;flex-wrap:wrap;">
+      <p class="hero-sub" style="font-size:0.88em;color:var(--text-secondary);margin-top:-8px;margin-bottom:28px;font-weight:300;opacity:0.7;">讓每一杯咖啡，都更接近你想要的味道</p>
+      <div class="hero-cta-group" style="display:flex;gap:12px;justify-content:center;flex-wrap:wrap;margin-bottom:48px;">
         <button class="hero-cta" id="heroCta">開始實驗 →</button>
         <button class="hero-cta hero-cta-secondary" id="heroBeginnerCta" style="background:transparent;border:1px solid rgba(184,125,86,0.4);color:var(--copper-light);">☕ 我是新手</button>
       </div>
@@ -2526,7 +2541,10 @@
       </div>
 
       <div id="quickBrewResults"></div>
-      <button class="quick-float-timer" id="quickFloatTimer">▶ 開始計時</button>
+      <div class="quick-float-group" id="quickFloatGroup">
+        <button class="quick-float-timer" id="quickFloatTimer">▶ 開始計時</button>
+        <button class="quick-float-free" id="quickFloatFree">⏱ 自由計時</button>
+      </div>
 
       <button class="quick-goto-tools" id="quickGotoTools">想要更精細的控制？前往進階工具 →</button>
     </div>
@@ -3420,8 +3438,8 @@ let currentQuickMethod = 'hoffmann';
 let currentTab = 'home';
 
 function switchTab(tabName) {
-  const fb = document.getElementById('quickFloatTimer');
-  if (fb) fb.classList.toggle('visible', tabName === 'quick' && currentQuickMethod);
+  const fg = document.getElementById('quickFloatGroup');
+  if (fg) fg.classList.toggle('visible', tabName === 'quick' && currentQuickMethod);
   currentTab = tabName;
   const tabs = document.querySelectorAll('.tab-content');
   tabs.forEach(t => {
@@ -3536,14 +3554,21 @@ function updateQuickBrewResults() {
     '</div>' +
     '</div>';
 
-  // Show floating timer button
+  // Show floating timer button group
+  const fg = document.getElementById('quickFloatGroup');
+  if (fg) fg.classList.add('visible');
   const fb = document.getElementById('quickFloatTimer');
-  if (fb) fb.classList.add('visible');
-  
+
   // Attach click handler to floating timer button (if not already)
   if (fb && !fb._hasListener) {
     fb.addEventListener('click', () => { startQuickTimer(); });
     fb._hasListener = true;
+  }
+  // Attach click handler to floating free timer button
+  const ffb = document.getElementById('quickFloatFree');
+  if (ffb && !ffb._hasListener) {
+    ffb.addEventListener('click', () => { startFreeTimer(); });
+    ffb._hasListener = true;
   }
 
   // Update quick dose buttons active state
