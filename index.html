@@ -2441,19 +2441,19 @@
         <div class="segment-card" id="segBeginner">
           <div class="segment-icon">☕</div>
           <div class="segment-title">我是新手</div>
-          <div class="segment-desc">從零開始學會手沖咖啡，30 秒快速沖煮</div>
+          <div class="segment-desc">選一個沖法，跟著步驟走，快速沖出第一杯</div>
           <div class="segment-arrow">→</div>
         </div>
-        <div class="segment-card" data-nav="tools" id="segFlavor">
+        <div class="segment-card" id="segFlavor">
           <div class="segment-icon">🧪</div>
-          <div class="segment-title">我想調整風味</div>
-          <div class="segment-desc">了解不同變因如何影響味道，找到你的理想風味</div>
+          <div class="segment-title">我想探索風味</div>
+          <div class="segment-desc">根據你的豆子與喜好，推薦最適合的沖法與參數</div>
           <div class="segment-arrow">→</div>
         </div>
-        <div class="segment-card" data-nav="tools" id="segPro">
+        <div class="segment-card" id="segPro">
           <div class="segment-icon">🎯</div>
-          <div class="segment-title">我想更專業</div>
-          <div class="segment-desc">深入萃取理論與參數控制，精進你的技術</div>
+          <div class="segment-title">我想自由實驗</div>
+          <div class="segment-desc">所有參數完全開放，自由調整，記錄每次實驗</div>
           <div class="segment-arrow">→</div>
         </div>
       </div>
@@ -2559,7 +2559,7 @@
         </button>
       </div>
 
-      <button class="quick-goto-tools" id="quickGotoTools">想要更精細的控制？前往進階工具 →</button>
+      <button class="quick-goto-tools" id="quickGotoTools">想要調整風味？試試進階工具的引導模式 →</button>
     </div>
 
     <!-- ========== TAB 3: ADVANCED TOOLS ========== -->
@@ -3378,7 +3378,15 @@ function updateCompareResult(){const cr=document.getElementById('compareResult')
 /* Hero CTA & scroll */
 /* Flavor preference buttons */
 document.querySelectorAll('.flavor-pref-btn').forEach(btn=>{btn.addEventListener('click',function(){document.querySelectorAll('.flavor-pref-btn').forEach(b=>{b.style.background='var(--surface-2)';b.style.border='1px solid var(--border)';b.style.color='var(--text-secondary)';b.classList.remove('active')});this.style.background='var(--copper)';this.style.border='1px solid var(--copper)';this.style.color='#fff';this.classList.add('active');document.getElementById('flavorPref').value=this.dataset.value;document.getElementById('flavorValue').textContent=this.dataset.value;if(typeof updateRecommendation==='function')updateRecommendation()})});
-document.getElementById('heroCta').addEventListener('click',()=>{window.location.hash='#tools'});
+document.getElementById('heroCta').addEventListener('click',()=>{
+  window.location.hash='#tools';
+  setTimeout(()=>{
+    const tt=document.getElementById('toolsTab');
+    if(tt){tt.classList.remove('mode-guided');tt.classList.add('mode-free');}
+    document.querySelectorAll('.tools-mode-btn').forEach(b=>b.classList.toggle('active',b.dataset.mode==='free'));
+    const ac=document.getElementById('advancedControls');if(ac)ac.classList.add('user-expanded');
+  },200);
+});
 /* Section fade-in on scroll */
 const sectionObserver=new IntersectionObserver((entries)=>{entries.forEach(e=>{if(e.isIntersecting){e.target.classList.add('visible');sectionObserver.unobserve(e.target)}})},{threshold:0.1,rootMargin:'0px 0px -50px 0px'});
 document.querySelectorAll('.section').forEach(s=>sectionObserver.observe(s));
@@ -3433,33 +3441,31 @@ updateFlavorSim();
 
 // ===== HERO BEGINNER CTA =====
 document.getElementById('heroBeginnerCta')?.addEventListener('click', () => {
-  window.location.hash = '#tools';
-  setTimeout(() => {
-    // Ensure guided mode is active then trigger beginner flow
-    const toolsTab = document.getElementById('toolsTab');
-    if (toolsTab) { toolsTab.classList.remove('mode-free'); toolsTab.classList.add('mode-guided'); }
-    document.querySelectorAll('.tools-mode-btn').forEach(b => b.classList.toggle('active', b.dataset.mode === 'guided'));
-    document.getElementById('quickStartBtn')?.click();
-  }, 200);
+  window.location.hash = '#quick';
 });
 
 // ===== SEGMENT CARD CLICKS =====
+// Beginner → Quick Brew (simplest path)
 document.getElementById('segBeginner')?.addEventListener('click', () => {
-  window.location.hash = '#tools';
-  setTimeout(() => {
-    const toolsTab = document.getElementById('toolsTab');
-    if (toolsTab) { toolsTab.classList.remove('mode-free'); toolsTab.classList.add('mode-guided'); }
-    document.querySelectorAll('.tools-mode-btn').forEach(b => b.classList.toggle('active', b.dataset.mode === 'guided'));
-    document.getElementById('quickStartBtn')?.click();
-  }, 200);
+  window.location.hash = '#quick';
 });
+// Flavor explorer → Tools guided mode (recommendations)
 document.getElementById('segFlavor')?.addEventListener('click', () => {
   window.location.hash = '#tools';
+  setTimeout(() => {
+    const tt = document.getElementById('toolsTab');
+    if (tt) { tt.classList.remove('mode-free'); tt.classList.add('mode-guided'); }
+    document.querySelectorAll('.tools-mode-btn').forEach(b => b.classList.toggle('active', b.dataset.mode === 'guided'));
+  }, 200);
 });
+// Pro → Tools free mode (full control)
 document.getElementById('segPro')?.addEventListener('click', () => {
   window.location.hash = '#tools';
   setTimeout(() => {
-    document.getElementById('compareBtn')?.click();
+    const tt = document.getElementById('toolsTab');
+    if (tt) { tt.classList.remove('mode-guided'); tt.classList.add('mode-free'); }
+    document.querySelectorAll('.tools-mode-btn').forEach(b => b.classList.toggle('active', b.dataset.mode === 'free'));
+    const ac = document.getElementById('advancedControls'); if (ac) ac.classList.add('user-expanded');
   }, 200);
 });
 
@@ -3744,6 +3750,10 @@ function renderMethodOverview() {
     const dose = parseFloat(document.getElementById('quickDoseInput').value) || 20;
     window.location.hash = '#tools';
     setTimeout(() => {
+      // Switch to guided mode for users upgrading from Quick Brew
+      const tt = document.getElementById('toolsTab');
+      if (tt) { tt.classList.remove('mode-free'); tt.classList.add('mode-guided'); }
+      document.querySelectorAll('.tools-mode-btn').forEach(b => b.classList.toggle('active', b.dataset.mode === 'guided'));
       if (method && BREW_METHODS[method]) {
         selectMethod(method, BREW_METHODS[method]);
         const doseInput = document.getElementById('doseInput');
@@ -3777,14 +3787,19 @@ function renderMethodOverview() {
     document.getElementById('compareModal').classList.add('active');
   });
 
-  // Hero CTA -> advanced tools
+  // Hero CTA -> advanced tools (free mode)
   const heroCta = document.getElementById('heroCta');
   if (heroCta) {
-    // Remove old listener by replacing element
     const newCta = heroCta.cloneNode(true);
     heroCta.parentNode.replaceChild(newCta, heroCta);
     newCta.addEventListener('click', () => {
       window.location.hash = '#tools';
+      setTimeout(() => {
+        const tt = document.getElementById('toolsTab');
+        if (tt) { tt.classList.remove('mode-guided'); tt.classList.add('mode-free'); }
+        document.querySelectorAll('.tools-mode-btn').forEach(b => b.classList.toggle('active', b.dataset.mode === 'free'));
+        const ac = document.getElementById('advancedControls'); if (ac) ac.classList.add('user-expanded');
+      }, 200);
     });
   }
 
