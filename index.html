@@ -2002,33 +2002,58 @@
   .quick-float-group {
     position: fixed; bottom: calc(64px + env(safe-area-inset-bottom, 0) + 12px);
     left: 50%; transform: translateX(-50%); z-index: 150;
-    display: none; align-items: center; gap: 0;
-    background: rgba(15,13,10,0.92); border-radius: 32px;
-    backdrop-filter: blur(16px); -webkit-backdrop-filter: blur(16px);
-    box-shadow: 0 4px 24px rgba(0,0,0,0.4), 0 0 0 1px rgba(184,125,86,0.15);
-    padding: 4px;
+    display: none; flex-direction: column; align-items: center; gap: 0;
   }
   .quick-float-group.visible { display: flex; animation: tabFadeIn 0.3s ease-out; }
-  .quick-float-timer {
-    background: var(--copper); color: #fff; border: none; border-radius: 28px;
-    padding: 10px 20px; font-size: 0.82em; font-weight: 600;
+
+  /* Expandable menu (hidden by default, shown on click) */
+  .quick-float-menu {
+    display: flex; flex-direction: column; gap: 6px;
+    background: rgba(15,13,10,0.95); border-radius: 16px;
+    backdrop-filter: blur(16px); -webkit-backdrop-filter: blur(16px);
+    box-shadow: 0 8px 32px rgba(0,0,0,0.5), 0 0 0 1px rgba(184,125,86,0.12);
+    padding: 8px; margin-bottom: 10px;
+    opacity: 0; transform: translateY(12px) scale(0.95); pointer-events: none;
+    transition: all 0.25s cubic-bezier(0.4, 0, 0.2, 1);
+  }
+  .quick-float-menu.open {
+    opacity: 1; transform: translateY(0) scale(1); pointer-events: auto;
+  }
+  .quick-float-menu-item {
+    background: transparent; color: var(--copper-light); border: none;
+    border-radius: 12px; padding: 12px 20px;
+    font-size: 0.88em; font-weight: 500; white-space: nowrap;
     font-family: 'DM Sans', 'Noto Sans TC', sans-serif;
-    box-shadow: 0 2px 12px rgba(184,125,86,0.35);
+    cursor: pointer; transition: all 0.2s;
+    display: flex; align-items: center; gap: 8px;
+    text-align: left;
+  }
+  .quick-float-menu-item:hover,
+  .quick-float-menu-item:active { background: rgba(184,125,86,0.12); }
+  .quick-float-menu-item .qfm-icon { font-size: 1.1em; flex-shrink: 0; }
+  .quick-float-menu-item .qfm-sub {
+    font-size: 0.75em; color: var(--text-secondary); font-weight: 300;
+    margin-top: 2px;
+  }
+
+  /* Main trigger button */
+  .quick-float-trigger {
+    background: var(--copper); color: #fff; border: none; border-radius: 50px;
+    padding: 12px 28px; font-size: 0.88em; font-weight: 600;
+    font-family: 'DM Sans', 'Noto Sans TC', sans-serif;
+    box-shadow: 0 4px 20px rgba(184,125,86,0.4);
     cursor: pointer; transition: all 0.25s;
     letter-spacing: 0.3px; white-space: nowrap;
-    display: flex; align-items: center; gap: 5px;
+    display: flex; align-items: center; gap: 6px;
   }
-  .quick-float-timer:hover { filter: brightness(1.1); box-shadow: 0 4px 18px rgba(184,125,86,0.5); }
-  .quick-float-free {
-    background: transparent; color: var(--copper-light);
-    border: none; border-radius: 28px;
-    padding: 10px 16px; font-size: 0.78em; font-weight: 500;
-    font-family: 'DM Sans', 'Noto Sans TC', sans-serif;
-    cursor: pointer; transition: all 0.25s;
-    white-space: nowrap;
-    display: flex; align-items: center; gap: 4px;
+  .quick-float-trigger:hover { filter: brightness(1.1); box-shadow: 0 6px 28px rgba(184,125,86,0.5); }
+  .quick-float-trigger:active { transform: scale(0.97); }
+  .quick-float-trigger .qft-arrow {
+    display: inline-block; transition: transform 0.25s; font-size: 0.7em;
   }
-  .quick-float-free:hover { background: rgba(184,125,86,0.12); color: #fff; }
+  .quick-float-group.menu-open .quick-float-trigger { background: rgba(15,13,10,0.9); color: var(--copper-light); border: 1px solid rgba(184,125,86,0.3); box-shadow: 0 4px 16px rgba(0,0,0,0.3); }
+  .quick-float-group.menu-open .qft-arrow { transform: rotate(180deg); }
+
   @media (min-width: 768px) {
     .quick-float-group { bottom: 24px; }
   }
@@ -2519,8 +2544,19 @@
 
       <div id="quickBrewResults"></div>
       <div class="quick-float-group" id="quickFloatGroup">
-        <button class="quick-float-timer" id="quickFloatTimer">▶ 計時</button>
-        <button class="quick-float-free" id="quickFloatFree">⏱ 自由</button>
+        <div class="quick-float-menu" id="quickFloatMenu">
+          <button class="quick-float-menu-item" id="quickFloatTimer">
+            <span class="qfm-icon">🧭</span>
+            <div><div>跟步驟計時</div><div class="qfm-sub">按照沖煮步驟引導</div></div>
+          </button>
+          <button class="quick-float-menu-item" id="quickFloatFree">
+            <span class="qfm-icon">⏱</span>
+            <div><div>自由計時</div><div class="qfm-sub">不跟步驟，只計時間</div></div>
+          </button>
+        </div>
+        <button class="quick-float-trigger" id="quickFloatTrigger">
+          ▶ 開始計時 <span class="qft-arrow">▲</span>
+        </button>
       </div>
 
       <button class="quick-goto-tools" id="quickGotoTools">想要更精細的控制？前往進階工具 →</button>
@@ -3474,7 +3510,11 @@ let currentTab = 'home';
 
 function switchTab(tabName) {
   const fg = document.getElementById('quickFloatGroup');
-  if (fg) fg.classList.toggle('visible', tabName === 'quick' && currentQuickMethod);
+  if (fg) {
+    fg.classList.toggle('visible', tabName === 'quick' && currentQuickMethod);
+    fg.classList.remove('menu-open');
+    document.getElementById('quickFloatMenu')?.classList.remove('open');
+  }
   currentTab = tabName;
   const tabs = document.querySelectorAll('.tab-content');
   tabs.forEach(t => {
@@ -3591,19 +3631,31 @@ function updateQuickBrewResults() {
 
   // Show floating timer button group
   const fg = document.getElementById('quickFloatGroup');
-  if (fg) fg.classList.add('visible');
-  const fb = document.getElementById('quickFloatTimer');
+  if (fg) { fg.classList.add('visible'); fg.classList.remove('menu-open'); }
+  const floatMenu = document.getElementById('quickFloatMenu');
+  if (floatMenu) floatMenu.classList.remove('open');
 
-  // Attach click handler to floating timer button (if not already)
+  const fb = document.getElementById('quickFloatTimer');
+  // Attach click handler to floating guided timer option
   if (fb && !fb._hasListener) {
-    fb.addEventListener('click', () => { startQuickTimer(); });
+    fb.addEventListener('click', () => { floatMenu?.classList.remove('open'); fg?.classList.remove('menu-open'); startQuickTimer(); });
     fb._hasListener = true;
   }
-  // Attach click handler to floating free timer button
+  // Attach click handler to floating free timer option
   const ffb = document.getElementById('quickFloatFree');
   if (ffb && !ffb._hasListener) {
-    ffb.addEventListener('click', () => { startFreeTimer(); });
+    ffb.addEventListener('click', () => { floatMenu?.classList.remove('open'); fg?.classList.remove('menu-open'); startFreeTimer(); });
     ffb._hasListener = true;
+  }
+  // Attach trigger button toggle
+  const ftrig = document.getElementById('quickFloatTrigger');
+  if (ftrig && !ftrig._hasListener) {
+    ftrig.addEventListener('click', () => {
+      const menu = document.getElementById('quickFloatMenu');
+      const grp = document.getElementById('quickFloatGroup');
+      if (menu && grp) { menu.classList.toggle('open'); grp.classList.toggle('menu-open'); }
+    });
+    ftrig._hasListener = true;
   }
 
   // Update quick dose buttons active state
@@ -3735,6 +3787,15 @@ function renderMethodOverview() {
       window.location.hash = '#tools';
     });
   }
+
+  // Close floating menu when clicking outside
+  document.addEventListener('click', (e) => {
+    const fg = document.getElementById('quickFloatGroup');
+    if (fg && fg.classList.contains('menu-open') && !fg.contains(e.target)) {
+      fg.classList.remove('menu-open');
+      document.getElementById('quickFloatMenu')?.classList.remove('open');
+    }
+  });
 
   // Centralized event delegation for data-nav, data-scroll-to, data-try-method
   document.addEventListener('click', (e) => {
