@@ -38,10 +38,11 @@
     --radius-sm: 6px; --radius-md: 10px; --radius-lg: 16px;
   }
 
+  html { min-width: 320px; overflow-x: hidden; }
   body {
     background: #0F0D0B;
     display: flex; flex-direction: column; align-items: center;
-    min-height: 100vh; min-height: 100dvh; padding: 20px;
+    min-height: 100vh; min-height: 100dvh; padding: 20px; min-width: 320px;
     font-family: 'Noto Sans TC', 'DM Sans', -apple-system, sans-serif; overflow-x: hidden;
     transition: background-color 0.4s ease, color 0.4s ease;
     color: var(--text-primary);
@@ -422,7 +423,7 @@
   .selector-label { color: var(--copper-light); font-size: 0.78em; margin-top: 28px; margin-bottom: 12px; font-weight: 500; letter-spacing: 2px; text-transform: uppercase; position: relative; padding-left: 12px; }
   .selector-label::before { content: ''; position: absolute; left: 0; top: 50%; transform: translateY(-50%); width: 3px; height: 14px; background: var(--copper); border-radius: 1px; }
   h2.selector-label, h2.calc-title { font-size: 0.78em; }
-  .step-item.active-step { background: rgba(200,149,108,0.08); border-left-color: var(--copper); border-left-width: 3px; }
+  .step-item.active-step { background: rgba(200,149,108,0.14); border-left-color: var(--copper); border-left-width: 4px; box-shadow: inset 0 0 12px rgba(184,125,86,0.06), 0 2px 8px rgba(0,0,0,0.15); }
   .selector-card {
     background: var(--surface-2); border: 1px solid var(--border);
     border-radius: 0; padding: 18px; margin-bottom: 16px;
@@ -663,9 +664,10 @@
     box-shadow: 0 0 8px rgba(192,138,92,0.4);
   }
   .step-item.active-step {
-    border-left-color: var(--copper); border-left-width: 3px;
-    background: rgba(184,125,86,0.06); border-radius: 0 4px 4px 0;
+    border-left-color: var(--copper); border-left-width: 4px;
+    background: rgba(184,125,86,0.14); border-radius: 0 4px 4px 0;
     padding: 14px 16px 14px 18px; margin-left: -1px;
+    box-shadow: inset 0 0 12px rgba(184,125,86,0.06), 0 2px 8px rgba(0,0,0,0.15);
   }
   .step-num { font-weight: 500; color: var(--copper); font-size: 0.72em; letter-spacing: 1.5px; text-transform: uppercase; display: inline-block; }
   .step-time { font-size: 0.72em; color: var(--text-secondary); font-weight: 300; display: inline-block; margin-left: 8px; font-family: 'Space Mono', monospace; }
@@ -1148,6 +1150,23 @@
     border-bottom: 1px solid var(--border);
     box-shadow: 0 4px 24px rgba(0,0,0,0.4);
   }
+
+  .focus-temp-badge {
+    position: fixed;
+    top: 68px;
+    right: 12px;
+    background: rgba(184,125,86,0.12);
+    border: 1px solid rgba(184,125,86,0.2);
+    color: var(--copper-light);
+    padding: 4px 10px;
+    border-radius: 16px;
+    font-size: 0.72em;
+    font-weight: 500;
+    z-index: 1001;
+    display: none;
+    letter-spacing: 0.5px;
+  }
+  body.focus-mode .focus-temp-badge { display: block; }
   body.focus-mode .timer-ring-wrap {
     width: 56px; height: 56px; margin: 0; flex-shrink: 0;
   }
@@ -1246,7 +1265,7 @@
   }
   /* Highlight the active step more prominently in focus mode */
   body.focus-mode .step-item.active-step {
-    background: rgba(184,125,86,0.12);
+    background: rgba(184,125,86,0.18);
     border-left-color: var(--copper);
     border-left-width: 3px;
     padding: 14px 18px;
@@ -1414,6 +1433,115 @@
     height: 12px;
     border-radius: 2px;
   }
+
+
+  /* ===== Free Timer Mode ===== */
+  #freeTimerOverlay {
+    position: fixed;
+    top: 0; left: 0; right: 0; bottom: 0;
+    background: linear-gradient(180deg, #1a1210 0%, #0d0b09 100%);
+    z-index: 2000;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    animation: fadeIn 0.3s ease;
+  }
+  .ft-header {
+    position: absolute; top: 0; left: 0; right: 0;
+    display: flex; align-items: center; gap: 12px;
+    padding: 14px 16px;
+    border-bottom: 1px solid var(--border);
+  }
+  .ft-exit {
+    padding: 7px 18px;
+    border: 1px solid rgba(192,138,92,0.2);
+    border-radius: 0;
+    background: transparent;
+    color: var(--text-secondary);
+    font-size: 0.78em;
+    cursor: pointer;
+    font-family: inherit;
+    transition: all 0.3s;
+    letter-spacing: 1px;
+  }
+  .ft-exit:hover { border-color: var(--copper); color: var(--copper-light); }
+  .ft-title {
+    font-size: 0.82em;
+    color: var(--copper-light);
+    font-weight: 400;
+    flex: 1;
+    text-align: center;
+    padding-right: 60px;
+    letter-spacing: 1px;
+    font-family: 'Cormorant Garamond', 'Playfair Display', serif;
+  }
+  .ft-ring-wrap {
+    position: relative;
+    width: 200px; height: 200px;
+  }
+  .ft-ring-wrap svg { width: 100%; height: 100%; }
+  .ft-ring-outer { fill: none; stroke: rgba(192,138,92,0.06); stroke-width: 0.5; }
+  .ft-ring-bg { fill: none; stroke: rgba(184,125,86,0.12); stroke-width: 4; }
+  .ft-ring-progress {
+    fill: none; stroke: var(--copper); stroke-width: 4;
+    stroke-linecap: round;
+    stroke-dasharray: 326.73; stroke-dashoffset: 326.73;
+    transform: rotate(-90deg); transform-origin: 50% 50%;
+    transition: stroke-dashoffset 0.3s linear;
+  }
+  .ft-ring-inner {
+    position: absolute; top: 50%; left: 50%;
+    transform: translate(-50%, -50%);
+    text-align: center;
+  }
+  .ft-time {
+    font-size: 3em;
+    font-weight: 300;
+    color: var(--copper-light);
+    font-family: 'Space Mono', monospace;
+    letter-spacing: 2px;
+  }
+  .ft-label {
+    font-size: 0.82em;
+    color: var(--text-secondary);
+    margin-top: 4px;
+    font-weight: 300;
+  }
+  .ft-lap-list {
+    margin-top: 24px;
+    width: 100%;
+    max-width: 300px;
+    max-height: 140px;
+    overflow-y: auto;
+    padding: 0 20px;
+  }
+  .ft-lap-item {
+    display: flex;
+    justify-content: space-between;
+    padding: 6px 0;
+    font-size: 0.82em;
+    color: var(--text-secondary);
+    border-bottom: 1px solid rgba(184,125,86,0.08);
+  }
+  .ft-lap-item .ft-lap-time { color: var(--copper-light); font-family: 'Space Mono', monospace; }
+  .ft-controls {
+    display: flex; gap: 16px; margin-top: 28px;
+  }
+  .ft-ctrl-btn {
+    width: 52px; height: 52px;
+    border-radius: 50%;
+    border: 1px solid rgba(192,138,92,0.25);
+    background: rgba(184,125,86,0.08);
+    color: var(--copper-light);
+    font-size: 1.4em;
+    cursor: pointer;
+    transition: all 0.2s;
+    display: flex; align-items: center; justify-content: center;
+    font-family: inherit;
+  }
+  .ft-ctrl-btn:hover { border-color: var(--copper); background: rgba(184,125,86,0.15); }
+  .ft-ctrl-btn.lap-btn { font-size: 0.85em; width: auto; border-radius: 26px; padding: 0 18px; }
 
   /* ===== Quick Timer Overlay ===== */
   #quickTimerOverlay {
@@ -2284,6 +2412,9 @@
         <button class="btn-start-timer" id="startTimerBtn" aria-label="開始沖煮計時">
           <span class="btn-start-icon">▶</span> 開始計時
         </button>
+        <button class="btn-start-timer" id="freeTimerBtn" aria-label="自由計時" style="background:transparent;border:1px solid var(--copper);color:var(--copper-light);font-size:0.82em;padding:10px 20px;">
+          ⏱ 自由計時
+        </button>
       </div>
     </div>
 
@@ -2322,6 +2453,7 @@
       </div>
     </div>
 
+    <div class="focus-temp-badge" id="focusTempBadge"></div>
     <!-- 沖煮日誌 -->
     <div class="journal-section" id="journalSection">
       <h2 class="section-label" style="display:inline-block;">📓 Brew Journal</h2>
@@ -2768,17 +2900,68 @@ function renderAllGuides(){const gc=document.getElementById('guideContainer');if
 let currentRecommendedMethod=null;
 let ratioLocked=true;
 function updateRecommendation(){const r=document.getElementById('roastLevel').value,p=document.getElementById('processing').value;let k=r+'-'+p;if(!RECOMMENDATIONS[k])k='default';const rec=RECOMMENDATIONS[k],rp=document.getElementById('recommendationPanel'),rt=document.getElementById('recommendationText');currentRecommendedMethod=rec.method;let recText=`<strong>${BREW_METHODS[rec.method].title}</strong><br>${rec.reason}`;const month=new Date().getMonth()+1,isSummer=month>=5&&month<=9;if(isSummer&&rec.method!=='icedBrew'){recText+='<br><br><em style="color:var(--text-secondary);font-size:0.9em;">🌞 夏日提醒：也可以試試冰手沖，用同一支豆子感受不同的清涼風味！</em>'}else if((month>=11||month<=2)&&!isSummer){recText+='<br><br><em style="color:var(--text-secondary);font-size:0.9em;">❄️ 冬日提醒：可以將水溫提高 1-2°C，讓風味更飽滿溫暖。</em>'}rt.innerHTML=recText}
-function updateKnowledgeTips(){const r=document.getElementById('roastLevel').value,p=document.getElementById('processing').value,skipRest=document.getElementById('restDaysSkipBtn').classList.contains('active'),d=skipRest?7:(parseInt(document.getElementById('restDays').value)||7),f=parseInt(document.getElementById('flavorPref').value),mt=KNOWLEDGE_TIPS.filter(t=>t.condition(r,p,d,f)).slice(0,2),ktc=document.getElementById('knowledgeTipsContainer');if(mt.length===0){ktc.innerHTML='';return}if(mt.length===0){ktc.innerHTML='<div style="padding:12px 16px;color:var(--text-secondary);font-size:0.85em;opacity:0.6;">✓ 目前設定沒有特別需要注意的地方，放心沖煮吧！</div>';return}ktc.innerHTML=mt.map((t,i)=>`<div class="knowledge-tip" id="tip-${i}"><div class="knowledge-tip-header"><div class="knowledge-tip-title">${t.title}</div><div class="knowledge-tip-toggle">▼</div></div><div class="knowledge-tip-text">${t.text}</div></div>`).join('');mt.forEach((_,i)=>{const el=document.getElementById(`tip-${i}`),h=el.querySelector('.knowledge-tip-header'),c=el.querySelector('.knowledge-tip-text'),tg=el.querySelector('.knowledge-tip-toggle');h.addEventListener('click',()=>{c.classList.toggle('open');tg.classList.toggle('open')})})}
-function attachEventListeners(){document.getElementById('quickStartBtn').addEventListener('click',quickStart);document.getElementById('doseInput').addEventListener('input',()=>{recalcAll();updateDoseBtnActive()});document.getElementById('roastLevel').addEventListener('change',()=>{updateRecommendation();updateKnowledgeTips()});document.getElementById('processing').addEventListener('change',()=>{updateRecommendation();updateKnowledgeTips()});document.getElementById('restDays').addEventListener('input',()=>{document.getElementById('restDaysSkipBtn').classList.remove('active');document.getElementById('restDays').disabled=false;document.getElementById('restDays').style.opacity='1';updateKnowledgeTips()});document.getElementById('restDaysSkipBtn').addEventListener('click',()=>{const btn=document.getElementById('restDaysSkipBtn'),inp=document.getElementById('restDays');btn.classList.toggle('active');if(btn.classList.contains('active')){inp.disabled=true;inp.style.opacity='0.4'}else{inp.disabled=false;inp.style.opacity='1'}updateKnowledgeTips()});document.getElementById('flavorPref').addEventListener('input',(e)=>{document.getElementById('flavorValue').textContent=e.target.value;updateRecommendation();updateKnowledgeTips()});document.querySelectorAll('.dose-btn').forEach(btn=>{btn.addEventListener('click',()=>{const v=parseFloat(btn.dataset.dose);document.getElementById('doseInput').value=v;document.querySelectorAll('.dose-btn').forEach(b=>b.classList.remove('active'));btn.classList.add('active');recalcAll()})});document.querySelectorAll('.stepper-btn').forEach(btn=>{btn.addEventListener('click',()=>{const tid=btn.dataset.target,delta=parseFloat(btn.dataset.delta),inp=document.getElementById(tid);if(inp.disabled)return;let v=parseFloat(inp.value)||0;v=Math.max(parseFloat(inp.min),Math.min(parseFloat(inp.max),v+delta));inp.value=v;inp.dispatchEvent(new Event('input',{bubbles:true}))})});document.getElementById('ratioSlider').addEventListener('input',(e)=>{const v=parseFloat(e.target.value);customRatio=v;document.getElementById('ratioValue').textContent='1:'+v;recalcAll()});document.getElementById('startTimerBtn').addEventListener('click',startTimer);document.getElementById('pausePlayBtn').addEventListener('click',toggleTimer);document.getElementById('resetTimerBtn').addEventListener('click',resetTimer);document.getElementById('currentTemp').addEventListener('input',()=>{updateTempSuggestion();updateCalcPanel(BREW_METHODS[selectedMethod])});document.getElementById('roastLevel').addEventListener('change',()=>{autoAdjustTemp();updateRecommendation();updateKnowledgeTips()});document.getElementById('manualRatioInput').addEventListener('input',(e)=>{const v=parseFloat(e.target.value);if(v>=12&&v<=18){customRatio=v;document.getElementById('ratioSlider').value=v;document.getElementById('ratioValue').textContent='1:'+v;recalcAll()}});document.getElementById('ratioSlider').addEventListener('input',(e)=>{const v=parseFloat(e.target.value);document.getElementById('manualRatioInput').value=v.toFixed(1);});document.querySelectorAll('.ratio-preset').forEach(btn=>{btn.addEventListener('click',()=>{const v=parseFloat(btn.dataset.ratio);customRatio=v;document.getElementById('ratioSlider').value=v;document.getElementById('ratioValue').textContent='1:'+v;document.getElementById('manualRatioInput').value=v;document.querySelectorAll('.ratio-preset').forEach(b=>b.classList.remove('active'));btn.classList.add('active');recalcAll()})});document.getElementById('compareBtn').addEventListener('click',()=>{selectedCompareMethods=[];renderCompareModal();document.getElementById('compareModal').classList.add('active')});document.getElementById('compareCloseBtn').addEventListener('click',()=>{document.getElementById('compareModal').classList.remove('active')});document.getElementById('compareModal').addEventListener('click',(e)=>{if(e.target===document.getElementById('compareModal'))document.getElementById('compareModal').classList.remove('active')});document.addEventListener('keydown',(e)=>{if(e.key==='Escape'){const cm=document.getElementById('compareModal');if(cm&&cm.classList.contains('active'))cm.classList.remove('active')}});['roastLevel','processing'].forEach(id=>{document.getElementById(id).addEventListener('change',saveUserPrefs)});['flavorPref','doseInput'].forEach(id=>{document.getElementById(id).addEventListener('change',saveUserPrefs)});document.getElementById('dripperType').addEventListener('change',()=>{renderDripperInfo();updateKnowledgeTips();saveUserPrefs()});document.getElementById('useRecommendationBtn').addEventListener('click',()=>{if(currentRecommendedMethod&&BREW_METHODS[currentRecommendedMethod]){selectMethod(currentRecommendedMethod,BREW_METHODS[currentRecommendedMethod])}});document.getElementById('ratioLockBtn').addEventListener('click',()=>{ratioLocked=!ratioLocked;const btn=document.getElementById('ratioLockBtn');const hint=document.getElementById('ratioLockStatus');btn.textContent=ratioLocked?'🔒':'🔓';btn.classList.toggle('unlocked',!ratioLocked);btn.title=ratioLocked?'鎖定粉水比：改粉量時自動算水量':'解鎖粉水比：可自由調整比例';hint.textContent=ratioLocked?'🔒 比例已鎖定 — 調整粉量時，水量自動計算':'🔓 比例已解鎖 — 可自由滑動調整粉水比';const slider=document.getElementById('ratioSlider');const manualInput=document.getElementById('manualRatioInput');if(ratioLocked){slider.style.opacity='0.4';slider.style.pointerEvents='none';manualInput.style.opacity='0.4';manualInput.disabled=true}else{slider.style.opacity='1';slider.style.pointerEvents='auto';manualInput.style.opacity='1';manualInput.disabled=false}})}
+function updateKnowledgeTips(){const r=document.getElementById('roastLevel').value,p=document.getElementById('processing').value,skipRest=document.getElementById('restDaysSkipBtn').classList.contains('active'),d=skipRest?7:(parseInt(document.getElementById('restDays').value)||7),f=parseInt(document.getElementById('flavorPref').value),mt=KNOWLEDGE_TIPS.filter(t=>t.condition(r,p,d,f)).slice(0,2),ktc=document.getElementById('knowledgeTipsContainer');if(mt.length===0){ktc.innerHTML='<div style="padding:12px 16px;color:var(--text-secondary);font-size:0.85em;opacity:0.6;">✓ 目前設定沒有特別需要注意的地方，放心沖煮吧！</div>';return}ktc.innerHTML=mt.map((t,i)=>`<div class="knowledge-tip" id="tip-${i}"><div class="knowledge-tip-header"><div class="knowledge-tip-title">${t.title}</div><div class="knowledge-tip-toggle">▼</div></div><div class="knowledge-tip-text">${t.text}</div></div>`).join('');mt.forEach((_,i)=>{const el=document.getElementById(`tip-${i}`),h=el.querySelector('.knowledge-tip-header'),c=el.querySelector('.knowledge-tip-text'),tg=el.querySelector('.knowledge-tip-toggle');h.addEventListener('click',()=>{c.classList.toggle('open');tg.classList.toggle('open')})})}
+function attachEventListeners(){document.getElementById('quickStartBtn').addEventListener('click',quickStart);document.getElementById('doseInput').addEventListener('input',()=>{recalcAll();updateDoseBtnActive()});document.getElementById('roastLevel').addEventListener('change',()=>{updateRecommendation();updateKnowledgeTips()});document.getElementById('processing').addEventListener('change',()=>{updateRecommendation();updateKnowledgeTips()});document.getElementById('restDays').addEventListener('input',()=>{document.getElementById('restDaysSkipBtn').classList.remove('active');document.getElementById('restDays').disabled=false;document.getElementById('restDays').style.opacity='1';updateKnowledgeTips()});document.getElementById('restDaysSkipBtn').addEventListener('click',()=>{const btn=document.getElementById('restDaysSkipBtn'),inp=document.getElementById('restDays');btn.classList.toggle('active');if(btn.classList.contains('active')){inp.disabled=true;inp.style.opacity='0.4'}else{inp.disabled=false;inp.style.opacity='1'}updateKnowledgeTips()});document.getElementById('flavorPref').addEventListener('input',(e)=>{document.getElementById('flavorValue').textContent=e.target.value;updateRecommendation();updateKnowledgeTips()});document.querySelectorAll('.dose-btn').forEach(btn=>{btn.addEventListener('click',()=>{const v=parseFloat(btn.dataset.dose);document.getElementById('doseInput').value=v;document.querySelectorAll('.dose-btn').forEach(b=>b.classList.remove('active'));btn.classList.add('active');recalcAll()})});document.querySelectorAll('.stepper-btn').forEach(btn=>{btn.addEventListener('click',()=>{const tid=btn.dataset.target,delta=parseFloat(btn.dataset.delta),inp=document.getElementById(tid);if(inp.disabled)return;let v=parseFloat(inp.value)||0;v=Math.max(parseFloat(inp.min),Math.min(parseFloat(inp.max),v+delta));inp.value=v;inp.dispatchEvent(new Event('input',{bubbles:true}))})});document.getElementById('ratioSlider').addEventListener('input',(e)=>{const v=parseFloat(e.target.value);customRatio=v;document.getElementById('ratioValue').textContent='1:'+v;recalcAll()});document.getElementById('startTimerBtn').addEventListener('click',startTimer);document.getElementById('freeTimerBtn').addEventListener('click',startFreeTimer);document.getElementById('pausePlayBtn').addEventListener('click',toggleTimer);document.getElementById('resetTimerBtn').addEventListener('click',resetTimer);document.getElementById('currentTemp').addEventListener('input',()=>{updateTempSuggestion();updateCalcPanel(BREW_METHODS[selectedMethod])});document.getElementById('roastLevel').addEventListener('change',()=>{autoAdjustTemp();updateRecommendation();updateKnowledgeTips()});document.getElementById('manualRatioInput').addEventListener('input',(e)=>{const v=parseFloat(e.target.value);if(v>=12&&v<=18){customRatio=v;document.getElementById('ratioSlider').value=v;document.getElementById('ratioValue').textContent='1:'+v;recalcAll()}});document.getElementById('ratioSlider').addEventListener('input',(e)=>{const v=parseFloat(e.target.value);document.getElementById('manualRatioInput').value=v.toFixed(1);});document.querySelectorAll('.ratio-preset').forEach(btn=>{btn.addEventListener('click',()=>{const v=parseFloat(btn.dataset.ratio);customRatio=v;document.getElementById('ratioSlider').value=v;document.getElementById('ratioValue').textContent='1:'+v;document.getElementById('manualRatioInput').value=v;document.querySelectorAll('.ratio-preset').forEach(b=>b.classList.remove('active'));btn.classList.add('active');recalcAll()})});document.getElementById('compareBtn').addEventListener('click',()=>{selectedCompareMethods=[];renderCompareModal();document.getElementById('compareModal').classList.add('active')});document.getElementById('compareCloseBtn').addEventListener('click',()=>{document.getElementById('compareModal').classList.remove('active')});document.getElementById('compareModal').addEventListener('click',(e)=>{if(e.target===document.getElementById('compareModal'))document.getElementById('compareModal').classList.remove('active')});document.addEventListener('keydown',(e)=>{if(e.key==='Escape'){const cm=document.getElementById('compareModal');if(cm&&cm.classList.contains('active'))cm.classList.remove('active')}});['roastLevel','processing'].forEach(id=>{document.getElementById(id).addEventListener('change',saveUserPrefs)});['flavorPref','doseInput'].forEach(id=>{document.getElementById(id).addEventListener('change',saveUserPrefs)});document.getElementById('dripperType').addEventListener('change',()=>{renderDripperInfo();updateKnowledgeTips();saveUserPrefs()});document.getElementById('useRecommendationBtn').addEventListener('click',()=>{if(currentRecommendedMethod&&BREW_METHODS[currentRecommendedMethod]){selectMethod(currentRecommendedMethod,BREW_METHODS[currentRecommendedMethod])}});document.getElementById('ratioLockBtn').addEventListener('click',()=>{ratioLocked=!ratioLocked;const btn=document.getElementById('ratioLockBtn');const hint=document.getElementById('ratioLockStatus');btn.textContent=ratioLocked?'🔒':'🔓';btn.classList.toggle('unlocked',!ratioLocked);btn.title=ratioLocked?'鎖定粉水比：改粉量時自動算水量':'解鎖粉水比：可自由調整比例';hint.textContent=ratioLocked?'🔒 比例已鎖定 — 調整粉量時，水量自動計算':'🔓 比例已解鎖 — 可自由滑動調整粉水比';const slider=document.getElementById('ratioSlider');const manualInput=document.getElementById('manualRatioInput');if(ratioLocked){slider.style.opacity='0.4';slider.style.pointerEvents='none';manualInput.style.opacity='0.4';manualInput.disabled=true}else{slider.style.opacity='1';slider.style.pointerEvents='auto';manualInput.style.opacity='1';manualInput.disabled=false}})}
 function updateDoseBtnActive(){const v=parseFloat(document.getElementById('doseInput').value);document.querySelectorAll('.dose-btn').forEach(b=>{b.classList.toggle('active',parseFloat(b.dataset.dose)===v)})}
 function renderRadar(k){const p=FLAVOR_PROFILES[k];if(!p)return;const svg=document.getElementById('radarSvg'),cx=120,cy=105,r=80,labels=['酸度','苦度','甜度','體脂感','香氣'],keys=['acidity','bitterness','sweetness','body','aroma'],n=5;let gridLines='',axisLines='',labelEls='';for(let ring=2;ring<=10;ring+=2){let pts=[];for(let i=0;i<n;i++){const a=Math.PI*2*i/n-Math.PI/2,x=cx+r*(ring/10)*Math.cos(a),y=cy+r*(ring/10)*Math.sin(a);pts.push(`${x},${y}`)}gridLines+=`<polygon points="${pts.join(' ')}" fill="none" stroke="rgba(184,125,86,${ring===10?0.3:0.12})" stroke-width="${ring===10?1:0.5}"/>`}for(let i=0;i<n;i++){const a=Math.PI*2*i/n-Math.PI/2,x=cx+r*Math.cos(a),y=cy+r*Math.sin(a),lx=cx+(r+16)*Math.cos(a),ly=cy+(r+16)*Math.sin(a);axisLines+=`<line x1="${cx}" y1="${cy}" x2="${x}" y2="${y}" stroke="rgba(184,125,86,0.2)" stroke-width="0.5"/>`;labelEls+=`<text x="${lx}" y="${ly}" text-anchor="middle" dominant-baseline="central" fill="currentColor" font-size="10" opacity="0.7">${labels[i]}</text>`}let dataPts=[];for(let i=0;i<n;i++){const a=Math.PI*2*i/n-Math.PI/2,v=p[keys[i]]/10,x=cx+r*v*Math.cos(a),y=cy+r*v*Math.sin(a);dataPts.push(`${x},${y}`)}const dataPolygon=`<polygon points="${dataPts.join(' ')}" fill="rgba(184,125,86,0.2)" stroke="var(--copper)" stroke-width="2"/>`;let dots='';for(let i=0;i<n;i++){const a=Math.PI*2*i/n-Math.PI/2,v=p[keys[i]]/10,x=cx+r*v*Math.cos(a),y=cy+r*v*Math.sin(a);dots+=`<circle cx="${x}" cy="${y}" r="3.5" fill="var(--copper)"/>`}svg.innerHTML=gridLines+axisLines+dataPolygon+dots+labelEls;const desc=FLAVOR_DESCRIPTIONS[k];if(desc){let descEl=document.querySelector('.radar-desc');if(!descEl){descEl=document.createElement('div');descEl.className='radar-desc';svg.parentNode.appendChild(descEl)}descEl.textContent=desc}}
 function recalcAll(){if(!selectedMethod)return;const m=BREW_METHODS[selectedMethod];updateCalcPanel(m);updateSteps(m)}
-function startTimer(){if(!selectedMethod){alert('請先選擇沖法');return}updateAdvancedFlow(3);const td=document.getElementById('timerDisplay');td.style.display='block';td.classList.add('timer-sticky');document.getElementById('journalSection').style.display='none';const sc=document.getElementById('stepsContent');if(sc)sc.style.display='block';const toggle=document.querySelector('#stepsToggle .collapse-toggle');if(toggle)toggle.textContent='▼';enterFocusMode();requestWakeLock();timerSeconds=0;timerRunning=true;brewCompleted=false;updateTimerDisplay();timerInterval=setInterval(()=>{timerSeconds++;updateTimerDisplay();if(!brewCompleted&&currentStepDurations.length>0&&timerSeconds>=currentStepDurations[currentStepDurations.length-1]){brewCompleted=true;showBrewComplete()}},1000)}
+function startTimer(){if(!selectedMethod){alert('請先選擇沖法');return}
+  const m=BREW_METHODS[selectedMethod];const d=parseFloat(document.getElementById('doseInput').value)||20;const r=getEffectiveRatio(m);const tw=Math.round(d*r);
+  if(!window._brewConfirmed){const gl=GRIND_LEVELS[selectedMethod]||'';const confirmMsg='☕ '+m.title.split(' · ')[0]+'\n\n粉量：'+d+'g　水量：'+tw+'g（1:'+r+'）\n水溫：'+m.temp+'　研磨：'+gl+'\n\n確認開始沖煮？';if(!confirm(confirmMsg))return;window._brewConfirmed=true;setTimeout(()=>{window._brewConfirmed=false},2000)}updateAdvancedFlow(3);const td=document.getElementById('timerDisplay');td.style.display='block';td.classList.add('timer-sticky');document.getElementById('journalSection').style.display='none';const sc=document.getElementById('stepsContent');if(sc)sc.style.display='block';const toggle=document.querySelector('#stepsToggle .collapse-toggle');if(toggle)toggle.textContent='▼';enterFocusMode();requestWakeLock();const ftb=document.getElementById('focusTempBadge');if(ftb&&selectedMethod){const tempVal=BREW_METHODS[selectedMethod].temp;ftb.textContent='🌡 '+tempVal;ftb.style.display='block';}timerSeconds=0;timerRunning=true;brewCompleted=false;updateTimerDisplay();timerInterval=setInterval(()=>{timerSeconds++;updateTimerDisplay();if(!brewCompleted&&currentStepDurations.length>0&&timerSeconds>=currentStepDurations[currentStepDurations.length-1]){brewCompleted=true;showBrewComplete()}},1000)}
 function toggleTimer(){timerRunning=!timerRunning;document.getElementById('pausePlayBtn').textContent=timerRunning?'⏸':'▶';if(timerRunning){timerInterval=setInterval(()=>{timerSeconds++;updateTimerDisplay()},1000)}else{clearInterval(timerInterval)}}
-function resetTimer(){timerSeconds=0;timerRunning=false;document.getElementById('pausePlayBtn').textContent='⏸';clearInterval(timerInterval);const ring=document.getElementById('timerRingProgress');if(ring)ring.style.strokeDashoffset=326.73;updateTimerDisplay();const td=document.getElementById('timerDisplay');td.style.display='none';td.classList.remove('timer-sticky');document.querySelectorAll('.step-item.active-step').forEach(el=>el.classList.remove('active-step'));document.currentActiveStep=undefined;exitFocusMode()}
+function resetTimer(){timerSeconds=0;timerRunning=false;document.getElementById('pausePlayBtn').textContent='⏸';clearInterval(timerInterval);const ring=document.getElementById('timerRingProgress');if(ring)ring.style.strokeDashoffset=326.73;updateTimerDisplay();const td=document.getElementById('timerDisplay');td.style.display='none';td.classList.remove('timer-sticky');document.querySelectorAll('.step-item.active-step').forEach(el=>el.classList.remove('active-step'));document.currentActiveStep=undefined;const ftbr=document.getElementById('focusTempBadge');if(ftbr)ftbr.style.display='none';exitFocusMode()}
 function updateTimerDisplay(){const m=Math.floor(timerSeconds/60),s=timerSeconds%60;$('timerTime').textContent=`${m}:${s.toString().padStart(2,'0')}`;const focusMode=document.body.classList.contains('focus-mode');if(focusMode){const activeStep=document.querySelector('.step-item.active-step');if(activeStep){const stepTitle=activeStep.querySelector('.step-title')?.textContent||'';const stepWaterPour=activeStep.querySelector('.step-water-pour')?.textContent||'';const stepWaterCum=activeStep.querySelector('.step-water-cum')?.textContent||'';const stepWaterBarFill=activeStep.querySelector('.step-water-bar-fill');const waterPct=stepWaterBarFill?stepWaterBarFill.style.width:'0%';let currentDisplay=document.querySelector('.current-step-display');if(!currentDisplay){currentDisplay=document.createElement('div');currentDisplay.className='current-step-display';const timerRing=document.querySelector('.timer-ring-wrap');if(timerRing)timerRing.parentNode.insertBefore(currentDisplay,timerRing.nextSibling)}const stepNum=activeStep.querySelector('.step-num')?.textContent||'';currentDisplay.innerHTML=`<div class="current-step-title">${stepNum} ${stepTitle}</div>${stepWaterPour||stepWaterCum?`<div class="current-step-water"><span class="focus-water-pour">${stepWaterPour}</span><span>${stepWaterCum}</span><div class="focus-water-bar"><div class="focus-water-bar-fill" style="width:${waterPct}"></div></div></div>`:''}`;}};const ring=$('timerRingProgress');if(ring&&currentStepDurations.length>0){const totalTime=currentStepDurations[currentStepDurations.length-1]||180;const pct=Math.min(timerSeconds/totalTime,1);const circumference=326.73;ring.style.strokeDashoffset=circumference*(1-pct)}if(currentStepDurations.length>0){let activeIdx=0;for(let i=currentStepDurations.length-1;i>=0;i--){if(timerSeconds>=currentStepDurations[i]){activeIdx=i;break}}const prevActive=document.currentActiveStep;document.querySelectorAll('.step-item').forEach(el=>{const idx=parseInt(el.dataset.stepIdx);if(idx===activeIdx){el.classList.add('active-step');if(timerRunning&&prevActive!==activeIdx){if(navigator.vibrate)navigator.vibrate([100,50,100]);el.scrollIntoView({behavior:'smooth',block:'center'});const stepTitle=el.querySelector('.step-title')?.textContent||'';let tipKey='wait';if(stepTitle.includes('悶蒸')||stepTitle.includes('bloom')){tipKey='bloom'}else if(stepTitle.includes('注水')||stepTitle.includes('pour')){tipKey='pour'}else if(stepTitle.includes('最後')||stepTitle.includes('最近')){tipKey='final'}const tip=STEP_TIPS[tipKey]||STEP_TIPS.wait;const label=document.getElementById('timerLabel');if(label)label.textContent=tip}}else{el.classList.remove('active-step')}});document.currentActiveStep=activeIdx}}
 
 function showBrewComplete(){if(navigator.vibrate)navigator.vibrate([200,100,200,100,300]);const label=document.getElementById('timerLabel');if(label)label.textContent='沖煮完成！';const currentDisplay=document.querySelector('.current-step-display');if(currentDisplay)currentDisplay.innerHTML='<div class="current-step-title">沖煮完成</div><div class="current-step-water"><span style="color:var(--copper);">移除濾杯，享受這一杯</span></div>';clearInterval(timerInterval);timerRunning=false;document.getElementById('pausePlayBtn').textContent='✓';const overlay=document.createElement('div');overlay.id='brewCompleteOverlay';overlay.innerHTML='<div class="brew-complete-content"><div class="brew-complete-icon">☕</div><div class="brew-complete-title">沖煮完成</div><div class="brew-complete-sub">移除濾杯，享受你的咖啡</div><button class="hero-cta brew-complete-btn" id="brewCompleteBtn" style="margin-top:16px;font-size:0.85em;padding:10px 24px;">記錄這一杯</button></div>';overlay.style.cssText='position:fixed;top:0;left:0;right:0;bottom:0;background:rgba(15,13,10,0.92);backdrop-filter:blur(12px);z-index:2000;display:flex;align-items:center;justify-content:center;animation:fadeIn 0.5s ease;';document.body.appendChild(overlay);document.getElementById('brewCompleteBtn').addEventListener('click',()=>{overlay.remove();exitFocusMode();const js=document.getElementById('journalSection');js.style.display='block';renderJournalHistory();js.scrollIntoView({behavior:'smooth',block:'center'});const jn=document.getElementById('journalNote');if(jn&&selectedMethod){const mTitle=BREW_METHODS[selectedMethod].title.split(' · ')[0];const dose=parseFloat(document.getElementById('doseInput').value)||20;jn.placeholder=mTitle+' · '+dose+'g — 記錄這杯的風味感受...'}})}
+
+function startFreeTimer(){
+  const overlay=document.createElement('div');
+  overlay.id='freeTimerOverlay';
+  let tickMarks='';
+  for(let i=0;i<60;i++){const angle=(i*6)-90;const r1=i%5===0?56:57.5;const r2=60;const x1=60+r1*Math.cos(angle*Math.PI/180);const y1=60+r1*Math.sin(angle*Math.PI/180);const x2=60+r2*Math.cos(angle*Math.PI/180);const y2=60+r2*Math.sin(angle*Math.PI/180);tickMarks+='<line x1="'+x1.toFixed(1)+'" y1="'+y1.toFixed(1)+'" x2="'+x2.toFixed(1)+'" y2="'+y2.toFixed(1)+'" stroke="rgba(192,138,92,'+(i%5===0?'0.25':'0.08')+')" stroke-width="'+(i%5===0?'1':'0.5')+'"/>';}
+  overlay.innerHTML='<div class="ft-header"><button class="ft-exit" id="ftExit">✕ 結束</button><div class="ft-title">自由計時</div></div><div class="ft-ring-wrap"><svg viewBox="0 0 120 120"><circle class="ft-ring-outer" cx="60" cy="60" r="59"/>'+tickMarks+'<circle class="ft-ring-bg" cx="60" cy="60" r="52"/><circle class="ft-ring-progress" id="ftRingProgress" cx="60" cy="60" r="52"/></svg><div class="ft-ring-inner"><div class="ft-time" id="ftTime">0:00</div><div class="ft-label" id="ftLabel">點擊開始</div></div></div><div class="ft-lap-list" id="ftLapList"></div><div class="ft-controls"><button class="ft-ctrl-btn" id="ftPlayPause">▶</button><button class="ft-ctrl-btn lap-btn" id="ftLap">📍 標記</button><button class="ft-ctrl-btn" id="ftReset">⟲</button></div>';
+  document.body.appendChild(overlay);
+  let seconds=0,running=false,ftInterval=null,laps=[];
+  function updateFtDisplay(){
+    const m=Math.floor(seconds/60),s=seconds%60;
+    document.getElementById('ftTime').textContent=m+':'+s.toString().padStart(2,'0');
+    const ring=document.getElementById('ftRingProgress');
+    const pct=(seconds%60)/60;
+    ring.style.strokeDashoffset=326.73*(1-pct);
+  }
+  document.getElementById('ftPlayPause').addEventListener('click',()=>{
+    running=!running;
+    document.getElementById('ftPlayPause').textContent=running?'⏸':'▶';
+    document.getElementById('ftLabel').textContent=running?'計時中':'已暫停';
+    if(running){
+      requestWakeLock();
+      ftInterval=setInterval(()=>{seconds++;updateFtDisplay()},1000);
+    }else{
+      clearInterval(ftInterval);
+    }
+  });
+  document.getElementById('ftLap').addEventListener('click',()=>{
+    if(!running&&seconds===0)return;
+    const m=Math.floor(seconds/60),s=seconds%60;
+    const timeStr=m+':'+s.toString().padStart(2,'0');
+    laps.push(timeStr);
+    const list=document.getElementById('ftLapList');
+    list.innerHTML=laps.map((t,i)=>'<div class="ft-lap-item"><span>標記 '+(i+1)+'</span><span class="ft-lap-time">'+t+'</span></div>').reverse().join('');
+    if(navigator.vibrate)navigator.vibrate([50]);
+  });
+  document.getElementById('ftReset').addEventListener('click',()=>{
+    seconds=0;running=false;laps=[];
+    clearInterval(ftInterval);
+    document.getElementById('ftPlayPause').textContent='▶';
+    document.getElementById('ftLabel').textContent='點擊開始';
+    document.getElementById('ftLapList').innerHTML='';
+    updateFtDisplay();
+  });
+  function closeFt(){clearInterval(ftInterval);running=false;releaseWakeLock();if(overlay&&overlay.parentNode)overlay.parentNode.removeChild(overlay);document.removeEventListener('keydown',ftEscHandler)}
+  document.getElementById('ftExit').addEventListener('click',closeFt);
+  function ftEscHandler(e){if(e.key==='Escape')closeFt()}
+  document.addEventListener('keydown',ftEscHandler);
+}
 function startQuickTimer(){
   const method=BREW_METHODS[currentQuickMethod];
   if(!method){alert('請先選擇沖法');return}
