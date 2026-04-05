@@ -2002,30 +2002,33 @@
   .quick-float-group {
     position: fixed; bottom: calc(64px + env(safe-area-inset-bottom, 0) + 12px);
     left: 50%; transform: translateX(-50%); z-index: 150;
-    display: none; align-items: center; gap: 8px;
+    display: none; align-items: center; gap: 0;
+    background: rgba(15,13,10,0.92); border-radius: 32px;
+    backdrop-filter: blur(16px); -webkit-backdrop-filter: blur(16px);
+    box-shadow: 0 4px 24px rgba(0,0,0,0.4), 0 0 0 1px rgba(184,125,86,0.15);
+    padding: 4px;
   }
   .quick-float-group.visible { display: flex; animation: tabFadeIn 0.3s ease-out; }
   .quick-float-timer {
     background: var(--copper); color: #fff; border: none; border-radius: 28px;
-    padding: 12px 24px; font-size: 0.88em; font-weight: 600;
+    padding: 10px 20px; font-size: 0.82em; font-weight: 600;
     font-family: 'DM Sans', 'Noto Sans TC', sans-serif;
-    box-shadow: 0 4px 20px rgba(184,125,86,0.4);
-    cursor: pointer; transition: all 0.3s;
-    letter-spacing: 0.5px;
-    display: flex; align-items: center; gap: 6px;
+    box-shadow: 0 2px 12px rgba(184,125,86,0.35);
+    cursor: pointer; transition: all 0.25s;
+    letter-spacing: 0.3px; white-space: nowrap;
+    display: flex; align-items: center; gap: 5px;
   }
-  .quick-float-timer:hover { transform: scale(1.05); box-shadow: 0 6px 24px rgba(184,125,86,0.5); }
+  .quick-float-timer:hover { filter: brightness(1.1); box-shadow: 0 4px 18px rgba(184,125,86,0.5); }
   .quick-float-free {
-    background: rgba(15,13,10,0.9); color: var(--copper-light);
-    border: 1px solid rgba(184,125,86,0.3); border-radius: 28px;
-    padding: 11px 18px; font-size: 0.82em; font-weight: 500;
+    background: transparent; color: var(--copper-light);
+    border: none; border-radius: 28px;
+    padding: 10px 16px; font-size: 0.78em; font-weight: 500;
     font-family: 'DM Sans', 'Noto Sans TC', sans-serif;
-    box-shadow: 0 4px 16px rgba(0,0,0,0.3);
-    cursor: pointer; transition: all 0.3s;
-    backdrop-filter: blur(12px); -webkit-backdrop-filter: blur(12px);
+    cursor: pointer; transition: all 0.25s;
+    white-space: nowrap;
     display: flex; align-items: center; gap: 4px;
   }
-  .quick-float-free:hover { border-color: var(--copper); transform: scale(1.05); }
+  .quick-float-free:hover { background: rgba(184,125,86,0.12); color: #fff; }
   @media (min-width: 768px) {
     .quick-float-group { bottom: 24px; }
   }
@@ -2227,6 +2230,69 @@
     transform: translateY(0);
   }
 
+
+  /* ===== Tools Mode Switcher ===== */
+  .tools-mode-toggle {
+    display: flex;
+    background: var(--surface-2);
+    border: 1px solid var(--border);
+    border-radius: 0;
+    overflow: hidden;
+    margin-bottom: 24px;
+    max-width: 400px;
+    margin-left: auto;
+    margin-right: auto;
+  }
+  .tools-mode-btn {
+    flex: 1;
+    padding: 12px 16px;
+    background: transparent;
+    border: none;
+    color: var(--text-secondary);
+    font-size: 0.85em;
+    font-weight: 500;
+    cursor: pointer;
+    transition: all 0.3s;
+    font-family: inherit;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 6px;
+  }
+  .tools-mode-btn.active {
+    background: var(--copper);
+    color: #fff;
+  }
+  .tools-mode-btn:not(.active):hover {
+    background: rgba(184,125,86,0.08);
+    color: var(--copper-light);
+  }
+  /* Guided-only elements hidden in free mode */
+  #toolsTab.mode-free .tools-guided-only { display: none !important; }
+  /* Free-only elements hidden in guided mode */
+  #toolsTab.mode-guided .tools-free-only { display: none !important; }
+  /* In guided mode, collapse advanced controls */
+  #toolsTab.mode-guided .advanced-controls { display: none; }
+  #toolsTab.mode-guided .advanced-controls.user-expanded { display: block; }
+  /* Show/hide toggle link */
+  .show-advanced-link {
+    display: inline-flex;
+    align-items: center;
+    gap: 4px;
+    color: var(--copper);
+    opacity: 0.6;
+    font-size: 0.78em;
+    cursor: pointer;
+    margin-top: 8px;
+    transition: opacity 0.2s;
+    border: none;
+    background: none;
+    font-family: inherit;
+    padding: 4px 0;
+  }
+  .show-advanced-link:hover { opacity: 1; }
+  #toolsTab.mode-free .show-advanced-link { display: none; }
+
   /* ===== Free Timer Section ===== */
   .free-timer-section {
     max-width: 780px;
@@ -2352,7 +2418,7 @@
         <div class="segment-card" data-nav="quick" id="segBeginner">
           <div class="segment-icon">☕</div>
           <div class="segment-title">我是新手</div>
-          <div class="segment-desc">從零開始學會手沖咖啡，30 秒快速上手</div>
+          <div class="segment-desc">從零開始學會手沖咖啡，30 秒快速沖煮</div>
           <div class="segment-arrow">→</div>
         </div>
         <div class="segment-card" data-nav="tools" id="segFlavor">
@@ -2397,7 +2463,7 @@
         </div>
       </div>
       <div style="text-align:center;margin-top:24px;">
-        <button class="hero-cta" data-nav="quick" style="font-size:0.95em;padding:14px 32px;">☕ 快速上手 →</button>
+        <button class="hero-cta" data-nav="quick" style="font-size:0.95em;padding:14px 32px;">☕ 快速沖煮 →</button>
       </div>
     </section>
       <div class="section-divider"></div>
@@ -2542,8 +2608,8 @@
 
       <div id="quickBrewResults"></div>
       <div class="quick-float-group" id="quickFloatGroup">
-        <button class="quick-float-timer" id="quickFloatTimer">▶ 開始計時</button>
-        <button class="quick-float-free" id="quickFloatFree">⏱ 自由計時</button>
+        <button class="quick-float-timer" id="quickFloatTimer">▶ 計時</button>
+        <button class="quick-float-free" id="quickFloatFree">⏱ 自由</button>
       </div>
 
       <button class="quick-goto-tools" id="quickGotoTools">想要更精細的控制？前往進階工具 →</button>
@@ -2552,11 +2618,16 @@
     <!-- ========== TAB 3: ADVANCED TOOLS ========== -->
     <div class="tab-content" id="toolsTab" role="tabpanel" aria-labelledby="tab-tools">
       <section class="section visible" id="toolSection">
-        <div class="section-label">進階實驗室</div>
-        <div class="section-title">進階沖煮實驗室</div>
-        <div class="section-sub">從豆子特性到風味預測 — 完整掌握每一杯的沖煮細節。</div>
+        <div class="section-label">沖煮工具</div>
+        <div class="section-title">沖煮實驗室</div>
+        <div class="section-sub">引導模式帶你一步步完成，自由模式讓你完全掌控參數。</div>
 
-      <div class="quick-flow-steps" id="advancedFlowSteps" style="margin-bottom:20px;">
+        <div class="tools-mode-toggle" id="toolsModeToggle">
+          <button class="tools-mode-btn active" data-mode="guided">🧭 引導模式</button>
+          <button class="tools-mode-btn" data-mode="free">🔧 自由模式</button>
+        </div>
+
+      <div class="quick-flow-steps tools-guided-only" id="advancedFlowSteps" style="margin-bottom:20px;">
         <div class="quick-flow-step active"><span class="quick-flow-num">1</span>設豆子</div>
         <div class="quick-flow-arrow">→</div>
         <div class="quick-flow-step"><span class="quick-flow-num">2</span>選濾杯</div>
@@ -2567,8 +2638,8 @@
       </div>
 
     <!-- 豆子條件選擇 -->
-    <div class="selector-card">
-      <button class="quick-start-btn" id="quickStartBtn" aria-label="快速開始">☕ 我是新手，幫我選</button>
+    <div class="selector-card tools-guided-only" id="beanSettingsCard">
+      <button class="quick-start-btn tools-guided-only" id="quickStartBtn" aria-label="快速開始">☕ 我是新手，幫我選</button>
       <h2 class="selector-label">豆子特性</h2>
       <div class="selector-row">
         <label for="roastLevel">烘焙度 <span style="color:#c06050;font-size:0.8em;">*</span></label>
@@ -2611,10 +2682,10 @@
       </div>
     </div>
 
-    <div class="tools-section-divider"></div>
+    <div class="tools-section-divider tools-guided-only"></div>
 
     <!-- 濾杯選擇 -->
-    <div class="selector-card" id="dripperCard">
+    <div class="selector-card tools-guided-only" id="dripperCard">
       <h2 class="selector-label">濾杯器材</h2>
       <div class="selector-row">
         <label for="dripperType">濾杯類型</label>
@@ -2632,12 +2703,12 @@
     </div>
 
     <!-- 知識提示 -->
-    <div id="knowledgeTipsContainer"></div>
+    <div id="knowledgeTipsContainer" class="tools-guided-only"></div>
 
-    <div class="tools-section-divider"></div>
+    <div class="tools-section-divider tools-guided-only"></div>
 
     <!-- 推薦結果 -->
-    <div id="recommendationPanel">
+    <div id="recommendationPanel" class="tools-guided-only">
       <div class="selector-card" style="border-color: rgba(192,138,92,0.25); background: rgba(184,125,86,0.04);">
         <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom: 10px;">
           <div style="color: var(--copper-light); font-weight: 600;">💡 智慧推薦</div>
@@ -2648,9 +2719,13 @@
     </div>
 
     <!-- 沖法選擇 -->
-    <div class="selector-card" style="border-color: rgba(192,138,92,0.15); background: transparent; padding: 16px 20px; margin-bottom: 16px;">
+    <div class="selector-card tools-guided-only" style="border-color: rgba(192,138,92,0.15); background: transparent; padding: 16px 20px; margin-bottom: 16px;">
       <h2 class="selector-label" style="margin-bottom: 8px;">選擇沖法</h2>
       <p style="font-size: 0.82em; color: var(--text-secondary); line-height: 1.6; font-weight: 300;">可以直接採用上方的推薦沖法，也可以根據自己的喜好點選下方卡片。<br><span style="color: var(--copper); opacity: 0.8;">點擊任一沖法卡片</span>，即可展開完整的配方面板與沖煮步驟。</p>
+    </div>
+    <div class="tools-free-only" style="margin-bottom:16px;">
+      <h2 class="selector-label" style="margin-top:0;">選擇沖法</h2>
+      <p style="font-size:0.82em;color:var(--text-secondary);line-height:1.6;font-weight:300;">直接選擇你想用的沖法，所有參數都可以自由調整。</p>
     </div>
     <div class="method-grid" id="methodGrid"></div>
 
@@ -2672,6 +2747,8 @@
         <button class="dose-btn" data-dose="40">40g<span class="dose-hint">三人份</span></button>
         <button class="dose-btn" data-dose="60">60g<span class="dose-hint">多人份</span></button>
       </div>
+      <div class="advanced-controls" id="advancedControls">
+      <button class="show-advanced-link" id="showAdvancedLink">⚙ 展開進階參數調整 ▼</button>
       <div class="selector-row">
         <label for="currentTemp">水溫 (°C)</label>
         <div style="display:flex;align-items:center;gap:8px;flex:1;">
@@ -2701,6 +2778,7 @@
         <button class="dose-btn ratio-preset" data-ratio="16">1:16</button>
         <button class="dose-btn ratio-preset" data-ratio="17">1:17</button>
       </div>
+      </div><!-- /advanced-controls -->
       <div class="grind-visual" id="grindVisual" style="display:none;"></div>
       <div class="calc-grid" id="calcGrid"></div>
       <div class="radar-wrap" id="radarWrap" style="display:none;">
@@ -3353,7 +3431,7 @@ function updateCompareResult(){const cr=document.getElementById('compareResult')
 /* Hero CTA & scroll */
 /* Flavor preference buttons */
 document.querySelectorAll('.flavor-pref-btn').forEach(btn=>{btn.addEventListener('click',function(){document.querySelectorAll('.flavor-pref-btn').forEach(b=>{b.style.background='var(--surface-2)';b.style.border='1px solid var(--border)';b.style.color='var(--text-secondary)';b.classList.remove('active')});this.style.background='var(--copper)';this.style.border='1px solid var(--copper)';this.style.color='#fff';this.classList.add('active');document.getElementById('flavorPref').value=this.dataset.value;document.getElementById('flavorValue').textContent=this.dataset.value;if(typeof updateRecommendation==='function')updateRecommendation()})});
-document.getElementById('heroCta').addEventListener('click',()=>{window.location.hash='#quick'});
+document.getElementById('heroCta').addEventListener('click',()=>{window.location.hash='#tools'});
 /* Section fade-in on scroll */
 const sectionObserver=new IntersectionObserver((entries)=>{entries.forEach(e=>{if(e.isIntersecting){e.target.classList.add('visible');sectionObserver.unobserve(e.target)}})},{threshold:0.1,rootMargin:'0px 0px -50px 0px'});
 document.querySelectorAll('.section').forEach(s=>sectionObserver.observe(s));
@@ -3408,16 +3486,23 @@ updateFlavorSim();
 
 // ===== HERO BEGINNER CTA =====
 document.getElementById('heroBeginnerCta')?.addEventListener('click', () => {
-  window.location.hash = '#quick';
+  window.location.hash = '#tools';
   setTimeout(() => {
+    // Ensure guided mode is active then trigger beginner flow
+    const toolsTab = document.getElementById('toolsTab');
+    if (toolsTab) { toolsTab.classList.remove('mode-free'); toolsTab.classList.add('mode-guided'); }
+    document.querySelectorAll('.tools-mode-btn').forEach(b => b.classList.toggle('active', b.dataset.mode === 'guided'));
     document.getElementById('quickStartBtn')?.click();
   }, 200);
 });
 
 // ===== SEGMENT CARD CLICKS =====
 document.getElementById('segBeginner')?.addEventListener('click', () => {
-  window.location.hash = '#quick';
+  window.location.hash = '#tools';
   setTimeout(() => {
+    const toolsTab = document.getElementById('toolsTab');
+    if (toolsTab) { toolsTab.classList.remove('mode-free'); toolsTab.classList.add('mode-guided'); }
+    document.querySelectorAll('.tools-mode-btn').forEach(b => b.classList.toggle('active', b.dataset.mode === 'guided'));
     document.getElementById('quickStartBtn')?.click();
   }, 200);
 });
@@ -3430,6 +3515,45 @@ document.getElementById('segPro')?.addEventListener('click', () => {
     document.getElementById('compareBtn')?.click();
   }, 200);
 });
+
+// ===== TOOLS MODE SWITCHER =====
+(function(){
+  const toolsTab = document.getElementById('toolsTab');
+  const toggleBtns = document.querySelectorAll('#toolsModeToggle .tools-mode-btn');
+  
+  // Default to guided mode
+  toolsTab.classList.add('mode-guided');
+  
+  toggleBtns.forEach(btn => {
+    btn.addEventListener('click', () => {
+      const mode = btn.dataset.mode;
+      toggleBtns.forEach(b => b.classList.remove('active'));
+      btn.classList.add('active');
+      toolsTab.classList.remove('mode-guided', 'mode-free');
+      toolsTab.classList.add('mode-' + mode);
+      
+      // In free mode, auto-expand advanced controls
+      const ac = document.getElementById('advancedControls');
+      if (mode === 'free' && ac) {
+        ac.classList.add('user-expanded');
+      }
+    });
+  });
+  
+  // Show/hide advanced controls link in guided mode
+  const advLink = document.getElementById('showAdvancedLink');
+  if (advLink) {
+    advLink.addEventListener('click', () => {
+      const ac = document.getElementById('advancedControls');
+      if (ac) {
+        ac.classList.toggle('user-expanded');
+        advLink.textContent = ac.classList.contains('user-expanded') 
+          ? '⚙ 收合進階參數 ▲' 
+          : '⚙ 展開進階參數調整 ▼';
+      }
+    });
+  }
+})();
 if('serviceWorker' in navigator){navigator.serviceWorker.register('sw.js').catch(()=>{})}
   
 
@@ -3690,14 +3814,14 @@ function renderMethodOverview() {
     document.getElementById('compareModal').classList.add('active');
   });
 
-  // Hero CTA -> quick brew
+  // Hero CTA -> advanced tools
   const heroCta = document.getElementById('heroCta');
   if (heroCta) {
     // Remove old listener by replacing element
     const newCta = heroCta.cloneNode(true);
     heroCta.parentNode.replaceChild(newCta, heroCta);
     newCta.addEventListener('click', () => {
-      window.location.hash = '#quick';
+      window.location.hash = '#tools';
     });
   }
 
