@@ -58,8 +58,8 @@
 
   /* Hero section */
   .hero {
-    text-align: center; padding: 100px 24px 60px; position: relative;
-    min-height: 60vh; display: flex; flex-direction: column;
+    text-align: center; padding: 80px 24px 40px; position: relative;
+    min-height: 50vh; display: flex; flex-direction: column;
     justify-content: center; align-items: center;
   }
   .scroll-hint {
@@ -194,10 +194,10 @@
 
   /* Section layout */
   .section {
-    padding: 48px 0; opacity: 0; transform: translateY(24px);
+    padding: 36px 0; opacity: 0; transform: translateY(24px);
     transition: opacity 0.7s ease, transform 0.7s ease;
   }
-  .hero + .section, .hero + * + .section { padding-top: 24px; }
+  .hero + .section, .hero + * + .section { padding-top: 16px; }
   .section.visible { opacity: 1; transform: translateY(0); }
   @keyframes sectionFadeIn { from { opacity: 0; transform: translateY(24px); } to { opacity: 1; transform: translateY(0); } }
   .section-label {
@@ -346,12 +346,17 @@
   /* Section divider */
   .section-divider {
     width: 32px; height: 1px; background: rgba(192,138,92,0.2);
-    margin: 0 auto 56px; position: relative;
+    margin: 0 auto 40px; position: relative;
   }
   .section-divider::after {
     content: ''; position: absolute; left: 50%; top: -2px;
     transform: translateX(-50%); width: 4px; height: 4px; border-radius: 50%;
     background: var(--copper); opacity: 0.4;
+  }
+  /* Tools page section divider */
+  .tools-section-divider {
+    height: 1px; margin: 24px 0;
+    background: linear-gradient(90deg, transparent 0%, rgba(192,138,92,0.18) 30%, rgba(192,138,92,0.18) 70%, transparent 100%);
   }
 
   /* Back to top */
@@ -375,7 +380,7 @@
     letter-spacing: 0.5px;
   }
   .page-sub { color: var(--text-secondary); text-align: center; margin-bottom: 30px; font-weight: 300; font-size: 0.88em; letter-spacing: 0.3px; }
-  .page-container { max-width: 680px; width: 100%; margin: 0 auto; }
+  .page-container { max-width: 780px; width: 100%; margin: 0 auto; }
 
   
   .mode-toggle:hover { border-color: var(--copper); }
@@ -396,6 +401,7 @@
     background: var(--surface-2); border: 1px solid var(--border);
     border-radius: 0; padding: 20px; cursor: pointer;
     transition: all 0.4s cubic-bezier(0.25,0.46,0.45,0.94); position: relative; overflow: hidden;
+    border-top: 2px solid var(--card-accent, var(--copper));
   }
   .method-card:hover {
     background: var(--surface-3); border-color: rgba(192,138,92,0.15); transform: translateY(-2px);
@@ -413,7 +419,8 @@
   .method-ratio { font-size: 0.8em; color: var(--text-secondary); margin-bottom: 4px; font-weight: 300; }
   .method-desc { font-size: 0.78em; color: var(--text-secondary); line-height: 1.6; font-weight: 300; }
 
-  .selector-label { color: var(--text-secondary); font-size: 0.75em; margin-top: 28px; margin-bottom: 12px; font-weight: 400; letter-spacing: 2px; text-transform: uppercase; }
+  .selector-label { color: var(--copper-light); font-size: 0.78em; margin-top: 28px; margin-bottom: 12px; font-weight: 500; letter-spacing: 2px; text-transform: uppercase; position: relative; padding-left: 12px; }
+  .selector-label::before { content: ''; position: absolute; left: 0; top: 50%; transform: translateY(-50%); width: 3px; height: 14px; background: var(--copper); border-radius: 1px; }
   h2.selector-label, h2.calc-title { font-size: 0.78em; }
   .step-item.active-step { background: rgba(200,149,108,0.08); border-left-color: var(--copper); border-left-width: 3px; }
   .selector-card {
@@ -848,16 +855,17 @@
   }
 
   @media (max-width: 600px) {
-    .hero { padding: 60px 20px 40px; min-height: 60vh; }
-    .hero h1 { font-size: 2.4em; }
-    .hero-en { font-size: 0.85em; }
-    .hero-tagline { font-size: 0.88em; }
-    .story-steps { grid-template-columns: 1fr; gap: 12px; max-width: 400px; margin-left: auto; margin-right: auto; }
+    .hero { padding: 48px 16px 28px; min-height: 45vh; }
+    .hero h1 { font-size: 2.2em; }
+    .hero-en { font-size: 0.8em; letter-spacing: 2px; }
+    .hero-tagline { font-size: 0.85em; margin-bottom: 28px; }
+    .story-steps { grid-template-columns: 1fr; gap: 10px; max-width: 400px; margin-left: auto; margin-right: auto; }
     .about-grid { grid-template-columns: 1fr; }
     .exp-cards { grid-template-columns: 1fr; }
-    .section { padding: 36px 0; }
-    .section-title { font-size: 1.4em; }
-    .page-h1 { font-size: 1.8em; }
+    .section { padding: 24px 0; }
+    .section-title { font-size: 1.3em; }
+    .section-sub { margin-bottom: 24px; }
+    .page-h1 { font-size: 1.6em; margin: 16px 0 4px; }
     .timer-time { font-size: 2em; }
     .timer-ring-wrap { width: 130px; height: 130px; }
     .calc-grid .calc-item { flex: 1 1 40%; min-width: 80px; }
@@ -868,13 +876,13 @@
     .dose-btn { padding: 7px 2px; font-size: 0.8em; }
     .radar-svg { max-width: 200px; }
     .method-icon { width: 32px; height: 32px; }
-    .tab-nav { height: 64px; }
-    .tab-btn { font-size: 0.58em; gap: 4px; }
-    .tab-btn-icon { font-size: 1.3em; }
+    .tab-nav { height: 56px; }
+    .tab-btn { font-size: 0.52em; gap: 2px; padding: 6px 4px; }
+    .tab-btn-icon { font-size: 1.15em; }
   }
   @media (max-width: 360px) {
-    .tab-btn { font-size: 0; padding: 4px; }
-    .tab-btn-icon { font-size: 1.5em; }
+    .tab-btn { font-size: 0.48em; padding: 4px 2px; letter-spacing: 0.5px; }
+    .tab-btn-icon { font-size: 1.2em; }
   }
 
   /* ===== TAB NAVIGATION ===== */
@@ -973,6 +981,7 @@
     background: var(--surface); border: 1px solid var(--border);
     border-radius: 0; padding: 16px 8px; cursor: pointer;
     transition: all 0.35s cubic-bezier(0.25,0.46,0.45,0.94); text-align: center;
+    position: relative; overflow: hidden;
   }
   .quick-method-card:hover {
     background: var(--surface-2); border-color: rgba(192,138,92,0.15);
@@ -983,6 +992,11 @@
     box-shadow: 0 0 0 1px var(--copper);
   }
   .quick-method-card .method-icon { width: 36px; height: 36px; margin: 0 auto 6px; display: block; }
+  .quick-method-card::before {
+    content: ''; position: absolute; top: 0; left: 0; right: 0; height: 2px;
+    background: var(--card-accent, var(--copper)); opacity: 0.5; transition: opacity 0.3s;
+  }
+  .quick-method-card:hover::before, .quick-method-card.active::before { opacity: 1; }
   .quick-method-name { font-size: 0.82em; font-weight: 500; color: var(--copper-light); }
 
   .quick-dose-section {
@@ -1059,25 +1073,28 @@
   .method-overview-card {
     background: var(--surface-2); border: 1px solid var(--border);
     border-radius: 0; padding: 20px; transition: all 0.35s cubic-bezier(0.25,0.46,0.45,0.94); cursor: pointer;
+    position: relative; overflow: hidden; border-left: 3px solid var(--card-accent, var(--copper));
   }
-  .method-overview-card:hover { background: var(--surface-3); transform: translateY(-2px); border-color: rgba(192,138,92,0.15); }
+  .method-overview-card:hover { background: var(--surface-3); transform: translateY(-2px); border-color: rgba(192,138,92,0.15); border-left-color: var(--card-accent, var(--copper)); }
   .method-overview-name { font-weight: 500; color: var(--copper-light); font-size: 1em; margin-bottom: 8px; letter-spacing: 0.3px; }
   .method-overview-info { font-size: 0.82em; color: var(--text-secondary); line-height: 1.6; }
   .method-overview-info span { display: block; margin-bottom: 2px; }
 
   /* Try it button for method overview */
   .method-overview-card .quick-goto-tools {
-    border: 1px solid var(--border-hover); background: transparent;
-    color: var(--copper-light); border-radius: 3px; cursor: pointer;
+    border: 1px solid var(--card-accent, var(--copper)); background: transparent;
+    color: var(--card-accent, var(--copper-light)); border-radius: 3px; cursor: pointer;
     transition: all 0.3s; font-family: inherit; font-weight: 600;
+    padding: 6px 14px; font-size: 0.82em; margin-top: 10px; display: inline-block;
   }
   .method-overview-card .quick-goto-tools:hover {
     background: rgba(184,125,86,0.1); border-color: var(--copper);
+    transform: translateX(2px);
   }
 
   /* Adjust existing elements for SPA */
-  .back-to-top { bottom: calc(72px + env(safe-area-inset-bottom, 0) + 16px); }
-  .hero { min-height: 65vh; }
+  .back-to-top { bottom: calc(64px + env(safe-area-inset-bottom, 0) + 16px); }
+  .hero { min-height: 50vh; }
 
   @media (min-width: 768px) {
     .tab-nav {
@@ -1840,6 +1857,33 @@
     .hero-scroll-hint, .scroll-hint { display: none; }
     .steam, .water-stream, .water-stream-2 { display: none; }
   }
+
+  /* Footer */
+  .site-footer {
+    text-align: center; padding: 32px 20px 100px; margin-top: 20px;
+    border-top: 1px solid var(--border); position: relative;
+  }
+  .site-footer::before {
+    content: ''; position: absolute; top: -1px; left: 50%; transform: translateX(-50%);
+    width: 40px; height: 1px; background: var(--copper); opacity: 0.4;
+  }
+  .site-footer-brand {
+    font-family: 'Cormorant Garamond', 'Playfair Display', serif;
+    font-size: 1em; color: var(--copper-light); font-weight: 300;
+    letter-spacing: 1px; margin-bottom: 8px;
+  }
+  .site-footer-sub {
+    font-size: 0.72em; color: var(--text-secondary); opacity: 0.5;
+    letter-spacing: 0.5px;
+  }
+  .site-footer-sub a {
+    color: var(--copper); text-decoration: none; opacity: 0.7;
+    transition: opacity 0.2s;
+  }
+  .site-footer-sub a:hover { opacity: 1; }
+  @media (min-width: 768px) {
+    .site-footer { padding-bottom: 40px; }
+  }
 </style>
 </head>
 <body>
@@ -2113,6 +2157,8 @@
       </div>
     </div>
 
+    <div class="tools-section-divider"></div>
+
     <!-- 濾杯選擇 -->
     <div class="selector-card" id="dripperCard">
       <h2 class="selector-label">濾杯器材</h2>
@@ -2133,6 +2179,8 @@
 
     <!-- 知識提示 -->
     <div id="knowledgeTipsContainer"></div>
+
+    <div class="tools-section-divider"></div>
 
     <!-- 推薦結果 -->
     <div id="recommendationPanel">
@@ -2432,6 +2480,15 @@
     </div>
   </div>
 
+  <!-- ===== FOOTER ===== -->
+  <footer class="site-footer page-container">
+    <div class="site-footer-brand">PourOver Lab</div>
+    <div class="site-footer-sub">
+      手沖咖啡感官實驗室 — Made with ☕ &amp; passion<br>
+      <a href="#home" onclick="window.scrollTo({top:0,behavior:'smooth'})">回到頂部 ↑</a>
+    </div>
+  </footer>
+
   <script>
 
 // DOM element cache for frequently accessed elements
@@ -2663,7 +2720,7 @@ function drawCompareRadar(methodKey,profile,svgId,color){const svg=document.getE
 function saveUserPrefs(){try{const prefs={quickDose:document.getElementById('quickDoseInput')?.value||'20',quickMethod:currentQuickMethod||'onePour',roast:document.getElementById('roastLevel')?.value||'medium',processing:document.getElementById('processing')?.value||'washed',flavor:document.getElementById('flavorPref')?.value||'50',dose:document.getElementById('doseInput')?.value||'20',dripper:document.getElementById('dripperType')?.value||'v60'};localStorage.setItem('pouroverPrefs',JSON.stringify(prefs))}catch(e){}}
 function loadUserPrefs(){try{const raw=localStorage.getItem('pouroverPrefs');if(!raw)return;const p=JSON.parse(raw);const qd=document.getElementById('quickDoseInput');if(qd&&p.quickDose)qd.value=p.quickDose;if(p.quickMethod)currentQuickMethod=p.quickMethod;const rl=document.getElementById('roastLevel');if(rl&&p.roast)rl.value=p.roast;const pr=document.getElementById('processing');if(pr&&p.processing)pr.value=p.processing;const fp=document.getElementById('flavorPref');if(fp&&p.flavor){fp.value=p.flavor;const fv=document.getElementById('flavorValue');if(fv)fv.textContent=p.flavor}const di=document.getElementById('doseInput');if(di&&p.dose)di.value=p.dose;const dt=document.getElementById('dripperType');if(dt&&p.dripper)dt.value=p.dripper}catch(e){}}
 function init(){loadUserPrefs();renderMethodCards();attachEventListeners();renderDripperInfo();renderDripperKnowledge();updateRecommendation();updateKnowledgeTips();updateGreeting();renderFAQ();renderBrewingTips();renderJournalHistory();const jn=document.getElementById('journalStars');jn.innerHTML='12345'.split('').map((n,i)=>`<button class="journal-star-btn" data-rating="${parseInt(n)}" aria-label="評分${n}星">★</button>`).join('');document.querySelectorAll('.journal-star-btn').forEach(b=>{b.addEventListener('click',(e)=>{const r=parseInt(e.target.dataset.rating);document.querySelectorAll('.journal-star-btn').forEach((sb,idx)=>sb.classList.toggle('active',idx<r));document.currentRating=r})});document.getElementById('journalSaveBtn').addEventListener('click',()=>{if(!selectedMethod){alert('請先開始沖煮');return}const entry={date:new Date().toLocaleDateString('zh-TW'),method:BREW_METHODS[selectedMethod].title.split(' · ')[0],dose:parseFloat(document.getElementById('doseInput').value),ratio:getEffectiveRatio(BREW_METHODS[selectedMethod]),rating:document.currentRating||0,note:document.getElementById('journalNote').value};const hist=JSON.parse(localStorage.getItem('brewJournal')||'[]');hist.push(entry);localStorage.setItem('brewJournal',JSON.stringify(hist));alert('紀錄已儲存！');document.getElementById('journalNote').value='';document.querySelectorAll('.journal-star-btn').forEach(b=>b.classList.remove('active'));document.currentRating=0;renderJournalHistory()})}
-function renderMethodCards(){const g=document.getElementById('methodGrid');g.innerHTML='';const diffTags={sweet:{label:'甜感派',color:'#E8B86D'},kasuya:{label:'競賽級',color:'#C07830'},hoffmann:{label:'新手推薦',color:'#6BBF6B'},rao:{label:'進階',color:'#B87D56'},onePour:{label:'新手推薦',color:'#6BBF6B'},osmotic:{label:'品鑑派',color:'#A0C4B8'},icedBrew:{label:'夏日限定',color:'#6BB8D4'}};const month=new Date().getMonth()+1;Object.entries(BREW_METHODS).forEach(([k,m])=>{const c=document.createElement('div');c.className='method-card';const tag=diffTags[k]||{label:'',color:'var(--copper)'};c.innerHTML=`${METHOD_ICONS[k]||''}<div class="method-badge">${m.badge}</div><div class="method-tag" style="background:${tag.color}20;color:${tag.color};border:1px solid ${tag.color}40;padding:2px 8px;border-radius:10px;font-size:0.65em;font-weight:600;display:inline-block;margin-bottom:4px;">${tag.label}</div><div class="method-name">${m.title.split(' · ')[0]}</div><div class="method-ratio">${m.ratio}:1 · ${m.time}</div><div class="method-desc">${m.desc}</div>`;c.addEventListener('click',()=>selectMethod(k,m));g.appendChild(c)})}
+function renderMethodCards(){const g=document.getElementById('methodGrid');g.innerHTML='';const diffTags={sweet:{label:'甜感派',color:'#E8B86D'},kasuya:{label:'競賽級',color:'#C07830'},hoffmann:{label:'新手推薦',color:'#6BBF6B'},rao:{label:'進階',color:'#B87D56'},onePour:{label:'新手推薦',color:'#6BBF6B'},osmotic:{label:'品鑑派',color:'#A0C4B8'},icedBrew:{label:'夏日限定',color:'#6BB8D4'}};const month=new Date().getMonth()+1;Object.entries(BREW_METHODS).forEach(([k,m])=>{const c=document.createElement('div');c.className='method-card';const tag=diffTags[k]||{label:'',color:'var(--copper)'};c.style.setProperty('--card-accent',tag.color);c.innerHTML=`${METHOD_ICONS[k]||''}<div class="method-badge">${m.badge}</div><div class="method-tag" style="background:${tag.color}20;color:${tag.color};border:1px solid ${tag.color}40;padding:2px 8px;border-radius:10px;font-size:0.65em;font-weight:600;display:inline-block;margin-bottom:4px;">${tag.label}</div><div class="method-name">${m.title.split(' · ')[0]}</div><div class="method-ratio">${m.ratio}:1 · ${m.time}</div><div class="method-desc">${m.desc}</div>`;c.addEventListener('click',()=>selectMethod(k,m));g.appendChild(c)})}
 function updateAdvancedFlow(step){const fs=document.getElementById('advancedFlowSteps');if(!fs)return;const steps=fs.querySelectorAll('.quick-flow-step');steps.forEach((s,i)=>{s.classList.toggle('active',i<=step)})}
 function selectMethod(k,m){if(!m)m=BREW_METHODS[k];selectedMethod=k;customRatio=null;updateAdvancedFlow(2);if(ratioLocked){const sl=document.getElementById('ratioSlider');const mi=document.getElementById('manualRatioInput');if(sl){sl.style.opacity='0.4';sl.style.pointerEvents='none'}if(mi){mi.style.opacity='0.4';mi.disabled=true}}const tempVal=m.temp.replace('°C','').replace('℃','');if(tempVal)document.getElementById('currentTemp').value=tempVal;updateTempSuggestion();document.querySelectorAll('.method-card').forEach(c=>c.classList.remove('active'));if(event&&event.target){const card=event.target.closest('.method-card');if(card)card.classList.add('active')}document.getElementById('calcPanel').style.display='block';document.getElementById('calcPanel').classList.remove('recipe-animate');void document.getElementById('calcPanel').offsetWidth;document.getElementById('calcPanel').classList.add('recipe-animate');document.getElementById('stepsContainer').style.display='block';document.getElementById('stepsContainer').classList.remove('recipe-animate');void document.getElementById('stepsContainer').offsetWidth;document.getElementById('stepsContainer').classList.add('recipe-animate');const rs=document.getElementById('ratioSlider');rs.value=m.ratio;document.getElementById('ratioValue').textContent='1:'+m.ratio;showGuide(k,m);updateCalcPanel(m);updateSteps(m);renderRadar(k);renderGrindVisual(k);updateDripperKnowledgeTip();document.getElementById('radarWrap').style.display='block';setTimeout(()=>{document.getElementById('calcPanel').scrollIntoView({behavior:'smooth',block:'start'})},100)}
 function getEffectiveRatio(m){return customRatio!==null?customRatio:m.ratio}
@@ -2843,13 +2900,15 @@ function renderQuickMethodGrid() {
   const names = { sweet:'甜感法', kasuya:'4:6法', hoffmann:'Hoffmann', rao:'Rao法', onePour:'一刀流', osmotic:'浸透式', icedBrew:'冰沖' };
   const quickDescs = { sweet:'搖晃濾杯，突出甜感', kasuya:'精準控制甜酸比', hoffmann:'入門首選，明亮風味', rao:'螺旋注水，醇厚層次', onePour:'極簡操作，穩定出品', osmotic:'中心慢注，纖細透亮', icedBrew:'急速冰鎮，果香爆發' };
   const quickTags = { hoffmann:'新手', onePour:'新手', sweet:'甜感', kasuya:'競賽', rao:'進階', osmotic:'品鑑', icedBrew:'夏日' };
+  const accentColors = { sweet:'#E8B86D', kasuya:'#C07830', hoffmann:'#6BBF6B', rao:'#B87D56', onePour:'#6BBF6B', osmotic:'#A0C4B8', icedBrew:'#6BB8D4' };
   let html = '';
   const methodOrder = ['hoffmann','onePour','rao','kasuya','sweet','osmotic','icedBrew'];
   for (const k of methodOrder) { const m = BREW_METHODS[k];
     const icon = METHOD_ICONS[k] || '';
     const badge = '';
     const tag = quickTags[k] || '';
-    html += '<div class="quick-method-card' + (k === currentQuickMethod ? ' active' : '') + '" data-method="' + k + '">' +
+    const accent = accentColors[k] || 'var(--copper)';
+    html += '<div class="quick-method-card' + (k === currentQuickMethod ? ' active' : '') + '" data-method="' + k + '" style="--card-accent:' + accent + '">' +
       badge +
       '<div class="method-icon">' + icon + '</div>' +
       (tag ? '<div style="font-size:0.6em;color:var(--copper);opacity:0.8;margin-bottom:1px;">' + tag + '</div>' : '') +
@@ -2907,11 +2966,13 @@ function updateQuickBrewResults() {
 function renderMethodOverview() {
   const el = document.getElementById('knowledgeMethodOverview');
   if (!el) return;
+  const accentColors = { sweet:'#E8B86D', kasuya:'#C07830', hoffmann:'#6BBF6B', rao:'#B87D56', onePour:'#6BBF6B', osmotic:'#A0C4B8', icedBrew:'#6BB8D4' };
   let html = '';
   for (const [k, m] of Object.entries(BREW_METHODS)) {
     const grind = GRIND_LEVELS ? GRIND_LEVELS[k] : m.grind;
     const flavor = FLAVOR_DESCRIPTIONS ? FLAVOR_DESCRIPTIONS[k] : '';
-    html += '<div class="method-overview-card" style="cursor:pointer;" data-try-method="' + k + '">' +
+    const accent = accentColors[k] || 'var(--copper)';
+    html += '<div class="method-overview-card" style="cursor:pointer;--card-accent:' + accent + ';" data-try-method="' + k + '">' +
       '<div class="method-overview-name">' + m.title + '</div>' +
       '<div class="method-overview-info">' +
       '<span>粉水比 1:' + m.ratio + ' ｜ ' + m.temp + ' ｜ ' + m.time + '</span>' +
