@@ -1579,6 +1579,108 @@
     .qt-method-name { padding-right: 40px; }
   }
 
+  /* Dripper info panel */
+  .dripper-info-panel {
+    margin-top: 14px;
+    padding: 16px;
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 0;
+    display: none;
+    animation: tabFadeIn 0.35s ease-out;
+  }
+  .dripper-info-panel.show { display: block; }
+  .dripper-info-title {
+    font-size: 0.88em;
+    font-weight: 500;
+    color: var(--copper-light);
+    margin-bottom: 10px;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+  }
+  .dripper-info-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 8px;
+    margin-bottom: 12px;
+  }
+  .dripper-info-item {
+    font-size: 0.8em;
+    color: var(--text-secondary);
+    line-height: 1.5;
+    font-weight: 300;
+  }
+  .dripper-info-item strong {
+    color: var(--text-primary);
+    font-weight: 500;
+    display: block;
+    font-size: 0.85em;
+    letter-spacing: 0.5px;
+    margin-bottom: 2px;
+  }
+  .dripper-info-tip {
+    font-size: 0.78em;
+    color: var(--copper);
+    padding-top: 10px;
+    border-top: 1px solid var(--border);
+    line-height: 1.6;
+    font-weight: 400;
+  }
+  .dripper-rib-visual {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    margin: 10px 0;
+    padding: 10px;
+    background: var(--surface-2);
+    border: 1px solid var(--border);
+    border-radius: 0;
+  }
+  .dripper-rib-icon {
+    font-size: 1.8em;
+    flex-shrink: 0;
+  }
+  .dripper-rib-text {
+    font-size: 0.78em;
+    color: var(--text-secondary);
+    line-height: 1.6;
+    font-weight: 300;
+  }
+  .dripper-rib-text strong {
+    color: var(--copper-light);
+    font-weight: 500;
+  }
+  .dripper-flow-bar {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    margin-top: 8px;
+  }
+  .dripper-flow-label {
+    font-size: 0.7em;
+    color: var(--text-secondary);
+    min-width: 36px;
+    letter-spacing: 0.5px;
+  }
+  .dripper-flow-track {
+    flex: 1;
+    height: 4px;
+    background: var(--surface-3);
+    border-radius: 2px;
+    overflow: hidden;
+    position: relative;
+  }
+  .dripper-flow-fill {
+    height: 100%;
+    background: var(--copper);
+    border-radius: 2px;
+    transition: width 0.5s cubic-bezier(0.25,0.46,0.45,0.94);
+  }
+  @media (max-width: 600px) {
+    .dripper-info-grid { grid-template-columns: 1fr; }
+  }
+
   /* Reduced motion for accessibility */
   @media (prefers-reduced-motion: reduce) {
     *, *::before, *::after {
@@ -1855,6 +1957,24 @@
       </div>
     </div>
 
+    <!-- 濾杯選擇 -->
+    <div class="selector-card" id="dripperCard">
+      <h2 class="selector-label">濾杯器材</h2>
+      <div class="selector-row">
+        <label for="dripperType">濾杯類型</label>
+        <select id="dripperType">
+          <option value="v60" selected>Hario V60</option>
+          <option value="kalita">Kalita Wave</option>
+          <option value="origami">Origami</option>
+          <option value="melitta">Melitta 扇形</option>
+          <option value="kono">KONO 名門</option>
+          <option value="april">April Brewer</option>
+          <option value="other">其他</option>
+        </select>
+      </div>
+      <div id="dripperInfo" class="dripper-info-panel"></div>
+    </div>
+
     <!-- 知識提示 -->
     <div id="knowledgeTipsContainer"></div>
 
@@ -1989,6 +2109,7 @@
 
       <nav class="knowledge-toc">
         <a href="#" data-scroll-to="knowledgeMethodOverview">沖法總覽</a>
+        <a href="#" data-scroll-to="dripperKnowledgeSection">濾杯圖鑑</a>
         <a href="#" data-scroll-to="faqSection">FAQ</a>
         <a href="#" data-scroll-to="guideContainer">沖法指南</a>
         <a href="#" data-scroll-to="equipmentSection">器材建議</a>
@@ -1997,6 +2118,16 @@
 
       <h3 class="selector-label" style="margin-top:10px;">六大沖法總覽</h3>
       <div class="method-overview-grid" id="knowledgeMethodOverview"></div>
+
+      <div class="section-divider" style="margin-top:30px;"></div>
+
+      <!-- Dripper Knowledge Section -->
+      <section class="section visible" id="dripperKnowledgeSection">
+        <div class="section-label">濾杯圖鑑</div>
+        <div class="section-title">濾杯類型與肋骨結構</div>
+        <div class="section-sub">濾杯的形狀、肋骨設計和出水孔直接決定流速與萃取均勻度 — 理解這些差異，才能選擇最適合你的器材。</div>
+        <div id="dripperKnowledgeGrid" class="method-overview-grid"></div>
+      </section>
 
       <div class="section-divider" style="margin-top:30px;"></div>
 
@@ -2118,9 +2249,189 @@
 // DOM element cache for frequently accessed elements
 const $=((cache={})=>id=>cache[id]||(cache[id]=document.getElementById(id)))();
 
+// ===== DRIPPER DATA =====
+const DRIPPER_DATA={
+  v60:{
+    name:'Hario V60',
+    shape:'錐形（60°角）',
+    ribType:'螺旋肋骨',
+    ribDesc:'螺旋狀肋骨從底部延伸至杯頂，與濾紙之間形成空氣通道，排水極快。',
+    flowSpeed:85,
+    flowLabel:'快速',
+    hole:'單孔（大）',
+    material:'陶瓷/玻璃/塑膠/金屬',
+    character:'流速快、容錯率較低。注水手法對風味影響極大 — 水流越細越慢、萃取越高；越粗越快、萃取越低。',
+    tip:'V60 是最考驗注水穩定性的濾杯。初學者建議從一刀流或 Hoffmann 法開始，等手感穩定後再嘗試分段注水。',
+    icon:'🔻',
+    suitableMethods:['hoffmann','rao','kasuya','onePour','sweet','icedBrew']
+  },
+  kalita:{
+    name:'Kalita Wave',
+    shape:'平底（蛋糕型）',
+    ribType:'波浪濾紙肋骨',
+    ribDesc:'平底設計搭配波浪形濾紙，濾紙本身的褶皺充當肋骨功能，讓咖啡粉與濾杯壁之間保持空隙。',
+    flowSpeed:50,
+    flowLabel:'中等',
+    hole:'三孔（小）',
+    material:'不鏽鋼/陶瓷/玻璃',
+    character:'三小孔設計限制流速，水在粉層中停留較久，萃取更均勻穩定。對注水手法的容錯率高，不同人沖出的差異較小。',
+    tip:'Kalita 是追求穩定出品的首選。適合咖啡店日常出杯，也適合喜歡醇厚口感的玩家。注水不需太講究手法，均勻注入即可。',
+    icon:'🫓',
+    suitableMethods:['onePour','hoffmann','sweet']
+  },
+  origami:{
+    name:'Origami',
+    shape:'錐形（可用錐形或平底濾紙）',
+    ribType:'放射狀直肋骨（20條）',
+    ribDesc:'20條等距放射狀肋骨，溝槽深度適中。使用錐形濾紙時接近 V60 流速；使用 Kalita 波浪濾紙時接近平底濾杯的穩定性。',
+    flowSpeed:70,
+    flowLabel:'中快',
+    hole:'單孔（大）',
+    material:'陶瓷/樹脂',
+    character:'最具彈性的濾杯 — 搭配不同濾紙可模擬不同濾杯特性。錐形濾紙 = 偏 V60 風格（明亮快速），波浪濾紙 = 偏 Kalita 風格（穩定醇厚）。',
+    tip:'想一杯濾杯玩出兩種風格，Origami 是最好的選擇。比賽中也常見，搭配 Kasuya 4:6 法加波浪濾紙是經典組合。',
+    icon:'🌸',
+    suitableMethods:['kasuya','hoffmann','rao','onePour','sweet','icedBrew']
+  },
+  melitta:{
+    name:'Melitta 扇形',
+    shape:'扇形（梯形）',
+    ribType:'直線肋骨（短）',
+    ribDesc:'肋骨僅覆蓋杯壁下半部，上半部濾紙直接貼合杯壁，大幅限制空氣流通，降低整體流速。',
+    flowSpeed:35,
+    flowLabel:'慢速',
+    hole:'單孔（小）',
+    material:'陶瓷/塑膠',
+    character:'流速最慢的主流濾杯，浸泡時間長，萃取充分。風味偏醇厚飽滿，容錯率極高，幾乎不需要特殊注水技巧。',
+    tip:'Melitta 是手沖濾杯的始祖。追求簡單穩定、不想練習注水手法的人非常適合。深焙豆需注意控制浸泡時間避免過萃。',
+    icon:'🔲',
+    suitableMethods:['onePour','hoffmann']
+  },
+  kono:{
+    name:'KONO 名門',
+    shape:'錐形',
+    ribType:'底部短肋骨',
+    ribDesc:'肋骨僅位於濾杯下半段（約1/3高度），上段完全光滑。濾紙在上段緊貼杯壁形成密封，引導水流必須通過粉層底部的孔洞流出。',
+    flowSpeed:45,
+    flowLabel:'中慢',
+    hole:'單孔（大）',
+    material:'樹脂/玻璃',
+    character:'獨特的「點滴法」聖杯 — 上段無肋骨讓濾紙吸附杯壁，延長水與粉的接觸時間，強調醇厚口感和甜度。比 V60 更溫和、更甜。',
+    tip:'KONO 適合偏好日式醇厚風味的玩家。經典用法是「點滴注水」— 悶蒸後以極細水流緩慢注入，讓每滴水充分萃取。',
+    icon:'🏔',
+    suitableMethods:['onePour','hoffmann']
+  },
+  april:{
+    name:'April Brewer',
+    shape:'錐形（淺角度）',
+    ribType:'極短底部肋骨',
+    ribDesc:'僅在濾杯最底部有極短的肋骨，大部分面積為光滑壁面。搭配專用 April 濾紙使用，流速非常快。',
+    flowSpeed:90,
+    flowLabel:'極快',
+    hole:'單孔（大）',
+    material:'塑膠/玻璃',
+    character:'以超快流速著稱，強調高萃取率下的乾淨度。需要極細研磨來平衡快速流過的水，風味走向明亮、乾淨、茶感。',
+    tip:'April Brewer 適合追求極致乾淨風味的進階玩家。研磨度需比 V60 更細，建議從 Hoffmann 法入手，體會其獨特的透明感。',
+    icon:'💎',
+    suitableMethods:['hoffmann','rao','onePour']
+  },
+  other:{
+    name:'其他濾杯',
+    shape:'—',
+    ribType:'—',
+    ribDesc:'不同濾杯有不同特性。一般原則：肋骨越多越深 = 流速越快；底部孔洞越多越大 = 流速越快。',
+    flowSpeed:60,
+    flowLabel:'視款式而定',
+    hole:'—',
+    material:'—',
+    character:'建議先觀察濾杯的肋骨深度和出水孔大小，判斷流速快慢，再選擇合適的研磨度和注水手法。',
+    tip:'不確定濾杯特性時，先用中研磨 + 一刀流測試，觀察總沖煮時間：2分鐘以內 = 流速偏快（磨細），4分鐘以上 = 流速偏慢（磨粗）。',
+    icon:'☕',
+    suitableMethods:['onePour','hoffmann']
+  }
+};
+
+function renderDripperInfo(){
+  const type=document.getElementById('dripperType').value;
+  const d=DRIPPER_DATA[type];
+  if(!d){document.getElementById('dripperInfo').classList.remove('show');return}
+  const panel=document.getElementById('dripperInfo');
+  panel.innerHTML=`
+    <div class="dripper-info-title">${d.icon} ${d.name}</div>
+    <div class="dripper-info-grid">
+      <div class="dripper-info-item"><strong>杯型</strong>${d.shape}</div>
+      <div class="dripper-info-item"><strong>出水孔</strong>${d.hole}</div>
+      <div class="dripper-info-item"><strong>材質</strong>${d.material}</div>
+      <div class="dripper-info-item"><strong>流速</strong>${d.flowLabel}</div>
+    </div>
+    <div class="dripper-rib-visual">
+      <div class="dripper-rib-icon">${d.icon}</div>
+      <div class="dripper-rib-text"><strong>${d.ribType}</strong><br>${d.ribDesc}</div>
+    </div>
+    <div class="dripper-flow-bar">
+      <div class="dripper-flow-label">慢</div>
+      <div class="dripper-flow-track"><div class="dripper-flow-fill" style="width:${d.flowSpeed}%;"></div></div>
+      <div class="dripper-flow-label" style="text-align:right;">快</div>
+    </div>
+    <div style="font-size:0.8em;color:var(--text-secondary);margin-top:12px;line-height:1.7;font-weight:300;">${d.character}</div>
+    <div class="dripper-info-tip">💡 ${d.tip}</div>
+  `;
+  panel.classList.add('show');
+  updateDripperKnowledgeTip();
+}
+
+function updateDripperKnowledgeTip(){
+  const type=document.getElementById('dripperType').value;
+  const d=DRIPPER_DATA[type];
+  if(!d||type==='other')return;
+  // Auto-suggest grind adjustment based on dripper flow speed
+  const grindEl=document.getElementById('grindVisual');
+  if(grindEl&&grindEl.style.display!=='none'&&selectedMethod){
+    const baseGrind=BREW_METHODS[selectedMethod].grind;
+    let tip='';
+    if(d.flowSpeed>=80){
+      tip=`${d.name} 流速較快，建議研磨比標準（${baseGrind}）再細半格，延長萃取時間`;
+    }else if(d.flowSpeed<=40){
+      tip=`${d.name} 流速較慢，建議研磨比標準（${baseGrind}）再粗半格，避免過萃`;
+    }
+    if(tip){
+      let tipEl=document.getElementById('dripperGrindTip');
+      if(!tipEl){
+        tipEl=document.createElement('div');
+        tipEl.id='dripperGrindTip';
+        tipEl.style.cssText='font-size:0.78em;color:var(--copper);margin-top:6px;padding:8px 10px;background:rgba(192,138,92,0.06);border-left:2px solid var(--copper);line-height:1.5;';
+        grindEl.appendChild(tipEl);
+      }
+      tipEl.textContent='🔧 '+tip;
+    }
+  }
+}
+
+function renderDripperKnowledge(){
+  const grid=document.getElementById('dripperKnowledgeGrid');
+  if(!grid)return;
+  grid.innerHTML=Object.entries(DRIPPER_DATA).filter(([k])=>k!=='other').map(([k,d])=>`
+    <div class="method-overview-card" style="cursor:default;">
+      <div class="method-overview-name">${d.icon} ${d.name}</div>
+      <div class="method-overview-info">
+        <span><strong>杯型：</strong>${d.shape}</span>
+        <span><strong>肋骨：</strong>${d.ribType}</span>
+        <span><strong>出水孔：</strong>${d.hole}</span>
+        <span><strong>流速：</strong>${d.flowLabel}</span>
+        <span style="margin-top:4px;">${d.ribDesc}</span>
+      </div>
+      <div class="dripper-flow-bar" style="margin-top:10px;">
+        <div class="dripper-flow-label">慢</div>
+        <div class="dripper-flow-track"><div class="dripper-flow-fill" style="width:${d.flowSpeed}%;"></div></div>
+        <div class="dripper-flow-label" style="text-align:right;">快</div>
+      </div>
+    </div>
+  `).join('');
+}
+
 const BREW_METHODS={sweet:{badge:'超高甜感',title:'超高甜感 · 搖晃濾杯法',desc:'透過搖晃增加甜感<br>圓潤飽滿 · 風味明顯',ratio:16,temp:'92°C',grind:'中細研磨',time:'2:45',buildSummary:(d,t)=>[{label:'第一段',value:Math.round(d*3.5),unit:'g'},{label:'第二段至',value:Math.round(t*0.6),unit:'g'},{label:'總水量',value:t,unit:'g'},{label:'目標時間',value:'2:45',unit:''}],buildSteps:(d,t)=>{const s1=Math.round(d*3.5),s2=Math.round(t*0.6)-s1,s34=t-Math.round(t*0.6),s3=Math.round(s34/2),s4=s34-s3;return{groups:[{label:'四段注水 + 搖晃',color:'amber',steps:[{num:1,time:'0:00',title:'第一段：快速注水 + 大幅搖晃',note:'此沖法不使用傳統悶蒸，而是透過搖晃取代 — 快速注入後立刻大幅搖晃濾杯約5秒，同時完成排氣和均勻萃取',water:s1,cum:s1,duration:0},{num:2,time:'0:10',title:'第二段：稍快速度注水',note:'稍快速度注水，建立萃取基底',water:s2,cum:Math.round(t*0.6),duration:10},{num:3,time:'0:40',title:'第三段：放慢注水',note:'放慢注水，輕柔注入避免過度攪拌',water:s3,cum:Math.round(t*0.6)+s3,duration:40},{num:4,time:'1:20',title:'第四段：輕注收尾',note:'中心注水為主，輕注收尾',water:s4,cum:t,duration:20},{num:5,time:'注完後',title:'等待滴完',note:'不再搖晃，靜待咖啡液完全滴落後即可移除濾杯享用',water:0,cum:t,duration:90}]}]}}},kasuya:{badge:'卡薩亞',title:'Kasuya 4:6 · 世界冠軍法',desc:'精準控制甜酸比<br>可調性強 · 競賽配方',ratio:15,temp:'92°C',grind:'中粗研磨',time:'3:15',buildSummary:(d,t)=>[{label:'第一段',value:Math.round(t*0.2),unit:'g'},{label:'第二段',value:Math.round(t*0.2),unit:'g'},{label:'後三段',value:t-2*Math.round(t*0.2),unit:'g'},{label:'總水量',value:t,unit:'g'},{label:'目標時間',value:'3:15',unit:''}],buildSteps:(d,t)=>{const s1=Math.round(t*0.2),s2=Math.round(t*0.2),rest=t-s1-s2,s3=Math.round(rest/3),s4=Math.round(rest/3),s5=rest-s3-s4;return{groups:[{label:'五段注水法',color:'amber',steps:[{num:1,time:'0:00',title:'第一段悶蒸注水（前40%決定甜酸）',note:'第一段注水同時兼具悶蒸排氣功能 — 從中心螺旋向外注水，充分濕潤所有咖啡粉讓CO2排出，注入後等水完全滴完再進下一段。此段水量控制著甜酸平衡',water:s1,cum:s1,duration:0},{num:2,time:'0:45',title:'第二段（前40%決定甜酸）',note:'甜酸比的關鍵段 — 想更甜可增加此段水量，想更酸則減少',water:s2,cum:s1+s2,duration:45},{num:3,time:'1:30',title:'第三段（後60%控制濃度）',note:'開始控制濃度，等待滴完',water:s3,cum:s1+s2+s3,duration:45},{num:4,time:'2:15',title:'第四段（後60%控制濃度）',note:'持續注水，等待滴完',water:s4,cum:s1+s2+s3+s4,duration:45},{num:5,time:'3:00',title:'第五段（後60%控制濃度）',note:'最後一段，完成沖煮',water:s5,cum:t,duration:45},{num:6,time:'注完後',title:'等待滴完',note:'靜待咖啡液完全滴落後即可移除濾杯享用',water:0,cum:t,duration:90}]}]}}},hoffmann:{badge:'霍夫曼',title:'James Hoffmann · 乾淨明亮法',desc:'簡潔均勻萃取<br>入門首選 · 明亮風味',ratio:16.7,temp:'96°C',grind:'中研磨',time:'3:30',buildSummary:(d,t)=>{const b=Math.round(d*2),f=Math.round(t*0.6);return[{label:'悶蒸水量',value:b,unit:'g'},{label:'注水至60%',value:f,unit:'g'},{label:'總水量',value:t,unit:'g'},{label:'目標時間',value:'3:30',unit:''}]},buildSteps:(d,t)=>{const b=Math.round(d*2),f=Math.round(t*0.6),s=t-f;return{groups:[{label:'悶蒸 + 兩段主注水',color:'amber',steps:[{num:1,time:'0:00',title:'悶蒸注水',note:'悶蒸是讓咖啡粉排出CO2的關鍵步驟 — 注入粉量2倍的水後，輕輕旋轉濾杯讓所有粉濕潤。看到粉層膨脹（像漢堡）表示豆子很新鮮！等待約45秒讓氣體充分排出',water:b,cum:b,duration:0},{num:2,time:'0:45',title:'第一次主注水',note:'穩定中心繞圈注水，約30秒內完成',water:f-b,cum:f,duration:45},{num:3,time:'1:15',title:'第二次主注水',note:'同樣手法繼續注水，約30秒內完成',water:s,cum:t,duration:30},{num:4,time:'1:45',title:'攪拌與搖晃',note:'用攪拌棒順時針、逆時針各攪拌一圈',water:0,cum:t,duration:0},{num:5,time:'注完後',title:'等待滴完',note:'靜待咖啡液完全滴落，整體時間約3:30，即可移除濾杯享用',water:0,cum:t,duration:105}]}]}}},rao:{badge:'雷歐',title:'Scott Rao · 螺旋渦流法',desc:'螺旋渦流均勻萃取<br>進階技巧 · 醇厚層次',ratio:16,temp:'96°C',grind:'中研磨',time:'3:30',buildSummary:(d,t)=>{const b=Math.round(d*3);return[{label:'悶蒸水量',value:b,unit:'g'},{label:'主注水',value:t-b,unit:'g'},{label:'總水量',value:t,unit:'g'},{label:'目標時間',value:'3:30',unit:''}]},buildSteps:(d,t)=>{const b=Math.round(d*3),m=t-b;return{groups:[{label:'悶蒸 + Rao Spin + 連續注水',color:'amber',steps:[{num:1,time:'0:00',title:'悶蒸 + Rao Spin',note:'注入粉量3倍的水後，立即大力旋轉濾杯（Rao Spin）讓粉床完全平整均勻。等待約45秒讓CO2充分排出',water:b,cum:b,duration:0},{num:2,time:'0:45',title:'連續螺旋注水',note:'從中心開始，以穩定的螺旋方式由內向外繞圈注水，保持一致的高度和流速，約60秒完成注水',water:m,cum:t,duration:60},{num:3,time:'1:45',title:'輕搖收尾',note:'注水完成後輕輕旋轉濾杯（gentle spin）讓粉床平整，靜待咖啡液自然滴完',water:0,cum:t,duration:105}]}]}}},onePour:{badge:'一刀流',title:'一刀流 · 單次注水法',desc:'極簡操作，穩定出品<br>新手友善 · 單次注水',ratio:15,temp:'92°C',grind:'中細研磨',time:'2:30',buildSummary:(d,t)=>{const b=Math.round(d*2);return[{label:'悶蒸水量',value:b,unit:'g'},{label:'主注水',value:t-b,unit:'g'},{label:'目標時間',value:'2:30',unit:''},{label:'總水量',value:t,unit:'g'}]},buildSteps:(d,t)=>{const b=Math.round(d*2);return{groups:[{label:'悶蒸 + 單次注水',color:'amber',steps:[{num:1,time:'0:00',title:'悶蒸注水',note:'悶蒸是排出咖啡粉中CO2的步驟，讓後續注水能均勻接觸咖啡粉 — 注入粉量2倍的水，等待30秒讓粉充分濕潤排氣',water:b,cum:b,duration:0},{num:2,time:'0:30',title:'一次注水完成',note:'穩定、不間斷地持續注水',water:t-b,cum:t,duration:30},{num:3,time:'注完後',title:'等待滴完',note:'不攪拌、不搖晃，靜待咖啡液完全滴落後移除濾杯',water:0,cum:t,duration:90}]}]}}},icedBrew:{badge:'冰手沖',title:'Flash Brew 冰手沖',desc:'40%冰塊+60%熱水沖煮<br>急速冷卻 · 果香爆發',ratio:15,temp:'96°C',grind:'中細偏細',time:'2:30',buildSummary:(d,t)=>{const i=Math.round(t*0.4),h=t-i,b=Math.round(d*2.5);return[{label:'冰塊量',value:i,unit:'g'},{label:'熱水量',value:h,unit:'g'},{label:'悶蒸水量',value:b,unit:'g'},{label:'總液量',value:t,unit:'g'}]},buildSteps:(d,t)=>{const i=Math.round(t*0.4),h=t-i,b=Math.round(d*2.5),m=h-b;return{groups:[{label:'準備 — 冰塊置入下壺',color:'green',steps:[{num:0,time:'準備',title:'放入冰塊（總水量的40%）',note:'在下壺中放入冰塊 — 冰塊會作為總水量的一部分，不是額外添加',water:i,cum:i,duration:-1}]},{label:'沖煮 — 高溫濃縮萃取',color:'amber',steps:[{num:1,time:'0:00',title:'悶蒸注水',note:'冰手沖使用高溫（96°C）悶蒸，目的是在水量較少的情況下最大化萃取 — 注入粉量2.5倍的水（比一般悶蒸多），等待30秒讓CO2排出',water:b,cum:b,duration:0},{num:2,time:'0:30',title:'主注水（僅用剩餘60%熱水）',note:'穩定注水至熱水用完，約60秒完成。注意：只用熱水沖煮，冰塊在下壺等待',water:m,cum:h,duration:30},{num:3,time:'注完後',title:'等待滴完並冷卻',note:'咖啡液滴入冰塊中急速冷卻，完成後輕搖杯子',water:0,cum:t,duration:90}]}]}}}};
 
-const KNOWLEDGE_TIPS=[{condition:(r,p,d,f)=>r==='light',title:'淺焙豆小知識',text:'淺焙豆密度較高，需要較高水溫（90°C以上）才能有效萃取。如果覺得酸味太尖銳，試試提高水溫而不是加長時間。'},{condition:(r,p,d,f)=>r==='dark',title:'深焙豆小知識',text:'深焙豆結構疏鬆，萃取速度快。降低水溫和加粗研磨是避免苦澀的關鍵。整體沖煮時間建議比淺焙短15-20%。'},{condition:(r,p,d,f)=>p==='natural',title:'日曬豆小知識',text:'日曬處理讓果肉糖分滲入豆體，甜度高但容易過萃變膩。建議研磨比同烘焙度的水洗豆粗半格到一格。'},{condition:(r,p,d,f)=>p==='anaerobic_natural'||p==='anaerobic_washed',title:'厭氧豆小知識',text:'厭氧發酵豆風味強烈獨特，建議略降水溫（降1-2°C）和略粗研磨，避免風味過於衝擊。用簡潔的沖法更能展現複雜度。'},{condition:(r,p,d,f)=>p==='honey',title:'蜜處理豆小知識',text:'蜜處理依果膠保留量分黃蜜、紅蜜、黑蜜。黑蜜接近日曬的豐富度，黃蜜接近水洗的乾淨感。可用標準研磨度作為起點。'},{condition:(r,p,d,f)=>r==='light'&&d<7,title:'養豆提醒',text:'淺焙豆建議養豆7-14天。目前天數較短，CO2仍在大量釋放，悶蒸會膨脹劇烈，可延長悶蒸時間至45-50秒讓排氣更充分。'},{condition:(r,p,d,f)=>r==='dark'&&d>14,title:'新鮮度提醒',text:'深焙豆最佳賞味期較短（烘焙後4-14天）。超過14天風味可能已開始衰減，建議磨細半格並適當提高水溫來補償。'},{condition:(r,p,d,f)=>f<30,title:'追求明亮風味',text:'偏好酸甜明亮的風味時，萃取率控制在18-20%最理想。可以用較高水溫搭配較短沖煮時間，保留前段的果酸和花香。'},{condition:(r,p,d,f)=>f>70,title:'追求醇厚風味',text:'偏好醇厚飽滿時，可以將粉水比降至1:14-1:15，並適當延長沖煮時間。中段的焦糖和巧克力風味會更明顯。'},{condition:(r,p,d,f)=>r==='light'&&p==='natural',title:'淺焙日曬組合',text:'這是風味最豐富的組合之一！建議用Kasuya 4:6法，透過前40%的分配來精準控制莓果甜感和明亮酸質的比例。'},{condition:(r,p,d,f)=>r==='medium'&&p==='washed',title:'中焙水洗組合',text:'最經典的組合，容錯範圍大。任何沖法都能有好表現，很適合作為練習和對比實驗的基準。'}];
+const KNOWLEDGE_TIPS=[{condition:(r,p,d,f)=>r==='light',title:'淺焙豆小知識',text:'淺焙豆密度較高，需要較高水溫（90°C以上）才能有效萃取。如果覺得酸味太尖銳，試試提高水溫而不是加長時間。'},{condition:(r,p,d,f)=>r==='dark',title:'深焙豆小知識',text:'深焙豆結構疏鬆，萃取速度快。降低水溫和加粗研磨是避免苦澀的關鍵。整體沖煮時間建議比淺焙短15-20%。'},{condition:(r,p,d,f)=>p==='natural',title:'日曬豆小知識',text:'日曬處理讓果肉糖分滲入豆體，甜度高但容易過萃變膩。建議研磨比同烘焙度的水洗豆粗半格到一格。'},{condition:(r,p,d,f)=>p==='anaerobic_natural'||p==='anaerobic_washed',title:'厭氧豆小知識',text:'厭氧發酵豆風味強烈獨特，建議略降水溫（降1-2°C）和略粗研磨，避免風味過於衝擊。用簡潔的沖法更能展現複雜度。'},{condition:(r,p,d,f)=>p==='honey',title:'蜜處理豆小知識',text:'蜜處理依果膠保留量分黃蜜、紅蜜、黑蜜。黑蜜接近日曬的豐富度，黃蜜接近水洗的乾淨感。可用標準研磨度作為起點。'},{condition:(r,p,d,f)=>r==='light'&&d<7,title:'養豆提醒',text:'淺焙豆建議養豆7-14天。目前天數較短，CO2仍在大量釋放，悶蒸會膨脹劇烈，可延長悶蒸時間至45-50秒讓排氣更充分。'},{condition:(r,p,d,f)=>r==='dark'&&d>14,title:'新鮮度提醒',text:'深焙豆最佳賞味期較短（烘焙後4-14天）。超過14天風味可能已開始衰減，建議磨細半格並適當提高水溫來補償。'},{condition:(r,p,d,f)=>f<30,title:'追求明亮風味',text:'偏好酸甜明亮的風味時，萃取率控制在18-20%最理想。可以用較高水溫搭配較短沖煮時間，保留前段的果酸和花香。'},{condition:(r,p,d,f)=>f>70,title:'追求醇厚風味',text:'偏好醇厚飽滿時，可以將粉水比降至1:14-1:15，並適當延長沖煮時間。中段的焦糖和巧克力風味會更明顯。'},{condition:(r,p,d,f)=>r==='light'&&p==='natural',title:'淺焙日曬組合',text:'這是風味最豐富的組合之一！建議用Kasuya 4:6法，透過前40%的分配來精準控制莓果甜感和明亮酸質的比例。'},{condition:(r,p,d,f)=>r==='medium'&&p==='washed',title:'中焙水洗組合',text:'最經典的組合，容錯範圍大。任何沖法都能有好表現，很適合作為練習和對比實驗的基準。'},{condition:()=>{const dt=document.getElementById('dripperType');return dt&&dt.value==='kalita'},title:'Kalita Wave 使用提醒',text:'Kalita 三孔設計流速較慢，浸泡時間較長。建議研磨比 V60 粗半格，避免過萃造成苦澀。一刀流和 Hoffmann 法在 Kalita 上表現特別穩定。'},{condition:()=>{const dt=document.getElementById('dripperType');return dt&&dt.value==='kono'},title:'KONO 名門使用提醒',text:'KONO 的短肋骨設計讓上段濾紙緊貼杯壁，流速較慢。適合點滴注水法，以極細水流慢慢注入。深焙豆搭配 KONO 容易過萃，建議磨粗一格。'},{condition:()=>{const dt=document.getElementById('dripperType');return dt&&dt.value==='april'},title:'April Brewer 使用提醒',text:'April 流速極快，需要比 V60 更細的研磨度來平衡。建議先用 Hoffmann 法測試，逐步調細研磨直到沖煮時間達到 3:00-3:30 的理想範圍。'}];
 const METHOD_COMPARE={sweet:{difficulty:'中等',flavorProfile:'甜感突出、圓潤',suitableRoast:'中深焙、深焙',keyTechnique:'搖晃濾杯',pourStages:'4段'},kasuya:{difficulty:'中等',flavorProfile:'可調控甜酸比',suitableRoast:'淺焙、中焙',keyTechnique:'分段等待滴完',pourStages:'5段'},hoffmann:{difficulty:'入門',flavorProfile:'乾淨明亮',suitableRoast:'淺焙',keyTechnique:'攪拌+搖晃拉平',pourStages:'2段'},rao:{difficulty:'進階',flavorProfile:'醇厚有層次',suitableRoast:'中焙',keyTechnique:'Rao Spin + 螺旋注水',pourStages:'連續'},onePour:{difficulty:'入門',flavorProfile:'乾淨穩定',suitableRoast:'中焙',keyTechnique:'單次不間斷注水',pourStages:'1段'},icedBrew:{difficulty:'中等',flavorProfile:'冰涼果香',suitableRoast:'淺焙',keyTechnique:'冰塊急速冷卻',pourStages:'2段'}};
 const GUIDE_CONTENT={sweet:{origin:'源自台灣咖啡社群，強調透過低溫和搖晃濾杯的方式，最大化咖啡的甜感表現。',concept:'利用搖晃濾杯增加萃取均勻度，配合較低水溫（約92°C），減少苦味物質溶出，凸顯甜感。',details:['第一段：快速注入約粉量3.5倍的水，立刻大幅搖晃濾杯約5秒','第二段：稍快速度注水至總水量60%，建立萃取基底','第三、四段：放慢注水速度，輕柔注入，避免過度攪拌','注水手法：中心注水為主，避免直接沖到濾紙'],suitableBean:'中深焙、蜜處理豆最能發揮此沖法的甜感特色；日曬豆也很適合',unsuitable:'極淺焙水洗豆（甜感不夠明顯，容易變得平淡）',faq:[{q:'太酸',a:'水溫提高2°C，或將研磨調細半格'},{q:'太苦',a:'水溫降低2°C，減少搖晃力度'},{q:'太淡',a:'增加粉量或將粉水比調至1:14'},{q:'風味模糊',a:'搖晃需更果斷有力，確保粉層均勻翻動'}]},kasuya:{origin:'由日本咖啡師粕谷哲（Tetsu Kasuya）發明，2016年世界沖煮杯（World Brewers Cup）冠軍配方。建議水溫92°C，研磨度比一般V60稍粗。',concept:'核心為「4:6法則」— 將總水量分為前40%和後60%。前40%的第一段注水兼具悶蒸排氣功能，同時決定甜酸比例：想更甜就增加第一段水量、想更酸就減少；後60%（後三段）平均分配，決定濃淡強度。每段注水後必須等水完全滴完再注下一段。',details:['研磨度比一般V60稍粗，接近法壓壺的粗細','每段注水後必須等水完全滴完再注下一段','由中心螺旋向外注水，避免直接沖濾紙','前兩段（40%）是風味關鍵，注水量分配決定甜酸比','後三段（60%）平均分配，控制濃度'],suitableBean:'日曬淺焙豆最能展現此沖法的精準控制力；各種處理法的淺中焙都適合',unsuitable:'深焙豆（分段等待容易過萃產生苦澀）',faq:[{q:'太酸',a:'第一段減少水量讓甜感上升'},{q:'太苦',a:'磨粗一格，或將水溫降低2°C'},{q:'總時間超過3:30',a:'研磨太細，需調粗'},{q:'風味不一致',a:'確認每段都等完全滴完再注下一段'}]},hoffmann:{origin:'由英國咖啡專家 James Hoffmann 提出，以簡潔的操作和高度均勻的萃取著稱。',concept:'透過充分悶蒸、兩段式注水、最後的攪拌與搖晃，達到咖啡粉的均勻萃取，追求乾淨明亮的風味。',details:['悶蒸：注入粉量2倍的水，輕輕旋轉濾杯讓所有咖啡粉濕潤，等待45秒','第一次主注水：在45秒時開始，注水至總水量60%，約30秒內完成','第二次主注水：注水至總水量100%，約30秒內完成','攪拌：注水完成後，用攪拌棒順時針、逆時針各攪拌一圈','搖晃：輕搖濾杯讓粉床平整，等待自然滴完','注水手法：穩定的中心繞圈注水，保持適中高度和水流'],suitableBean:'水洗淺焙豆最能展現乾淨明亮的風味；厭氧處理豆也適合用簡潔的流程展現複雜度',unsuitable:'深焙豆（高水溫容易萃取過度）',faq:[{q:'太酸',a:'研磨調細半格，或延長總沖煮時間'},{q:'太苦',a:'減少攪拌力度，或水溫降低2°C'},{q:'太淡',a:'粉水比從1:16.7改為1:15'},{q:'滴完時間太長',a:'研磨太細，需調粗'}]},rao:{origin:'由美國咖啡專家 Scott Rao 提出，以「Rao Spin」旋轉技巧聞名，強調均勻萃取與高萃取率。',concept:'透過 Rao Spin（旋轉濾杯）讓粉床平整，搭配穩定的螺旋注水，達到均勻萃取，追求層次豐富、有厚度的口感。',details:['悶蒸：注入粉量3倍的水，立即大力旋轉濾杯（Rao Spin）讓粉床完全平整','等待45秒讓CO2充分釋放','主注水：從中心開始螺旋向外，保持穩定水流和高度，約60秒完成','收尾：注水完成後輕輕旋轉濾杯（gentle spin），靜待自然滴完','水溫建議96°C，目標時間約3:30完成'],suitableBean:'中焙豆最能展現平衡醇厚的特色；適合追求高萃取率的進階沖煮者',unsuitable:'極淺焙豆（容易過度攪拌導致澀感）',faq:[{q:'太苦/澀',a:'降低注水高度，減緩渦流強度'},{q:'太酸',a:'增加注水高度，讓渦流更明顯'},{q:'風味雜亂',a:'保持螺旋的一致性，不要忽快忽慢'},{q:'總時間太短',a:'研磨太粗，需調細'}]},onePour:{origin:'最簡約的手沖方式，去除複雜的分段注水，用一次穩定的注水完成萃取。',concept:'減少人為變數，讓水自然均勻通過咖啡粉層。操作越簡單，變數越少，出品越穩定。',details:['悶蒸30秒後，以穩定的水流一次注完剩餘水量','水流保持細且穩定，由中心緩慢向外繞圈','不需要暫停、不需要分段、不需要攪拌','全程保持相同的注水高度和速度'],suitableBean:'中焙豆最適合，容錯範圍大；也適合作為新豆子的「基準測試」沖法',unsuitable:'需要精細控制甜酸比的場景（用Kasuya更好）',faq:[{q:'太淡',a:'放慢注水速度，讓水與粉接觸更久'},{q:'太苦',a:'加快注水速度，減少浸泡時間'},{q:'風味單調',a:'一刀流的特色就是乾淨穩定，想要更多層次可嘗試其他沖法'}]},icedBrew:{origin:'Flash Brew（急速冷卻法）是日式冰咖啡的延伸，透過將熱咖啡直接沖在冰塊上，達到急速冷卻的效果。',concept:'核心原則：總水量的40%用冰塊替代，僅用60%的熱水進行高濃度萃取，咖啡液滴入冰塊後稀釋至正常濃度。急速冷卻能保留更多花果香氣。粉水比1:15是含冰塊的總液量。',details:['總水量的40%用冰塊替代，放在下壺中','用剩餘60%的熱水進行沖煮（水溫96°C，盡量高溫）','研磨比一般手沖細一格，彌補水量減少導致的萃取不足','悶蒸用粉量2.5倍的水（比一般多一點），確保充分萃取','沖完後輕搖杯子讓殘餘冰塊融化均勻'],suitableBean:'淺焙水洗豆的花果香在冰手沖中表現最驚豔；日曬淺焙的莓果調性也很適合',unsuitable:'深焙豆（冰鎮後苦味會更突出）',faq:[{q:'太淡/水感',a:'增加粉量（如1:13），或減少冰塊比例至35%'},{q:'太酸/尖銳',a:'研磨再細半格，或延長主注水時間'},{q:'冰塊融不完',a:'正常現象，可以保留作為飲用時的冰塊'},{q:'不夠冰',a:'確保冰塊是實心冰塊而非碎冰，保冷效果更好'}]}};
 const RECOMMENDATIONS={'light-washed':{method:'hoffmann',reason:'淺焙水洗豆適合用簡潔的沖法來展現清爽明亮的風味。Hoffmann法透過充分悶蒸和均勻萃取，能最好地凸顯花香和果酸。'},'light-natural':{method:'kasuya',reason:'淺焙日曬豆風味豐富，用Kasuya 4:6法能精準控制前40%的甜酸比，充分發揮莓果和蜜甜特色。'},'light-honey':{method:'kasuya',reason:'淺焙蜜處理豆的甜感明顯，Kasuya 4:6法能精準平衡蜜甜與酸質，展現蜜處理的層次。'},'light-anaerobic':{method:'hoffmann',reason:'淺焙厭氧豆風味獨特強烈，Hoffmann法的簡潔流程能乾淨地呈現複雜發酵風味，不會過度干擾。'},'medium-washed':{method:'onePour',reason:'中焙水洗豆是最經典的組合，一刀流以簡單穩定著稱，容錯範圍大，適合練習和實驗。'},'medium-natural':{method:'sweet',reason:'中焙日曬豆甜感豐富，搖晃濾杯法能進一步放大甜感，帶出圓潤的水果調性。'},'medium-honey':{method:'rao',reason:'中焙蜜處理豆質地醇厚，Scott Rao的螺旋渦流法能均勻萃取，展現蜜處理的飽滿口感和層次。'},'medium-anaerobic':{method:'onePour',reason:'中焙厭氧豆風味已經很複雜，一刀流的極簡操作反而能穩定呈現，避免過度萃取導致風味混亂。'},'dark-washed':{method:'sweet',reason:'深焙水洗豆用搖晃濾杯法能強化甜感，低溫沖煮減少苦澀，帶出焦糖和巧克力調性。'},'dark-natural':{method:'sweet',reason:'深焙日曬豆甜度高，搖晃濾杯法搭配低溫能最大化甜感，避免過萃的苦膩。'},'dark-honey':{method:'sweet',reason:'深焙蜜處理豆口感圓潤，搖晃濾杯法能凸顯黑糖般的甜感，是深焙蜜處理的最佳搭配。'},'dark-anaerobic':{method:'onePour',reason:'深焙厭氧豆風味濃郁，一刀流的簡潔操作能避免過度萃取，讓發酵風味保持乾淨。'},'light-anaerobic_natural':{method:'hoffmann',reason:'淺焙厭氧日曬豆風味獨特強烈，Hoffmann法的簡潔流程能乾淨地呈現複雜發酵風味，不會過度干擾。'},'light-anaerobic_washed':{method:'hoffmann',reason:'淺焙厭氧水洗豆風味獨特強烈，Hoffmann法的簡潔流程能乾淨地呈現複雜發酵風味，不會過度干擾。'},'medium-anaerobic_natural':{method:'onePour',reason:'中焙厭氧日曬豆風味已經很複雜，一刀流的極簡操作反而能穩定呈現，避免過度萃取導致風味混亂。'},'medium-anaerobic_washed':{method:'onePour',reason:'中焙厭氧水洗豆風味已經很複雜，一刀流的極簡操作反而能穩定呈現，避免過度萃取導致風味混亂。'},'dark-anaerobic_natural':{method:'onePour',reason:'深焙厭氧日曬豆風味濃郁，一刀流的簡潔操作能避免過度萃取，讓發酵風味保持乾淨。'},'dark-anaerobic_washed':{method:'onePour',reason:'深焙厭氧水洗豆風味濃郁，一刀流的簡潔操作能避免過度萃取，讓發酵風味保持乾淨。'},default:{method:'onePour',reason:'一刀流穩定易掌控，是發現新豆子特色的最佳起點。'}};
@@ -2140,11 +2451,11 @@ function exitFocusMode(){document.body.classList.remove('focus-mode');document.g
 function renderCompareRadar(){if(selectedCompareMethods.length!==2)return;const m1=selectedCompareMethods[0],m2=selectedCompareMethods[1];const p1=FLAVOR_PROFILES[m1],p2=FLAVOR_PROFILES[m2];if(!p1||!p2)return;const cr=document.getElementById('compareResult');const existingRadar=cr.querySelector('.compare-radar-wrap');if(existingRadar)existingRadar.remove();const radarWrap=document.createElement('div');radarWrap.className='compare-radar-wrap';radarWrap.innerHTML=`<div class="compare-radar-title">風味雷達圖對比</div><div class="compare-radar-container"><div class="compare-radar-item"><svg class="compare-radar-svg" id="compareRadar1" viewBox="0 0 240 210"></svg><div style="font-size:0.85em;font-weight:600;color:var(--copper);margin-top:8px;">${BREW_METHODS[m1].title.split(' · ')[0]}</div></div><div class="compare-radar-item"><svg class="compare-radar-svg" id="compareRadar2" viewBox="0 0 240 210"></svg><div style="font-size:0.85em;font-weight:600;color:#4ECDC4;margin-top:8px;">${BREW_METHODS[m2].title.split(' · ')[0]}</div></div></div><div class="compare-radar-legend"><div class="compare-radar-legend-item"><div class="compare-radar-legend-color" style="background:var(--copper);"></div><span>${BREW_METHODS[m1].title.split(' · ')[0]}</span></div><div class="compare-radar-legend-item"><div class="compare-radar-legend-color" style="background:#4ECDC4;"></div><span>${BREW_METHODS[m2].title.split(' · ')[0]}</span></div></div>`;cr.insertBefore(radarWrap,cr.firstChild);setTimeout(()=>{drawCompareRadar(m1,p1,'compareRadar1','var(--copper)');drawCompareRadar(m2,p2,'compareRadar2','#4ECDC4')},0)}
 function drawCompareRadar(methodKey,profile,svgId,color){const svg=document.getElementById(svgId);if(!svg)return;const cx=120,cy=105,r=80,labels=['酸度','苦度','甜度','體脂感','香氣'],keys=['acidity','bitterness','sweetness','body','aroma'],n=5;let gridLines='',axisLines='',labelEls='';for(let ring=2;ring<=10;ring+=2){let pts=[];for(let i=0;i<n;i++){const a=Math.PI*2*i/n-Math.PI/2,x=cx+r*(ring/10)*Math.cos(a),y=cy+r*(ring/10)*Math.sin(a);pts.push(`${x},${y}`)}gridLines+=`<polygon points="${pts.join(' ')}" fill="none" stroke="rgba(184,125,86,${ring===10?0.3:0.12})" stroke-width="${ring===10?1:0.5}"/>`}for(let i=0;i<n;i++){const a=Math.PI*2*i/n-Math.PI/2,x=cx+r*Math.cos(a),y=cy+r*Math.sin(a),lx=cx+(r+16)*Math.cos(a),ly=cy+(r+16)*Math.sin(a);axisLines+=`<line x1="${cx}" y1="${cy}" x2="${x}" y2="${y}" stroke="rgba(184,125,86,0.2)" stroke-width="0.5"/>`;labelEls+=`<text x="${lx}" y="${ly}" text-anchor="middle" dominant-baseline="central" fill="currentColor" font-size="10" opacity="0.7">${labels[i]}</text>`}let dataPts=[];for(let i=0;i<n;i++){const a=Math.PI*2*i/n-Math.PI/2,v=profile[keys[i]]/10,x=cx+r*v*Math.cos(a),y=cy+r*v*Math.sin(a);dataPts.push(`${x},${y}`)}const dataPolygon=`<polygon points="${dataPts.join(' ')}" fill="${color}" opacity="0.2" stroke="${color}" stroke-width="2"/>`;let dots='';for(let i=0;i<n;i++){const a=Math.PI*2*i/n-Math.PI/2,v=profile[keys[i]]/10,x=cx+r*v*Math.cos(a),y=cy+r*v*Math.sin(a);dots+=`<circle cx="${x}" cy="${y}" r="3.5" fill="${color}"/>`}svg.innerHTML=gridLines+axisLines+dataPolygon+dots+labelEls}
 
-function saveUserPrefs(){try{const prefs={quickDose:document.getElementById('quickDoseInput')?.value||'20',quickMethod:currentQuickMethod||'onePour',roast:document.getElementById('roastLevel')?.value||'medium',processing:document.getElementById('processing')?.value||'washed',flavor:document.getElementById('flavorPref')?.value||'50',dose:document.getElementById('doseInput')?.value||'20'};localStorage.setItem('pouroverPrefs',JSON.stringify(prefs))}catch(e){}}
-function loadUserPrefs(){try{const raw=localStorage.getItem('pouroverPrefs');if(!raw)return;const p=JSON.parse(raw);const qd=document.getElementById('quickDoseInput');if(qd&&p.quickDose)qd.value=p.quickDose;if(p.quickMethod)currentQuickMethod=p.quickMethod;const rl=document.getElementById('roastLevel');if(rl&&p.roast)rl.value=p.roast;const pr=document.getElementById('processing');if(pr&&p.processing)pr.value=p.processing;const fp=document.getElementById('flavorPref');if(fp&&p.flavor){fp.value=p.flavor;const fv=document.getElementById('flavorValue');if(fv)fv.textContent=p.flavor}const di=document.getElementById('doseInput');if(di&&p.dose)di.value=p.dose}catch(e){}}
-function init(){loadUserPrefs();renderMethodCards();attachEventListeners();updateRecommendation();updateKnowledgeTips();updateGreeting();renderFAQ();const jn=document.getElementById('journalStars');jn.innerHTML='12345'.split('').map((n,i)=>`<button class="journal-star-btn" data-rating="${parseInt(n)}" aria-label="評分${n}星">★</button>`).join('');document.querySelectorAll('.journal-star-btn').forEach(b=>{b.addEventListener('click',(e)=>{const r=parseInt(e.target.dataset.rating);document.querySelectorAll('.journal-star-btn').forEach((sb,idx)=>sb.classList.toggle('active',idx<r));document.currentRating=r})});document.getElementById('journalSaveBtn').addEventListener('click',()=>{if(!selectedMethod){alert('請先開始沖煮');return}const entry={date:new Date().toLocaleDateString('zh-TW'),method:BREW_METHODS[selectedMethod].title.split(' · ')[0],dose:parseFloat(document.getElementById('doseInput').value),ratio:getEffectiveRatio(BREW_METHODS[selectedMethod]),rating:document.currentRating||0,note:document.getElementById('journalNote').value};const hist=JSON.parse(localStorage.getItem('brewJournal')||'[]');hist.push(entry);localStorage.setItem('brewJournal',JSON.stringify(hist));alert('紀錄已儲存！');document.getElementById('journalNote').value='';document.querySelectorAll('.journal-star-btn').forEach(b=>b.classList.remove('active'));document.currentRating=0;renderJournalHistory()})}
+function saveUserPrefs(){try{const prefs={quickDose:document.getElementById('quickDoseInput')?.value||'20',quickMethod:currentQuickMethod||'onePour',roast:document.getElementById('roastLevel')?.value||'medium',processing:document.getElementById('processing')?.value||'washed',flavor:document.getElementById('flavorPref')?.value||'50',dose:document.getElementById('doseInput')?.value||'20',dripper:document.getElementById('dripperType')?.value||'v60'};localStorage.setItem('pouroverPrefs',JSON.stringify(prefs))}catch(e){}}
+function loadUserPrefs(){try{const raw=localStorage.getItem('pouroverPrefs');if(!raw)return;const p=JSON.parse(raw);const qd=document.getElementById('quickDoseInput');if(qd&&p.quickDose)qd.value=p.quickDose;if(p.quickMethod)currentQuickMethod=p.quickMethod;const rl=document.getElementById('roastLevel');if(rl&&p.roast)rl.value=p.roast;const pr=document.getElementById('processing');if(pr&&p.processing)pr.value=p.processing;const fp=document.getElementById('flavorPref');if(fp&&p.flavor){fp.value=p.flavor;const fv=document.getElementById('flavorValue');if(fv)fv.textContent=p.flavor}const di=document.getElementById('doseInput');if(di&&p.dose)di.value=p.dose;const dt=document.getElementById('dripperType');if(dt&&p.dripper)dt.value=p.dripper}catch(e){}}
+function init(){loadUserPrefs();renderMethodCards();attachEventListeners();renderDripperInfo();renderDripperKnowledge();updateRecommendation();updateKnowledgeTips();updateGreeting();renderFAQ();const jn=document.getElementById('journalStars');jn.innerHTML='12345'.split('').map((n,i)=>`<button class="journal-star-btn" data-rating="${parseInt(n)}" aria-label="評分${n}星">★</button>`).join('');document.querySelectorAll('.journal-star-btn').forEach(b=>{b.addEventListener('click',(e)=>{const r=parseInt(e.target.dataset.rating);document.querySelectorAll('.journal-star-btn').forEach((sb,idx)=>sb.classList.toggle('active',idx<r));document.currentRating=r})});document.getElementById('journalSaveBtn').addEventListener('click',()=>{if(!selectedMethod){alert('請先開始沖煮');return}const entry={date:new Date().toLocaleDateString('zh-TW'),method:BREW_METHODS[selectedMethod].title.split(' · ')[0],dose:parseFloat(document.getElementById('doseInput').value),ratio:getEffectiveRatio(BREW_METHODS[selectedMethod]),rating:document.currentRating||0,note:document.getElementById('journalNote').value};const hist=JSON.parse(localStorage.getItem('brewJournal')||'[]');hist.push(entry);localStorage.setItem('brewJournal',JSON.stringify(hist));alert('紀錄已儲存！');document.getElementById('journalNote').value='';document.querySelectorAll('.journal-star-btn').forEach(b=>b.classList.remove('active'));document.currentRating=0;renderJournalHistory()})}
 function renderMethodCards(){const g=document.getElementById('methodGrid');g.innerHTML='';const diffTags={sweet:{label:'甜感派',color:'#E8B86D'},kasuya:{label:'競賽級',color:'#C07830'},hoffmann:{label:'新手推薦',color:'#6BBF6B'},rao:{label:'進階',color:'#B87D56'},onePour:{label:'新手推薦',color:'#6BBF6B'},icedBrew:{label:'夏日限定',color:'#6BB8D4'}};const month=new Date().getMonth()+1;Object.entries(BREW_METHODS).forEach(([k,m])=>{const c=document.createElement('div');c.className='method-card';const tag=diffTags[k]||{label:'',color:'var(--copper)'};c.innerHTML=`${METHOD_ICONS[k]||''}<div class="method-badge">${m.badge}</div><div class="method-tag" style="background:${tag.color}20;color:${tag.color};border:1px solid ${tag.color}40;padding:2px 8px;border-radius:10px;font-size:0.65em;font-weight:600;display:inline-block;margin-bottom:4px;">${tag.label}</div><div class="method-name">${m.title.split(' · ')[0]}</div><div class="method-ratio">${m.ratio}:1 · ${m.time}</div><div class="method-desc">${m.desc}</div>`;c.addEventListener('click',()=>selectMethod(k,m));g.appendChild(c)})}
-function selectMethod(k,m){if(!m)m=BREW_METHODS[k];selectedMethod=k;customRatio=null;const tempVal=m.temp.replace('°C','').replace('℃','');if(tempVal)document.getElementById('currentTemp').value=tempVal;updateTempSuggestion();document.querySelectorAll('.method-card').forEach(c=>c.classList.remove('active'));if(event&&event.target){const card=event.target.closest('.method-card');if(card)card.classList.add('active')}document.getElementById('calcPanel').style.display='block';document.getElementById('calcPanel').classList.remove('recipe-animate');void document.getElementById('calcPanel').offsetWidth;document.getElementById('calcPanel').classList.add('recipe-animate');document.getElementById('stepsContainer').style.display='block';document.getElementById('stepsContainer').classList.remove('recipe-animate');void document.getElementById('stepsContainer').offsetWidth;document.getElementById('stepsContainer').classList.add('recipe-animate');const rs=document.getElementById('ratioSlider');rs.value=m.ratio;document.getElementById('ratioValue').textContent='1:'+m.ratio;showGuide(k,m);updateCalcPanel(m);updateSteps(m);renderRadar(k);renderGrindVisual(k);document.getElementById('radarWrap').style.display='block';setTimeout(()=>{document.getElementById('calcPanel').scrollIntoView({behavior:'smooth',block:'start'})},100)}
+function selectMethod(k,m){if(!m)m=BREW_METHODS[k];selectedMethod=k;customRatio=null;const tempVal=m.temp.replace('°C','').replace('℃','');if(tempVal)document.getElementById('currentTemp').value=tempVal;updateTempSuggestion();document.querySelectorAll('.method-card').forEach(c=>c.classList.remove('active'));if(event&&event.target){const card=event.target.closest('.method-card');if(card)card.classList.add('active')}document.getElementById('calcPanel').style.display='block';document.getElementById('calcPanel').classList.remove('recipe-animate');void document.getElementById('calcPanel').offsetWidth;document.getElementById('calcPanel').classList.add('recipe-animate');document.getElementById('stepsContainer').style.display='block';document.getElementById('stepsContainer').classList.remove('recipe-animate');void document.getElementById('stepsContainer').offsetWidth;document.getElementById('stepsContainer').classList.add('recipe-animate');const rs=document.getElementById('ratioSlider');rs.value=m.ratio;document.getElementById('ratioValue').textContent='1:'+m.ratio;showGuide(k,m);updateCalcPanel(m);updateSteps(m);renderRadar(k);renderGrindVisual(k);updateDripperKnowledgeTip();document.getElementById('radarWrap').style.display='block';setTimeout(()=>{document.getElementById('calcPanel').scrollIntoView({behavior:'smooth',block:'start'})},100)}
 function getEffectiveRatio(m){return customRatio!==null?customRatio:m.ratio}
 function updateCalcPanel(m){const d=parseFloat($('doseInput').value)||20,r=getEffectiveRatio(m),t=Math.round(d*r),s=m.buildSummary(d,t),g=$('calcGrid');g.innerHTML=s.map(i=>`<div class="calc-item"><div class="calc-value">${i.value}</div><div class="calc-label">${i.label}</div>${i.unit?`<div class="calc-label">${i.unit}</div>`:''}</div>`).join('')}
 function updateSteps(m){const d=parseFloat($('doseInput').value)||20,r=getEffectiveRatio(m),t=Math.round(d*r),sd=m.buildSteps(d,t);let bloomTimeAddition=0;const skipRest=$('restDaysSkipBtn').classList.contains('active'),restDays=skipRest?7:(parseInt($('restDays').value)||7);if(restDays<=3&&!skipRest){bloomTimeAddition=10;$('freshBeanNote').classList.add('show')}else{$('freshBeanNote').classList.remove('show')}currentStepBloomTime=bloomTimeAddition;let h='';currentStepDurations=[];let cumTime=0;sd.groups.forEach(g=>{h+=`<div class="steps-group-title ${g.color}">${g.label}</div>`;g.steps.forEach(s=>{cumTime+=(s.duration||0);currentStepDurations.push(cumTime);let wb='';const pct=Math.round((s.cum/t)*100);if(s.water>0){wb=`<div class="step-water"><div class="step-water-pour">+${s.water}g</div><div class="step-water-cum">累計 ${s.cum}g / ${t}g</div><div class="step-water-bar"><div class="step-water-bar-fill" style="width:${pct}%"></div></div></div>`}else if(s.cum>0){wb=`<div class="step-water"><div class="step-water-cum" style="opacity:0.7;">維持 ${s.cum}g / ${t}g</div><div class="step-water-bar"><div class="step-water-bar-fill" style="width:${pct}%"></div></div></div>`}h+=`<div class="step-item" data-step-idx="${currentStepDurations.length-1}"><div class="step-num">步驟 ${s.num}</div><div class="step-time">${s.time}</div><div class="step-title">${s.title}</div>${wb}<div class="step-note">${s.note}</div></div>`})});$('stepsContent').innerHTML=h}
@@ -2152,7 +2463,7 @@ function showGuide(k,m){const g=GUIDE_CONTENT[k],gd=[{title:'方法起源',text:
 function renderAllGuides(){const gc=document.getElementById('guideContainer');if(!gc)return;let html='';const guideNames={sweet:'超高甜感法',kasuya:'Kasuya 4:6法',hoffmann:'James Hoffmann法',rao:'Scott Rao法',onePour:'一刀流',icedBrew:'Flash Brew 冰手沖'};Object.entries(GUIDE_CONTENT).forEach(([k,g])=>{const gd=[{title:'方法起源',text:g.origin},{title:'核心理念',text:g.concept},{title:'操作細節',text:g.details.join('\n')},{title:'適合豆子',text:g.suitableBean},{title:'不太適合',text:g.unsuitable},{title:'常見問題',text:g.faq.map(f=>`${f.q}: ${f.a}`).join('\n')}];html+=`<div class="guide-card" data-guide="${k}"><div class="guide-header"><div class="guide-header-text">${guideNames[k]||k} 沖法指南</div><div class="guide-toggle">▼</div></div><div class="guide-content">${gd.map(s=>`<div class="guide-section"><div class="guide-section-title">${s.title}</div><div class="guide-section-text">${s.text.includes('\n')?'<ul>'+s.text.split('\n').map(l=>`<li>${l}</li>`).join('')+'</ul>':s.text.replace(/\n/g,'<br>')}</div></div>`).join('')}</div></div>`});gc.innerHTML=html;gc.querySelectorAll('.guide-header').forEach(h=>{const c=h.nextElementSibling,t=h.querySelector('.guide-toggle');h.addEventListener('click',()=>{c.classList.toggle('open');t.classList.toggle('open')})})}
 function updateRecommendation(){const r=document.getElementById('roastLevel').value,p=document.getElementById('processing').value;let k=r+'-'+p;if(!RECOMMENDATIONS[k])k='default';const rec=RECOMMENDATIONS[k],rp=document.getElementById('recommendationPanel'),rt=document.getElementById('recommendationText');let recText=`<strong>${BREW_METHODS[rec.method].title}</strong><br>${rec.reason}`;const month=new Date().getMonth()+1,isSummer=month>=5&&month<=9;if(isSummer&&rec.method!=='icedBrew'){recText+='<br><br><em style="color:var(--text-secondary);font-size:0.9em;">🌞 夏日提醒：也可以試試冰手沖，用同一支豆子感受不同的清涼風味！</em>'}else if((month>=11||month<=2)&&!isSummer){recText+='<br><br><em style="color:var(--text-secondary);font-size:0.9em;">❄️ 冬日提醒：可以將水溫提高 1-2°C，讓風味更飽滿溫暖。</em>'}rp.style.display='block';rt.innerHTML=recText}
 function updateKnowledgeTips(){const r=document.getElementById('roastLevel').value,p=document.getElementById('processing').value,skipRest=document.getElementById('restDaysSkipBtn').classList.contains('active'),d=skipRest?7:(parseInt(document.getElementById('restDays').value)||7),f=parseInt(document.getElementById('flavorPref').value),mt=KNOWLEDGE_TIPS.filter(t=>t.condition(r,p,d,f)).slice(0,2),ktc=document.getElementById('knowledgeTipsContainer');if(mt.length===0){ktc.innerHTML='';return}ktc.innerHTML=mt.map((t,i)=>`<div class="knowledge-tip" id="tip-${i}"><div class="knowledge-tip-header"><div class="knowledge-tip-title">${t.title}</div><div class="knowledge-tip-toggle">▼</div></div><div class="knowledge-tip-text">${t.text}</div></div>`).join('');mt.forEach((_,i)=>{const el=document.getElementById(`tip-${i}`),h=el.querySelector('.knowledge-tip-header'),c=el.querySelector('.knowledge-tip-text'),tg=el.querySelector('.knowledge-tip-toggle');h.addEventListener('click',()=>{c.classList.toggle('open');tg.classList.toggle('open')})})}
-function attachEventListeners(){document.getElementById('quickStartBtn').addEventListener('click',quickStart);document.getElementById('doseInput').addEventListener('input',()=>{recalcAll();updateDoseBtnActive()});document.getElementById('roastLevel').addEventListener('change',()=>{updateRecommendation();updateKnowledgeTips()});document.getElementById('processing').addEventListener('change',()=>{updateRecommendation();updateKnowledgeTips()});document.getElementById('restDays').addEventListener('input',()=>{document.getElementById('restDaysSkipBtn').classList.remove('active');document.getElementById('restDays').disabled=false;document.getElementById('restDays').style.opacity='1';updateKnowledgeTips()});document.getElementById('restDaysSkipBtn').addEventListener('click',()=>{const btn=document.getElementById('restDaysSkipBtn'),inp=document.getElementById('restDays');btn.classList.toggle('active');if(btn.classList.contains('active')){inp.disabled=true;inp.style.opacity='0.4'}else{inp.disabled=false;inp.style.opacity='1'}updateKnowledgeTips()});document.getElementById('flavorPref').addEventListener('input',(e)=>{document.getElementById('flavorValue').textContent=e.target.value;updateRecommendation();updateKnowledgeTips()});document.querySelectorAll('.dose-btn').forEach(btn=>{btn.addEventListener('click',()=>{const v=parseFloat(btn.dataset.dose);document.getElementById('doseInput').value=v;document.querySelectorAll('.dose-btn').forEach(b=>b.classList.remove('active'));btn.classList.add('active');recalcAll()})});document.querySelectorAll('.stepper-btn').forEach(btn=>{btn.addEventListener('click',()=>{const tid=btn.dataset.target,delta=parseFloat(btn.dataset.delta),inp=document.getElementById(tid);if(inp.disabled)return;let v=parseFloat(inp.value)||0;v=Math.max(parseFloat(inp.min),Math.min(parseFloat(inp.max),v+delta));inp.value=v;inp.dispatchEvent(new Event('input',{bubbles:true}))})});document.getElementById('ratioSlider').addEventListener('input',(e)=>{const v=parseFloat(e.target.value);customRatio=v;document.getElementById('ratioValue').textContent='1:'+v;recalcAll()});document.getElementById('startTimerBtn').addEventListener('click',startTimer);document.getElementById('pausePlayBtn').addEventListener('click',toggleTimer);document.getElementById('resetTimerBtn').addEventListener('click',resetTimer);document.getElementById('currentTemp').addEventListener('input',()=>{updateTempSuggestion();updateCalcPanel(BREW_METHODS[selectedMethod])});document.getElementById('roastLevel').addEventListener('change',()=>{autoAdjustTemp();updateRecommendation();updateKnowledgeTips()});document.getElementById('manualRatioInput').addEventListener('input',(e)=>{const v=parseFloat(e.target.value);if(v>=12&&v<=18){customRatio=v;document.getElementById('ratioSlider').value=v;document.getElementById('ratioValue').textContent='1:'+v;recalcAll()}});document.getElementById('ratioSlider').addEventListener('input',(e)=>{const v=parseFloat(e.target.value);document.getElementById('manualRatioInput').value=v.toFixed(1);});document.querySelectorAll('.ratio-preset').forEach(btn=>{btn.addEventListener('click',()=>{const v=parseFloat(btn.dataset.ratio);customRatio=v;document.getElementById('ratioSlider').value=v;document.getElementById('ratioValue').textContent='1:'+v;document.getElementById('manualRatioInput').value=v;document.querySelectorAll('.ratio-preset').forEach(b=>b.classList.remove('active'));btn.classList.add('active');recalcAll()})});document.getElementById('compareBtn').addEventListener('click',()=>{selectedCompareMethods=[];renderCompareModal();document.getElementById('compareModal').classList.add('active')});document.getElementById('compareCloseBtn').addEventListener('click',()=>{document.getElementById('compareModal').classList.remove('active')});document.getElementById('compareModal').addEventListener('click',(e)=>{if(e.target===document.getElementById('compareModal'))document.getElementById('compareModal').classList.remove('active')});['roastLevel','processing'].forEach(id=>{document.getElementById(id).addEventListener('change',saveUserPrefs)});['flavorPref','doseInput'].forEach(id=>{document.getElementById(id).addEventListener('change',saveUserPrefs)})}
+function attachEventListeners(){document.getElementById('quickStartBtn').addEventListener('click',quickStart);document.getElementById('doseInput').addEventListener('input',()=>{recalcAll();updateDoseBtnActive()});document.getElementById('roastLevel').addEventListener('change',()=>{updateRecommendation();updateKnowledgeTips()});document.getElementById('processing').addEventListener('change',()=>{updateRecommendation();updateKnowledgeTips()});document.getElementById('restDays').addEventListener('input',()=>{document.getElementById('restDaysSkipBtn').classList.remove('active');document.getElementById('restDays').disabled=false;document.getElementById('restDays').style.opacity='1';updateKnowledgeTips()});document.getElementById('restDaysSkipBtn').addEventListener('click',()=>{const btn=document.getElementById('restDaysSkipBtn'),inp=document.getElementById('restDays');btn.classList.toggle('active');if(btn.classList.contains('active')){inp.disabled=true;inp.style.opacity='0.4'}else{inp.disabled=false;inp.style.opacity='1'}updateKnowledgeTips()});document.getElementById('flavorPref').addEventListener('input',(e)=>{document.getElementById('flavorValue').textContent=e.target.value;updateRecommendation();updateKnowledgeTips()});document.querySelectorAll('.dose-btn').forEach(btn=>{btn.addEventListener('click',()=>{const v=parseFloat(btn.dataset.dose);document.getElementById('doseInput').value=v;document.querySelectorAll('.dose-btn').forEach(b=>b.classList.remove('active'));btn.classList.add('active');recalcAll()})});document.querySelectorAll('.stepper-btn').forEach(btn=>{btn.addEventListener('click',()=>{const tid=btn.dataset.target,delta=parseFloat(btn.dataset.delta),inp=document.getElementById(tid);if(inp.disabled)return;let v=parseFloat(inp.value)||0;v=Math.max(parseFloat(inp.min),Math.min(parseFloat(inp.max),v+delta));inp.value=v;inp.dispatchEvent(new Event('input',{bubbles:true}))})});document.getElementById('ratioSlider').addEventListener('input',(e)=>{const v=parseFloat(e.target.value);customRatio=v;document.getElementById('ratioValue').textContent='1:'+v;recalcAll()});document.getElementById('startTimerBtn').addEventListener('click',startTimer);document.getElementById('pausePlayBtn').addEventListener('click',toggleTimer);document.getElementById('resetTimerBtn').addEventListener('click',resetTimer);document.getElementById('currentTemp').addEventListener('input',()=>{updateTempSuggestion();updateCalcPanel(BREW_METHODS[selectedMethod])});document.getElementById('roastLevel').addEventListener('change',()=>{autoAdjustTemp();updateRecommendation();updateKnowledgeTips()});document.getElementById('manualRatioInput').addEventListener('input',(e)=>{const v=parseFloat(e.target.value);if(v>=12&&v<=18){customRatio=v;document.getElementById('ratioSlider').value=v;document.getElementById('ratioValue').textContent='1:'+v;recalcAll()}});document.getElementById('ratioSlider').addEventListener('input',(e)=>{const v=parseFloat(e.target.value);document.getElementById('manualRatioInput').value=v.toFixed(1);});document.querySelectorAll('.ratio-preset').forEach(btn=>{btn.addEventListener('click',()=>{const v=parseFloat(btn.dataset.ratio);customRatio=v;document.getElementById('ratioSlider').value=v;document.getElementById('ratioValue').textContent='1:'+v;document.getElementById('manualRatioInput').value=v;document.querySelectorAll('.ratio-preset').forEach(b=>b.classList.remove('active'));btn.classList.add('active');recalcAll()})});document.getElementById('compareBtn').addEventListener('click',()=>{selectedCompareMethods=[];renderCompareModal();document.getElementById('compareModal').classList.add('active')});document.getElementById('compareCloseBtn').addEventListener('click',()=>{document.getElementById('compareModal').classList.remove('active')});document.getElementById('compareModal').addEventListener('click',(e)=>{if(e.target===document.getElementById('compareModal'))document.getElementById('compareModal').classList.remove('active')});['roastLevel','processing'].forEach(id=>{document.getElementById(id).addEventListener('change',saveUserPrefs)});['flavorPref','doseInput'].forEach(id=>{document.getElementById(id).addEventListener('change',saveUserPrefs)});document.getElementById('dripperType').addEventListener('change',()=>{renderDripperInfo();updateKnowledgeTips();saveUserPrefs()})}
 function updateDoseBtnActive(){const v=parseFloat(document.getElementById('doseInput').value);document.querySelectorAll('.dose-btn').forEach(b=>{b.classList.toggle('active',parseFloat(b.dataset.dose)===v)})}
 function renderRadar(k){const p=FLAVOR_PROFILES[k];if(!p)return;const svg=document.getElementById('radarSvg'),cx=120,cy=105,r=80,labels=['酸度','苦度','甜度','體脂感','香氣'],keys=['acidity','bitterness','sweetness','body','aroma'],n=5;let gridLines='',axisLines='',labelEls='';for(let ring=2;ring<=10;ring+=2){let pts=[];for(let i=0;i<n;i++){const a=Math.PI*2*i/n-Math.PI/2,x=cx+r*(ring/10)*Math.cos(a),y=cy+r*(ring/10)*Math.sin(a);pts.push(`${x},${y}`)}gridLines+=`<polygon points="${pts.join(' ')}" fill="none" stroke="rgba(184,125,86,${ring===10?0.3:0.12})" stroke-width="${ring===10?1:0.5}"/>`}for(let i=0;i<n;i++){const a=Math.PI*2*i/n-Math.PI/2,x=cx+r*Math.cos(a),y=cy+r*Math.sin(a),lx=cx+(r+16)*Math.cos(a),ly=cy+(r+16)*Math.sin(a);axisLines+=`<line x1="${cx}" y1="${cy}" x2="${x}" y2="${y}" stroke="rgba(184,125,86,0.2)" stroke-width="0.5"/>`;labelEls+=`<text x="${lx}" y="${ly}" text-anchor="middle" dominant-baseline="central" fill="currentColor" font-size="10" opacity="0.7">${labels[i]}</text>`}let dataPts=[];for(let i=0;i<n;i++){const a=Math.PI*2*i/n-Math.PI/2,v=p[keys[i]]/10,x=cx+r*v*Math.cos(a),y=cy+r*v*Math.sin(a);dataPts.push(`${x},${y}`)}const dataPolygon=`<polygon points="${dataPts.join(' ')}" fill="rgba(184,125,86,0.2)" stroke="var(--copper)" stroke-width="2"/>`;let dots='';for(let i=0;i<n;i++){const a=Math.PI*2*i/n-Math.PI/2,v=p[keys[i]]/10,x=cx+r*v*Math.cos(a),y=cy+r*v*Math.sin(a);dots+=`<circle cx="${x}" cy="${y}" r="3.5" fill="var(--copper)"/>`}svg.innerHTML=gridLines+axisLines+dataPolygon+dots+labelEls;const desc=FLAVOR_DESCRIPTIONS[k];if(desc){let descEl=document.querySelector('.radar-desc');if(!descEl){descEl=document.createElement('div');descEl.className='radar-desc';svg.parentNode.appendChild(descEl)}descEl.textContent=desc}}
 function recalcAll(){if(!selectedMethod)return;const m=BREW_METHODS[selectedMethod];updateCalcPanel(m);updateSteps(m)}
