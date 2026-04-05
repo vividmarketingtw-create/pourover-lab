@@ -41,7 +41,7 @@
   body {
     background: #0F0D0B;
     display: flex; flex-direction: column; align-items: center;
-    min-height: 100vh; padding: 20px;
+    min-height: 100vh; min-height: 100dvh; padding: 20px;
     font-family: 'Noto Sans TC', 'DM Sans', -apple-system, sans-serif; overflow-x: hidden;
     transition: background-color 0.4s ease, color 0.4s ease;
     color: var(--text-primary);
@@ -59,7 +59,7 @@
   /* Hero section */
   .hero {
     text-align: center; padding: 80px 24px 40px; position: relative;
-    min-height: 50vh; display: flex; flex-direction: column;
+    min-height: 50vh; min-height: 50dvh; display: flex; flex-direction: column;
     justify-content: center; align-items: center;
   }
   .scroll-hint {
@@ -850,12 +850,9 @@
   .compare-table td { color: var(--text-primary); }
   .compare-empty { text-align: center; color: var(--text-secondary); padding: 30px 0; }
 
-  .footer { margin-top: 56px; text-align: center; color: var(--text-secondary);
-    font-size: 0.75em; padding-bottom: 24px; letter-spacing: 1px; font-weight: 300;
-  }
 
   @media (max-width: 600px) {
-    .hero { padding: 48px 16px 28px; min-height: 45vh; }
+    .hero { padding: 48px 16px 28px; min-height: 45vh; min-height: 45dvh; }
     .hero h1 { font-size: 2.2em; }
     .hero-en { font-size: 0.8em; letter-spacing: 2px; }
     .hero-tagline { font-size: 0.85em; margin-bottom: 28px; }
@@ -1094,7 +1091,7 @@
 
   /* Adjust existing elements for SPA */
   .back-to-top { bottom: calc(64px + env(safe-area-inset-bottom, 0) + 16px); }
-  .hero { min-height: 50vh; }
+  .hero { min-height: 50vh; min-height: 50dvh; }
 
   @media (min-width: 768px) {
     .tab-nav {
@@ -1860,7 +1857,7 @@
 
   /* Footer */
   .site-footer {
-    text-align: center; padding: 32px 20px 100px; margin-top: 20px;
+    text-align: center; padding: 32px 20px 24px; margin-top: 20px;
     border-top: 1px solid var(--border); position: relative;
   }
   .site-footer::before {
@@ -1870,19 +1867,29 @@
   .site-footer-brand {
     font-family: 'Cormorant Garamond', 'Playfair Display', serif;
     font-size: 1em; color: var(--copper-light); font-weight: 300;
-    letter-spacing: 1px; margin-bottom: 8px;
+    letter-spacing: 1px; margin-bottom: 6px;
   }
   .site-footer-sub {
     font-size: 0.72em; color: var(--text-secondary); opacity: 0.5;
+    letter-spacing: 0.5px; margin-bottom: 14px;
+  }
+  .site-footer-nav {
+    display: flex; gap: 20px; justify-content: center; flex-wrap: wrap;
+    margin-bottom: 14px;
+  }
+  .site-footer-nav a {
+    color: var(--text-secondary); font-size: 0.78em; text-decoration: none;
+    opacity: 0.6; transition: opacity 0.2s, color 0.2s; letter-spacing: 0.5px;
+  }
+  .site-footer-nav a:hover { opacity: 1; color: var(--copper-light); }
+  .site-footer-disclaimer {
+    font-size: 0.68em; color: var(--text-secondary); opacity: 0.4;
+    padding-top: 12px; border-top: 1px solid var(--border);
+    margin-bottom: 6px;
+  }
+  .site-footer-copy {
+    font-size: 0.68em; color: var(--text-secondary); opacity: 0.35;
     letter-spacing: 0.5px;
-  }
-  .site-footer-sub a {
-    color: var(--copper); text-decoration: none; opacity: 0.7;
-    transition: opacity 0.2s;
-  }
-  .site-footer-sub a:hover { opacity: 1; }
-  @media (min-width: 768px) {
-    .site-footer { padding-bottom: 40px; }
   }
 </style>
 </head>
@@ -2038,22 +2045,6 @@
         <button class="hero-cta" data-nav="quick" style="font-size:0.95em;padding:12px 28px;">開始你的第一杯 →</button>
       </div>
     </section>
-      <div class="section-divider"></div>
-      <div class="footer">
-      <p style="font-family: 'Playfair Display', serif; font-size: 1.1em; color: var(--copper-light); margin-bottom: 8px;">PourOver Lab</p>
-      <p style="font-size: 0.8em; color: var(--text-secondary); letter-spacing: 1px;">手沖咖啡的感官實驗室</p>
-      <div style="display:flex;gap:20px;justify-content:center;margin-top:16px;flex-wrap:wrap;">
-        <a href="#home" style="color:var(--text-secondary);font-size:0.82em;text-decoration:none;">首頁</a>
-        <a href="#quick" style="color:var(--text-secondary);font-size:0.82em;text-decoration:none;">快速沖煮</a>
-        <a href="#tools" style="color:var(--text-secondary);font-size:0.82em;text-decoration:none;">進階工具</a>
-        <a href="#knowledge" style="color:var(--text-secondary);font-size:0.82em;text-decoration:none;">知識庫</a>
-      </div>
-      <p style="margin-top:12px;font-size:0.78em;">每次沖煮都是一場實驗。調整、嘗試、發現最適合你的風味。</p>
-      <div style="margin-top:16px;padding-top:12px;border-top:1px solid var(--border);">
-        <p style="font-size:0.72em;color:var(--text-secondary);opacity:0.6;">本站沖煮參數僅供參考，實際風味會因豆子、器材、水質等因素而異。</p>
-        <p style="font-size:0.72em;color:var(--text-secondary);opacity:0.5;margin-top:8px;">&copy; 2026 PourOver Lab. All rights reserved.</p>
-      </div>
-    </div>
     </div>
 
     <!-- ========== TAB 2: QUICK BREW ========== -->
@@ -2484,9 +2475,18 @@
   <footer class="site-footer page-container">
     <div class="site-footer-brand">PourOver Lab</div>
     <div class="site-footer-sub">
-      手沖咖啡感官實驗室 — Made with ☕ &amp; passion<br>
-      <a href="#home" onclick="window.scrollTo({top:0,behavior:'smooth'})">回到頂部 ↑</a>
+      手沖咖啡感官實驗室 — Made with ☕ &amp; passion
     </div>
+    <div class="site-footer-nav">
+      <a href="#home" data-nav="home">首頁</a>
+      <a href="#quick" data-nav="quick">快速沖煮</a>
+      <a href="#tools" data-nav="tools">進階工具</a>
+      <a href="#knowledge" data-nav="knowledge">知識庫</a>
+    </div>
+    <div class="site-footer-disclaimer">
+      本站沖煮參數僅供參考，實際風味會因豆子、器材、水質等因素而異。
+    </div>
+    <div class="site-footer-copy">&copy; 2026 PourOver Lab. All rights reserved.</div>
   </footer>
 
   <script>
