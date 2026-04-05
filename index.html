@@ -2015,6 +2015,210 @@
     .quick-float-timer { bottom: 24px; }
   }
 
+
+  /* ===== User Segmentation Cards ===== */
+  .segment-cards {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 12px;
+    max-width: 500px;
+    margin: 0 auto;
+  }
+  .segment-card {
+    display: flex;
+    align-items: center;
+    gap: 16px;
+    padding: 20px;
+    background: var(--surface-2);
+    border: 1px solid var(--border);
+    border-radius: 0;
+    cursor: pointer;
+    transition: all 0.3s ease;
+  }
+  .segment-card:hover {
+    border-color: var(--copper);
+    background: rgba(184,125,86,0.06);
+    transform: translateX(4px);
+  }
+  .segment-icon { font-size: 1.8em; flex-shrink: 0; }
+  .segment-title { font-size: 1em; font-weight: 600; color: var(--copper-light); margin-bottom: 4px; }
+  .segment-desc { font-size: 0.82em; color: var(--text-secondary); line-height: 1.5; font-weight: 300; }
+  .segment-arrow { margin-left: auto; color: var(--copper); opacity: 0.4; font-size: 1.2em; transition: all 0.3s; flex-shrink: 0; }
+  .segment-card:hover .segment-arrow { opacity: 1; transform: translateX(4px); }
+
+  /* ===== Flavor Simulation Demo ===== */
+  .flavor-sim-demo {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 24px;
+    max-width: 600px;
+    margin: 0 auto;
+    padding: 24px;
+    background: var(--surface-2);
+    border: 1px solid var(--border);
+    border-radius: 0;
+  }
+  @media (max-width: 600px) {
+    .flavor-sim-demo { grid-template-columns: 1fr; gap: 20px; padding: 18px 14px; }
+  }
+  .sim-slider-group { display: flex; flex-direction: column; gap: 16px; }
+  .sim-slider-row { display: flex; align-items: center; gap: 10px; }
+  .sim-label { font-size: 0.82em; color: var(--text-secondary); min-width: 48px; font-weight: 400; }
+  .sim-range {
+    flex: 1;
+    -webkit-appearance: none;
+    appearance: none;
+    height: 4px;
+    background: var(--surface-3);
+    border-radius: 2px;
+    outline: none;
+  }
+  .sim-range::-webkit-slider-thumb {
+    -webkit-appearance: none;
+    width: 16px; height: 16px;
+    border-radius: 50%;
+    background: var(--copper);
+    cursor: pointer;
+    border: 2px solid rgba(15,13,10,0.8);
+  }
+  .sim-value { font-size: 0.78em; color: var(--copper-light); min-width: 42px; text-align: right; font-family: 'Space Mono', monospace; }
+  .sim-result { display: flex; flex-direction: column; gap: 12px; justify-content: center; }
+  .sim-bar-group { display: flex; flex-direction: column; gap: 10px; }
+  .sim-bar-row { display: flex; align-items: center; gap: 8px; }
+  .sim-bar-label { font-size: 0.78em; color: var(--text-secondary); min-width: 36px; }
+  .sim-bar { flex: 1; height: 6px; background: rgba(184,125,86,0.1); border-radius: 3px; overflow: hidden; }
+  .sim-bar-fill { height: 100%; background: var(--copper); border-radius: 3px; transition: width 0.4s ease; }
+  .sim-bar-fill.sim-bar-bitter { background: #A0826D; }
+  .sim-bar-fill.sim-bar-sweet { background: #D4A574; }
+  .sim-bar-fill.sim-bar-body { background: #8B6F5E; }
+  .sim-taste-tag {
+    text-align: center;
+    font-size: 0.82em;
+    color: var(--copper-light);
+    padding: 8px 12px;
+    background: rgba(184,125,86,0.08);
+    border-radius: 0;
+    border: 1px solid rgba(184,125,86,0.15);
+    transition: all 0.3s;
+  }
+
+  /* ===== Simplified Knowledge Cards ===== */
+  .knowledge-cards-simple {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 10px;
+    max-width: 500px;
+    margin: 0 auto;
+  }
+  @media (max-width: 600px) {
+    .knowledge-cards-simple { grid-template-columns: 1fr; }
+  }
+  .k-simple-card {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    padding: 14px 16px;
+    background: var(--surface-2);
+    border: 1px solid var(--border);
+    border-radius: 0;
+    transition: all 0.3s;
+  }
+  .k-simple-card:hover { border-color: var(--copper); background: rgba(184,125,86,0.04); }
+  .k-simple-left { font-size: 1.4em; flex-shrink: 0; }
+  .k-simple-title { font-size: 0.88em; font-weight: 500; color: var(--copper-light); }
+  .k-simple-result { font-size: 0.78em; color: var(--text-secondary); margin-top: 2px; font-weight: 300; }
+
+  /* ===== Tool Value List ===== */
+  .tool-value-list {
+    max-width: 400px;
+    margin: 0 auto;
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+  }
+  .tool-value-item {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    font-size: 0.92em;
+    color: var(--text-primary);
+    font-weight: 300;
+    padding: 10px 16px;
+    background: var(--surface-2);
+    border: 1px solid var(--border);
+    transition: all 0.3s;
+  }
+  .tool-value-item:hover { border-color: var(--copper); }
+  .tool-value-check { color: var(--copper); font-size: 1em; flex-shrink: 0; }
+
+
+  /* ===== Enhanced Animations ===== */
+  .segment-card, .k-simple-card, .tool-value-item, .method-card, .exp-card {
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  }
+  .segment-card:active, .k-simple-card:active, .method-card:active {
+    transform: scale(0.97);
+  }
+  
+  /* Staggered fade-in for section children */
+  .section.visible .segment-card,
+  .section.visible .k-simple-card,
+  .section.visible .tool-value-item,
+  .section.visible .story-step {
+    opacity: 0;
+    transform: translateY(16px);
+    animation: staggerFadeIn 0.5s ease forwards;
+  }
+  .section.visible .segment-card:nth-child(1),
+  .section.visible .story-step:nth-child(1),
+  .section.visible .k-simple-card:nth-child(1),
+  .section.visible .tool-value-item:nth-child(1) { animation-delay: 0.1s; }
+  .section.visible .segment-card:nth-child(2),
+  .section.visible .story-step:nth-child(2),
+  .section.visible .k-simple-card:nth-child(2),
+  .section.visible .tool-value-item:nth-child(2) { animation-delay: 0.2s; }
+  .section.visible .segment-card:nth-child(3),
+  .section.visible .story-step:nth-child(3),
+  .section.visible .k-simple-card:nth-child(3),
+  .section.visible .tool-value-item:nth-child(3) { animation-delay: 0.3s; }
+  .section.visible .k-simple-card:nth-child(4),
+  .section.visible .tool-value-item:nth-child(4) { animation-delay: 0.4s; }
+  
+  @keyframes staggerFadeIn {
+    from { opacity: 0; transform: translateY(16px); }
+    to { opacity: 1; transform: translateY(0); }
+  }
+  
+  /* Slider thumb pulse */
+  .sim-range::-webkit-slider-thumb:active {
+    box-shadow: 0 0 0 6px rgba(184,125,86,0.2);
+    transform: scale(1.2);
+  }
+  
+  /* Flavor bar animation on load */
+  .sim-bar-fill {
+    transition: width 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+  }
+  
+  /* Hero CTA hover effect */
+  .hero-cta {
+    transition: all 0.3s ease;
+  }
+  .hero-cta:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 6px 20px rgba(184,125,86,0.3);
+  }
+  .hero-cta:active {
+    transform: translateY(0);
+  }
+
+  /* ===== Free Timer Section ===== */
+  .free-timer-section {
+    max-width: 780px;
+    margin: 0 auto;
+    padding: 0 20px;
+  }
+
   /* Footer */
   .site-footer {
     text-align: center; padding: 32px 20px calc(24px + 80px + env(safe-area-inset-bottom, 0)); margin-top: 20px;
@@ -2092,15 +2296,12 @@
     <section class="hero" id="heroSection">
       <div class="hero-background-svg">
         <svg viewBox="0 0 120 200" xmlns="http://www.w3.org/2000/svg" class="dripper-svg">
-          <!-- V60 dripper outline -->
           <path d="M35 40 L45 80 L75 80 L85 40 Z" fill="none" stroke="currentColor" stroke-width="1.2" opacity="0.3"/>
-          <!-- Dripper ridges -->
           <path d="M40 50 Q60 55 80 50" fill="none" stroke="currentColor" stroke-width="0.8" opacity="0.2"/>
           <path d="M38 60 Q60 65 82 60" fill="none" stroke="currentColor" stroke-width="0.8" opacity="0.2"/>
           <path d="M36 70 Q60 75 84 70" fill="none" stroke="currentColor" stroke-width="0.8" opacity="0.2"/>
-          <!-- Water stream -->
           <path class="water-stream" d="M60 20 Q58 30 58 40" fill="none" stroke="currentColor" stroke-width="2" opacity="0.5" stroke-linecap="round"/>
-          <path class="water-stream water-stream-2" d="M60 15 Q62 25 62 40" fill="none" stroke="currentColor" stroke-width="1.8" opacity="0.35" stroke-linecap="round" animation-delay="0.3s"/>
+          <path class="water-stream water-stream-2" d="M60 15 Q62 25 62 40" fill="none" stroke="currentColor" stroke-width="1.8" opacity="0.35" stroke-linecap="round"/>
         </svg>
       </div>
       <div class="steam-container" id="steamContainer">
@@ -2113,9 +2314,13 @@
       <h1>PourOver Lab</h1>
       <div class="hero-en">手沖咖啡的感官實驗室</div>
       <p class="hero-tagline">
-        <span id="heroGreeting">每一次沖煮，都是一場關於味覺、時間與意念的探索。</span>
+        <span id="heroGreeting">從水溫、粉水比到萃取時間，每一次沖煮，都是一場關於味覺、時間與意念的探索。</span>
       </p>
-      <button class="hero-cta" id="heroCta">快速沖一杯 →</button>
+      <p class="hero-sub" style="font-size:0.88em;color:var(--text-secondary);margin-top:-8px;margin-bottom:24px;font-weight:300;opacity:0.7;">讓每一杯咖啡，都更接近你想要的味道</p>
+      <div class="hero-cta-group" style="display:flex;gap:12px;justify-content:center;flex-wrap:wrap;">
+        <button class="hero-cta" id="heroCta">開始實驗 →</button>
+        <button class="hero-cta hero-cta-secondary" id="heroBeginnerCta" style="background:transparent;border:1px solid rgba(184,125,86,0.4);color:var(--copper-light);">☕ 我是新手</button>
+      </div>
       <div class="scroll-hint">
         <span>探索更多</span>
         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 5v14M5 12l7 7 7-7"/></svg>
@@ -2124,90 +2329,164 @@
 
     
     <!-- ===== STORY STEPS ===== -->
-    <section class="section" id="storySection">
-      <div class="section-label">沖煮流程</div>
-      <div class="section-title">三步開始手沖</div>
-      <div class="section-sub">選沖法、定粉量、開始沖 — 跟著引導，輕鬆完成你的第一杯。</div>
-      <div class="story-steps">
-        <div class="story-step" data-nav="quick">
-          <span class="story-step-num">步驟 1</span>
-          <span class="story-step-icon">🫖</span>
-          <div class="story-step-title">選沖法</div>
-          <div class="story-step-desc">六種世界級手沖法，從新手到競賽級，找到最適合你的風味路線</div>
+    <!-- ===== USER SEGMENTATION ===== -->
+    <section class="section" id="segmentSection">
+      <div class="section-label">你現在想做什麼</div>
+      <div class="section-title">找到你的沖煮路線</div>
+      <div class="segment-cards">
+        <div class="segment-card" data-nav="quick" id="segBeginner">
+          <div class="segment-icon">☕</div>
+          <div class="segment-title">我是新手</div>
+          <div class="segment-desc">從零開始學會手沖咖啡，30 秒快速上手</div>
+          <div class="segment-arrow">→</div>
         </div>
-        <div class="story-step" data-nav="quick" data-scroll="quickDoseSection">
-          <span class="story-step-num">步驟 2</span>
-          <span class="story-step-icon">⚖️</span>
-          <div class="story-step-title">定粉量</div>
-          <div class="story-step-desc">輸入咖啡粉量，系統即時計算水量、比例與沖煮參數</div>
+        <div class="segment-card" data-nav="tools" id="segFlavor">
+          <div class="segment-icon">🧪</div>
+          <div class="segment-title">我想調整風味</div>
+          <div class="segment-desc">了解不同變因如何影響味道，找到你的理想風味</div>
+          <div class="segment-arrow">→</div>
         </div>
-        <div class="story-step" data-nav="quick">
-          <span class="story-step-num">步驟 3</span>
-          <span class="story-step-icon">⏱️</span>
-          <div class="story-step-title">開始沖</div>
-          <div class="story-step-desc">計時器逐步引導注水節奏，從悶蒸到收尾，不漏掉任何一步</div>
+        <div class="segment-card" data-nav="tools" id="segPro">
+          <div class="segment-icon">🎯</div>
+          <div class="segment-title">我想更專業</div>
+          <div class="segment-desc">深入萃取理論與參數控制，精進你的技術</div>
+          <div class="segment-arrow">→</div>
         </div>
       </div>
-      <div class="story-cta-group">
-        <button class="story-cta-btn story-cta-quick" data-nav="quick">
-          ⚡ 快速沖一杯
-          <span class="story-cta-sub">選方法、設粉量、立即開始</span>
-        </button>
-        <button class="story-cta-btn story-cta-advanced" data-nav="tools">
-          🔧 進階參數設定
-          <span class="story-cta-sub">豆子分析、濾杯選擇、風味預測</span>
-        </button>
+    </section>
+      <div class="section-divider"></div>
+
+    <!-- ===== QUICK START (Beginner Fast Track) ===== -->
+    <section class="section" id="quickStartSection">
+      <div class="section-label">第一次手沖</div>
+      <div class="section-title">30 秒快速開始</div>
+      <div class="section-sub">不需要記住任何理論，跟著三步走，就能沖出第一杯好咖啡。</div>
+      <div class="story-steps">
+        <div class="story-step" data-nav="quick">
+          <span class="story-step-num">1</span>
+          <span class="story-step-icon">⚖️</span>
+          <div class="story-step-title">準備器材</div>
+          <div class="story-step-desc">V60 濾杯＋濾紙＋手沖壺＋電子秤＋15g 咖啡粉</div>
+        </div>
+        <div class="story-step" data-nav="quick">
+          <span class="story-step-num">2</span>
+          <span class="story-step-icon">🌡️</span>
+          <div class="story-step-title">基本比例</div>
+          <div class="story-step-desc">粉水比 1:15，93°C 熱水，中細研磨（砂糖粗細）</div>
+        </div>
+        <div class="story-step" data-nav="quick">
+          <span class="story-step-num">3</span>
+          <span class="story-step-icon">⏱️</span>
+          <div class="story-step-title">一鍵開沖</div>
+          <div class="story-step-desc">選「Hoffmann 法」按下開始，計時器會引導你每一步</div>
+        </div>
+      </div>
+      <div style="text-align:center;margin-top:24px;">
+        <button class="hero-cta" data-nav="quick" style="font-size:0.95em;padding:14px 32px;">☕ 快速上手 →</button>
       </div>
     </section>
       <div class="section-divider"></div>
       <!-- ===== EXPERIENCE ===== -->
-    <section class="section" id="expSection">
-      <div class="section-label">功能亮點</div>
-      <div class="section-title">你能獲得什麼</div>
-      <div class="section-sub">六種沖煮法、七款濾杯支援、智慧推薦、風味視覺化 — 全部免費。</div>
-      <div class="exp-cards">
-        <div class="exp-card">
-          <span class="exp-card-icon">🎯</span>
-          <div class="exp-card-title">智慧推薦</div>
-          <div class="exp-card-text">根據烘焙度、處理法和你的口味偏好，自動推薦最適合的沖法</div>
+    <!-- ===== FLAVOR SIMULATION PREVIEW ===== -->
+    <section class="section" id="flavorSimSection">
+      <div class="section-label">風味實驗室</div>
+      <div class="section-title">咖啡，不只是沖煮，而是一場實驗</div>
+      <div class="section-sub">調整參數，即時看到風味如何改變。</div>
+      <div class="flavor-sim-demo" id="flavorSimDemo">
+        <div class="sim-slider-group">
+          <div class="sim-slider-row">
+            <label class="sim-label">水溫</label>
+            <input type="range" class="sim-range" id="simTemp" min="85" max="96" value="93">
+            <span class="sim-value" id="simTempVal">93°C</span>
+          </div>
+          <div class="sim-slider-row">
+            <label class="sim-label">研磨</label>
+            <input type="range" class="sim-range" id="simGrind" min="1" max="5" value="3">
+            <span class="sim-value" id="simGrindVal">中細</span>
+          </div>
+          <div class="sim-slider-row">
+            <label class="sim-label">粉水比</label>
+            <input type="range" class="sim-range" id="simRatio" min="13" max="17" value="15">
+            <span class="sim-value" id="simRatioVal">1:15</span>
+          </div>
         </div>
-        <div class="exp-card">
-          <span class="exp-card-icon">⏱</span>
-          <div class="exp-card-title">即時引導</div>
-          <div class="exp-card-text">計時器同步高亮每一步，像有咖啡師在身邊指導</div>
-        </div>
-        <div class="exp-card">
-          <span class="exp-card-icon">📊</span>
-          <div class="exp-card-title">風味視覺化</div>
-          <div class="exp-card-text">雷達圖呈現酸、甜、苦、體脂感、香氣五維風味</div>
+        <div class="sim-result" id="simResult">
+          <div class="sim-bar-group">
+            <div class="sim-bar-row"><span class="sim-bar-label">酸度</span><div class="sim-bar"><div class="sim-bar-fill" id="simAcid" style="width:50%"></div></div></div>
+            <div class="sim-bar-row"><span class="sim-bar-label">苦味</span><div class="sim-bar"><div class="sim-bar-fill sim-bar-bitter" id="simBitter" style="width:30%"></div></div></div>
+            <div class="sim-bar-row"><span class="sim-bar-label">甜度</span><div class="sim-bar"><div class="sim-bar-fill sim-bar-sweet" id="simSweet" style="width:55%"></div></div></div>
+            <div class="sim-bar-row"><span class="sim-bar-label">口感</span><div class="sim-bar"><div class="sim-bar-fill sim-bar-body" id="simBody" style="width:50%"></div></div></div>
+          </div>
+          <div class="sim-taste-tag" id="simTasteTag">☕ 平衡順口，適合日常飲用</div>
         </div>
       </div>
-      <div style="text-align:center;margin-top:28px;">
-        <button class="hero-cta" data-nav="quick" style="font-size:0.95em;padding:12px 28px;">開始沖煮 →</button>
+      <div style="text-align:center;margin-top:20px;">
+        <button class="hero-cta" data-nav="tools" style="font-size:0.92em;padding:12px 28px;">開始模擬沖煮 →</button>
       </div>
     </section>
       <div class="section-divider"></div>
-      <!-- ===== ABOUT ===== -->
-    <section class="section" id="aboutSection">
-      <div class="section-label">關於我們</div>
-      <div class="section-title">為什麼選擇 PourOver Lab</div>
-      <div class="about-grid">
-        <div class="about-card">
-          <div class="about-card-title">起源</div>
-          <div class="about-card-text">
-            這個工具誕生於一個簡單的想法：每個在家沖咖啡的人，都值得擁有一位安靜的沖煮教練。我們把世界冠軍的方法論拆解成可操作的步驟，讓你不需要讀完整本書，就能沖出一杯好咖啡。
+
+    <!-- ===== SIMPLIFIED KNOWLEDGE ===== -->
+    <section class="section" id="simpleKnowledgeSection">
+      <div class="section-label">直覺咖啡學</div>
+      <div class="section-title">你不需要記住所有理論</div>
+      <div class="section-sub">我們把複雜的咖啡知識，轉換成可以理解的直覺。</div>
+      <div class="knowledge-cards-simple">
+        <div class="k-simple-card">
+          <div class="k-simple-left">🌡️</div>
+          <div class="k-simple-right">
+            <div class="k-simple-title">水溫高一點</div>
+            <div class="k-simple-result">→ 苦味增加，萃取更強</div>
           </div>
         </div>
-        <div class="about-card">
-          <div class="about-card-title">理念</div>
-          <div class="about-card-text">
-            我們相信沖煮是一場感官實驗，不是精密考試。參數是起點，不是終點。這個工具幫你建立直覺，而不是取代它 — 最終，你的味蕾才是最好的老師。
+        <div class="k-simple-card">
+          <div class="k-simple-left">⚙️</div>
+          <div class="k-simple-right">
+            <div class="k-simple-title">研磨細一點</div>
+            <div class="k-simple-result">→ 萃取更深，味道更集中</div>
+          </div>
+        </div>
+        <div class="k-simple-card">
+          <div class="k-simple-left">💧</div>
+          <div class="k-simple-right">
+            <div class="k-simple-title">粉水比降低</div>
+            <div class="k-simple-result">→ 味道更濃郁厚實</div>
+          </div>
+        </div>
+        <div class="k-simple-card">
+          <div class="k-simple-left">⏱️</div>
+          <div class="k-simple-right">
+            <div class="k-simple-title">沖煮時間長</div>
+            <div class="k-simple-result">→ 萃取率高，風味更複雜</div>
           </div>
         </div>
       </div>
-      <div style="text-align:center;margin-top:30px;">
-        <p style="color:var(--text-secondary);font-size:0.95em;margin-bottom:16px;font-style:italic;">每一杯手沖，都是一場安靜的實驗。</p>
-        <button class="hero-cta" data-nav="quick" style="font-size:0.95em;padding:12px 28px;">開始你的第一杯 →</button>
+      <div style="text-align:center;margin-top:16px;font-size:0.82em;color:var(--text-secondary);opacity:0.6;">簡單調整，就能改變風味</div>
+    </section>
+      <div class="section-divider"></div>
+      <!-- ===== ABOUT ===== -->
+    <!-- ===== TOOL VALUE (Stickiness) ===== -->
+    <section class="section" id="toolValueSection">
+      <div class="section-label">你的沖煮夥伴</div>
+      <div class="section-title">建立你的專屬沖煮配方</div>
+      <div class="section-sub">每一次實驗，都讓你離理想風味更近一步。</div>
+      <div class="tool-value-list">
+        <div class="tool-value-item"><span class="tool-value-check">✓</span>記錄每一次沖煮實驗</div>
+        <div class="tool-value-item"><span class="tool-value-check">✓</span>收藏喜歡的沖煮配方</div>
+        <div class="tool-value-item"><span class="tool-value-check">✓</span>追蹤風味變化與進步</div>
+        <div class="tool-value-item"><span class="tool-value-check">✓</span>九種世界級沖法完整指南</div>
+      </div>
+      <div style="text-align:center;margin-top:24px;">
+        <button class="hero-cta" data-nav="tools" style="font-size:0.95em;padding:14px 32px;">建立我的配方 →</button>
+      </div>
+    </section>
+      <div class="section-divider"></div>
+
+    <!-- ===== PHILOSOPHY ===== -->
+    <section class="section" id="aboutSection" style="padding-bottom:16px;">
+      <div style="text-align:center;max-width:420px;margin:0 auto;">
+        <p style="color:var(--text-secondary);font-size:0.95em;font-style:italic;line-height:1.8;margin-bottom:6px;">「參數是起點，不是終點。<br>你的味蕾，才是最好的老師。」</p>
+        <p style="color:var(--text-secondary);font-size:0.78em;opacity:0.5;">— PourOver Lab</p>
       </div>
     </section>
     </div>
@@ -2414,10 +2693,20 @@
         <button class="btn-start-timer" id="startTimerBtn" aria-label="開始沖煮計時">
           <span class="btn-start-icon">▶</span> 開始計時
         </button>
-        <button class="btn-start-timer" id="freeTimerBtn" aria-label="自由計時" style="background:transparent;border:1px solid var(--copper);color:var(--copper-light);font-size:0.82em;padding:10px 20px;">
-          ⏱ 自由計時
-        </button>
+
       </div>
+    </div>
+
+    <!-- 自由計時獨立區塊 -->
+    <div class="free-timer-section" id="freeTimerSection">
+      <div style="display:flex;align-items:center;gap:12px;justify-content:center;padding:16px 0;">
+        <div style="flex:1;height:1px;background:var(--border);"></div>
+        <span style="font-size:0.72em;color:var(--text-secondary);letter-spacing:2px;">或者</span>
+        <div style="flex:1;height:1px;background:var(--border);"></div>
+      </div>
+      <button class="btn-start-timer" id="freeTimerBtn" aria-label="自由計時" style="width:100%;background:transparent;border:1px solid rgba(184,125,86,0.3);color:var(--copper-light);font-size:0.88em;padding:14px 20px;display:flex;align-items:center;justify-content:center;gap:8px;">
+        <span style="font-size:1.1em;">⏱</span> 自由計時 <span style="font-size:0.75em;opacity:0.5;margin-left:4px;">不跟步驟，只計時間</span>
+      </button>
     </div>
 
     <!-- 沖煮步驟 (collapsible) -->
@@ -3039,7 +3328,7 @@ function quickStart(){const btn=document.getElementById('quickStartBtn');const i
 function renderGrindVisual(k){const grindLevel=GRIND_LEVELS[k];const grindMap={'細':'fine','中細':'medium-fine','中':'medium','中粗':'medium-coarse','粗':'coarse','中細偏細':'medium-fine','中粗':'medium-coarse'};const positions={fine:10,'medium-fine':30,medium:50,'medium-coarse':70,coarse:90};let pos=50;for(let [key,p] of Object.entries(positions)){if(grindLevel.includes(key.split('-')[0])||grindLevel===key){pos=p;break}}const gv=document.getElementById('grindVisual');gv.innerHTML=`<div style="display:flex;align-items:center;gap:15px;margin-bottom:10px;"><div style="flex:1;position:relative;height:40px;border-radius:20px;background:var(--surface-2);overflow:hidden;"><div style="position:absolute;display:flex;align-items:center;justify-content:space-between;width:100%;height:100%;padding:0 8px;"><span style="font-size:0.75em;color:var(--text-secondary);">細</span><span style="font-size:0.75em;color:var(--text-secondary);">粗</span></div><svg style="position:absolute;width:100%;height:100%;top:0;left:0;" viewBox="0 0 200 20"><circle cx="10" cy="10" r="2" fill="rgba(184,125,86,0.3)"/><circle cx="50" cy="10" r="3" fill="rgba(184,125,86,0.3)"/><circle cx="100" cy="10" r="4" fill="rgba(184,125,86,0.3)"/><circle cx="150" cy="10" r="5" fill="rgba(184,125,86,0.3)"/><circle cx="190" cy="10" r="6" fill="rgba(184,125,86,0.3)"/><circle cx="${(pos/100)*200}" cy="10" r="4.5" fill="var(--copper);" stroke="rgba(184,125,86,0.5)" stroke-width="0.5"/></svg></div></div><div style="text-align:center;font-size:0.9em;font-weight:600;color:var(--copper-light);min-width:60px;">${grindLevel}</div></div>`;gv.style.display='block'}
 function renderJournalHistory(){const hist=JSON.parse(localStorage.getItem('brewJournal')||'[]'),jh=document.getElementById('journalHistory');if(hist.length===0){jh.innerHTML='<div style="text-align:center;color:var(--text-secondary);font-size:0.9em;padding:15px;">還沒有紀錄。開始沖煮並儲存你的第一筆筆記！</div>';return}jh.innerHTML='<div style="font-size:0.85em;margin-bottom:10px;color:var(--text-secondary);">最近紀錄</div>'+hist.slice(-5).reverse().map(e=>`<div class="journal-entry"><div class="journal-entry-header"><div><strong>${e.method}</strong> · ${e.dose}g / 1:${e.ratio}</div><div class="journal-entry-date">${e.date}</div></div>${e.rating?`<div class="journal-entry-stars">${'★'.repeat(e.rating)}${'☆'.repeat(5-e.rating)}</div>`:''}<div class="journal-entry-note">${e.note||'(無筆記)'}</div></div>`).join('')}
 function renderFAQ(){const fl=document.getElementById('faqList');fl.innerHTML=FAQ_DATA.map((faq,idx)=>`<div class="knowledge-tip"><div class="knowledge-tip-header"><div class="knowledge-tip-title" style="font-weight:600;color:var(--copper-light);">${faq.q}</div><div class="knowledge-tip-toggle">▼</div></div><div class="knowledge-tip-text">${faq.a}</div></div>`).join('');document.querySelectorAll('#faqList .knowledge-tip-header').forEach((h,idx)=>{const c=h.nextElementSibling,t=h.querySelector('.knowledge-tip-toggle');h.addEventListener('click',()=>{c.classList.toggle('open');t.classList.toggle('open')})})}
-function updateGreeting(){document.getElementById('heroGreeting').innerHTML='每一次沖煮，都是一場關於味覺、時間與意念的探索。'}
+function updateGreeting(){document.getElementById('heroGreeting').innerHTML='從水溫、粉水比到萃取時間，每一次沖煮，都是一場關於味覺、時間與意念的探索。'}
 function toggleDarkMode(){}
 function renderCompareModal(){const cmg=document.getElementById('compareMethodGrid');cmg.innerHTML=Object.entries(BREW_METHODS).map(([k,m])=>`<button class="compare-method-btn" data-method="${k}">${m.title.split(' · ')[0]}<br><small>${m.badge}</small></button>`).join('');document.querySelectorAll('.compare-method-btn').forEach(btn=>{btn.onclick=function(){const method=this.dataset.method;if(selectedCompareMethods.includes(method)){selectedCompareMethods=selectedCompareMethods.filter(m=>m!==method);this.classList.remove('selected')}else if(selectedCompareMethods.length<2){selectedCompareMethods.push(method);this.classList.add('selected')}else{const oldMethod=selectedCompareMethods.shift();document.querySelectorAll('.compare-method-btn').forEach(b=>{if(b.dataset.method===oldMethod)b.classList.remove('selected')});selectedCompareMethods.push(method);this.classList.add('selected')}updateCompareResult()}});document.getElementById('compareResult').innerHTML='<div class="compare-empty">選擇沖法開始比較</div>'}
 function updateCompareResult(){const cr=document.getElementById('compareResult');if(selectedCompareMethods.length===0){cr.innerHTML='<div class="compare-empty">選擇沖法開始比較</div>';return}const m=selectedCompareMethods.map(k=>({key:k,data:BREW_METHODS[k]})),hr=`<tr class="compare-header"><th>項目</th>${m.map(x=>`<th>${x.data.title.split(' · ')[0]}</th>`).join('')}</tr>`,rows=[{label:'難易度',values:m.map(x=>METHOD_COMPARE[x.key].difficulty)},{label:'風味走向',values:m.map(x=>METHOD_COMPARE[x.key].flavorProfile)},{label:'適合烘焙度',values:m.map(x=>METHOD_COMPARE[x.key].suitableRoast)},{label:'核心技巧',values:m.map(x=>METHOD_COMPARE[x.key].keyTechnique)},{label:'注水段數',values:m.map(x=>METHOD_COMPARE[x.key].pourStages)},{label:'粉水比',values:m.map(x=>`1:${x.data.ratio}`)},{label:'水溫',values:m.map(x=>x.data.temp)},{label:'預期時間',values:m.map(x=>x.data.time)}];cr.innerHTML=`<table class="compare-table">${hr}${rows.map(row=>`<tr><td><strong>${row.label}</strong></td>${row.values.map(val=>`<td>${val}</td>`).join('')}</tr>`).join('')}</table>`;renderCompareRadar()}
@@ -3058,6 +3347,71 @@ btt.addEventListener('click',()=>{window.scrollTo({top:0,behavior:'smooth'})});
 document.documentElement.style.scrollBehavior='smooth';
 /* Dark mode only - no toggle */
 init();
+
+// ===== FLAVOR SIMULATION DEMO =====
+function updateFlavorSim() {
+  const temp = parseInt(document.getElementById('simTemp')?.value || 93);
+  const grind = parseInt(document.getElementById('simGrind')?.value || 3);
+  const ratio = parseInt(document.getElementById('simRatio')?.value || 15);
+  
+  document.getElementById('simTempVal').textContent = temp + '°C';
+  const grindNames = {1:'極細',2:'細',3:'中細',4:'中粗',5:'粗'};
+  document.getElementById('simGrindVal').textContent = grindNames[grind] || '中細';
+  document.getElementById('simRatioVal').textContent = '1:' + ratio;
+  
+  // Calculate flavor bars
+  const tempFactor = (temp - 85) / 11; // 0-1
+  const grindFactor = (5 - grind) / 4; // fine=1, coarse=0
+  const ratioFactor = (17 - ratio) / 4; // low ratio=strong
+  
+  const acidity = Math.max(10, Math.min(90, 60 - tempFactor * 30 - grindFactor * 15 + (1 - ratioFactor) * 10));
+  const bitter = Math.max(10, Math.min(90, 20 + tempFactor * 40 + grindFactor * 25));
+  const sweet = Math.max(10, Math.min(90, 55 - Math.abs(tempFactor - 0.5) * 30 - Math.abs(grindFactor - 0.4) * 20));
+  const body = Math.max(10, Math.min(90, 30 + grindFactor * 30 + ratioFactor * 25));
+  
+  document.getElementById('simAcid').style.width = acidity + '%';
+  document.getElementById('simBitter').style.width = bitter + '%';
+  document.getElementById('simSweet').style.width = sweet + '%';
+  document.getElementById('simBody').style.width = body + '%';
+  
+  // Taste tag
+  let tag = '';
+  if (acidity > 55 && bitter < 35) tag = '🍋 明亮果酸，清爽乾淨';
+  else if (bitter > 55 && body > 55) tag = '🫘 醇厚濃郁，口感飽滿';
+  else if (sweet > 50 && acidity < 50 && bitter < 45) tag = '🍯 甜感突出，柔和均衡';
+  else if (body > 60) tag = '☕ 厚實濃醇，餘韻悠長';
+  else tag = '☕ 平衡順口，適合日常飲用';
+  document.getElementById('simTasteTag').textContent = tag;
+}
+['simTemp','simGrind','simRatio'].forEach(id => {
+  document.getElementById(id)?.addEventListener('input', updateFlavorSim);
+});
+updateFlavorSim();
+
+// ===== HERO BEGINNER CTA =====
+document.getElementById('heroBeginnerCta')?.addEventListener('click', () => {
+  window.location.hash = '#quick';
+  setTimeout(() => {
+    document.getElementById('quickStartBtn')?.click();
+  }, 200);
+});
+
+// ===== SEGMENT CARD CLICKS =====
+document.getElementById('segBeginner')?.addEventListener('click', () => {
+  window.location.hash = '#quick';
+  setTimeout(() => {
+    document.getElementById('quickStartBtn')?.click();
+  }, 200);
+});
+document.getElementById('segFlavor')?.addEventListener('click', () => {
+  window.location.hash = '#tools';
+});
+document.getElementById('segPro')?.addEventListener('click', () => {
+  window.location.hash = '#tools';
+  setTimeout(() => {
+    document.getElementById('compareBtn')?.click();
+  }, 200);
+});
 if('serviceWorker' in navigator){navigator.serviceWorker.register('sw.js').catch(()=>{})}
   
 
