@@ -2729,6 +2729,49 @@
   .bnm-rating-row { display: flex; align-items: center; justify-content: space-between; }
   .bnm-rating-lbl { font-size: 0.72em; color: var(--text-secondary); }
   .bnm-rating-dots { font-size: 0.78em; color: var(--copper); letter-spacing: 3px; }
+
+  /* ===== BREW COMPLETE — TWO-STEP REDESIGN ===== */
+  .bco-hero { text-align: center; padding: 8px 0 20px; }
+  .bco-hero-icon { font-size: 3em; display: block; margin-bottom: 8px; }
+  .bco-hero-title { font-size: 1.25em; font-weight: 600; color: var(--copper-light); margin-bottom: 4px; }
+  .bco-hero-sub { font-size: 0.78em; color: var(--text-secondary); opacity: 0.75; margin-bottom: 20px; }
+  .bco-actions { display: flex; flex-direction: column; gap: 9px; }
+  .bco-btn-note {
+    width: 100%; background: rgba(192,138,92,0.08); color: var(--copper-light);
+    border: 1px solid rgba(192,138,92,0.3); border-radius: 12px; padding: 13px;
+    font-size: 0.95em; font-weight: 500; cursor: pointer; font-family: inherit;
+    transition: background 0.2s, border-color 0.2s;
+  }
+  .bco-btn-note:hover { background: rgba(192,138,92,0.16); border-color: var(--copper); }
+  .bco-note-section {
+    max-height: 0; overflow: hidden;
+    transition: max-height 0.45s cubic-bezier(0.4,0,0.2,1);
+  }
+  .bco-note-section.open { max-height: 720px; }
+  .bco-note-inner { padding-top: 16px; }
+
+  /* ===== BREW NOTES FILTER PILLS ===== */
+  .bnm-filter {
+    padding: 10px 16px 0; display: flex; gap: 6px;
+    overflow-x: auto; -webkit-overflow-scrolling: touch; scrollbar-width: none;
+  }
+  .bnm-filter::-webkit-scrollbar { display: none; }
+  .bnm-filter-pill {
+    flex-shrink: 0; background: var(--surface-2); color: var(--text-secondary);
+    border: 1px solid var(--border); border-radius: 20px; padding: 5px 14px;
+    font-size: 0.75em; cursor: pointer; font-family: inherit;
+    transition: all 0.18s; white-space: nowrap;
+  }
+  .bnm-filter-pill.active {
+    background: rgba(192,138,92,0.14); color: var(--copper-light);
+    border-color: rgba(192,138,92,0.45);
+  }
+  .bnm-delete {
+    background: none; border: none; cursor: pointer;
+    color: var(--text-secondary); opacity: 0.35; font-size: 0.85em;
+    padding: 2px 4px; line-height: 1; transition: opacity 0.15s;
+  }
+  .bnm-delete:hover { opacity: 0.85; }
 </style>
 </head>
 <body>
@@ -3800,7 +3843,12 @@ function toggleTimer(){timerRunning=!timerRunning;document.getElementById('pause
 function resetTimer(){timerSeconds=0;timerRunning=false;document.getElementById('pausePlayBtn').textContent='⏸';clearInterval(timerInterval);const ring=document.getElementById('timerRingProgress');if(ring)ring.style.strokeDashoffset=326.73;updateTimerDisplay();const td=document.getElementById('timerDisplay');td.style.display='none';td.classList.remove('timer-sticky');document.querySelectorAll('.step-item.active-step').forEach(el=>el.classList.remove('active-step'));document.currentActiveStep=undefined;const ftbr=document.getElementById('focusTempBadge');if(ftbr)ftbr.style.display='none';exitFocusMode()}
 function updateTimerDisplay(){const m=Math.floor(timerSeconds/60),s=timerSeconds%60;$('timerTime').textContent=`${m}:${s.toString().padStart(2,'0')}`;const focusMode=document.body.classList.contains('focus-mode');if(focusMode){const activeStep=document.querySelector('.step-item.active-step');if(activeStep){const stepTitle=activeStep.querySelector('.step-title')?.textContent||'';const stepWaterPour=activeStep.querySelector('.step-water-pour')?.textContent||'';const stepWaterCum=activeStep.querySelector('.step-water-cum')?.textContent||'';const stepWaterBarFill=activeStep.querySelector('.step-water-bar-fill');const waterPct=stepWaterBarFill?stepWaterBarFill.style.width:'0%';let currentDisplay=document.querySelector('.current-step-display');if(!currentDisplay){currentDisplay=document.createElement('div');currentDisplay.className='current-step-display';const timerRing=document.querySelector('.timer-ring-wrap');if(timerRing)timerRing.parentNode.insertBefore(currentDisplay,timerRing.nextSibling)}const stepNum=activeStep.querySelector('.step-badge')?.textContent||'';currentDisplay.innerHTML=`<div class="current-step-title">${stepNum?stepNum+'. ':''}${stepTitle}</div>${stepWaterPour||stepWaterCum?`<div class="current-step-water"><span class="focus-water-pour">${stepWaterPour}</span><span>${stepWaterCum}</span><div class="focus-water-bar"><div class="focus-water-bar-fill" style="width:${waterPct}"></div></div></div>`:''}`;}};const ring=$('timerRingProgress');if(ring&&currentStepDurations.length>0){const totalTime=currentStepDurations[currentStepDurations.length-1]||180;const pct=Math.min(timerSeconds/totalTime,1);const circumference=326.73;ring.style.strokeDashoffset=circumference*(1-pct)}if(currentStepDurations.length>0){let activeIdx=0;for(let i=currentStepDurations.length-1;i>=0;i--){if(timerSeconds>=currentStepDurations[i]){activeIdx=i;break}}const prevActive=document.currentActiveStep;document.querySelectorAll('.step-item').forEach(el=>{const idx=parseInt(el.dataset.stepIdx);if(idx===activeIdx){el.classList.add('active-step');if(timerRunning&&prevActive!==activeIdx){if(navigator.vibrate)navigator.vibrate([100,50,100]);el.scrollIntoView({behavior:'smooth',block:'center'});const stepTitle=el.querySelector('.step-title')?.textContent||'';let tipKey='wait';if(stepTitle.includes('悶蒸')||stepTitle.includes('bloom')){tipKey='bloom'}else if(stepTitle.includes('注水')||stepTitle.includes('pour')){tipKey='pour'}else if(stepTitle.includes('最後')||stepTitle.includes('最近')){tipKey='final'}const tip=STEP_TIPS[tipKey]||STEP_TIPS.wait;const label=document.getElementById('timerLabel');if(label)label.textContent=tip}}else{el.classList.remove('active-step')}});document.currentActiveStep=activeIdx}}
 
-function showBrewComplete(){if(navigator.vibrate)navigator.vibrate([200,100,200,100,300]);const label=document.getElementById('timerLabel');if(label)label.textContent='沖煮完成！';const currentDisplay=document.querySelector('.current-step-display');if(currentDisplay)currentDisplay.innerHTML='<div class="current-step-title">沖煮完成</div><div class="current-step-water"><span style="color:var(--copper);">移除濾杯，享受這一杯</span></div>';clearInterval(timerInterval);timerRunning=false;document.getElementById('pausePlayBtn').textContent='✓';
+function showBrewComplete(){
+  if(navigator.vibrate)navigator.vibrate([200,100,200,100,300]);
+  const label=document.getElementById('timerLabel');if(label)label.textContent='沖煮完成！';
+  const currentDisplay=document.querySelector('.current-step-display');
+  if(currentDisplay)currentDisplay.innerHTML='<div class="current-step-title">沖煮完成</div><div class="current-step-water"><span style="color:var(--copper);">移除濾杯，享受這一杯</span></div>';
+  clearInterval(timerInterval);timerRunning=false;document.getElementById('pausePlayBtn').textContent='✓';
   const m=selectedMethod?BREW_METHODS[selectedMethod]:null;
   const d=parseFloat(document.getElementById('doseInput')?.value)||20;
   const r=m?getEffectiveRatio(m):15;
@@ -3810,8 +3858,32 @@ function showBrewComplete(){if(navigator.vibrate)navigator.vibrate([200,100,200,
   const overlay=document.createElement('div');
   overlay.id='brewCompleteOverlay';
   overlay.style.cssText='position:fixed;top:0;left:0;right:0;bottom:0;background:rgba(15,13,10,0.92);backdrop-filter:blur(12px);z-index:2000;display:flex;align-items:flex-start;justify-content:center;padding-top:60px;overflow-y:auto;animation:fadeIn 0.4s ease;';
-  overlay.innerHTML=`<div class="bco-card"><div style="font-size:2.8em;margin-bottom:6px;">☕</div><div style="font-size:1.2em;font-weight:600;color:var(--copper-light);margin-bottom:2px;">沖煮完成</div><div style="font-size:0.8em;color:var(--text-secondary);margin-bottom:20px;">${m?m.title.split(' · ')[0]:'手沖咖啡'} — 移除濾杯，靜置 30 秒再享用</div><div class="bco-grid"><div class="bco-cell"><div class="bco-val">${d}g</div><div class="bco-lbl">粉量</div></div><div class="bco-cell"><div class="bco-val">${tw}g</div><div class="bco-lbl">水量</div></div><div class="bco-cell"><div class="bco-val">${timeStr}</div><div class="bco-lbl">時間</div></div></div><div class="bco-rating-section"><div class="bco-rating-title">感受評量 <span style="font-size:0.8em;opacity:0.55;font-weight:400;">（可選）</span></div>${['acidity:酸度','sweetness:甜感','bitterness:苦度','balance:平衡感'].map(s=>{const[k,label]=s.split(':');return`<div class="bco-rating-row"><label class="bco-rating-label">${label}</label><div class="bco-rating-stars" id="stars-${k}" data-key="${k}" data-val="0">${[1,2,3,4,5].map(i=>`<button class="bco-star" data-v="${i}">○</button>`).join('')}</div><span class="bco-rating-hint" id="hint-${k}"></span></div>`}).join('')}</div><div class="bco-suggestion" id="brewSuggestion" style="display:none;"></div><textarea class="bco-textarea" id="brewNoteInput" placeholder="記錄這次的風味感受（可選）&#10;例：酸感明亮、餘韻甜…"></textarea><button class="bco-btn-primary" id="brewAgainBtn">再沖一杯 ↺</button><button class="bco-btn-outline" id="brewAdjustBtn">調整參數 →</button><div style="display:flex;gap:10px;justify-content:center;margin-top:8px;"><button class="bco-btn-ghost" id="brewDoneBtn" style="flex:1;">完成</button><button class="bco-btn-ghost" id="brewViewNotesBtn" style="flex:1;border:1px solid rgba(192,138,92,0.2);">🗒 查看所有紀錄</button></div></div>`;
+  const ratingRowsHtml=['acidity:酸度','sweetness:甜感','bitterness:苦度','balance:平衡感'].map(s=>{const[k,lbl]=s.split(':');return`<div class="bco-rating-row"><label class="bco-rating-label">${lbl}</label><div class="bco-rating-stars" id="stars-${k}" data-key="${k}" data-val="0">${[1,2,3,4,5].map(i=>`<button class="bco-star" data-v="${i}">○</button>`).join('')}</div><span class="bco-rating-hint" id="hint-${k}"></span></div>`;}).join('');
+  overlay.innerHTML=`<div class="bco-card">
+    <div class="bco-hero"><span class="bco-hero-icon">☕</span><div class="bco-hero-title">沖煮完成</div><div class="bco-hero-sub">${m?m.title.split(' · ')[0]:'手沖咖啡'} · 移除濾杯，靜置 30 秒再享用</div></div>
+    <div class="bco-grid"><div class="bco-cell"><div class="bco-val">${d}g</div><div class="bco-lbl">粉量</div></div><div class="bco-cell"><div class="bco-val">${tw}g</div><div class="bco-lbl">水量</div></div><div class="bco-cell"><div class="bco-val">${timeStr}</div><div class="bco-lbl">時間</div></div></div>
+    <div class="bco-actions">
+      <button class="bco-btn-note" id="brewNoteToggle">✎ 記錄心得</button>
+      <div class="bco-note-section" id="brewNoteSection"><div class="bco-note-inner">
+        <div class="bco-rating-section"><div class="bco-rating-title">感受評量 <span style="font-size:0.8em;opacity:0.55;font-weight:400;">（可選）</span></div>${ratingRowsHtml}</div>
+        <div class="bco-suggestion" id="brewSuggestion" style="display:none;"></div>
+        <textarea class="bco-textarea" id="brewNoteInput" placeholder="記錄這次的風味感受（可選）&#10;例：酸感明亮、餘韻甜…"></textarea>
+        <button class="bco-btn-primary" id="brewSaveNoteBtn">儲存並完成</button>
+        <button class="bco-btn-ghost" id="brewViewNotesBtn" style="border:1px solid rgba(192,138,92,0.2);margin-bottom:6px;">🗒 查看所有紀錄</button>
+      </div></div>
+      <button class="bco-btn-outline" id="brewAgainBtn">↺ 再沖一杯</button>
+      <button class="bco-btn-ghost" id="brewDoneBtn">✓ 完成</button>
+    </div>
+  </div>`;
   document.body.appendChild(overlay);
+  // Toggle note section
+  const noteToggle=document.getElementById('brewNoteToggle');
+  const noteSection=document.getElementById('brewNoteSection');
+  noteToggle.addEventListener('click',()=>{
+    const open=noteSection.classList.toggle('open');
+    noteToggle.textContent=open?'▲ 收起心得':'✎ 記錄心得';
+    if(open)setTimeout(()=>noteSection.scrollIntoView({behavior:'smooth',block:'nearest'}),100);
+  });
   // Rating star interactions
   const ratings={};
   const RATING_HINTS={acidity:['幾乎沒有','輕微','適中','明顯','非常強烈'],sweetness:['幾乎沒有','輕微','適中','明顯','非常甜'],bitterness:['幾乎沒有','輕微','適中','明顯','過苦'],balance:['不平衡','稍微偏','尚可','不錯','完美平衡']};
@@ -3838,10 +3910,11 @@ function showBrewComplete(){if(navigator.vibrate)navigator.vibrate([200,100,200,
     if(el){if(sugg.length){el.style.display='block';el.innerHTML='<div style="font-size:0.72em;color:var(--copper);letter-spacing:2px;text-transform:uppercase;margin-bottom:8px;">調整建議</div>'+sugg.map(s=>`<div style="font-size:0.85em;color:var(--text-secondary);line-height:1.6;padding:4px 0;border-bottom:1px solid var(--border);">${s}</div>`).join('')}else{el.style.display='none';}}
   }
   function saveNote(){const note=document.getElementById('brewNoteInput')?.value?.trim();const roast=document.getElementById('roastLevel')?.value||'';const process=document.getElementById('processMethod')?.value||'';const temp=parseFloat(document.getElementById('currentTemp')?.value)||0;const dripper=document.getElementById('dripperType')?.value||'';const days=parseInt(document.getElementById('daysOld')?.value)||0;try{const notes=JSON.parse(localStorage.getItem('brewNotes')||'[]');notes.unshift({time:new Date().toISOString(),method:selectedMethod||'',dose:d,water:tw,ratio:r,duration:timerSeconds,note:note||'',ratings:{...ratings},roast,process,temp,dripper,days});if(notes.length>50)notes.pop();localStorage.setItem('brewNotes',JSON.stringify(notes))}catch(e){}}
+  document.getElementById('brewSaveNoteBtn').addEventListener('click',()=>{saveNote();overlay.remove();exitFocusMode();});
+  document.getElementById('brewViewNotesBtn').addEventListener('click',()=>{saveNote();overlay.remove();exitFocusMode();setTimeout(()=>showBrewNotes(),100);});
   document.getElementById('brewAgainBtn').addEventListener('click',()=>{saveNote();overlay.remove();resetTimer();exitFocusMode();});
-  document.getElementById('brewAdjustBtn').addEventListener('click',()=>{saveNote();overlay.remove();exitFocusMode();setTimeout(()=>{document.getElementById('calcPanel')?.scrollIntoView({behavior:'smooth',block:'start'})},100);});
   document.getElementById('brewDoneBtn').addEventListener('click',()=>{saveNote();overlay.remove();exitFocusMode();});
-  document.getElementById('brewViewNotesBtn').addEventListener('click',()=>{saveNote();overlay.remove();exitFocusMode();setTimeout(()=>showBrewNotes(),100);});}
+}
 
 function startFreeTimer(){
   const overlay=document.createElement('div');
@@ -3898,9 +3971,44 @@ function showQuickBrewNoteModal(method,dose,water,seconds){
   const timeStr=mins+"'"+String(secs).padStart(2,'0')+'"';
   const modal=document.createElement('div');modal.id='quickBrewNoteModal';
   modal.style.cssText='position:fixed;top:0;left:0;right:0;bottom:0;background:rgba(15,13,10,0.92);backdrop-filter:blur(12px);z-index:2000;display:flex;align-items:flex-start;justify-content:center;padding:40px 16px 80px;overflow-y:auto;animation:fadeIn 0.3s ease;';
-  modal.innerHTML=`<div class="bco-card"><div style="font-size:2em;margin-bottom:6px;">☕</div><div style="font-size:1.1em;font-weight:600;color:var(--copper-light);margin-bottom:2px;">沖煮完成！</div><div style="font-size:0.78em;color:var(--text-secondary);margin-bottom:16px;">${m?m.title.split(' · ')[0]:'手沖咖啡'}</div><div class="bco-grid"><div class="bco-cell"><div class="bco-val">${dose}g</div><div class="bco-lbl">粉量</div></div><div class="bco-cell"><div class="bco-val">${water}g</div><div class="bco-lbl">水量</div></div><div class="bco-cell"><div class="bco-val">${timeStr}</div><div class="bco-lbl">時間</div></div></div><div style="margin:16px 0 8px;font-size:0.82em;font-weight:500;color:var(--copper-light);">風味紀錄 <span style="font-size:0.85em;opacity:0.55;font-weight:400;">（可選）</span></div><textarea class="bco-textarea" id="qbnInput" placeholder="例：酸感明亮、花香、餘韻甜…"></textarea><div style="display:flex;gap:10px;margin-top:12px;"><button class="bco-btn-primary" id="qbnSave" style="flex:1;">儲存紀錄</button><button class="bco-btn-ghost" id="qbnViewAll" style="flex:1;border:1px solid rgba(192,138,92,0.2);">🗒 查看所有紀錄</button></div><button class="bco-btn-ghost" id="qbnSkip" style="width:100%;margin-top:8px;opacity:0.6;">略過</button></div>`;
+  const qbnRatingRowsHtml=['acidity:酸度','sweetness:甜感','bitterness:苦度','balance:平衡感'].map(s=>{const[k,lbl]=s.split(':');return`<div class="bco-rating-row"><label class="bco-rating-label">${lbl}</label><div class="bco-rating-stars" id="qbn-stars-${k}" data-key="${k}" data-val="0">${[1,2,3,4,5].map(i=>`<button class="bco-star" data-v="${i}">○</button>`).join('')}</div><span class="bco-rating-hint" id="qbn-hint-${k}"></span></div>`;}).join('');
+  modal.innerHTML=`<div class="bco-card">
+    <div class="bco-hero"><span class="bco-hero-icon">☕</span><div class="bco-hero-title">沖煮完成！</div><div class="bco-hero-sub">${m?m.title.split(' · ')[0]:'手沖咖啡'}</div></div>
+    <div class="bco-grid"><div class="bco-cell"><div class="bco-val">${dose}g</div><div class="bco-lbl">粉量</div></div><div class="bco-cell"><div class="bco-val">${water}g</div><div class="bco-lbl">水量</div></div><div class="bco-cell"><div class="bco-val">${timeStr}</div><div class="bco-lbl">時間</div></div></div>
+    <div class="bco-actions">
+      <button class="bco-btn-note" id="qbnNoteToggle">✎ 記錄心得</button>
+      <div class="bco-note-section" id="qbnNoteSection"><div class="bco-note-inner">
+        <div class="bco-rating-section"><div class="bco-rating-title">感受評量 <span style="font-size:0.8em;opacity:0.55;font-weight:400;">（可選）</span></div>${qbnRatingRowsHtml}</div>
+        <textarea class="bco-textarea" id="qbnInput" placeholder="例：酸感明亮、花香、餘韻甜…"></textarea>
+        <button class="bco-btn-primary" id="qbnSave">儲存紀錄</button>
+        <button class="bco-btn-ghost" id="qbnViewAll" style="border:1px solid rgba(192,138,92,0.2);margin-bottom:6px;">🗒 查看所有紀錄</button>
+      </div></div>
+      <button class="bco-btn-ghost" id="qbnSkip" style="opacity:0.5;">略過，不記錄</button>
+    </div>
+  </div>`;
   document.body.appendChild(modal);
-  function saveQbn(){const note=document.getElementById('qbnInput')?.value?.trim();try{const notes=JSON.parse(localStorage.getItem('brewNotes')||'[]');notes.unshift({time:new Date().toISOString(),method:method||'',dose:dose,water:water,duration:seconds,note:note||'',ratings:{}});if(notes.length>50)notes.pop();localStorage.setItem('brewNotes',JSON.stringify(notes))}catch(e){}}
+  // Toggle note section
+  const qbnToggle=document.getElementById('qbnNoteToggle');
+  const qbnSection=document.getElementById('qbnNoteSection');
+  qbnToggle.addEventListener('click',()=>{
+    const open=qbnSection.classList.toggle('open');
+    qbnToggle.textContent=open?'▲ 收起心得':'✎ 記錄心得';
+    if(open)setTimeout(()=>qbnSection.scrollIntoView({behavior:'smooth',block:'nearest'}),100);
+  });
+  // Ratings
+  const qbnRatings={};
+  const QBN_RATING_HINTS={acidity:['幾乎沒有','輕微','適中','明顯','非常強烈'],sweetness:['幾乎沒有','輕微','適中','明顯','非常甜'],bitterness:['幾乎沒有','輕微','適中','明顯','過苦'],balance:['不平衡','稍微偏','尚可','不錯','完美平衡']};
+  modal.querySelectorAll('.bco-rating-stars').forEach(starsEl=>{
+    const key=starsEl.dataset.key;
+    starsEl.querySelectorAll('.bco-star').forEach(btn=>{
+      btn.addEventListener('click',()=>{
+        const v=parseInt(btn.dataset.v);qbnRatings[key]=v;starsEl.dataset.val=v;
+        starsEl.querySelectorAll('.bco-star').forEach((b,i)=>{b.textContent=i<v?'●':'○';b.style.color=i<v?'var(--copper-cta)':'';});
+        const hint=document.getElementById('qbn-hint-'+key);if(hint)hint.textContent=QBN_RATING_HINTS[key]?.[v-1]||'';
+      });
+    });
+  });
+  function saveQbn(){const note=document.getElementById('qbnInput')?.value?.trim();try{const notes=JSON.parse(localStorage.getItem('brewNotes')||'[]');notes.unshift({time:new Date().toISOString(),method:method||'',dose:dose,water:water,duration:seconds,note:note||'',ratings:{...qbnRatings}});if(notes.length>50)notes.pop();localStorage.setItem('brewNotes',JSON.stringify(notes))}catch(e){}}
   document.getElementById('qbnSave').addEventListener('click',()=>{saveQbn();modal.remove();showCompareToast('已儲存至沖煮紀錄 ✓');});
   document.getElementById('qbnViewAll').addEventListener('click',()=>{saveQbn();modal.remove();setTimeout(()=>showBrewNotes(),100);});
   document.getElementById('qbnSkip').addEventListener('click',()=>modal.remove());
@@ -4066,20 +4174,21 @@ function showBrewNotes(){
   const PROCESS_LBL={'washed':'水洗','natural':'日曬','honey':'蜜處理','anaerobic_natural':'厭氧日曬','anaerobic_washed':'厭氧水洗','fruit_ferment':'水果發酵'};
   const DRIPPER_LBL={'v60':'V60','kalita':'Kalita Wave','kono':'KONO','april':'April'};
   const RATING_LBL={'acidity':'酸度','sweetness':'甜感','bitterness':'苦度','balance':'平衡感'};
-  // Stats
-  let statsHtml='';
-  if(notes.length>0){
+  let filterMethod='all';
+  const buildStats=()=>{
+    if(notes.length===0)return'';
     const avgDur=notes.filter(n=>n.duration).reduce((a,n)=>a+n.duration,0)/Math.max(1,notes.filter(n=>n.duration).length);
-    const methodCount={};notes.forEach(n=>{if(n.method)methodCount[n.method]=(methodCount[n.method]||0)+1});
-    const topMethod=Object.entries(methodCount).sort((a,b)=>b[1]-a[1])[0];
+    const mc={};notes.forEach(n=>{if(n.method)mc[n.method]=(mc[n.method]||0)+1});
+    const topMethod=Object.entries(mc).sort((a,b)=>b[1]-a[1])[0];
     const avgM=Math.floor(avgDur/60),avgS=Math.round(avgDur%60);
-    statsHtml=`<div class="bnm-stats-bar">
-      <div class="bnm-stat-cell"><div class="bnm-stat-num">${notes.length}</div><div class="bnm-stat-lbl">總次數</div></div>
-      <div class="bnm-stat-cell"><div class="bnm-stat-num">${avgM}:${String(avgS).padStart(2,'0')}</div><div class="bnm-stat-lbl">平均時間</div></div>
-      <div class="bnm-stat-cell"><div class="bnm-stat-num" style="font-size:0.82em">${topMethod?methodNames[topMethod[0]]||topMethod[0]:'—'}</div><div class="bnm-stat-lbl">最常沖</div></div>
-    </div>`;
-  }
-  const buildList=(ns)=>ns.length===0?'<div class="bnm-empty">還沒有任何紀錄<br>完成沖煮後可以記錄風味感受</div>':ns.map((n,idx)=>{
+    return`<div class="bnm-stats-bar"><div class="bnm-stat-cell"><div class="bnm-stat-num">${notes.length}</div><div class="bnm-stat-lbl">總次數</div></div><div class="bnm-stat-cell"><div class="bnm-stat-num">${avgM}:${String(avgS).padStart(2,'0')}</div><div class="bnm-stat-lbl">平均時間</div></div><div class="bnm-stat-cell"><div class="bnm-stat-num" style="font-size:0.82em">${topMethod?methodNames[topMethod[0]]||topMethod[0]:'—'}</div><div class="bnm-stat-lbl">最常沖</div></div></div>`;
+  };
+  const buildFilterPills=()=>{
+    const methods=[...new Set(notes.map(n=>n.method).filter(Boolean))];
+    if(methods.length<=1)return'';
+    return`<div class="bnm-filter" id="bnmFilter"><button class="bnm-filter-pill${filterMethod==='all'?' active':''}" data-method="all">全部</button>${methods.map(k=>`<button class="bnm-filter-pill${filterMethod===k?' active':''}" data-method="${k}">${methodNames[k]||k}</button>`).join('')}</div>`;
+  };
+  const buildList=(ns)=>ns.length===0?`<div class="bnm-empty">${notes.length===0?'還沒有任何紀錄<br>完成沖煮後可以記錄風味感受':'這個沖法還沒有紀錄'}</div>`:ns.map((n,idx)=>{
     const dt=new Date(n.time);const dateStr=`${dt.getMonth()+1}/${dt.getDate()} ${dt.getHours().toString().padStart(2,'0')}:${dt.getMinutes().toString().padStart(2,'0')}`;
     const dur=n.duration?Math.floor(n.duration/60)+"'"+String(n.duration%60).padStart(2,'0')+'"':'';
     const details=[];
@@ -4092,16 +4201,16 @@ function showBrewNotes(){
     const ratingEntries=Object.entries(n.ratings||{}).filter(([,v])=>v>0);
     const hasDetail=details.length>0||ratingEntries.length>0||n.note;
     const detailHtml=hasDetail?`<div class="bnm-detail" id="bnmd-${idx}" style="display:none;">${details.length?`<div class="bnm-detail-grid">${details.map(d=>`<div class="bnm-detail-cell"><span class="bnm-detail-lbl">${d.l}</span><span class="bnm-detail-val">${d.v}</span></div>`).join('')}</div>`:''}${ratingEntries.length?`<div class="bnm-detail-ratings">${ratingEntries.map(([k,v])=>`<div class="bnm-rating-row"><span class="bnm-rating-lbl">${RATING_LBL[k]||k}</span><span class="bnm-rating-dots">${'●'.repeat(v)+'○'.repeat(5-v)}</span></div>`).join('')}</div>`:''}${n.note?`<div class="bnm-item-note">${n.note}</div>`:''}</div>`:'';
-    return `<div class="bnm-item${hasDetail?' bnm-expandable':''}" data-idx="${idx}"><div class="bnm-item-header"><span class="bnm-item-method">${methodNames[n.method]||n.method||'手沖咖啡'}</span><div style="display:flex;align-items:center;gap:4px;"><span class="bnm-item-date">${dateStr}</span>${hasDetail?`<span class="bnm-expand-arrow" id="bnma-${idx}">›</span>`:''}<button class="bnm-delete" data-del="${idx}" title="刪除">🗑</button></div></div><div class="bnm-item-stats"><span class="bnm-stat">粉 ${n.dose}g</span><span class="bnm-stat">水 ${n.water}g</span>${dur?`<span class="bnm-stat">${dur}</span>`:''}</div>${detailHtml}</div>`;
+    return`<div class="bnm-item${hasDetail?' bnm-expandable':''}" data-idx="${idx}"><div class="bnm-item-header"><span class="bnm-item-method">${methodNames[n.method]||n.method||'手沖咖啡'}</span><div style="display:flex;align-items:center;gap:4px;"><span class="bnm-item-date">${dateStr}</span>${hasDetail?`<span class="bnm-expand-arrow" id="bnma-${idx}">›</span>`:''}<button class="bnm-delete" data-time="${n.time}" title="刪除">🗑</button></div></div><div class="bnm-item-stats"><span class="bnm-stat">粉 ${n.dose}g</span><span class="bnm-stat">水 ${n.water}g</span>${dur?`<span class="bnm-stat">${dur}</span>`:''}</div>${detailHtml}</div>`;
   }).join('');
   const modal=document.createElement('div');modal.id='brewNotesModal';
   modal.style.cssText='position:fixed;top:0;left:0;right:0;bottom:0;background:rgba(15,13,10,0.9);backdrop-filter:blur(12px);z-index:2000;display:flex;align-items:center;justify-content:center;animation:fadeIn 0.2s ease;';
   const renderModal=()=>{
+    const filtered=filterMethod==='all'?notes:notes.filter(n=>n.method===filterMethod);
     const listEl=modal.querySelector('.bnm-list');
-    if(listEl)listEl.innerHTML=buildList(notes);
+    if(listEl)listEl.innerHTML=buildList(filtered);
     const titleEl=modal.querySelector('.bnm-title');
     if(titleEl)titleEl.textContent=`🗒 沖煮紀錄（${notes.length} 筆）`;
-    // Recalculate stats after delete
     const statCells=modal.querySelectorAll('.bnm-stat-cell');
     if(statCells.length>=3&&notes.length>0){
       const avgDur=notes.filter(n=>n.duration).reduce((a,n)=>a+n.duration,0)/Math.max(1,notes.filter(n=>n.duration).length);
@@ -4116,10 +4225,23 @@ function showBrewNotes(){
     }
     attachListHandlers();
   };
-  modal.innerHTML=`<div class="bnm-card"><div class="bnm-header"><span class="bnm-title">🗒 沖煮紀錄（${notes.length} 筆）</span><button class="bnm-close" id="bnmClose">✕</button></div>${statsHtml}<div class="bnm-list">${buildList(notes)}</div></div>`;
+  modal.innerHTML=`<div class="bnm-card"><div class="bnm-header"><span class="bnm-title">🗒 沖煮紀錄（${notes.length} 筆）</span><button class="bnm-close" id="bnmClose">✕</button></div>${buildStats()}${buildFilterPills()}<div class="bnm-list">${buildList(notes)}</div></div>`;
   document.body.appendChild(modal);
   document.getElementById('bnmClose').addEventListener('click',()=>modal.remove());
   modal.addEventListener('click',e=>{if(e.target===modal)modal.remove();});
+  function attachFilterHandlers(){
+    modal.querySelectorAll('.bnm-filter-pill').forEach(pill=>{
+      pill.addEventListener('click',e=>{
+        e.stopPropagation();
+        filterMethod=pill.dataset.method;
+        modal.querySelectorAll('.bnm-filter-pill').forEach(p=>p.classList.toggle('active',p.dataset.method===filterMethod));
+        const filtered=filterMethod==='all'?notes:notes.filter(n=>n.method===filterMethod);
+        const listEl=modal.querySelector('.bnm-list');
+        if(listEl)listEl.innerHTML=buildList(filtered);
+        attachListHandlers();
+      });
+    });
+  }
   function attachListHandlers(){
     modal.querySelectorAll('.bnm-expandable').forEach(item=>{
       item.addEventListener('click',e=>{
@@ -4136,14 +4258,15 @@ function showBrewNotes(){
     modal.querySelectorAll('.bnm-delete').forEach(btn=>{
       btn.addEventListener('click',e=>{
         e.stopPropagation();
-        const idx=parseInt(btn.dataset.del);
-        notes.splice(idx,1);
+        const timeKey=btn.dataset.time;
+        notes=notes.filter(n=>n.time!==timeKey);
         try{localStorage.setItem('brewNotes',JSON.stringify(notes))}catch(err){}
         renderModal();
       });
     });
   }
   attachListHandlers();
+  attachFilterHandlers();
 }
 /* ===== SWIPE TO SWITCH TABS (mobile) ===== */
 (function(){
