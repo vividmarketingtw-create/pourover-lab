@@ -1844,6 +1844,9 @@
   .pto-pour-total, .qt-pour-total {
     font-size: 0.42em; opacity: 0.55; margin-left: 6px; letter-spacing: 1px;
   }
+  .pto-pour-sep {
+    font-size: 0.48em; opacity: 0.45; margin: 0 2px; vertical-align: middle; letter-spacing: 0;
+  }
   /* Step transition flash */
   @keyframes stepFlash {
     0%   { background: rgba(192,138,92,0.18); }
@@ -2968,7 +2971,7 @@
           </button>
         </div>
         <button class="quick-float-trigger" id="quickFloatTrigger">
-          ▶ 開始計時 <span class="qft-arrow">▲</span>
+          ▶ 開始計時
         </button>
       </div>
 
@@ -3784,7 +3787,7 @@ function startProTimerOverlay(m,dose,totalWater,ratio){
       const ptoIsWait=step.water===0&&step.cum>0&&!ptoIsAction;
       if(waterEl){
         if(step.water>0){
-          waterEl.innerHTML=`<span class="pto-water-pour">+${step.water}g<span class="pto-pour-total">/ ${totalWater}g</span></span><span class="pto-water-cum"><span class="qt-water-cum-label">累計</span>${step.cum}g</span>`;
+          waterEl.innerHTML=`<span class="pto-water-pour">+${step.water}g<span class="pto-pour-sep"> / </span>${step.cum}g</span>`;
         }else if(ptoIsAction){
           waterEl.innerHTML=`<button class="qt-action-done" id="ptoActionDone">✓ 完成動作，繼續</button>`;
         }else if(ptoIsWait&&ptoStepDur>0){
@@ -4082,7 +4085,7 @@ function startQuickTimer(){
     // Wait step detection
     const isWaitStep=step.water===0&&step.cum>0&&!isActionStep;
     const waterHtml=step.water>0
-      ?'<div class="qt-cur-water"><span class="qt-water-pour">+'+step.water+'g<span class="qt-pour-total">/ '+water+'g</span></span><span class="qt-water-cum"><span class="qt-water-cum-label">累計</span>'+step.cum+'g</span></div>'
+      ?'<div class="qt-cur-water"><span class="qt-water-pour">+'+step.water+'g<span class="pto-pour-sep"> / </span>'+step.cum+'g</span></div>'
       :step.cum>0
         ?'<div class="qt-cur-water"><span class="qt-water-cum"><span class="qt-water-cum-label">累計</span>'+step.cum+'g <span style="opacity:0.45">/ '+water+'g</span></span></div>'
         :'';
@@ -4528,16 +4531,18 @@ function updateQuickBrewResults() {
     ffb.addEventListener('click', () => { floatMenu?.classList.remove('open'); fg?.classList.remove('menu-open'); startFreeTimer(); });
     ffb._hasListener = true;
   }
-  // Attach trigger button toggle
+  // Attach trigger button — directly start guided timer
   const ftrig = document.getElementById('quickFloatTrigger');
   if (ftrig && !ftrig._hasListener) {
     ftrig.addEventListener('click', () => {
-      const menu = document.getElementById('quickFloatMenu');
-      const grp = document.getElementById('quickFloatGroup');
-      if (menu && grp) { menu.classList.toggle('open'); grp.classList.toggle('menu-open'); }
+      startQuickTimer();
     });
     ftrig._hasListener = true;
   }
+
+  // Also attach direct listener to inline start button (in case delegation misses it)
+  const qsb = document.getElementById('quickStartTimerBtn');
+  if (qsb) qsb.addEventListener('click', startQuickTimer);
 
   // Update quick dose buttons active state
   document.querySelectorAll('#quickDoseBtns .dose-btn').forEach(b => {
