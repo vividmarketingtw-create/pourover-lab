@@ -3787,7 +3787,7 @@ function startProTimerOverlay(m,dose,totalWater,ratio){
       const ptoIsWait=step.water===0&&step.cum>0&&!ptoIsAction;
       if(waterEl){
         if(step.water>0){
-          waterEl.innerHTML=`<span class="pto-water-pour">+${step.water}g<span class="pto-pour-sep"> / </span>${step.cum}g</span>`;
+          waterEl.innerHTML=`<span class="pto-water-pour">+${step.water}g<span class="pto-pour-sep"> / </span>${step.cum}g</span><span class="pto-water-cum" style="opacity:0.45;margin-top:6px;">/ ${totalWater}g</span>`;
         }else if(ptoIsAction){
           waterEl.innerHTML=`<button class="qt-action-done" id="ptoActionDone">✓ 完成動作，繼續</button>`;
         }else if(ptoIsWait&&ptoStepDur>0){
@@ -4085,7 +4085,7 @@ function startQuickTimer(){
     // Wait step detection
     const isWaitStep=step.water===0&&step.cum>0&&!isActionStep;
     const waterHtml=step.water>0
-      ?'<div class="qt-cur-water"><span class="qt-water-pour">+'+step.water+'g<span class="pto-pour-sep"> / </span>'+step.cum+'g</span></div>'
+      ?'<div class="qt-cur-water"><span class="qt-water-pour">+'+step.water+'g<span class="pto-pour-sep"> / </span>'+step.cum+'g</span><span class="qt-water-cum" style="opacity:0.45;margin-top:4px;">/ '+water+'g</span></div>'
       :step.cum>0
         ?'<div class="qt-cur-water"><span class="qt-water-cum"><span class="qt-water-cum-label">累計</span>'+step.cum+'g <span style="opacity:0.45">/ '+water+'g</span></span></div>'
         :'';
