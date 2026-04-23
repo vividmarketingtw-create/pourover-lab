@@ -13,7 +13,10 @@
 <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>☕</text></svg>">
 <link rel="canonical" href="https://vividmarketingtw-create.github.io/pourover-lab/">
 <meta property="og:url" content="https://vividmarketingtw-create.github.io/pourover-lab/">
-<meta property="og:image" content="https://vividmarketingtw-create.github.io/pourover-lab/og-image.svg">
+<meta property="og:image" content="https://vividmarketingtw-create.github.io/pourover-lab/og-image.png">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<link rel="apple-touch-icon" href="icon-192.png">
 <meta property="og:locale" content="zh_TW">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="手沖咖啡實驗室 | Pour Over Lab">
@@ -3157,6 +3160,10 @@
     .recommend-toggle { font-size: 0.82em; padding: 13px 12px; }
     .dripper-compact-row { padding: 11px 12px; }
     .section-title { font-size: 1.15em; }
+    /* Radar chart — bigger labels, full width on tiny screens */
+    .radar-svg { max-width: 100%; }
+    .radar-svg text { font-size: 12px !important; }
+    .compare-radar-svg text { font-size: 11px !important; }
   }
 </style>
 </head>
@@ -4828,6 +4835,16 @@ function copyRecipe(){
     const btn=document.getElementById('recipeCopyBtn');if(btn){btn.textContent='✓ 已複製';btn.classList.add('copied');setTimeout(()=>{btn.textContent='📋 複製配方';btn.classList.remove('copied')},2000);}
   });
 }
+function timeAgo(isoStr){
+  const dt=new Date(isoStr),now=new Date(),diff=Math.floor((now-dt)/1000);
+  if(diff<60)return'剛才';
+  if(diff<3600)return Math.floor(diff/60)+'分鐘前';
+  if(diff<86400)return Math.floor(diff/3600)+'小時前';
+  const yest=new Date(now);yest.setDate(yest.getDate()-1);
+  if(dt.toDateString()===yest.toDateString())return'昨天 '+dt.getHours().toString().padStart(2,'0')+':'+dt.getMinutes().toString().padStart(2,'0');
+  if(diff<604800)return Math.floor(diff/86400)+'天前';
+  return(dt.getMonth()+1)+'/'+(dt.getDate())+' '+(dt.getHours().toString().padStart(2,'0'))+':'+(dt.getMinutes().toString().padStart(2,'0'));
+}
 function showBrewNotes(){
   const existing=document.getElementById('brewNotesModal');if(existing){existing.remove();return;}
   let notes=[];try{notes=JSON.parse(localStorage.getItem('brewNotes')||'[]')}catch(e){}
@@ -4851,7 +4868,7 @@ function showBrewNotes(){
     return`<div class="bnm-filter" id="bnmFilter"><button class="bnm-filter-pill${filterMethod==='all'?' active':''}" data-method="all">全部</button>${methods.map(k=>`<button class="bnm-filter-pill${filterMethod===k?' active':''}" data-method="${k}">${methodNames[k]||k}</button>`).join('')}</div>`;
   };
   const buildList=(ns)=>ns.length===0?`<div class="bnm-empty">${notes.length===0?'還沒有任何紀錄<br>完成沖煮後可以記錄風味感受':'這個沖法還沒有紀錄'}</div>`:ns.map((n,idx)=>{
-    const dt=new Date(n.time);const dateStr=`${dt.getMonth()+1}/${dt.getDate()} ${dt.getHours().toString().padStart(2,'0')}:${dt.getMinutes().toString().padStart(2,'0')}`;
+    const dateStr=timeAgo(n.time);
     const dur=n.duration?Math.floor(n.duration/60)+"'"+String(n.duration%60).padStart(2,'0')+'"':'';
     const details=[];
     if(n.roast)details.push({l:'烘焙度',v:ROAST_LBL[n.roast]||n.roast});
@@ -4887,10 +4904,22 @@ function showBrewNotes(){
     }
     attachListHandlers();
   };
-  modal.innerHTML=`<div class="bnm-card"><div class="bnm-header"><span class="bnm-title">🗒 沖煮紀錄（${notes.length} 筆）</span><button class="bnm-close" id="bnmClose">✕</button></div>${buildStats()}${buildFilterPills()}<div class="bnm-list">${buildList(notes)}</div></div>`;
+  modal.innerHTML=`<div class="bnm-card"><div class="bnm-header"><span class="bnm-title">🗒 沖煮紀錄（${notes.length} 筆）</span><div style="display:flex;align-items:center;gap:8px;">${notes.length>0?`<button id="bnmExport" style="background:transparent;border:1px solid rgba(192,138,92,0.3);color:var(--copper-light);font-size:0.72em;padding:5px 10px;cursor:pointer;font-family:inherit;letter-spacing:0.5px;" title="匯出 JSON">↓ 匯出</button>`:''}<button class="bnm-close" id="bnmClose">✕</button></div></div>${buildStats()}${buildFilterPills()}<div class="bnm-list">${buildList(notes)}</div></div>`;
   document.body.appendChild(modal);
   document.getElementById('bnmClose').addEventListener('click',()=>modal.remove());
   modal.addEventListener('click',e=>{if(e.target===modal)modal.remove();});
+  document.getElementById('bnmExport')?.addEventListener('click',e=>{
+    e.stopPropagation();
+    const json=JSON.stringify(notes,null,2);
+    const blob=new Blob([json],{type:'application/json'});
+    const url=URL.createObjectURL(blob);
+    const a=document.createElement('a');
+    const date=new Date().toISOString().slice(0,10);
+    a.href=url;a.download=`pourover-notes-${date}.json`;
+    document.body.appendChild(a);a.click();
+    setTimeout(()=>{URL.revokeObjectURL(url);a.remove()},300);
+    showCompareToast('沖煮紀錄已匯出 ✓');
+  });
   function attachFilterHandlers(){
     modal.querySelectorAll('.bnm-filter-pill').forEach(pill=>{
       pill.addEventListener('click',e=>{
