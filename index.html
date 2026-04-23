@@ -13,7 +13,7 @@
 <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>☕</text></svg>">
 <link rel="canonical" href="https://vividmarketingtw-create.github.io/pourover-lab/">
 <meta property="og:url" content="https://vividmarketingtw-create.github.io/pourover-lab/">
-<meta property="og:image" content="https://vividmarketingtw-create.github.io/pourover-lab/og-image.png">
+<meta property="og:image" content="https://vividmarketingtw-create.github.io/pourover-lab/og-image.svg">
 <meta property="og:locale" content="zh_TW">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="手沖咖啡實驗室 | Pour Over Lab">
@@ -23,7 +23,7 @@
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
 <meta name="apple-mobile-web-app-title" content="手沖咖啡實驗室">
-<link href="https://fonts.googleapis.com/css2?family=Noto+Sans+TC:wght@300;400;500;700&family=Playfair+Display:ital,wght@0,400;0,700;0,900;1,400&family=DM+Sans:wght@400;500;700&family=Space+Mono:wght@400;700&family=Cormorant+Garamond:ital,wght@0,400;0,700;1,400&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Noto+Sans+TC:wght@300;400;500;700&family=DM+Sans:wght@400;500;700&family=Space+Mono:wght@400;700&family=Cormorant+Garamond:ital,wght@0,300;0,400;0,700;1,300;1,400&display=swap" rel="stylesheet">
 <style>
 
   * { margin: 0; padding: 0; box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
@@ -311,15 +311,15 @@
     transition: color 0.3s;
   }
   .quick-flow-step.active { color: var(--copper-light); }
+  .quick-flow-step.done { color: var(--copper); opacity: 0.65; }
   .quick-flow-num {
     width: 22px; height: 22px; border-radius: 50%; display: inline-flex;
     align-items: center; justify-content: center; font-size: 0.78em;
     background: var(--surface-3); color: var(--text-secondary); font-weight: 700;
     transition: all 0.3s;
   }
-  .quick-flow-step.active .quick-flow-num {
-    background: var(--copper); color: #1A1714;
-  }
+  .quick-flow-step.active .quick-flow-num { background: var(--copper); color: #1A1714; }
+  .quick-flow-step.done .quick-flow-num { background: rgba(192,138,92,0.25); color: var(--copper); }
   .quick-flow-arrow { color: var(--border-hover); font-size: 0.8em; }
 
   /* Quick method popular badge */
@@ -3229,11 +3229,11 @@
       </div>
 
       <div class="quick-flow-steps">
-        <div class="quick-flow-step active"><span class="quick-flow-num">1</span>選沖法</div>
+        <div class="quick-flow-step active" id="qfStep1"><span class="quick-flow-num">1</span>選沖法</div>
         <div class="quick-flow-arrow">→</div>
-        <div class="quick-flow-step"><span class="quick-flow-num">2</span>定粉量</div>
+        <div class="quick-flow-step" id="qfStep2"><span class="quick-flow-num">2</span>定粉量</div>
         <div class="quick-flow-arrow">→</div>
-        <div class="quick-flow-step"><span class="quick-flow-num">3</span>開始沖</div>
+        <div class="quick-flow-step" id="qfStep3"><span class="quick-flow-num">3</span>開始沖</div>
       </div>
 
       <h3 class="selector-label">選擇沖法</h3>
@@ -3263,16 +3263,6 @@
       </div>
 
       <div class="quick-float-group" id="quickFloatGroup">
-        <div class="quick-float-menu" id="quickFloatMenu">
-          <button class="quick-float-menu-item" id="quickFloatTimer">
-            <span class="qfm-icon">🧭</span>
-            <div><div>跟步驟計時</div><div class="qfm-sub">按照沖煮步驟引導</div></div>
-          </button>
-          <button class="quick-float-menu-item" id="quickFloatFree">
-            <span class="qfm-icon">⏱</span>
-            <div><div>自由計時</div><div class="qfm-sub">不跟步驟，只計時間</div></div>
-          </button>
-        </div>
         <button class="quick-float-trigger" id="quickFloatTrigger">
           ▶ 開始計時
         </button>
@@ -3688,7 +3678,7 @@
       <!-- FAQ Section -->
     <section class="section visible" id="faqSection">
       <div class="section-label">FAQ</div>
-      <div class="section-title">FAQ</div>
+      <div class="section-title">常見問題解答</div>
       <div id="faqList"></div>
     </section>
 
@@ -4123,7 +4113,7 @@ function attachEventListeners(){document.getElementById('doseInput').addEventLis
 function updateDoseBtnActive(){const v=parseFloat(document.getElementById('doseInput').value);document.querySelectorAll('.dose-btn:not(.ratio-preset)').forEach(b=>{b.classList.toggle('active',parseFloat(b.dataset.dose)===v)})}
 function renderRadar(k){const p=FLAVOR_PROFILES[k];if(!p)return;const svg=document.getElementById('radarSvg'),cx=120,cy=105,r=80,labels=['酸度','苦度','甜度','體脂感','香氣'],keys=['acidity','bitterness','sweetness','body','aroma'],n=5;let gridLines='',axisLines='',labelEls='';for(let ring=2;ring<=10;ring+=2){let pts=[];for(let i=0;i<n;i++){const a=Math.PI*2*i/n-Math.PI/2,x=cx+r*(ring/10)*Math.cos(a),y=cy+r*(ring/10)*Math.sin(a);pts.push(`${x},${y}`)}gridLines+=`<polygon points="${pts.join(' ')}" fill="none" stroke="rgba(184,125,86,${ring===10?0.3:0.12})" stroke-width="${ring===10?1:0.5}"/>`}for(let i=0;i<n;i++){const a=Math.PI*2*i/n-Math.PI/2,x=cx+r*Math.cos(a),y=cy+r*Math.sin(a),lx=cx+(r+16)*Math.cos(a),ly=cy+(r+16)*Math.sin(a);axisLines+=`<line x1="${cx}" y1="${cy}" x2="${x}" y2="${y}" stroke="rgba(184,125,86,0.2)" stroke-width="0.5"/>`;labelEls+=`<text x="${lx}" y="${ly}" text-anchor="middle" dominant-baseline="central" fill="currentColor" font-size="10" opacity="0.7">${labels[i]}</text>`}let dataPts=[];for(let i=0;i<n;i++){const a=Math.PI*2*i/n-Math.PI/2,v=p[keys[i]]/10,x=cx+r*v*Math.cos(a),y=cy+r*v*Math.sin(a);dataPts.push(`${x},${y}`)}const dataPolygon=`<polygon points="${dataPts.join(' ')}" fill="rgba(184,125,86,0.2)" stroke="var(--copper)" stroke-width="2"/>`;let dots='';for(let i=0;i<n;i++){const a=Math.PI*2*i/n-Math.PI/2,v=p[keys[i]]/10,x=cx+r*v*Math.cos(a),y=cy+r*v*Math.sin(a);dots+=`<circle cx="${x}" cy="${y}" r="3.5" fill="var(--copper)"/>`}svg.innerHTML=gridLines+axisLines+dataPolygon+dots+labelEls;const desc=FLAVOR_DESCRIPTIONS[k];if(desc){let descEl=document.querySelector('.radar-desc');if(!descEl){descEl=document.createElement('div');descEl.className='radar-desc';svg.parentNode.appendChild(descEl)}descEl.textContent=desc}}
 function recalcAll(){if(!selectedMethod)return;const m=BREW_METHODS[selectedMethod];updateCalcPanel(m);updateSteps(m)}
-function startTimer(){if(!selectedMethod){alert('請先選擇沖法');return}
+function startTimer(){if(!selectedMethod){showErrorToast('請先選擇沖法');return}
   const m=BREW_METHODS[selectedMethod];const d=parseFloat(document.getElementById('doseInput').value)||20;const r=getEffectiveRatio(m);const tw=Math.round(d*r);
   if(!window._brewConfirmed){showBrewConfirmModal(m,d,tw,r);return;}
   window._brewConfirmed=false;
@@ -4559,18 +4549,19 @@ function showPreBrewChecklist(onConfirm){
 }
 function startQuickTimer(){
   const method=BREW_METHODS[currentQuickMethod];
-  if(!method){alert('請先選擇沖法');return}
+  if(!method){showErrorToast('請先選擇沖法');return}
   showPreBrewChecklist(()=>_doStartQuickTimer());
 }
 function _doStartQuickTimer(){
   const existing=document.getElementById('quickTimerOverlay');
   if(existing)existing.remove();
   document.getElementById('quickTimerDot')?.classList.add('active');
+  updateQuickFlowSteps(3);
   // 隱藏計時浮動按鈕（與overlay重複）
   const fg=document.getElementById('quickFloatGroup');
   if(fg)fg.classList.remove('visible');
   const method=BREW_METHODS[currentQuickMethod];
-  if(!method){alert('請先選擇沖法');return}
+  if(!method){showErrorToast('請先選擇沖法');return}
   const dose=parseFloat(document.getElementById('quickDoseInput').value)||20;
   const water=Math.round(dose*method.ratio);
   const stepsData=method.buildSteps(dose,water);
@@ -4732,6 +4723,8 @@ document.addEventListener('click',e=>{
 function renderFAQ(){const fl=document.getElementById('faqList');fl.innerHTML=FAQ_DATA.map((faq,idx)=>`<div class="knowledge-tip" data-search="${(faq.q+' '+faq.a).toLowerCase()}"><div class="knowledge-tip-header"><div class="knowledge-tip-title" style="font-weight:600;color:var(--copper-light);">${faq.q}</div><div class="knowledge-tip-toggle">▼</div></div><div class="knowledge-tip-text">${faq.a}</div></div>`).join('');document.querySelectorAll('#faqList .knowledge-tip-header').forEach((h,idx)=>{const c=h.nextElementSibling,t=h.querySelector('.knowledge-tip-toggle');h.addEventListener('click',()=>{c.classList.toggle('open');t.classList.toggle('open')})})}
 function filterKnowledge(query){const q=query.toLowerCase().trim();let count=0;document.querySelectorAll('#faqList .knowledge-tip').forEach(el=>{const text=el.dataset.search||el.textContent.toLowerCase();const show=!q||text.includes(q);el.style.display=show?'':'none';if(show&&q)count++;});document.querySelectorAll('#troubleshootGrid .troubleshoot-card').forEach(el=>{const text=el.textContent.toLowerCase();const show=!q||text.includes(q);el.style.display=show?'':'none';if(show&&q)count++;});const res=document.getElementById('knowledgeSearchResults');if(res)res.textContent=q?`找到 ${count} 筆相關內容`:'';if(q){const faqSec=document.getElementById('faqSection');const tsSec=document.getElementById('troubleshootSection');const hasVisibleFaq=!!document.querySelector('#faqList .knowledge-tip[style=""]')||!!document.querySelector('#faqList .knowledge-tip:not([style])');const hasVisibleTs=!!document.querySelector('#troubleshootGrid .troubleshoot-card[style=""]')||!!document.querySelector('#troubleshootGrid .troubleshoot-card:not([style])');if(hasVisibleTs)setTimeout(()=>tsSec?.scrollIntoView({behavior:'smooth',block:'start'}),150);else if(hasVisibleFaq)setTimeout(()=>faqSec?.scrollIntoView({behavior:'smooth',block:'start'}),150);}}
 function showCompareToast(msg){const t=document.createElement('div');t.style.cssText='position:fixed;bottom:90px;left:50%;transform:translateX(-50%);background:rgba(192,138,92,0.95);color:#0F0D0A;padding:10px 20px;border-radius:4px;font-size:0.82em;z-index:9999;pointer-events:none;letter-spacing:0.5px;white-space:nowrap;box-shadow:0 4px 16px rgba(0,0,0,0.3);animation:fadeIn 0.2s ease;';t.textContent=msg;document.body.appendChild(t);setTimeout(()=>{t.style.transition='opacity 0.4s';t.style.opacity='0';setTimeout(()=>t.remove(),400)},1800);}
+function updateQuickFlowSteps(step){const s1=document.getElementById('qfStep1'),s2=document.getElementById('qfStep2'),s3=document.getElementById('qfStep3');if(!s1)return;[s1,s2,s3].forEach(s=>s&&s.classList.remove('active','done'));if(step>=3){s1&&s1.classList.add('done');s2&&s2.classList.add('done');s3&&s3.classList.add('active');}else if(step===2){s1&&s1.classList.add('done');s2&&s2.classList.add('active');}else{s1&&s1.classList.add('active');}}
+function showErrorToast(msg){const t=document.createElement('div');t.style.cssText='position:fixed;top:max(20px,env(safe-area-inset-top,20px));left:50%;transform:translateX(-50%);background:rgba(30,20,14,0.96);color:var(--copper-light,#D4A574);padding:12px 22px;border-radius:6px;font-size:0.85em;z-index:9999;pointer-events:none;letter-spacing:0.5px;white-space:nowrap;box-shadow:0 4px 20px rgba(0,0,0,0.5);border:1px solid rgba(192,138,92,0.3);animation:fadeIn 0.2s ease;';t.textContent='⚠ '+msg;document.body.appendChild(t);setTimeout(()=>{t.style.transition='opacity 0.4s';t.style.opacity='0';setTimeout(()=>t.remove(),400)},2200);}
 function toggleCompareMethod(k,card){if(selectedCompareMethods.includes(k)){selectedCompareMethods=selectedCompareMethods.filter(m=>m!==k);card.classList.remove('compare-selected');card.querySelector('.compare-add-btn').textContent='＋ 加入比較';showCompareToast('已取消選取');}else if(selectedCompareMethods.length<2){selectedCompareMethods.push(k);card.classList.add('compare-selected');card.querySelector('.compare-add-btn').textContent='✓ 已選';const n=selectedCompareMethods.length;showCompareToast(n===1?'已選 1 個 — 再選一個沖法即可比較':'已選 2 個沖法 — 點擊下方「比較 →」');}else{const oldK=selectedCompareMethods.shift();document.querySelectorAll('.method-card').forEach(c=>{const btn=c.querySelector('.compare-add-btn');if(btn&&btn.dataset.method===oldK){c.classList.remove('compare-selected');btn.textContent='＋ 加入比較';}});selectedCompareMethods.push(k);card.classList.add('compare-selected');card.querySelector('.compare-add-btn').textContent='✓ 已選';showCompareToast('已更換選取 — 點擊下方「比較 →」');}updateCompareFloatBar();}
 function updateCompareFloatBar(){const bar=document.getElementById('compareFloatBar');if(!bar)return;const n=selectedCompareMethods.length;if(n>=1){bar.style.display='flex';document.getElementById('compareFloatCount').textContent=`已選 ${n} / 2 個沖法`;const btn=document.getElementById('compareFloatBtn');btn.disabled=n<2;btn.style.opacity=n<2?'0.45':'1';}else{bar.style.display='none';}}
 function updateGreeting(){document.getElementById('heroGreeting').innerHTML='從水溫、粉水比到萃取時間，每一次沖煮，都是一場關於味覺、時間與意念的探索。'}
@@ -4977,7 +4970,6 @@ function switchTab(tabName) {
   if (fg) {
     fg.classList.toggle('visible', tabName === 'quick' && currentQuickMethod);
     fg.classList.remove('menu-open');
-    document.getElementById('quickFloatMenu')?.classList.remove('open');
   }
   currentTab = tabName;
   const tabs = document.querySelectorAll('.tab-content');
@@ -5007,11 +4999,13 @@ function switchTab(tabName) {
     renderQuickMethodGrid();
     updateQuickBrewResults();
   }
-  if (tabName === 'knowledge' && !document.getElementById('knowledgeMethodOverview').innerHTML) {
-    renderMethodOverview();
-    renderAllGuides();
-    renderBrewingTips();
-    renderTroubleshoot();
+  if (tabName === 'knowledge') {
+    if (!document.getElementById('knowledgeMethodOverview').innerHTML) {
+      renderMethodOverview();
+      renderBrewingTips();
+      renderTroubleshoot();
+    }
+    renderAllGuides(); // 每次切換都重繪，避免 tools 頁 showGuide() 覆蓋後只剩單一沖法
   }
   // Re-trigger fade-in for visible sections
   if (tabName === 'home') {
@@ -5104,21 +5098,6 @@ function updateQuickBrewResults() {
   // Show floating timer button group
   const fg = document.getElementById('quickFloatGroup');
   if (fg) { fg.classList.add('visible'); fg.classList.remove('menu-open'); }
-  const floatMenu = document.getElementById('quickFloatMenu');
-  if (floatMenu) floatMenu.classList.remove('open');
-
-  const fb = document.getElementById('quickFloatTimer');
-  // Attach click handler to floating guided timer option
-  if (fb && !fb._hasListener) {
-    fb.addEventListener('click', () => { floatMenu?.classList.remove('open'); fg?.classList.remove('menu-open'); startQuickTimer(); });
-    fb._hasListener = true;
-  }
-  // Attach click handler to floating free timer option
-  const ffb = document.getElementById('quickFloatFree');
-  if (ffb && !ffb._hasListener) {
-    ffb.addEventListener('click', () => { floatMenu?.classList.remove('open'); fg?.classList.remove('menu-open'); startFreeTimer(); });
-    ffb._hasListener = true;
-  }
   // Attach trigger button — directly start guided timer
   const ftrig = document.getElementById('quickFloatTrigger');
   if (ftrig && !ftrig._hasListener) {
@@ -5179,6 +5158,7 @@ function renderMethodOverview() {
     card.classList.add('active');
     currentQuickMethod = card.dataset.method;
     updateQuickBrewResults();
+    updateQuickFlowSteps(2);
     saveUserPrefs();
   });
 
@@ -5271,8 +5251,7 @@ function renderMethodOverview() {
     const fg = document.getElementById('quickFloatGroup');
     if (fg && fg.classList.contains('menu-open') && !fg.contains(e.target)) {
       fg.classList.remove('menu-open');
-      document.getElementById('quickFloatMenu')?.classList.remove('open');
-    }
+      }
   });
 
   // Centralized event delegation for data-nav, data-scroll-to, data-try-method
