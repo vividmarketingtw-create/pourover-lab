@@ -284,7 +284,8 @@
     display: flex; flex-wrap: nowrap; gap: 8px; margin-bottom: 20px;
     padding: 12px 0; border-bottom: 1px solid var(--border);
     overflow-x: auto; -webkit-overflow-scrolling: touch;
-    scrollbar-width: none; position: sticky; top: 64px; z-index: 90;
+    scrollbar-width: none; position: sticky;
+    top: calc(64px + env(safe-area-inset-top, 0px)); z-index: 90;
     background: var(--bg-primary); backdrop-filter: blur(10px);
   }
   .knowledge-toc::-webkit-scrollbar { display: none; }
@@ -462,6 +463,12 @@
     flex: 1; padding: 10px 12px; border: 1px solid var(--border);
     background: var(--surface); color: var(--text-primary); border-radius: 0;
     font-family: inherit; font-size: 16px; transition: border-color 0.3s;
+  }
+  .selector-row select {
+    -webkit-appearance: none; appearance: none;
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='8' viewBox='0 0 12 8'%3E%3Cpath d='M1 1l5 5 5-5' stroke='%23C08A5C' stroke-width='1.8' fill='none' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E");
+    background-repeat: no-repeat; background-position: right 12px center;
+    padding-right: 36px;
   }
   .selector-row input:focus, .selector-row select:focus {
     outline: none; border-color: var(--copper);
@@ -3063,6 +3070,10 @@
   .dripper-compact-row select {
     flex: 1; background: transparent; border: none; color: var(--copper-light);
     font-size: 0.88em; font-family: inherit; outline: none; cursor: pointer;
+    -webkit-appearance: none; appearance: none;
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='8' viewBox='0 0 12 8'%3E%3Cpath d='M1 1l5 5 5-5' stroke='%23C08A5C' stroke-width='1.8' fill='none' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E");
+    background-repeat: no-repeat; background-position: right 4px center;
+    padding-right: 24px;
   }
   /* 開始計時主按鈕 */
   .btn-start-timer-main {
@@ -3077,6 +3088,75 @@
   .btn-start-timer-main:active { transform: translateY(0); box-shadow: none; }
   @media (max-width: 600px) {
     .btn-start-timer-main { font-size: 1.1em; padding: 20px 24px; }
+  }
+
+  /* ===== COMPREHENSIVE MOBILE POLISH ===== */
+  @media (max-width: 600px) {
+    /* Calc panel — reduce excessive desktop padding */
+    .calc-panel { padding: 20px 16px; margin: 20px 0; }
+    .calc-panel::before { left: 16px; right: 16px; }
+
+    /* Slider thumb — bigger touch target */
+    input[type="range"]::-webkit-slider-thumb {
+      width: 24px; height: 24px;
+      box-shadow: 0 0 0 6px rgba(184,125,86,0.12);
+    }
+    input[type="range"]::-moz-range-thumb { width: 24px; height: 24px; }
+    /* Invisible touch-area expansion for range */
+    input[type="range"] { padding: 10px 0; box-sizing: content-box; }
+
+    /* Back-to-top button — larger touch target */
+    .back-to-top { width: 44px; height: 44px; }
+
+    /* Knowledge TOC links — taller tap target */
+    .knowledge-toc a { padding: 10px 16px; font-size: 0.8em; }
+
+    /* Recommend toggle — ensure min tap height */
+    .recommend-toggle { min-height: 52px; }
+
+    /* Dripper info panel — tighter on mobile */
+    .dripper-info-panel { padding: 12px; }
+    .dripper-info-title { font-size: 0.92em; margin-bottom: 8px; }
+    .dripper-rib-visual { padding: 8px; gap: 10px; }
+    .dripper-rib-icon { font-size: 1.5em; }
+    .dripper-rib-text { font-size: 0.8em; }
+    .dripper-flow-bar { margin: 8px 0 0; }
+
+    /* Steps container — breathe on mobile */
+    .steps-container { padding: 16px 12px; margin: 0; }
+
+    /* Method grid — 3 cols is fine, reduce internal padding */
+    .method-card { padding: 14px 8px; }
+
+    /* Segment cards touch target */
+    .segment-card { padding: 20px 16px; min-height: 100px; }
+
+    /* Flavor pref group — taller buttons */
+    .flavor-pref-btn { min-height: 44px !important; }
+
+    /* Ratio row — prevent overflow on tiny screens */
+    .ratio-row { gap: 6px; }
+    .ratio-row label { font-size: 0.82em; }
+
+    /* Step water bar — avoid overflow */
+    .step-water { flex-wrap: wrap; }
+    .step-water-bar { min-width: 60px; }
+
+    /* Brew notes modal list items */
+    .bnm-item { padding: 12px; }
+
+    /* Knowledge card line height for readability */
+    .guide-section-text { line-height: 1.85; }
+    .faq-answer { line-height: 1.85; }
+  }
+
+  @media (max-width: 390px) {
+    /* Extra small phones — tighten further */
+    .calc-panel { padding: 16px 12px; }
+    .tools-phase-header { margin-bottom: 14px; }
+    .recommend-toggle { font-size: 0.82em; padding: 13px 12px; }
+    .dripper-compact-row { padding: 11px 12px; }
+    .section-title { font-size: 1.15em; }
   }
 </style>
 </head>
