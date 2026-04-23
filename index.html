@@ -1047,9 +1047,9 @@
   .quick-step-title { color: var(--text-primary); font-weight: 500; font-size: 0.95em; flex: 1; min-width: 0; }
   .quick-step-water { color: var(--copper); font-weight: 700; font-size: 0.82em; white-space: nowrap; flex-shrink: 0; background: rgba(184,125,86,0.12); padding: 2px 8px; border-radius: 5px; border: 1px solid rgba(184,125,86,0.2); }
   .quick-step-cum { font-size: 0.72em; color: var(--text-secondary); margin-top: 2px; font-family: 'Space Mono', monospace; }
-  .quick-step-note { display: none; font-size: 0.78em; color: var(--text-secondary); margin-top: 6px; padding-top: 5px; border-top: 1px solid rgba(255,255,255,0.05); line-height: 1.55; font-weight: 300; }
+  .quick-step-note { display: block; font-size: 0.78em; color: var(--text-secondary); margin-top: 6px; padding-top: 5px; border-top: 1px solid rgba(255,255,255,0.05); line-height: 1.55; font-weight: 300; }
   .quick-step-row.active { background: rgba(184,125,86,0.15); border-color: rgba(192,138,92,0.6); border-left: 4px solid var(--copper); box-shadow: 0 3px 16px rgba(184,125,86,0.15); }
-  .quick-step-row.active .quick-step-note { display: block; }
+  .quick-step-row.active .quick-step-note { display: none; }
   .quick-step-row.active .quick-step-title { color: var(--copper-light); font-weight: 700; font-size: 1em; }
   .quick-step-row.active .quick-step-num { background: var(--copper); color: #0F0D0A; border-color: var(--copper); }
   .quick-step-row.done { opacity: 0.30; }
@@ -2027,7 +2027,7 @@
     line-height: 1.65; font-weight: 300; padding-top: 6px;
     border-top: 1px solid rgba(255,255,255,0.06); margin-top: 4px;
   }
-  .pto-step-item.active .pto-step-note { display: block; }
+  .pto-step-item.active .pto-step-note { display: none; }
 
   /* Step transition flash */
   @keyframes stepFlash {
@@ -4133,7 +4133,7 @@ function startProTimerOverlay(m,dose,totalWater,ratio){
       const ptoIsWait=step.water===0&&step.cum>0&&!ptoIsAction;
       if(waterEl){
         if(step.water>0){
-          waterEl.innerHTML=`<span class="pto-water-pour">+${step.water}g<span class="pto-pour-sep"> / </span><span style="font-size:0.55em;opacity:0.6;letter-spacing:0.5px;font-weight:400;">累計</span> ${step.cum}g</span><span class="pto-water-cum" style="opacity:0.45;margin-top:6px;">/ ${totalWater}g</span>`;
+          waterEl.innerHTML=`<span class="pto-water-pour">+${step.water}g</span><span class="pto-water-cum" style="margin-top:6px;">累計 ${step.cum}g <span style="opacity:0.45">/ ${totalWater}g</span></span>`;
         }else if(ptoIsAction){
           waterEl.innerHTML=`<button class="qt-action-done" id="ptoActionDone">✓ 完成動作，繼續</button>`;
         }else if(ptoIsWait&&ptoStepDur>0){
@@ -4463,25 +4463,12 @@ function showPreBrewChecklist(onConfirm){
   ];
   const el=document.createElement('div');el.id='preBrewChecklist';
   el.innerHTML=`<div class="pbc-card">
-    <div class="pbc-header"><span class="pbc-icon">☑️</span><div class="pbc-title">沖前確認</div><div class="pbc-sub">${m?m.title.split(' · ')[0]:'手沖咖啡'} · 全部完成後才能開始</div></div>
-    <div class="pbc-items">${items.map((it,i)=>`<div class="pbc-item" data-idx="${i}"><span class="pbc-item-icon">${it.icon}</span><div class="pbc-item-text"><div class="pbc-item-label">${it.label}</div><div class="pbc-item-hint">${it.hint}</div></div><span class="pbc-item-check">✓</span></div>`).join('')}</div>
-    <button class="pbc-start-btn" id="pbcStartBtn" disabled>全部完成，開始計時 →</button>
-    <button class="pbc-skip-btn" id="pbcSkipBtn">略過，直接開始</button>
+    <div class="pbc-header"><span class="pbc-icon">☑️</span><div class="pbc-title">沖前確認</div><div class="pbc-sub">${m?m.title.split(' · ')[0]:'手沖咖啡'} · 確認備妥後開始</div></div>
+    <div class="pbc-items">${items.map((it,i)=>`<div class="pbc-item checked" data-idx="${i}"><span class="pbc-item-icon">${it.icon}</span><div class="pbc-item-text"><div class="pbc-item-label">${it.label}</div><div class="pbc-item-hint">${it.hint}</div></div><span class="pbc-item-check">✓</span></div>`).join('')}</div>
+    <button class="pbc-start-btn ready" id="pbcStartBtn">一鍵確認，開始計時 →</button>
   </div>`;
   document.body.appendChild(el);
-  const checked=new Set();
-  el.querySelectorAll('.pbc-item').forEach(row=>{
-    row.addEventListener('click',()=>{
-      const idx=row.dataset.idx;
-      if(checked.has(idx)){checked.delete(idx);row.classList.remove('checked');}
-      else{checked.add(idx);row.classList.add('checked');}
-      const startBtn=document.getElementById('pbcStartBtn');
-      if(checked.size===items.length){startBtn.classList.add('ready');startBtn.disabled=false;}
-      else{startBtn.classList.remove('ready');startBtn.disabled=true;}
-    });
-  });
   document.getElementById('pbcStartBtn').addEventListener('click',()=>{el.remove();onConfirm();});
-  document.getElementById('pbcSkipBtn').addEventListener('click',()=>{el.remove();onConfirm();});
 }
 function startQuickTimer(){
   const method=BREW_METHODS[currentQuickMethod];
@@ -4560,7 +4547,7 @@ function _doStartQuickTimer(){
     // Wait step detection
     const isWaitStep=step.water===0&&step.cum>0&&!isActionStep;
     const waterHtml=step.water>0
-      ?'<div class="qt-cur-water"><span class="qt-water-pour">+'+step.water+'g<span class="pto-pour-sep"> / </span><span style="font-size:0.55em;opacity:0.6;letter-spacing:0.5px;font-weight:400;">累計</span> '+step.cum+'g</span><span class="qt-water-cum" style="opacity:0.45;margin-top:4px;">/ '+water+'g</span></div>'
+      ?'<div class="qt-cur-water"><span class="qt-water-pour">+'+step.water+'g</span><span class="qt-water-cum" style="margin-top:6px;">累計 '+step.cum+'g <span style="opacity:0.45">/ '+water+'g</span></span></div>'
       :step.cum>0
         ?'<div class="qt-cur-water"><span class="qt-water-cum"><span class="qt-water-cum-label">累計</span>'+step.cum+'g <span style="opacity:0.45">/ '+water+'g</span></span></div>'
         :'';
@@ -5054,9 +5041,9 @@ function updateQuickBrewResults() {
     ftrig._hasListener = true;
   }
 
-  // Also attach direct listener to inline start button (in case delegation misses it)
+  // Also attach direct listener to inline start button — bypass checklist for immediacy
   const qsb = document.getElementById('quickStartTimerBtn');
-  if (qsb) qsb.addEventListener('click', startQuickTimer);
+  if (qsb) qsb.addEventListener('click', _doStartQuickTimer);
 
   // Update quick dose buttons active state
   document.querySelectorAll('#quickDoseBtns .dose-btn').forEach(b => {
@@ -5140,10 +5127,10 @@ function renderMethodOverview() {
     }, 150);
   });
 
-  // Quick start timer button — open timer overlay directly (no tab switch)
+  // Quick start timer button — open timer overlay directly, bypass checklist
   document.getElementById('quickBrewResults')?.addEventListener('click', (e) => {
     if (e.target.id === 'quickStartTimerBtn' || e.target.closest('#quickStartTimerBtn')) {
-      startQuickTimer();
+      _doStartQuickTimer();
     }
   });
 
