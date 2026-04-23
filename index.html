@@ -1667,7 +1667,7 @@
   }
   .qt-header {
     display: flex; align-items: center; gap: 12px;
-    padding: 14px 16px;
+    padding: max(14px, env(safe-area-inset-top, 14px)) 16px 14px;
     border-bottom: 1px solid var(--border);
     flex-shrink: 0;
   }
@@ -1908,7 +1908,7 @@
   #proTimerOverlay { font-family: 'Noto Sans TC', 'DM Sans', sans-serif; }
   .pto-header {
     display: flex; align-items: center; gap: 10px;
-    padding: 12px 16px; border-bottom: 1px solid var(--border); flex-shrink: 0;
+    padding: max(12px, env(safe-area-inset-top, 12px)) 16px 12px; border-bottom: 1px solid var(--border); flex-shrink: 0;
   }
   .pto-exit {
     padding: 6px 14px; border: 1px solid rgba(192,138,92,0.2); border-radius: 0;
@@ -1994,7 +1994,7 @@
 
   /* ── 步驟清單：取得全部剩餘高度 ── */
   .pto-steps-list {
-    flex: 1; overflow-y: auto; padding: 4px 16px 80px;
+    flex: 1; overflow-y: auto; padding: 4px 16px calc(80px + env(safe-area-inset-bottom, 0));
     min-height: 0; /* 關鍵：讓 flex-child 可以縮小並捲動 */
   }
   .pto-step-item {
@@ -2066,11 +2066,17 @@
   /* Tab subtitle hints */
   .tab-btn-sub { display: block; font-size: 0.6em; opacity: 0.55; font-weight: 400; letter-spacing: 0.3px; margin-top: 1px; }
 
+  @media (max-width: 390px) {
+    /* iPhone SE / small phones — scale down large numbers */
+    .qt-water-pour { font-size: 2.6em; }
+    .qt-ctrl-btn { width: 56px; height: 56px; }
+  }
   @media (max-width: 380px) {
     .pto-ring-wrap { width: 110px; height: 110px; }
     .pto-time { font-size: 2em; }
     .pto-cur-title { font-size: 0.95em; }
     .pto-water-pour { font-size: 1.7em; }
+    .qt-water-pour { font-size: 2.2em; }
   }
 
   /* Brewing Tips */
@@ -2191,9 +2197,13 @@
     .qt-time { font-size: 3.2em; letter-spacing: 4px; }
     .qt-step-indicator { font-size: 0.58em; letter-spacing: 2.5px; }
     .qt-label { font-size: 0.68em; max-width: 150px; }
-    .qt-ctrl-btn { width: 56px; height: 56px; font-size: 1.4em; }
+    .qt-ctrl-btn { width: 60px; height: 60px; font-size: 1.5em; }
     .qt-water-pour { font-size: 3.2em; }
     .qt-cur-title { font-size: 1.05em; }
+    /* Pro Timer controls — bigger touch target */
+    .pto-ctrl-btn { width: 56px; height: 56px; font-size: 1.3em; }
+    /* Tools-tab timer controls */
+    .timer-ctrl-btn { width: 60px; height: 60px; font-size: 1.5em; }
 
     /* Quick step rows — bigger text, easier to read while pouring */
     .quick-step-row { padding: 13px 14px; font-size: 0.92em; }
@@ -2904,7 +2914,7 @@
   }
   .bnm-title { font-size: 1em; font-weight: 600; color: var(--copper-light); }
   .bnm-close { background: none; border: none; color: var(--text-secondary); font-size: 1.1em; cursor: pointer; padding: 4px; }
-  .bnm-list { overflow-y: auto; flex: 1; padding: 12px 16px; }
+  .bnm-list { overflow-y: auto; flex: 1; padding: 12px 16px calc(12px + env(safe-area-inset-bottom, 0)); }
   .bnm-empty { text-align: center; padding: 40px 20px; color: var(--text-secondary); font-size: 0.85em; opacity: 0.6; }
   .bnm-item {
     border: 1px solid var(--border);
@@ -3006,6 +3016,68 @@
     padding: 2px 4px; line-height: 1; transition: opacity 0.15s;
   }
   .bnm-delete:hover { opacity: 0.85; }
+
+  /* ===== TOOLS TAB REDESIGN ===== */
+  .tools-phase-header {
+    display: flex; align-items: center; gap: 10px; margin: 0 0 18px;
+  }
+  .tools-phase-num {
+    display: flex; align-items: center; justify-content: center;
+    width: 26px; height: 26px; border-radius: 50%;
+    background: var(--copper); color: #0F0D0A;
+    font-size: 0.72em; font-weight: 700; flex-shrink: 0;
+  }
+  .tools-phase-title {
+    font-size: 0.6em; font-weight: 600; letter-spacing: 4px;
+    text-transform: uppercase; color: var(--copper); opacity: 0.9;
+  }
+  /* 推薦折疊區塊 */
+  .recommend-wrap { margin-bottom: 20px; }
+  .recommend-toggle {
+    display: flex; align-items: center; gap: 10px; width: 100%;
+    padding: 13px 16px; background: var(--surface-2);
+    border: 1px solid var(--border); color: var(--copper-light);
+    font-size: 0.85em; font-weight: 500; cursor: pointer;
+    font-family: inherit; transition: all 0.2s; text-align: left;
+    letter-spacing: 0.3px;
+  }
+  .recommend-toggle:hover { border-color: rgba(192,138,92,0.4); background: rgba(184,125,86,0.06); }
+  .recommend-toggle .rec-icon { font-size: 1em; flex-shrink: 0; }
+  .recommend-toggle .rec-arrow { margin-left: auto; font-size: 0.72em; opacity: 0.55; transition: transform 0.25s; }
+  .recommend-toggle.open .rec-arrow { transform: rotate(180deg); }
+  .recommend-body {
+    max-height: 0; overflow: hidden;
+    transition: max-height 0.4s cubic-bezier(0.4,0,0.2,1);
+    border: 1px solid var(--border); border-top: none;
+  }
+  .recommend-body.open { max-height: 900px; }
+  /* 濾杯緊湊列 */
+  .dripper-compact-row {
+    display: flex; align-items: center; gap: 12px;
+    padding: 11px 14px; background: var(--surface-2);
+    border: 1px solid var(--border); margin-bottom: 4px;
+  }
+  .dripper-compact-label {
+    font-size: 0.78em; color: var(--text-secondary); white-space: nowrap; flex-shrink: 0;
+  }
+  .dripper-compact-row select {
+    flex: 1; background: transparent; border: none; color: var(--copper-light);
+    font-size: 0.88em; font-family: inherit; outline: none; cursor: pointer;
+  }
+  /* 開始計時主按鈕 */
+  .btn-start-timer-main {
+    display: flex; align-items: center; justify-content: center; gap: 10px;
+    width: 100%; padding: 18px 24px; margin-top: 24px;
+    background: var(--copper-cta); color: #0F0D0A;
+    border: none; font-size: 1.05em; font-weight: 700;
+    letter-spacing: 1.5px; cursor: pointer; font-family: inherit;
+    transition: all 0.2s;
+  }
+  .btn-start-timer-main:hover { filter: brightness(1.08); transform: translateY(-1px); box-shadow: 0 8px 24px rgba(184,125,86,0.4); }
+  .btn-start-timer-main:active { transform: translateY(0); box-shadow: none; }
+  @media (max-width: 600px) {
+    .btn-start-timer-main { font-size: 1.1em; padding: 20px 24px; }
+  }
 </style>
 </head>
 <body>
@@ -3212,236 +3284,247 @@
     <!-- ========== TAB 3: ADVANCED TOOLS ========== -->
     <div class="tab-content" id="toolsTab" role="tabpanel" aria-labelledby="tab-tools">
       <section class="section visible" id="toolSection">
-        <div class="section-label">沖煮工具</div>
+        <div class="section-label">進階工具</div>
         <div class="section-title">沖煮實驗室</div>
-        <div class="section-sub">告訴我你的豆子資訊，系統會推薦最適合的沖法 — 也可以自由選擇並微調所有參數。<span style="display:inline-block;margin-top:6px;font-size:0.88em;opacity:0.65;">（已知道要沖哪種方法？可直接切換到「快速沖煮」。）</span></div>
 
-    <!-- 豆子條件選擇 -->
-    <div class="selector-card" id="beanSettingsCard">
-      <h2 class="selector-label">豆子特性</h2>
-      <div class="bean-settings-grid">
-        <div class="selector-row">
-          <label for="roastLevel">烘焙度</label>
-          <select id="roastLevel">
-            <option value="light">淺焙</option>
-            <option value="medium" selected>中焙</option>
-            <option value="dark">深焙</option>
-          </select>
+        <!-- ── STEP 1：選沖法 ── -->
+        <div class="tools-phase-header">
+          <span class="tools-phase-num">1</span>
+          <span class="tools-phase-title">選擇沖法</span>
         </div>
-        <div class="selector-row">
-          <label for="processing">處理法</label>
-          <select id="processing">
-            <option value="washed" selected>水洗</option>
-            <option value="natural">日曬</option>
-            <option value="honey">蜜處理</option>
-            <option value="anaerobic_natural">厭氧日曬</option>
-            <option value="anaerobic_washed">厭氧水洗</option>
-            <option value="fruit_ferment">水果發酵</option>
-          </select>
-        </div>
-      </div>
-      <div class="selector-row" style="margin-top:10px;">
-        <label for="restDays">養豆天數 <small style="font-weight:300;opacity:0.6;font-size:0.85em;">（烘焙日期通常印在包裝上）</small></label>
-        <div style="display:flex;align-items:center;gap:8px;flex:1;">
-          <div class="stepper-wrap">
-            <button class="stepper-btn" data-target="restDays" data-delta="-1" aria-label="減少天數">−</button>
-            <input type="number" id="restDays" value="7" min="0" max="60">
-            <button class="stepper-btn" data-target="restDays" data-delta="1" aria-label="增加天數">+</button>
-          </div>
-          <button class="rest-skip-btn" id="restDaysSkipBtn" aria-label="略過養豆天數">不確定</button>
-        </div>
-      </div>
-      <div class="selector-row" style="flex-direction:column;align-items:stretch;margin-top:10px;">
-        <label>風味偏好</label>
-        <div class="flavor-pref-group" id="flavorPrefGroup" style="display:flex;gap:8px;margin-top:6px;flex-wrap:wrap;">
-          <button class="flavor-pref-btn" data-value="20" style="flex:1;min-width:0;padding:10px 8px;background:var(--surface-2);border:1px solid var(--border);color:var(--text-secondary);cursor:pointer;font-size:0.85em;transition:all 0.2s;text-align:center;">🍋 果酸明亮</button>
-          <button class="flavor-pref-btn active" data-value="50" style="flex:1;min-width:0;padding:10px 8px;background:var(--copper);border:1px solid var(--copper);color:#fff;cursor:pointer;font-size:0.85em;transition:all 0.2s;text-align:center;">☕ 平衡順口</button>
-          <button class="flavor-pref-btn" data-value="80" style="flex:1;min-width:0;padding:10px 8px;background:var(--surface-2);border:1px solid var(--border);color:var(--text-secondary);cursor:pointer;font-size:0.85em;transition:all 0.2s;text-align:center;">🫘 醇厚飽滿</button>
-        </div>
-        <input type="hidden" id="flavorPref" value="50">
-        <span id="flavorValue" style="display:none;">50</span>
-      </div>
-    </div>
 
-    <!-- 推薦結果 (inline, always visible) -->
-    <div id="recommendationPanel">
-      <div class="selector-card" style="border-color: rgba(192,138,92,0.25); background: rgba(184,125,86,0.04);">
-        <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom: 10px;">
-          <div style="color: var(--copper-light); font-weight: 600;">💡 智慧推薦</div>
-        </div>
-        <div id="recommendationText" style="color: var(--text-primary); font-size: 0.9em; line-height: 1.6;"></div>
-        <button id="useRecommendationBtn" style="margin-top:14px;width:100%;padding:12px 20px;font-size:0.95em;font-weight:600;letter-spacing:1px;background:var(--copper);color:#fff;border:none;cursor:pointer;transition:all 0.2s;display:flex;align-items:center;justify-content:center;gap:8px;" onmouseover="this.style.background='var(--copper-light)'" onmouseout="this.style.background='var(--copper)'">☕ 採用此沖法，開始沖煮 →</button>
-      </div>
-    </div>
-
-    <!-- 知識提示 -->
-    <div id="knowledgeTipsContainer"></div>
-
-    <div class="tools-section-divider"></div>
-
-    <!-- 濾杯選擇 -->
-    <div class="selector-card" id="dripperCard">
-      <h2 class="selector-label">濾杯器材</h2>
-      <div class="selector-row">
-        <label for="dripperType">濾杯類型</label>
-        <select id="dripperType">
-          <option value="v60" selected>Hario V60</option>
-          <option value="kalita">Kalita Wave</option>
-          <option value="origami">Origami</option>
-          <option value="melitta">Melitta 扇形</option>
-          <option value="kono">KONO 名門</option>
-          <option value="april">April Brewer</option>
-          <option value="other">其他</option>
-        </select>
-      </div>
-      <div id="dripperInfo" class="dripper-info-panel"></div>
-    </div>
-
-    <div class="tools-section-divider"></div>
-
-    <!-- 選沖法 -->
-    <h2 class="selector-label" style="margin-bottom:8px;">選擇沖法</h2>
-    <p style="font-size:0.82em;color:var(--text-secondary);line-height:1.6;font-weight:300;margin-bottom:14px;">點擊任一沖法卡片，即可展開完整的配方面板與沖煮步驟。</p>
-    <div class="method-filter-bar" id="methodFilterBar">
-      <button class="method-filter-pill active" data-filter="all">全部 (9)</button>
-      <button class="method-filter-pill" data-filter="beginner">🌱 新手友善</button>
-      <button class="method-filter-pill" data-filter="competition">🏆 競賽配方</button>
-      <button class="method-filter-pill" data-filter="tasting">🔬 品鑑特殊</button>
-      <button class="method-filter-pill" data-filter="iced">🧊 冰飲</button>
-    </div>
-    <div class="method-grid" id="methodGrid"></div>
-
-    <!-- 空狀態提示 -->
-    <div class="method-empty-state" id="methodEmptyState">
-      <div class="method-empty-arrow">↑</div>
-      <div class="method-empty-text">點擊上方任一沖法卡片<br>展開完整配方與計時器</div>
-    </div>
-
-    <!-- 比較浮動列 -->
-    <div id="compareFloatBar" style="display:none;">
-      <span id="compareFloatCount">已選 0 / 2 個沖法</span>
-      <button id="compareFloatBtn" disabled>比較 →</button>
-      <button id="compareFloatClear" title="清除選取">✕</button>
-    </div>
-
-    <!-- 計算面板 -->
-    <div class="calc-panel" id="calcPanel" style="display:none;">
-      <h2 class="calc-title">你的沖煮配方</h2>
-      <div class="selector-row" style="margin-bottom: 8px;">
-        <label for="doseInput">咖啡粉量 (g)</label>
-        <div class="stepper-wrap">
-          <button class="stepper-btn" data-target="doseInput" data-delta="-0.5" aria-label="減少粉量">−</button>
-          <input type="number" id="doseInput" value="20" min="5" max="100" step="0.5">
-          <button class="stepper-btn" data-target="doseInput" data-delta="0.5" aria-label="增加粉量">+</button>
-        </div>
-      </div>
-      <div class="dose-quick-btns" id="doseQuickBtns">
-        <button class="dose-btn" data-dose="15">15g<span class="dose-hint">約一杯</span></button>
-        <button class="dose-btn active" data-dose="20">20g<span class="dose-hint">一大杯</span></button>
-        <button class="dose-btn" data-dose="30">30g<span class="dose-hint">約兩杯</span></button>
-        <button class="dose-btn" data-dose="40">40g<span class="dose-hint">三人份</span></button>
-        <button class="dose-btn" data-dose="60">60g<span class="dose-hint">多人份</span></button>
-      </div>
-      <div class="advanced-controls" id="advancedControls">
-      <div class="selector-row" style="margin-top:12px;">
-        <label for="currentTemp">水溫 (°C)</label>
-        <div style="display:flex;align-items:center;gap:8px;flex:1;">
-          <div class="stepper-wrap">
-            <button class="stepper-btn" data-target="currentTemp" data-delta="-1" aria-label="降低水溫">−</button>
-            <input type="number" id="currentTemp" value="90" min="75" max="100" step="1">
-            <button class="stepper-btn" data-target="currentTemp" data-delta="1" aria-label="提高水溫">+</button>
+        <!-- 幫我推薦（可折疊） -->
+        <div class="recommend-wrap">
+          <button class="recommend-toggle" id="recommendToggleBtn" aria-expanded="false">
+            <span class="rec-icon">🔍</span> 幫我推薦適合的沖法
+            <span class="rec-arrow">▼</span>
+          </button>
+          <div class="recommend-body" id="recommendBody">
+            <div id="beanSettingsCard" style="padding:16px 16px 0;">
+              <div class="bean-settings-grid">
+                <div class="selector-row">
+                  <label for="roastLevel">烘焙度</label>
+                  <select id="roastLevel">
+                    <option value="light">淺焙</option>
+                    <option value="medium" selected>中焙</option>
+                    <option value="dark">深焙</option>
+                  </select>
+                </div>
+                <div class="selector-row">
+                  <label for="processing">處理法</label>
+                  <select id="processing">
+                    <option value="washed" selected>水洗</option>
+                    <option value="natural">日曬</option>
+                    <option value="honey">蜜處理</option>
+                    <option value="anaerobic_natural">厭氧日曬</option>
+                    <option value="anaerobic_washed">厭氧水洗</option>
+                    <option value="fruit_ferment">水果發酵</option>
+                  </select>
+                </div>
+              </div>
+              <div class="selector-row" style="margin-top:10px;">
+                <label for="restDays">養豆天數 <small style="font-weight:300;opacity:0.6;font-size:0.85em;">（烘焙日期通常印在包裝上）</small></label>
+                <div style="display:flex;align-items:center;gap:8px;flex:1;">
+                  <div class="stepper-wrap">
+                    <button class="stepper-btn" data-target="restDays" data-delta="-1" aria-label="減少天數">−</button>
+                    <input type="number" id="restDays" value="7" min="0" max="60">
+                    <button class="stepper-btn" data-target="restDays" data-delta="1" aria-label="增加天數">+</button>
+                  </div>
+                  <button class="rest-skip-btn" id="restDaysSkipBtn" aria-label="略過養豆天數">不確定</button>
+                </div>
+              </div>
+              <div class="selector-row" style="flex-direction:column;align-items:stretch;margin-top:10px;">
+                <label>風味偏好</label>
+                <div class="flavor-pref-group" id="flavorPrefGroup" style="display:flex;gap:8px;margin-top:6px;flex-wrap:wrap;">
+                  <button class="flavor-pref-btn" data-value="20" style="flex:1;min-width:0;padding:10px 8px;background:var(--surface-2);border:1px solid var(--border);color:var(--text-secondary);cursor:pointer;font-size:0.85em;transition:all 0.2s;text-align:center;">🍋 果酸明亮</button>
+                  <button class="flavor-pref-btn active" data-value="50" style="flex:1;min-width:0;padding:10px 8px;background:var(--copper);border:1px solid var(--copper);color:#fff;cursor:pointer;font-size:0.85em;transition:all 0.2s;text-align:center;">☕ 平衡順口</button>
+                  <button class="flavor-pref-btn" data-value="80" style="flex:1;min-width:0;padding:10px 8px;background:var(--surface-2);border:1px solid var(--border);color:var(--text-secondary);cursor:pointer;font-size:0.85em;transition:all 0.2s;text-align:center;">🫘 醇厚飽滿</button>
+                </div>
+                <input type="hidden" id="flavorPref" value="50">
+                <span id="flavorValue" style="display:none;">50</span>
+              </div>
+            </div>
+            <div id="recommendationPanel" style="padding:14px 16px 16px;">
+              <div style="border:1px solid rgba(192,138,92,0.25);background:rgba(184,125,86,0.04);padding:14px 16px;">
+                <div style="color:var(--copper-light);font-weight:600;margin-bottom:8px;font-size:0.92em;">💡 推薦結果</div>
+                <div id="recommendationText" style="color:var(--text-primary);font-size:0.88em;line-height:1.65;"></div>
+                <button id="useRecommendationBtn" style="margin-top:12px;width:100%;padding:12px 20px;font-size:0.92em;font-weight:600;letter-spacing:0.5px;background:var(--copper);color:#fff;border:none;cursor:pointer;transition:all 0.2s;display:flex;align-items:center;justify-content:center;gap:8px;" onmouseover="this.style.filter='brightness(1.1)'" onmouseout="this.style.filter=''">採用此沖法 →</button>
+              </div>
+            </div>
           </div>
         </div>
-      </div>
-      <div class="temp-suggestion" id="tempSuggestion"></div>
-      <div class="ratio-row">
-        <label for="ratioSlider">粉水比</label>
-        <button class="ratio-lock-btn" id="ratioLockBtn" title="鎖定粉水比：改粉量時自動算水量" aria-label="鎖定粉水比">🔒</button>
-        <input type="range" id="ratioSlider" min="12" max="18" step="0.1" value="15" style="flex:1;">
-        <div class="ratio-input-wrap">
-          <input type="number" id="manualRatioInput" value="15" min="12" max="18" step="0.1" placeholder="15">
+
+        <!-- 篩選 + 方法卡片 -->
+        <div class="method-filter-bar" id="methodFilterBar">
+          <button class="method-filter-pill active" data-filter="all">全部 (9)</button>
+          <button class="method-filter-pill" data-filter="beginner">🌱 新手友善</button>
+          <button class="method-filter-pill" data-filter="competition">🏆 競賽配方</button>
+          <button class="method-filter-pill" data-filter="tasting">🔬 品鑑特殊</button>
+          <button class="method-filter-pill" data-filter="iced">🧊 冰飲</button>
         </div>
-        <span class="ratio-value" id="ratioValue">1:15</span>
-      </div>
-      <div class="ratio-lock-hint" id="ratioLockHint">
-        <span id="ratioLockStatus">🔒 比例已鎖定 — 調整粉量時，水量自動計算</span>
-      </div>
-      <div class="dose-quick-btns" style="margin-top:8px;">
-        <button class="dose-btn ratio-preset" data-ratio="14">1:14</button>
-        <button class="dose-btn ratio-preset" data-ratio="15">1:15</button>
-        <button class="dose-btn ratio-preset" data-ratio="16">1:16</button>
-        <button class="dose-btn ratio-preset" data-ratio="17">1:17</button>
-      </div>
-      </div><!-- /advanced-controls -->
-      <div class="grind-visual" id="grindVisual" style="display:none;"></div>
-      <div class="calc-grid" id="calcGrid"></div>
-      <div class="radar-wrap" id="radarWrap" style="display:none;">
-        <div class="radar-title">風味預測</div>
-        <svg class="radar-svg" id="radarSvg" viewBox="0 0 240 220"></svg>
-      </div>
-      <div style="text-align:center;margin-top:10px;">
-        <button class="recipe-copy-btn" id="recipeCopyBtn">📋 複製配方</button>
-      </div>
-      <div class="button-group" style="justify-content:center;margin-top:10px;">
-        <button class="btn-start-timer" id="startTimerBtn" aria-label="開始沖煮計時">
-          <span class="btn-start-icon">▶</span> 開始計時
-        </button>
-      </div>
-    </div>
-
-    <!-- 自由計時獨立區塊 -->
-    <div class="free-timer-section" id="freeTimerSection">
-      <div style="display:flex;align-items:center;gap:12px;justify-content:center;padding:16px 0;">
-        <div style="flex:1;height:1px;background:var(--border);"></div>
-        <span style="font-size:0.72em;color:var(--text-secondary);letter-spacing:2px;">或者</span>
-        <div style="flex:1;height:1px;background:var(--border);"></div>
-      </div>
-      <button class="btn-start-timer" id="freeTimerBtn" aria-label="自由計時" style="width:100%;background:transparent;border:1px solid rgba(184,125,86,0.3);color:var(--copper-light);font-size:0.88em;padding:14px 20px;display:flex;align-items:center;justify-content:center;gap:8px;">
-        <span style="font-size:1.1em;">⏱</span> 自由計時 <span style="font-size:0.75em;opacity:0.5;margin-left:4px;">不跟步驟，只計時間</span>
-      </button>
-    </div>
-
-    <!-- 沖煮步驟（預設展開） -->
-    <div class="fresh-bean-note" id="freshBeanNote">
-      <span class="fresh-bean-note-icon">💨</span>
-      <span class="fresh-bean-note-text">偵測到豆子極新鮮，已自動增加悶蒸時間以利排氣</span>
-    </div>
-    <div class="steps-container" id="stepsContainer" style="display:none;">
-      <h2 style="font-size: 0.95em; font-weight: 600; color: var(--copper-light); margin-bottom: 15px; padding-top: 8px;">📋 沖煮步驟</h2>
-      <div id="stepsContent"></div>
-    </div>
-
-    <!-- 計時器 -->
-    <div class="timer-display" id="timerDisplay" style="display:none;" aria-live="polite" aria-atomic="true">
-      <div class="timer-ring-wrap">
-        <svg class="timer-ring" viewBox="0 0 120 120">
-          <circle class="timer-ring-bg" cx="60" cy="60" r="52" />
-          <circle class="timer-ring-progress" id="timerRingProgress" cx="60" cy="60" r="52" />
-        </svg>
-        <div class="timer-ring-inner">
-          <div class="timer-time" id="timerTime">0:00</div>
-          <div class="timer-label" id="timerLabel">準備中</div>
+        <div class="method-grid" id="methodGrid"></div>
+        <div class="method-empty-state" id="methodEmptyState">
+          <div class="method-empty-arrow">↑</div>
+          <div class="method-empty-text">點擊上方任一沖法卡片<br>展開完整配方與計時器</div>
         </div>
-      </div>
-      <div class="timer-controls">
-        <button class="timer-ctrl-btn pause" id="pausePlayBtn" aria-label="暫停計時">⏸</button>
-        <button class="timer-ctrl-btn reset" id="resetTimerBtn" aria-label="重置計時器">⟲</button>
-        <div class="wake-lock-indicator" id="wakeLockIndicator">
-          <span>📱</span>
-          <span>螢幕保持亮起</span>
+        <div id="compareFloatBar" style="display:none;">
+          <span id="compareFloatCount">已選 0 / 2 個沖法</span>
+          <button id="compareFloatBtn" disabled>比較 →</button>
+          <button id="compareFloatClear" title="清除選取">✕</button>
         </div>
-      </div>
-    </div>
 
-    <div class="focus-temp-badge" id="focusTempBadge"></div>
+        <!-- ── STEP 2：調整配方（選完方法後展開）── -->
+        <div class="calc-panel" id="calcPanel" style="display:none;">
+          <div class="tools-section-divider" style="margin-top:0;"></div>
+          <div class="tools-phase-header">
+            <span class="tools-phase-num">2</span>
+            <span class="tools-phase-title">調整配方</span>
+          </div>
 
-    <div style="margin:28px 0 10px;padding:20px;border:1px solid var(--border);background:var(--surface-2);text-align:center;">
-      <p style="font-size:0.82em;color:var(--text-secondary);margin-bottom:12px;font-weight:300;">想並排比較各沖法的風味特色與難度？</p>
-      <div style="display:flex;gap:10px;justify-content:center;flex-wrap:wrap;">
-        <button class="btn-secondary" id="compareBtn" aria-label="比較不同沖法" style="padding:10px 28px;">比較沖法 →</button>
-        <button class="bnm-notes-btn" id="showBrewNotesBtnTools" style="padding:10px 20px;">🗒 沖煮紀錄</button>
-      </div>
-    </div>
+          <!-- 濾杯（緊湊列） -->
+          <div class="dripper-compact-row">
+            <span class="dripper-compact-label">濾杯</span>
+            <select id="dripperType">
+              <option value="v60" selected>Hario V60</option>
+              <option value="kalita">Kalita Wave</option>
+              <option value="origami">Origami</option>
+              <option value="melitta">Melitta 扇形</option>
+              <option value="kono">KONO 名門</option>
+              <option value="april">April Brewer</option>
+              <option value="other">其他</option>
+            </select>
+          </div>
+          <div id="dripperInfo" class="dripper-info-panel" style="margin-bottom:14px;"></div>
+
+          <!-- 粉量 -->
+          <div class="selector-row" style="margin-bottom:8px;">
+            <label for="doseInput">咖啡粉量 (g)</label>
+            <div class="stepper-wrap">
+              <button class="stepper-btn" data-target="doseInput" data-delta="-0.5" aria-label="減少粉量">−</button>
+              <input type="number" id="doseInput" value="20" min="5" max="100" step="0.5">
+              <button class="stepper-btn" data-target="doseInput" data-delta="0.5" aria-label="增加粉量">+</button>
+            </div>
+          </div>
+          <div class="dose-quick-btns" id="doseQuickBtns">
+            <button class="dose-btn" data-dose="15">15g<span class="dose-hint">約一杯</span></button>
+            <button class="dose-btn active" data-dose="20">20g<span class="dose-hint">一大杯</span></button>
+            <button class="dose-btn" data-dose="30">30g<span class="dose-hint">約兩杯</span></button>
+            <button class="dose-btn" data-dose="40">40g<span class="dose-hint">三人份</span></button>
+            <button class="dose-btn" data-dose="60">60g<span class="dose-hint">多人份</span></button>
+          </div>
+
+          <!-- 水溫 + 粉水比 -->
+          <div class="advanced-controls" id="advancedControls">
+            <div class="selector-row" style="margin-top:12px;">
+              <label for="currentTemp">水溫 (°C)</label>
+              <div style="display:flex;align-items:center;gap:8px;flex:1;">
+                <div class="stepper-wrap">
+                  <button class="stepper-btn" data-target="currentTemp" data-delta="-1" aria-label="降低水溫">−</button>
+                  <input type="number" id="currentTemp" value="90" min="75" max="100" step="1">
+                  <button class="stepper-btn" data-target="currentTemp" data-delta="1" aria-label="提高水溫">+</button>
+                </div>
+              </div>
+            </div>
+            <div class="temp-suggestion" id="tempSuggestion"></div>
+            <div class="ratio-row">
+              <label for="ratioSlider">粉水比</label>
+              <button class="ratio-lock-btn" id="ratioLockBtn" title="鎖定粉水比：改粉量時自動算水量" aria-label="鎖定粉水比">🔒</button>
+              <input type="range" id="ratioSlider" min="12" max="18" step="0.1" value="15" style="flex:1;">
+              <div class="ratio-input-wrap">
+                <input type="number" id="manualRatioInput" value="15" min="12" max="18" step="0.1" placeholder="15">
+              </div>
+              <span class="ratio-value" id="ratioValue">1:15</span>
+            </div>
+            <div class="ratio-lock-hint" id="ratioLockHint">
+              <span id="ratioLockStatus">🔒 比例已鎖定 — 調整粉量時，水量自動計算</span>
+            </div>
+            <div class="dose-quick-btns" style="margin-top:8px;">
+              <button class="dose-btn ratio-preset" data-ratio="14">1:14</button>
+              <button class="dose-btn ratio-preset" data-ratio="15">1:15</button>
+              <button class="dose-btn ratio-preset" data-ratio="16">1:16</button>
+              <button class="dose-btn ratio-preset" data-ratio="17">1:17</button>
+            </div>
+          </div>
+
+          <div class="grind-visual" id="grindVisual" style="display:none;"></div>
+          <div class="calc-grid" id="calcGrid"></div>
+          <div class="radar-wrap" id="radarWrap" style="display:none;">
+            <div class="radar-title">風味預測</div>
+            <svg class="radar-svg" id="radarSvg" viewBox="0 0 240 220"></svg>
+          </div>
+          <div style="text-align:center;margin-top:10px;">
+            <button class="recipe-copy-btn" id="recipeCopyBtn">📋 複製配方</button>
+          </div>
+        </div>
+
+        <!-- ── STEP 3：沖煮步驟 ＋ 開始計時 ── -->
+        <div class="steps-container" id="stepsContainer" style="display:none;">
+          <div class="tools-section-divider" style="margin-top:0;"></div>
+          <div class="tools-phase-header">
+            <span class="tools-phase-num">3</span>
+            <span class="tools-phase-title">沖煮步驟</span>
+          </div>
+
+          <!-- 知識提示（沖前閱讀）-->
+          <div id="knowledgeTipsContainer"></div>
+
+          <div class="fresh-bean-note" id="freshBeanNote">
+            <span class="fresh-bean-note-icon">💨</span>
+            <span class="fresh-bean-note-text">偵測到豆子極新鮮，已自動增加悶蒸時間以利排氣</span>
+          </div>
+
+          <div id="stepsContent"></div>
+
+          <!-- 開始計時（步驟後緊接，視覺上自然引導）-->
+          <button class="btn-start-timer-main" id="startTimerBtn" aria-label="開始沖煮計時">
+            ▶ 開始計時
+          </button>
+
+          <!-- 自由計時（次要選項）-->
+          <div class="free-timer-section" id="freeTimerSection">
+            <div style="display:flex;align-items:center;gap:12px;justify-content:center;padding:12px 0 0;">
+              <div style="flex:1;height:1px;background:var(--border);"></div>
+              <span style="font-size:0.72em;color:var(--text-secondary);letter-spacing:2px;">或者</span>
+              <div style="flex:1;height:1px;background:var(--border);"></div>
+            </div>
+            <button class="btn-start-timer" id="freeTimerBtn" aria-label="自由計時" style="width:100%;background:transparent;border:1px solid rgba(184,125,86,0.3);color:var(--copper-light);font-size:0.88em;padding:14px 20px;display:flex;align-items:center;justify-content:center;gap:8px;">
+              <span style="font-size:1.1em;">⏱</span> 自由計時 <span style="font-size:0.75em;opacity:0.5;margin-left:4px;">不跟步驟，只計時間</span>
+            </button>
+          </div>
+        </div>
+
+        <!-- 計時器（JS 控制）-->
+        <div class="timer-display" id="timerDisplay" style="display:none;" aria-live="polite" aria-atomic="true">
+          <div class="timer-ring-wrap">
+            <svg class="timer-ring" viewBox="0 0 120 120">
+              <circle class="timer-ring-bg" cx="60" cy="60" r="52" />
+              <circle class="timer-ring-progress" id="timerRingProgress" cx="60" cy="60" r="52" />
+            </svg>
+            <div class="timer-ring-inner">
+              <div class="timer-time" id="timerTime">0:00</div>
+              <div class="timer-label" id="timerLabel">準備中</div>
+            </div>
+          </div>
+          <div class="timer-controls">
+            <button class="timer-ctrl-btn pause" id="pausePlayBtn" aria-label="暫停計時">⏸</button>
+            <button class="timer-ctrl-btn reset" id="resetTimerBtn" aria-label="重置計時器">⟲</button>
+            <div class="wake-lock-indicator" id="wakeLockIndicator">
+              <span>📱</span>
+              <span>螢幕保持亮起</span>
+            </div>
+          </div>
+        </div>
+
+        <div class="focus-temp-badge" id="focusTempBadge"></div>
+
+        <!-- 底部工具 -->
+        <div style="margin:28px 0 10px;padding:20px;border:1px solid var(--border);background:var(--surface-2);text-align:center;">
+          <p style="font-size:0.82em;color:var(--text-secondary);margin-bottom:12px;font-weight:300;">想並排比較各沖法的風味特色與難度？</p>
+          <div style="display:flex;gap:10px;justify-content:center;flex-wrap:wrap;">
+            <button class="btn-secondary" id="compareBtn" aria-label="比較不同沖法" style="padding:10px 28px;">比較沖法 →</button>
+            <button class="bnm-notes-btn" id="showBrewNotesBtnTools" style="padding:10px 20px;">🗒 沖煮紀錄</button>
+          </div>
+        </div>
       </section>
     </div>
 
@@ -4022,7 +4105,7 @@ function applyMethodFilter(filter){document.querySelectorAll('#methodGrid .metho
 function renderMethodCards(){const g=document.getElementById('methodGrid');g.innerHTML='';const diffTags={sweet:{label:'甜感派',color:'#E8B86D'},kasuya:{label:'競賽級',color:'#C07830'},hoffmann:{label:'新手推薦',color:'#6BBF6B'},rao:{label:'進階',color:'#B87D56'},onePour:{label:'新手推薦',color:'#6BBF6B'},osmotic:{label:'品鑑派',color:'#A0C4B8'},winton:{label:'WBC冠軍',color:'#D4A574'},melodrip:{label:'品鑑派',color:'#8FB8D4'},icedBrew:{label:'夏日限定',color:'#6BB8D4'}};Object.entries(BREW_METHODS).forEach(([k,m])=>{const c=document.createElement('div');c.className='method-card';c.dataset.methodKey=k;const tag=diffTags[k]||{label:'',color:'var(--copper)'};c.style.setProperty('--card-accent',tag.color);c.innerHTML=`${METHOD_ICONS[k]||''}<div class="method-badge">${m.badge}</div><div class="method-tag" style="background:${tag.color}20;color:${tag.color};border:1px solid ${tag.color}40;padding:2px 8px;border-radius:10px;font-size:0.65em;font-weight:600;display:inline-block;margin-bottom:4px;">${tag.label}</div><div class="method-name">${m.title.split(' · ')[0]}</div><div class="method-ratio">1:${m.ratio} · ${m.time}</div><div class="method-desc">${m.desc}</div><button class="compare-add-btn" data-method="${k}">＋ 加入比較</button>`;c.addEventListener('click',(e)=>{if(e.target.classList.contains('compare-add-btn'))return;selectMethod(k,m)});c.querySelector('.compare-add-btn').addEventListener('click',(e)=>{e.stopPropagation();toggleCompareMethod(k,c)});g.appendChild(c)});
 // attach filter pill events
 document.getElementById('methodFilterBar')?.querySelectorAll('.method-filter-pill').forEach(pill=>{pill.addEventListener('click',()=>{document.querySelectorAll('.method-filter-pill').forEach(p=>p.classList.remove('active'));pill.classList.add('active');applyMethodFilter(pill.dataset.filter);});});}
-function selectMethod(k,m,silent){if(!m)m=BREW_METHODS[k];selectedMethod=k;customRatio=null;const ems=document.getElementById('methodEmptyState');if(ems)ems.style.display='none';if(ratioLocked){const sl=document.getElementById('ratioSlider');const mi=document.getElementById('manualRatioInput');if(sl){sl.style.opacity='0.4';sl.style.pointerEvents='none'}if(mi){mi.style.opacity='0.4';mi.disabled=true}}const tempNum=parseInt(m.temp);if(!isNaN(tempNum))document.getElementById('currentTemp').value=tempNum;updateTempSuggestion();document.querySelectorAll('.method-card').forEach(c=>c.classList.remove('active'));if(!silent){if(event&&event.target){const card=event.target.closest('.method-card');if(card)card.classList.add('active')}}else{document.querySelectorAll('.method-card').forEach(c=>{if(c.querySelector('.compare-add-btn')?.dataset.method===k)c.classList.add('active')})}document.getElementById('calcPanel').style.display='block';if(!silent){document.getElementById('calcPanel').classList.remove('recipe-animate');void document.getElementById('calcPanel').offsetWidth;document.getElementById('calcPanel').classList.add('recipe-animate')}document.getElementById('stepsContainer').style.display='block';if(!silent){document.getElementById('stepsContainer').classList.remove('recipe-animate');void document.getElementById('stepsContainer').offsetWidth;document.getElementById('stepsContainer').classList.add('recipe-animate')}const rs=document.getElementById('ratioSlider');rs.value=m.ratio;document.getElementById('ratioValue').textContent='1:'+m.ratio;showGuide(k,m);updateCalcPanel(m);updateSteps(m);renderRadar(k);renderGrindVisual(k);updateDripperKnowledgeTip();document.getElementById('radarWrap').style.display='block';if(!silent){setTimeout(()=>{document.getElementById('calcPanel').scrollIntoView({behavior:'smooth',block:'start'})},100)}saveUserPrefs();}
+function selectMethod(k,m,silent){if(!m)m=BREW_METHODS[k];selectedMethod=k;customRatio=null;const ems=document.getElementById('methodEmptyState');if(ems)ems.style.display='none';if(ratioLocked){const sl=document.getElementById('ratioSlider');const mi=document.getElementById('manualRatioInput');if(sl){sl.style.opacity='0.4';sl.style.pointerEvents='none'}if(mi){mi.style.opacity='0.4';mi.disabled=true}}const tempNum=parseInt(m.temp);if(!isNaN(tempNum))document.getElementById('currentTemp').value=tempNum;updateTempSuggestion();document.querySelectorAll('.method-card').forEach(c=>c.classList.remove('active'));if(!silent){if(event&&event.target){const card=event.target.closest('.method-card');if(card)card.classList.add('active')}}else{document.querySelectorAll('.method-card').forEach(c=>{if(c.querySelector('.compare-add-btn')?.dataset.method===k)c.classList.add('active')})}document.getElementById('calcPanel').style.display='block';if(!silent){document.getElementById('calcPanel').classList.remove('recipe-animate');void document.getElementById('calcPanel').offsetWidth;document.getElementById('calcPanel').classList.add('recipe-animate')}document.getElementById('stepsContainer').style.display='block';const _rb=document.getElementById('recommendBody');const _rt=document.getElementById('recommendToggleBtn');if(_rb&&_rb.classList.contains('open')){_rb.classList.remove('open');if(_rt){_rt.classList.remove('open');_rt.setAttribute('aria-expanded','false')}}if(!silent){document.getElementById('stepsContainer').classList.remove('recipe-animate');void document.getElementById('stepsContainer').offsetWidth;document.getElementById('stepsContainer').classList.add('recipe-animate')}const rs=document.getElementById('ratioSlider');rs.value=m.ratio;document.getElementById('ratioValue').textContent='1:'+m.ratio;showGuide(k,m);updateCalcPanel(m);updateSteps(m);renderRadar(k);renderGrindVisual(k);updateDripperKnowledgeTip();document.getElementById('radarWrap').style.display='block';if(!silent){setTimeout(()=>{document.getElementById('calcPanel').scrollIntoView({behavior:'smooth',block:'start'})},100)}saveUserPrefs();}
 function getEffectiveRatio(m){return customRatio!==null?customRatio:m.ratio}
 function updateCalcPanel(m){const d=parseFloat($('doseInput').value)||20,r=getEffectiveRatio(m),t=Math.round(d*r),s=m.buildSummary(d,t),g=$('calcGrid');g.innerHTML=s.map(i=>`<div class="calc-item"><div class="calc-value">${i.value}${i.unit?'<span style="font-size:0.55em;opacity:0.6;margin-left:2px;">'+i.unit+'</span>':''}</div><div class="calc-label">${i.label}</div></div>`).join('')}
 function _adjTimeLabel(t,offset){if(!offset)return t;const m=t.match(/^(\d+):(\d{2})$/);if(!m)return t;const tot=parseInt(m[1])*60+parseInt(m[2])+offset;return Math.floor(tot/60)+':'+(tot%60).toString().padStart(2,'0');}function updateSteps(m){const d=parseFloat($('doseInput').value)||20,r=getEffectiveRatio(m),t=Math.round(d*r),sd=m.buildSteps(d,t);let bloomTimeAddition=0;const skipRest=$('restDaysSkipBtn').classList.contains('active'),restDays=skipRest?7:(parseInt($('restDays').value)||7);if(restDays<=3&&!skipRest){bloomTimeAddition=10;$('freshBeanNote').classList.add('show')}else{$('freshBeanNote').classList.remove('show')}currentStepBloomTime=bloomTimeAddition;let h='';currentStepDurations=[];currentAllStepsData=[];let cumTime=0;let stepNum=0;let _bloomOffset=0;sd.groups.forEach(g=>{h+=`<div class="steps-group-title ${g.color}">${g.label}</div>`;g.steps.forEach(s=>{stepNum++;const _bloomExtra=(s.title&&s.title.includes('悶蒸')&&(s.duration||0)>0?bloomTimeAddition:0);const _dispTime=_adjTimeLabel(s.time,_bloomOffset);cumTime+=(s.duration||0)+_bloomExtra;_bloomOffset+=_bloomExtra;currentStepDurations.push(cumTime);currentAllStepsData.push({...s,stepNum,totalWater:t});const pct=Math.round((s.cum/t)*100);let wb='';if(s.water>0){wb=`<div class="step-water"><div class="step-water-pour">+${s.water}g</div><div class="step-water-bar"><div class="step-water-bar-fill" style="width:${pct}%"></div></div><div class="step-water-cum">累計 ${s.cum} / ${t}g</div></div>`}else if(s.cum>0){wb=`<div class="step-water"><div class="step-water-bar" style="flex:1"><div class="step-water-bar-fill" style="width:${pct}%"></div></div><div class="step-water-cum" style="opacity:0.7;">維持 ${s.cum} / ${t}g</div></div>`}let noteText=s.note||'';if(s.water>0&&s.duration>0&&!s.title.includes('悶蒸')){const rate=Math.round(s.water/s.duration*10)/10;noteText=(noteText?noteText+' · ':'')+`注水速度 ${rate} g/s`;}const noteHtml=noteText?`<div class="step-note">${noteText}</div>`:'';h+=`<div class="step-item" data-step-idx="${currentStepDurations.length-1}"><div class="step-num" style="display:none"></div><div class="step-header"><div class="step-badge">${stepNum}</div><div class="step-body"><div class="step-row-top"><span class="step-title">${s.title}</span><span class="step-time">${_dispTime}</span></div>${wb}${noteHtml}</div></div></div>`})});$('stepsContent').innerHTML=h}
@@ -4032,7 +4115,11 @@ let currentRecommendedMethod=null;
 let ratioLocked=true;
 function updateRecommendation(){const r=document.getElementById('roastLevel').value,p=document.getElementById('processing').value;let k=r+'-'+p;if(!RECOMMENDATIONS[k])k='default';const rec=RECOMMENDATIONS[k],rp=document.getElementById('recommendationPanel'),rt=document.getElementById('recommendationText');currentRecommendedMethod=rec.method;let recText=`<strong>${BREW_METHODS[rec.method].title}</strong><br>${rec.reason}`;const month=new Date().getMonth()+1,isSummer=month>=5&&month<=9;if(isSummer&&rec.method!=='icedBrew'){recText+='<br><br><em style="color:var(--text-secondary);font-size:0.9em;">🌞 夏日提醒：也可以試試冰手沖，用同一支豆子感受不同的清涼風味！</em>'}else if((month>=11||month<=2)&&!isSummer){recText+='<br><br><em style="color:var(--text-secondary);font-size:0.9em;">❄️ 冬日提醒：可以將水溫提高 1-2°C，讓風味更飽滿溫暖。</em>'}rt.innerHTML=recText}
 function updateKnowledgeTips(){const r=document.getElementById('roastLevel').value,p=document.getElementById('processing').value,skipRest=document.getElementById('restDaysSkipBtn').classList.contains('active'),d=skipRest?7:(parseInt(document.getElementById('restDays').value)||7),f=parseInt(document.getElementById('flavorPref').value),mt=KNOWLEDGE_TIPS.filter(t=>t.condition(r,p,d,f)).slice(0,2),ktc=document.getElementById('knowledgeTipsContainer');if(mt.length===0){ktc.innerHTML='<div style="padding:12px 16px;color:var(--text-secondary);font-size:0.85em;opacity:0.6;">✓ 目前設定沒有特別需要注意的地方，放心沖煮吧！</div>';return}ktc.innerHTML=mt.map((t,i)=>`<div class="knowledge-tip" id="tip-${i}"><div class="knowledge-tip-header"><div class="knowledge-tip-title">${t.title}</div><div class="knowledge-tip-toggle">▼</div></div><div class="knowledge-tip-text">${t.text}</div></div>`).join('');mt.forEach((_,i)=>{const el=document.getElementById(`tip-${i}`),h=el.querySelector('.knowledge-tip-header'),c=el.querySelector('.knowledge-tip-text'),tg=el.querySelector('.knowledge-tip-toggle');h.addEventListener('click',()=>{c.classList.toggle('open');tg.classList.toggle('open')})})}
-function attachEventListeners(){document.getElementById('doseInput').addEventListener('input',()=>{recalcAll();updateDoseBtnActive()});document.getElementById('roastLevel').addEventListener('change',()=>{updateRecommendation();updateKnowledgeTips()});document.getElementById('processing').addEventListener('change',()=>{updateRecommendation();updateKnowledgeTips()});document.getElementById('restDays').addEventListener('input',()=>{document.getElementById('restDaysSkipBtn').classList.remove('active');document.getElementById('restDays').disabled=false;document.getElementById('restDays').style.opacity='1';updateKnowledgeTips()});document.getElementById('restDaysSkipBtn').addEventListener('click',()=>{const btn=document.getElementById('restDaysSkipBtn'),inp=document.getElementById('restDays');btn.classList.toggle('active');if(btn.classList.contains('active')){inp.disabled=true;inp.style.opacity='0.4'}else{inp.disabled=false;inp.style.opacity='1'}updateKnowledgeTips()});document.getElementById('flavorPref').addEventListener('input',(e)=>{document.getElementById('flavorValue').textContent=e.target.value;updateRecommendation();updateKnowledgeTips()});document.querySelectorAll('.dose-btn:not(.ratio-preset)').forEach(btn=>{btn.addEventListener('click',()=>{const v=parseFloat(btn.dataset.dose);document.getElementById('doseInput').value=v;document.querySelectorAll('.dose-btn:not(.ratio-preset)').forEach(b=>b.classList.remove('active'));btn.classList.add('active');recalcAll()})});document.querySelectorAll('.stepper-btn').forEach(btn=>{btn.addEventListener('click',()=>{const tid=btn.dataset.target,delta=parseFloat(btn.dataset.delta),inp=document.getElementById(tid);if(inp.disabled)return;let v=parseFloat(inp.value)||0;v=Math.max(parseFloat(inp.min),Math.min(parseFloat(inp.max),v+delta));inp.value=v;inp.dispatchEvent(new Event('input',{bubbles:true}))})});document.getElementById('ratioSlider').addEventListener('input',(e)=>{const v=parseFloat(e.target.value);customRatio=v;document.getElementById('ratioValue').textContent='1:'+v;recalcAll()});document.getElementById('startTimerBtn').addEventListener('click',startTimer);document.getElementById('freeTimerBtn').addEventListener('click',startFreeTimer);document.getElementById('pausePlayBtn').addEventListener('click',toggleTimer);document.getElementById('resetTimerBtn').addEventListener('click',resetTimer);document.getElementById('currentTemp').addEventListener('input',()=>{updateTempSuggestion();updateCalcPanel(BREW_METHODS[selectedMethod])});document.getElementById('roastLevel').addEventListener('change',()=>{autoAdjustTemp();updateRecommendation();updateKnowledgeTips()});document.getElementById('manualRatioInput').addEventListener('input',(e)=>{const v=parseFloat(e.target.value);if(v>=12&&v<=18){customRatio=v;document.getElementById('ratioSlider').value=v;document.getElementById('ratioValue').textContent='1:'+v;recalcAll()}});document.getElementById('ratioSlider').addEventListener('input',(e)=>{const v=parseFloat(e.target.value);document.getElementById('manualRatioInput').value=v.toFixed(1);});document.querySelectorAll('.ratio-preset').forEach(btn=>{btn.addEventListener('click',()=>{const v=parseFloat(btn.dataset.ratio);customRatio=v;document.getElementById('ratioSlider').value=v;document.getElementById('ratioValue').textContent='1:'+v;document.getElementById('manualRatioInput').value=v;document.querySelectorAll('.ratio-preset').forEach(b=>b.classList.remove('active'));btn.classList.add('active');recalcAll()})});document.getElementById('compareBtn').addEventListener('click',()=>{selectedCompareMethods=[];renderCompareModal();document.getElementById('compareModal').classList.add('active')});document.getElementById('compareCloseBtn').addEventListener('click',()=>{document.getElementById('compareModal').classList.remove('active')});document.getElementById('compareModal').addEventListener('click',(e)=>{if(e.target===document.getElementById('compareModal'))document.getElementById('compareModal').classList.remove('active')});document.addEventListener('keydown',(e)=>{if(e.key==='Escape'){const cm=document.getElementById('compareModal');if(cm&&cm.classList.contains('active'))cm.classList.remove('active')}});['roastLevel','processing'].forEach(id=>{document.getElementById(id).addEventListener('change',saveUserPrefs)});['flavorPref','doseInput'].forEach(id=>{document.getElementById(id).addEventListener('change',saveUserPrefs)});document.getElementById('dripperType').addEventListener('change',()=>{renderDripperInfo();updateKnowledgeTips();saveUserPrefs()});document.getElementById('useRecommendationBtn').addEventListener('click',()=>{if(currentRecommendedMethod&&BREW_METHODS[currentRecommendedMethod]){selectMethod(currentRecommendedMethod,BREW_METHODS[currentRecommendedMethod])}});document.getElementById('ratioLockBtn').addEventListener('click',()=>{ratioLocked=!ratioLocked;const btn=document.getElementById('ratioLockBtn');const hint=document.getElementById('ratioLockStatus');btn.textContent=ratioLocked?'🔒':'🔓';btn.classList.toggle('unlocked',!ratioLocked);btn.title=ratioLocked?'鎖定粉水比：改粉量時自動算水量':'解鎖粉水比：可自由調整比例';hint.textContent=ratioLocked?'🔒 比例已鎖定 — 調整粉量時，水量自動計算':'🔓 比例已解鎖 — 可自由滑動調整粉水比';const slider=document.getElementById('ratioSlider');const manualInput=document.getElementById('manualRatioInput');if(ratioLocked){slider.style.opacity='0.4';slider.style.pointerEvents='none';manualInput.style.opacity='0.4';manualInput.disabled=true}else{slider.style.opacity='1';slider.style.pointerEvents='auto';manualInput.style.opacity='1';manualInput.disabled=false}})}
+function attachEventListeners(){document.getElementById('doseInput').addEventListener('input',()=>{recalcAll();updateDoseBtnActive()});document.getElementById('roastLevel').addEventListener('change',()=>{updateRecommendation();updateKnowledgeTips()});document.getElementById('processing').addEventListener('change',()=>{updateRecommendation();updateKnowledgeTips()});document.getElementById('restDays').addEventListener('input',()=>{document.getElementById('restDaysSkipBtn').classList.remove('active');document.getElementById('restDays').disabled=false;document.getElementById('restDays').style.opacity='1';updateKnowledgeTips()});document.getElementById('restDaysSkipBtn').addEventListener('click',()=>{const btn=document.getElementById('restDaysSkipBtn'),inp=document.getElementById('restDays');btn.classList.toggle('active');if(btn.classList.contains('active')){inp.disabled=true;inp.style.opacity='0.4'}else{inp.disabled=false;inp.style.opacity='1'}updateKnowledgeTips()});document.getElementById('flavorPref').addEventListener('input',(e)=>{document.getElementById('flavorValue').textContent=e.target.value;updateRecommendation();updateKnowledgeTips()});document.querySelectorAll('.dose-btn:not(.ratio-preset)').forEach(btn=>{btn.addEventListener('click',()=>{const v=parseFloat(btn.dataset.dose);document.getElementById('doseInput').value=v;document.querySelectorAll('.dose-btn:not(.ratio-preset)').forEach(b=>b.classList.remove('active'));btn.classList.add('active');recalcAll()})});document.querySelectorAll('.stepper-btn').forEach(btn=>{btn.addEventListener('click',()=>{const tid=btn.dataset.target,delta=parseFloat(btn.dataset.delta),inp=document.getElementById(tid);if(inp.disabled)return;let v=parseFloat(inp.value)||0;v=Math.max(parseFloat(inp.min),Math.min(parseFloat(inp.max),v+delta));inp.value=v;inp.dispatchEvent(new Event('input',{bubbles:true}))})});document.getElementById('ratioSlider').addEventListener('input',(e)=>{const v=parseFloat(e.target.value);customRatio=v;document.getElementById('ratioValue').textContent='1:'+v;recalcAll()});document.getElementById('startTimerBtn').addEventListener('click',startTimer);document.getElementById('freeTimerBtn').addEventListener('click',startFreeTimer);document.getElementById('pausePlayBtn').addEventListener('click',toggleTimer);document.getElementById('resetTimerBtn').addEventListener('click',resetTimer);document.getElementById('currentTemp').addEventListener('input',()=>{updateTempSuggestion();updateCalcPanel(BREW_METHODS[selectedMethod])});document.getElementById('roastLevel').addEventListener('change',()=>{autoAdjustTemp();updateRecommendation();updateKnowledgeTips()});document.getElementById('manualRatioInput').addEventListener('input',(e)=>{const v=parseFloat(e.target.value);if(v>=12&&v<=18){customRatio=v;document.getElementById('ratioSlider').value=v;document.getElementById('ratioValue').textContent='1:'+v;recalcAll()}});document.getElementById('ratioSlider').addEventListener('input',(e)=>{const v=parseFloat(e.target.value);document.getElementById('manualRatioInput').value=v.toFixed(1);});document.querySelectorAll('.ratio-preset').forEach(btn=>{btn.addEventListener('click',()=>{const v=parseFloat(btn.dataset.ratio);customRatio=v;document.getElementById('ratioSlider').value=v;document.getElementById('ratioValue').textContent='1:'+v;document.getElementById('manualRatioInput').value=v;document.querySelectorAll('.ratio-preset').forEach(b=>b.classList.remove('active'));btn.classList.add('active');recalcAll()})});document.getElementById('compareBtn').addEventListener('click',()=>{selectedCompareMethods=[];renderCompareModal();document.getElementById('compareModal').classList.add('active')});document.getElementById('compareCloseBtn').addEventListener('click',()=>{document.getElementById('compareModal').classList.remove('active')});document.getElementById('compareModal').addEventListener('click',(e)=>{if(e.target===document.getElementById('compareModal'))document.getElementById('compareModal').classList.remove('active')});document.addEventListener('keydown',(e)=>{if(e.key==='Escape'){const cm=document.getElementById('compareModal');if(cm&&cm.classList.contains('active'))cm.classList.remove('active')}});['roastLevel','processing'].forEach(id=>{document.getElementById(id).addEventListener('change',saveUserPrefs)});['flavorPref','doseInput'].forEach(id=>{document.getElementById(id).addEventListener('change',saveUserPrefs)});document.getElementById('dripperType').addEventListener('change',()=>{renderDripperInfo();updateKnowledgeTips();saveUserPrefs()});document.getElementById('useRecommendationBtn').addEventListener('click',()=>{if(currentRecommendedMethod&&BREW_METHODS[currentRecommendedMethod]){selectMethod(currentRecommendedMethod,BREW_METHODS[currentRecommendedMethod])}});
+  // 推薦折疊 toggle
+  const _recToggle=document.getElementById('recommendToggleBtn');
+  const _recBody=document.getElementById('recommendBody');
+  if(_recToggle&&_recBody){_recToggle.addEventListener('click',()=>{const open=_recBody.classList.toggle('open');_recToggle.classList.toggle('open',open);_recToggle.setAttribute('aria-expanded',open)})};document.getElementById('ratioLockBtn').addEventListener('click',()=>{ratioLocked=!ratioLocked;const btn=document.getElementById('ratioLockBtn');const hint=document.getElementById('ratioLockStatus');btn.textContent=ratioLocked?'🔒':'🔓';btn.classList.toggle('unlocked',!ratioLocked);btn.title=ratioLocked?'鎖定粉水比：改粉量時自動算水量':'解鎖粉水比：可自由調整比例';hint.textContent=ratioLocked?'🔒 比例已鎖定 — 調整粉量時，水量自動計算':'🔓 比例已解鎖 — 可自由滑動調整粉水比';const slider=document.getElementById('ratioSlider');const manualInput=document.getElementById('manualRatioInput');if(ratioLocked){slider.style.opacity='0.4';slider.style.pointerEvents='none';manualInput.style.opacity='0.4';manualInput.disabled=true}else{slider.style.opacity='1';slider.style.pointerEvents='auto';manualInput.style.opacity='1';manualInput.disabled=false}})}
 function updateDoseBtnActive(){const v=parseFloat(document.getElementById('doseInput').value);document.querySelectorAll('.dose-btn:not(.ratio-preset)').forEach(b=>{b.classList.toggle('active',parseFloat(b.dataset.dose)===v)})}
 function renderRadar(k){const p=FLAVOR_PROFILES[k];if(!p)return;const svg=document.getElementById('radarSvg'),cx=120,cy=105,r=80,labels=['酸度','苦度','甜度','體脂感','香氣'],keys=['acidity','bitterness','sweetness','body','aroma'],n=5;let gridLines='',axisLines='',labelEls='';for(let ring=2;ring<=10;ring+=2){let pts=[];for(let i=0;i<n;i++){const a=Math.PI*2*i/n-Math.PI/2,x=cx+r*(ring/10)*Math.cos(a),y=cy+r*(ring/10)*Math.sin(a);pts.push(`${x},${y}`)}gridLines+=`<polygon points="${pts.join(' ')}" fill="none" stroke="rgba(184,125,86,${ring===10?0.3:0.12})" stroke-width="${ring===10?1:0.5}"/>`}for(let i=0;i<n;i++){const a=Math.PI*2*i/n-Math.PI/2,x=cx+r*Math.cos(a),y=cy+r*Math.sin(a),lx=cx+(r+16)*Math.cos(a),ly=cy+(r+16)*Math.sin(a);axisLines+=`<line x1="${cx}" y1="${cy}" x2="${x}" y2="${y}" stroke="rgba(184,125,86,0.2)" stroke-width="0.5"/>`;labelEls+=`<text x="${lx}" y="${ly}" text-anchor="middle" dominant-baseline="central" fill="currentColor" font-size="10" opacity="0.7">${labels[i]}</text>`}let dataPts=[];for(let i=0;i<n;i++){const a=Math.PI*2*i/n-Math.PI/2,v=p[keys[i]]/10,x=cx+r*v*Math.cos(a),y=cy+r*v*Math.sin(a);dataPts.push(`${x},${y}`)}const dataPolygon=`<polygon points="${dataPts.join(' ')}" fill="rgba(184,125,86,0.2)" stroke="var(--copper)" stroke-width="2"/>`;let dots='';for(let i=0;i<n;i++){const a=Math.PI*2*i/n-Math.PI/2,v=p[keys[i]]/10,x=cx+r*v*Math.cos(a),y=cy+r*v*Math.sin(a);dots+=`<circle cx="${x}" cy="${y}" r="3.5" fill="var(--copper)"/>`}svg.innerHTML=gridLines+axisLines+dataPolygon+dots+labelEls;const desc=FLAVOR_DESCRIPTIONS[k];if(desc){let descEl=document.querySelector('.radar-desc');if(!descEl){descEl=document.createElement('div');descEl.className='radar-desc';svg.parentNode.appendChild(descEl)}descEl.textContent=desc}}
 function recalcAll(){if(!selectedMethod)return;const m=BREW_METHODS[selectedMethod];updateCalcPanel(m);updateSteps(m)}
@@ -4050,7 +4137,7 @@ function startProTimerOverlay(m,dose,totalWater,ratio){
   for(let i=0;i<60;i++){const angle=(i*6)-90;const r1=i%5===0?56:57.5;const r2=60;const x1=60+r1*Math.cos(angle*Math.PI/180);const y1=60+r1*Math.sin(angle*Math.PI/180);const x2=60+r2*Math.cos(angle*Math.PI/180);const y2=60+r2*Math.sin(angle*Math.PI/180);tickMarks+='<line x1="'+x1.toFixed(1)+'" y1="'+y1.toFixed(1)+'" x2="'+x2.toFixed(1)+'" y2="'+y2.toFixed(1)+'" stroke="rgba(192,138,92,'+(i%5===0?'0.25':'0.08')+')" stroke-width="'+(i%5===0?'1':'0.5')+'"/>';}
   const stepTotal=currentAllStepsData.length||currentStepDurations.length;
   const ov=document.createElement('div');ov.id='proTimerOverlay';
-  ov.style.cssText='position:fixed;top:0;left:0;right:0;bottom:0;background:var(--surface);z-index:2000;display:flex;flex-direction:column;overflow:hidden;animation:fadeIn 0.25s ease;';
+  ov.style.cssText='position:fixed;top:0;left:0;right:0;bottom:0;background:var(--surface);z-index:2000;display:flex;flex-direction:column;overflow:hidden;animation:fadeIn 0.25s ease;padding-left:env(safe-area-inset-left,0);padding-right:env(safe-area-inset-right,0);';
   ov.innerHTML=`
     <div class="pto-header">
       <button class="pto-exit" id="ptoExit">✕ 結束</button>
@@ -4208,7 +4295,7 @@ function showBrewComplete(){
   const timeStr=mins+"'"+secs.toString().padStart(2,'0')+'"';
   const overlay=document.createElement('div');
   overlay.id='brewCompleteOverlay';
-  overlay.style.cssText='position:fixed;top:0;left:0;right:0;bottom:0;background:rgba(15,13,10,0.92);backdrop-filter:blur(12px);z-index:2000;display:flex;align-items:flex-start;justify-content:center;padding-top:60px;overflow-y:auto;animation:fadeIn 0.4s ease;';
+  overlay.style.cssText='position:fixed;top:0;left:0;right:0;bottom:0;background:rgba(15,13,10,0.92);backdrop-filter:blur(12px);z-index:2000;display:flex;align-items:flex-start;justify-content:center;padding-top:max(60px,calc(env(safe-area-inset-top,0px) + 20px));padding-bottom:calc(40px + env(safe-area-inset-bottom,0px));overflow-y:auto;animation:fadeIn 0.4s ease;';
   const ratingRowsHtml=['acidity:酸度','sweetness:甜感','bitterness:苦度','balance:平衡感'].map(s=>{const[k,lbl]=s.split(':');return`<div class="bco-rating-row"><label class="bco-rating-label">${lbl}</label><div class="bco-rating-stars" id="stars-${k}" data-key="${k}" data-val="0">${[1,2,3,4,5].map(i=>`<button class="bco-star" data-v="${i}">○</button>`).join('')}</div><span class="bco-rating-hint" id="hint-${k}"></span></div>`;}).join('');
   overlay.innerHTML=`<div class="bco-card">
     <div class="bco-hero"><span class="bco-hero-icon">☕</span><div class="bco-hero-title">沖煮完成</div><div class="bco-hero-sub">${m?m.title.split(' · ')[0]:'手沖咖啡'} · 移除濾杯，靜置 30 秒再享用</div></div>
@@ -4378,7 +4465,7 @@ function showQuickBrewNoteModal(method,dose,water,seconds){
   const mins=Math.floor(seconds/60),secs=seconds%60;
   const timeStr=mins+"'"+String(secs).padStart(2,'0')+'"';
   const modal=document.createElement('div');modal.id='quickBrewNoteModal';
-  modal.style.cssText='position:fixed;top:0;left:0;right:0;bottom:0;background:rgba(15,13,10,0.92);backdrop-filter:blur(12px);z-index:2000;display:flex;align-items:flex-start;justify-content:center;padding:40px 16px 80px;overflow-y:auto;animation:fadeIn 0.3s ease;';
+  modal.style.cssText='position:fixed;top:0;left:0;right:0;bottom:0;background:rgba(15,13,10,0.92);backdrop-filter:blur(12px);z-index:2000;display:flex;align-items:flex-start;justify-content:center;padding:max(40px,calc(env(safe-area-inset-top,0px) + 16px)) 16px calc(80px + env(safe-area-inset-bottom,0px));overflow-y:auto;animation:fadeIn 0.3s ease;';
   const qbnRatingRowsHtml=['acidity:酸度','sweetness:甜感','bitterness:苦度','balance:平衡感'].map(s=>{const[k,lbl]=s.split(':');return`<div class="bco-rating-row"><label class="bco-rating-label">${lbl}</label><div class="bco-rating-stars" id="qbn-stars-${k}" data-key="${k}" data-val="0">${[1,2,3,4,5].map(i=>`<button class="bco-star" data-v="${i}">○</button>`).join('')}</div><span class="bco-rating-hint" id="qbn-hint-${k}"></span></div>`;}).join('');
   modal.innerHTML=`<div class="bco-card">
     <div class="bco-hero"><span class="bco-hero-icon">☕</span><div class="bco-hero-title">沖煮完成！</div><div class="bco-hero-sub">${m?m.title.split(' · ')[0]:'手沖咖啡'}</div></div>
