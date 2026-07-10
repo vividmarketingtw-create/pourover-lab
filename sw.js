@@ -1,9 +1,12 @@
-const CACHE_NAME = 'pourover-lab-v3';
+const CACHE_NAME = 'pourover-lab-v8';
 const ASSETS = [
-  '/pourover-lab/',
-  '/pourover-lab/index.html',
-  '/pourover-lab/manifest.json',
-  'https://fonts.googleapis.com/css2?family=Noto+Serif+TC:wght@400;700;900&family=Playfair+Display:wght@700;900&display=swap'
+  './',
+  './index.html',
+  './manifest.json',
+  './icon-192.png',
+  './icon-512.png',
+  './og-image.png',
+  'https://fonts.googleapis.com/css2?family=Noto+Sans+TC:wght@300;400;500;700&family=DM+Sans:wght@400;500;700&family=Space+Mono:wght@400;700&family=Cormorant+Garamond:ital,wght@0,300;0,400;0,700;1,300;1,400&display=swap'
 ];
 
 self.addEventListener('install', e => {
@@ -24,7 +27,8 @@ self.addEventListener('fetch', e => {
   e.respondWith(
     caches.match(e.request).then(cached => {
       const fetched = fetch(e.request).then(response => {
-        if (response && response.status === 200) {
+        const isFont = e.request.url.startsWith('https://fonts.');
+        if (response && (response.status === 200 || (isFont && response.type === 'opaque'))) {
           const clone = response.clone();
           caches.open(CACHE_NAME).then(cache => cache.put(e.request, clone));
         }
