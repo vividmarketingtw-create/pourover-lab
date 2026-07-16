@@ -1,4 +1,4 @@
-const CACHE_NAME = 'pourover-lab-v15';
+const CACHE_NAME = 'pourover-lab-v16';
 const ASSETS = [
   './',
   './index.html',
