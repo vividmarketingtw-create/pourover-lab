@@ -12,13 +12,17 @@
 <meta name="theme-color" content="#2C1A0E">
 <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>☕</text></svg>">
 <link rel="canonical" href="https://vividmarketingtw-create.github.io/pourover-lab/">
+<link rel="alternate" hreflang="zh-TW" href="https://vividmarketingtw-create.github.io/pourover-lab/">
+<link rel="alternate" hreflang="en" href="https://vividmarketingtw-create.github.io/pourover-lab/en/">
+<link rel="alternate" hreflang="x-default" href="https://vividmarketingtw-create.github.io/pourover-lab/">
 <meta property="og:url" content="https://vividmarketingtw-create.github.io/pourover-lab/">
 <meta property="og:image" content="https://vividmarketingtw-create.github.io/pourover-lab/og-image.png">
 <meta property="og:image:width" content="1200">
 <meta property="og:image:height" content="630">
 <link rel="apple-touch-icon" href="icon-192.png">
 <meta property="og:locale" content="zh_TW">
-<meta name="twitter:card" content="summary">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:image" content="https://vividmarketingtw-create.github.io/pourover-lab/og-image.png">
 <meta name="twitter:title" content="手沖咖啡實驗室 | Pour Over Lab">
 <meta name="twitter:description" content="精準計算、智慧推薦、完整指南 — 支援8種手沖咖啡沖法的互動工具">
 <title>PourOver Lab — 手沖咖啡感官實驗室</title>
@@ -28,7 +32,8 @@
 <meta name="apple-mobile-web-app-title" content="手沖咖啡實驗室">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Noto+Sans+TC:wght@300;400;500;700&family=DM+Sans:wght@400;500;700&family=Space+Mono:wght@400;700&family=Cormorant+Garamond:ital,wght@0,300;0,400;0,700;1,300;1,400&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Noto+Sans+TC:wght@300;400;500;700&family=DM+Sans:wght@400;500;700&family=Space+Mono:wght@400;700&family=Cormorant+Garamond:ital,wght@0,300;0,400;1,400&display=swap" rel="stylesheet">
+<script>(function(){try{var t=localStorage.getItem("poTheme")||(window.matchMedia&&window.matchMedia("(prefers-color-scheme: light)").matches?"light":"dark");document.documentElement.setAttribute("data-theme",t);}catch(e){}})();</script>
 <style>
 
   * { margin: 0; padding: 0; box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
@@ -46,6 +51,66 @@
   }
 
   html { min-width: 320px; overflow-x: hidden; }
+
+  /* ===== Light theme ===== */
+  html[data-theme="light"] {
+    --surface: #FBF6EE; --surface-2: #F3EADC; --surface-3: #E9DCC8;
+    --copper: #A26B38; --copper-light: #8A5A2E; --copper-cta: #9C5F28;
+    --copper-muted: rgba(162,107,56,0.55);
+    --text-primary: #2B211A; --text-secondary: rgba(43,33,26,0.78);
+    --border: rgba(122,89,60,0.22); --border-hover: rgba(122,89,60,0.4);
+    --glow: rgba(162,107,56,0.08);
+    --cream: #3A2C20; --cream-subtle: rgba(58,44,32,0.03);
+  }
+  html[data-theme="light"] body { background: #F3EBDD; }
+  html[data-theme="light"] .tab-nav { background: rgba(247,241,232,0.97); border-top-color: rgba(122,89,60,0.15); }
+  html[data-theme="light"] .tab-btn { color: rgba(90,64,40,0.5); }
+  html[data-theme="light"] .site-header { background: transparent; }
+
+  /* ===== Top-right actions (theme + language) ===== */
+  .top-actions {
+    position: fixed; top: max(10px, env(safe-area-inset-top, 10px)); right: 12px; z-index: 220;
+    display: flex; gap: 6px; align-items: center;
+  }
+  .top-actions a, .top-actions button {
+    display: inline-flex; align-items: center; justify-content: center;
+    min-width: 34px; height: 30px; padding: 0 9px;
+    background: rgba(15,13,10,0.55); backdrop-filter: blur(10px); -webkit-backdrop-filter: blur(10px);
+    border: 1px solid var(--border); border-radius: 15px;
+    color: var(--copper-light); font-size: 0.72em; font-family: 'DM Sans','Noto Sans TC',sans-serif;
+    letter-spacing: 1px; cursor: pointer; text-decoration: none; transition: all 0.25s;
+  }
+  .top-actions a:hover, .top-actions button:hover { border-color: var(--border-hover); color: var(--copper); }
+  html[data-theme="light"] .top-actions a, html[data-theme="light"] .top-actions button { background: rgba(251,246,238,0.72); }
+
+  /* ===== My recipes ===== */
+  .my-recipes-wrap { margin-top: 18px; padding-top: 14px; border-top: 1px dashed var(--border); }
+  .my-recipes-header { display: flex; align-items: center; justify-content: space-between; margin-bottom: 10px; }
+  .my-recipes-header > span { font-size: 0.8em; letter-spacing: 2px; color: var(--text-secondary); }
+  .recipe-save-btn {
+    padding: 6px 12px; background: transparent; border: 1px solid rgba(192,138,92,0.35);
+    color: var(--copper-light); font-size: 0.72em; letter-spacing: 1px; cursor: pointer;
+    font-family: inherit; border-radius: var(--radius-sm); transition: all 0.25s;
+  }
+  .recipe-save-btn:hover { border-color: var(--copper); color: var(--copper); }
+  .my-recipes-list { display: flex; flex-direction: column; gap: 6px; }
+  .my-recipes-empty { font-size: 0.72em; color: var(--text-secondary); opacity: 0.7; }
+  .my-recipe-chip { display: flex; align-items: stretch; gap: 6px; }
+  .my-recipe-load {
+    flex: 1; display: flex; flex-direction: column; align-items: flex-start; gap: 2px;
+    padding: 8px 12px; background: var(--surface-2); border: 1px solid var(--border);
+    border-radius: var(--radius-sm); cursor: pointer; text-align: left;
+    font-family: inherit; transition: all 0.25s;
+  }
+  .my-recipe-load:hover { border-color: var(--border-hover); background: var(--surface-3); }
+  .my-recipe-name { color: var(--text-primary); font-size: 0.82em; font-weight: 500; }
+  .my-recipe-meta { color: var(--text-secondary); font-size: 0.68em; letter-spacing: 0.5px; }
+  .my-recipe-del {
+    background: transparent; border: 1px solid var(--border); border-radius: var(--radius-sm);
+    color: var(--text-secondary); width: 34px; cursor: pointer; font-family: inherit; transition: all 0.25s;
+  }
+  .my-recipe-del:hover { color: #C96A5A; border-color: rgba(201,106,90,0.5); }
+
   body {
     background: #0F0D0B;
     display: flex; flex-direction: column; align-items: center;
@@ -3195,6 +3260,10 @@
   <button class="back-to-top" id="backToTop" aria-label="回到頂部"><svg class="back-to-top-icon" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 5v14M5 12l7-7 7 7"/></svg></button>
 
   <!-- ===== DESKTOP SITE HEADER ===== -->
+  <div class="top-actions">
+    <a class="lang-switch-btn" href="en/" aria-label="Switch to English">EN</a>
+    <button class="theme-toggle-btn" id="themeToggleBtn" aria-label="切換深淺色主題">☀︎</button>
+  </div>
   <header class="site-header" id="siteHeader">
     <span class="site-header-logo">☕</span>
     <span class="site-header-title">PourOver Lab</span>
@@ -3555,6 +3624,10 @@
           </div>
           <div style="text-align:center;margin-top:10px;">
             <button class="recipe-copy-btn" id="recipeCopyBtn">📋 複製配方</button>
+          </div>
+          <div class="my-recipes-wrap" id="myRecipesWrap">
+            <div class="my-recipes-header"><span>⭐ 我的配方</span><button class="recipe-save-btn" id="recipeSaveBtn">＋ 儲存目前配方</button></div>
+            <div class="my-recipes-list" id="myRecipesList"></div>
           </div>
         </div>
 
@@ -4210,6 +4283,18 @@ const debouncedRecalcAll=debounce(()=>recalcAll(),150);
 const AppState={get selectedMethod(){return selectedMethod},get timerSeconds(){return timerSeconds},get timerRunning(){return timerRunning},get brewCompleted(){return brewCompleted},get customRatio(){return customRatio},get currentStepDurations(){return currentStepDurations},get selectedCompareMethods(){return selectedCompareMethods}};
 function updateTempSuggestion(){const r=document.getElementById('roastLevel').value;const ct=parseInt(document.getElementById('currentTemp').value)||90;let suggestion='',ideal=90;if(r==='light'){ideal=93;suggestion='💡 淺焙建議 93°C — 高溫有助萃取花香與果酸'}else if(r==='medium'){ideal=90;suggestion='💡 中焙建議 90°C — 平衡甜感與醇厚度'}else if(r==='dark'){ideal=85;suggestion='💡 深焙建議 85°C — 低溫避免苦澀，突出焦糖甜'}const diff=ct-ideal;if(Math.abs(diff)>=3){suggestion+=(diff>0?' ⚠️ 目前水溫偏高，可能增加苦澀':' ⚠️ 目前水溫偏低，可能萃取不足')}document.getElementById('tempSuggestion').innerHTML=suggestion}
 function autoAdjustTemp(){const r=document.getElementById('roastLevel').value;const tempInput=document.getElementById('currentTemp');if(r==='light')tempInput.value='93';else if(r==='medium')tempInput.value='90';else if(r==='dark')tempInput.value='85';updateTempSuggestion()}
+// ===== Theme (light/dark) =====
+function applyTheme(t){document.documentElement.setAttribute('data-theme',t);const btn=document.getElementById('themeToggleBtn');if(btn)btn.textContent=t==='light'?'\u263D':'\u2600\uFE0E';const mc=document.querySelector('meta[name="theme-color"]');if(mc)mc.setAttribute('content',t==='light'?'#F3EBDD':'#2C1A0E');}
+function toggleTheme(){const cur=document.documentElement.getAttribute('data-theme')==='light'?'dark':'light';try{localStorage.setItem('poTheme',cur)}catch(e){}applyTheme(cur);}
+// ===== Brew sound cues (Web Audio; iOS has no vibration support) =====
+let _sfxCtx=null,_sfxOn=(function(){try{return localStorage.getItem('poSoundOn')!=='0'}catch(e){return true}})(),_lastTickAt=-1;
+function _sfxInit(){if(!_sfxCtx){try{_sfxCtx=new (window.AudioContext||window.webkitAudioContext)()}catch(e){}}if(_sfxCtx&&_sfxCtx.state==='suspended')_sfxCtx.resume().catch(()=>{});}
+document.addEventListener('pointerdown',_sfxInit,{capture:true});
+function _beep(freq,dur,delay,vol){if(!_sfxCtx)return;const t=_sfxCtx.currentTime+(delay||0);const o=_sfxCtx.createOscillator(),g=_sfxCtx.createGain();o.type='sine';o.frequency.value=freq;g.gain.setValueAtTime(0.0001,t);g.gain.exponentialRampToValueAtTime(vol||0.22,t+0.012);g.gain.exponentialRampToValueAtTime(0.0001,t+dur);o.connect(g);g.connect(_sfxCtx.destination);o.start(t);o.stop(t+dur+0.05);}
+function _sfx(kind){if(!_sfxOn)return;_sfxInit();if(!_sfxCtx)return;if(kind==='step'){_beep(880,0.12,0,0.24);_beep(1318,0.2,0.14,0.22)}else if(kind==='tick'){_beep(1046,0.055,0,0.13)}else if(kind==='done'){_beep(659,0.16,0,0.24);_beep(880,0.16,0.19,0.24);_beep(1046,0.4,0.38,0.24)}else if(kind==='lap'){_beep(1174,0.07,0,0.18)}}
+function toggleSfx(){_sfxOn=!_sfxOn;try{localStorage.setItem('poSoundOn',_sfxOn?'1':'0')}catch(e){}document.querySelectorAll('.sfx-toggle-btn').forEach(b=>{b.textContent=_sfxOn?'\uD83D\uDD0A':'\uD83D\uDD07';b.setAttribute('aria-label',_sfxOn?'\u95DC\u9589\u97F3\u6548':'\u958B\u555F\u97F3\u6548')});if(_sfxOn)_sfx('tick');}
+function _sfxBtnHtml(cls){return '<button class="'+cls+' sfx-toggle-btn" onclick="toggleSfx()" aria-label="\u97F3\u6548\u958B\u95DC">'+(_sfxOn?'\uD83D\uDD0A':'\uD83D\uDD07')+'</button>'}
+function _stepCountdownTick(seconds,durations,completed){if(completed||!durations||!durations.length)return;for(let i=0;i<durations.length;i++){if(durations[i]>seconds){const d=durations[i]-seconds;if(d<=3&&_lastTickAt!==seconds){_lastTickAt=seconds;_sfx('tick')}return}}}
 function requestWakeLock(){if('wakeLock' in navigator){navigator.wakeLock.request('screen').then(lock=>{wakeLock=lock}).catch(()=>{})}}
 function releaseWakeLock(){if(wakeLock){wakeLock.release().then(()=>{wakeLock=null}).catch(()=>{})}}
 function enterFocusMode(){document.body.classList.add('focus-mode')}
@@ -4228,6 +4313,26 @@ function renderMethodCards(){const g=document.getElementById('methodGrid');g.inn
 // attach filter pill events
 document.getElementById('methodFilterBar')?.querySelectorAll('.method-filter-pill').forEach(pill=>{pill.addEventListener('click',()=>{document.querySelectorAll('.method-filter-pill').forEach(p=>p.classList.remove('active'));pill.classList.add('active');applyMethodFilter(pill.dataset.filter);});});}
 function selectMethod(k,m,silent){if(!m)m=BREW_METHODS[k];selectedMethod=k;customRatio=null;const ems=document.getElementById('methodEmptyState');if(ems)ems.style.display='none';if(ratioLocked){const sl=document.getElementById('ratioSlider');const mi=document.getElementById('manualRatioInput');if(sl){sl.style.opacity='0.4';sl.style.pointerEvents='none'}if(mi){mi.style.opacity='0.4';mi.disabled=true}}const tempNum=(typeof m.tempC==='number')?m.tempC:parseInt(m.temp);if(!isNaN(tempNum))document.getElementById('currentTemp').value=tempNum;updateTempSuggestion();document.querySelectorAll('.method-card').forEach(c=>c.classList.remove('active'));if(!silent){if(event&&event.target){const card=event.target.closest('.method-card');if(card)card.classList.add('active')}}else{document.querySelectorAll('.method-card').forEach(c=>{if(c.querySelector('.compare-add-btn')?.dataset.method===k)c.classList.add('active')})}document.getElementById('calcPanel').style.display='block';if(!silent){document.getElementById('calcPanel').classList.remove('recipe-animate');void document.getElementById('calcPanel').offsetWidth;document.getElementById('calcPanel').classList.add('recipe-animate')}document.getElementById('stepsContainer').style.display='block';const _rb=document.getElementById('recommendBody');const _rt=document.getElementById('recommendToggleBtn');if(_rb&&_rb.classList.contains('open')){_rb.classList.remove('open');if(_rt){_rt.classList.remove('open');_rt.setAttribute('aria-expanded','false')}}if(!silent){document.getElementById('stepsContainer').classList.remove('recipe-animate');void document.getElementById('stepsContainer').offsetWidth;document.getElementById('stepsContainer').classList.add('recipe-animate')}const rs=document.getElementById('ratioSlider');rs.value=m.ratio;document.getElementById('ratioValue').textContent='1:'+m.ratio;showGuide(k,m);updateCalcPanel(m);updateSteps(m);renderRadar(k);renderGrindVisual(k);updateDripperKnowledgeTip();document.getElementById('radarWrap').style.display='block';if(!silent){setTimeout(()=>{document.getElementById('calcPanel').scrollIntoView({behavior:'smooth',block:'start'})},100)}saveUserPrefs();}
+// ===== My recipes (saved presets) =====
+function _getSavedRecipes(){try{return JSON.parse(localStorage.getItem('savedRecipes')||'[]')}catch(e){return[]}}
+function _escRcp(s){return String(s).replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]))}
+function renderMyRecipes(){const list=document.getElementById('myRecipesList');if(!list)return;const rs=_getSavedRecipes();if(!rs.length){list.innerHTML='<div class="my-recipes-empty">\u5C1A\u7121\u5132\u5B58\u914D\u65B9 \u2014 \u8ABF\u597D\u53C3\u6578\u5F8C\u6309\u4E0A\u65B9\u6309\u9215\u4FDD\u5B58\uFF0C\u4E0B\u6B21\u4E00\u9375\u8F09\u5165\u3002</div>';return}
+list.innerHTML=rs.map((r,i)=>'<div class="my-recipe-chip"><button class="my-recipe-load" data-i="'+i+'"><span class="my-recipe-name">'+_escRcp(r.name)+'</span><span class="my-recipe-meta">'+((BREW_METHODS[r.method]&&BREW_METHODS[r.method].badge)||r.method)+' \u00B7 '+r.dose+'g \u00B7 1:'+r.ratio+(r.temp?' \u00B7 '+r.temp+'\u00B0C':'')+'</span></button><button class="my-recipe-del" data-i="'+i+'" aria-label="\u522A\u9664\u914D\u65B9">\u2715</button></div>').join('');
+list.querySelectorAll('.my-recipe-load').forEach(b=>b.addEventListener('click',()=>loadMyRecipe(parseInt(b.dataset.i))));
+list.querySelectorAll('.my-recipe-del').forEach(b=>b.addEventListener('click',()=>{const rs2=_getSavedRecipes();rs2.splice(parseInt(b.dataset.i),1);try{localStorage.setItem('savedRecipes',JSON.stringify(rs2))}catch(e){}renderMyRecipes()}));}
+function saveMyRecipe(){if(!selectedMethod||!BREW_METHODS[selectedMethod]){showErrorToast('\u8ACB\u5148\u9078\u64C7\u4E00\u7A2E\u6C96\u6CD5');return}
+const rs=_getSavedRecipes();if(rs.length>=5){showErrorToast('\u6700\u591A\u4FDD\u5B58 5 \u7D44\u914D\u65B9\uFF0C\u8ACB\u5148\u522A\u9664\u4E00\u7D44');return}
+const m=BREW_METHODS[selectedMethod];const dose=parseFloat(document.getElementById('doseInput').value)||20;const def=(m.badge||'\u914D\u65B9')+' '+dose+'g';
+const name=prompt('\u70BA\u9019\u7D44\u914D\u65B9\u547D\u540D\uFF1A',def);if(name===null)return;
+const ratio=Math.round(getEffectiveRatio(m)*10)/10;const temp=parseInt(document.getElementById('currentTemp').value)||null;
+rs.push({name:(name.trim()||def).slice(0,24),method:selectedMethod,dose:dose,ratio:ratio,temp:temp});
+try{localStorage.setItem('savedRecipes',JSON.stringify(rs))}catch(e){}renderMyRecipes();showCompareToast('\u914D\u65B9\u5DF2\u5132\u5B58 \u2B50');}
+function loadMyRecipe(i){const r=_getSavedRecipes()[i];if(!r||!BREW_METHODS[r.method])return;selectMethod(r.method,BREW_METHODS[r.method],true);
+document.getElementById('doseInput').value=r.dose;
+if(r.ratio){customRatio=r.ratio;const sl=document.getElementById('ratioSlider');if(sl)sl.value=r.ratio;const mi=document.getElementById('manualRatioInput');if(mi)mi.value=r.ratio;const rv=document.getElementById('ratioValue');if(rv)rv.textContent='1:'+r.ratio;}
+if(r.temp)document.getElementById('currentTemp').value=r.temp;
+updateTempSuggestion();recalcAll();showCompareToast('\u5DF2\u8F09\u5165\u300C'+r.name+'\u300D');
+const cp=document.getElementById('calcPanel');if(cp)cp.scrollIntoView({behavior:'smooth',block:'start'});}
 function getEffectiveRatio(m){return customRatio!==null?customRatio:m.ratio}
 function updateCalcPanel(m){const d=parseFloat($('doseInput').value)||20,r=getEffectiveRatio(m),t=Math.round(d*r),s=m.buildSummary(d,t),g=$('calcGrid');g.innerHTML=s.map(i=>`<div class="calc-item"><div class="calc-value">${i.value}${i.unit?'<span style="font-size:0.55em;opacity:0.6;margin-left:2px;">'+i.unit+'</span>':''}</div><div class="calc-label">${i.label}</div></div>`).join('');const _cpTotal=m.buildSteps(d,t).groups.flatMap(gr=>gr.steps).reduce((a,st)=>a+(st.duration||0),0);const _cpNotes=[_tempAdjNote(m)?'<div class="pro-brew-note">'+_tempAdjNote(m)+'（顯示水溫已同步調整）</div>':'',_doseWarn(d)?'<div class="pro-brew-note warn">'+_doseWarn(d)+'</div>':'',_heatWarn(_cpTotal)?'<div class="pro-brew-note">'+_heatWarn(_cpTotal)+'</div>':''].join('');if(_cpNotes)g.insertAdjacentHTML('beforeend','<div style="grid-column:1/-1;">'+_cpNotes+'</div>')}
 function _adjTimeLabel(t,offset){if(!offset)return t;const m=t.match(/^(\d+):(\d{2})$/);if(!m)return t;const tot=parseInt(m[1])*60+parseInt(m[2])+offset;return Math.floor(tot/60)+':'+(tot%60).toString().padStart(2,'0');}function updateSteps(m){const d=parseFloat($('doseInput').value)||20,r=getEffectiveRatio(m),t=Math.round(d*r),sd=m.buildSteps(d,t);let bloomTimeAddition=0;const skipRest=$('restDaysSkipBtn').classList.contains('active'),restDays=skipRest?7:(parseInt($('restDays').value)||7);bloomTimeAddition=_bloomAdd(restDays,skipRest);if(bloomTimeAddition>0){$('freshBeanNote').classList.add('show');const _fbt=document.querySelector('#freshBeanNote .fresh-bean-note-text');if(_fbt)_fbt.textContent='已自動延長悶蒸 '+bloomTimeAddition+' 秒（依養豆天數與烘焙度補償排氣）'}else{$('freshBeanNote').classList.remove('show')}currentStepBloomTime=bloomTimeAddition;let h='';currentStepDurations=[];currentAllStepsData=[];let cumTime=0;let stepNum=0;let _bloomOffset=0;sd.groups.forEach(g=>{h+=`<div class="steps-group-title ${g.color}">${g.label}</div>`;g.steps.forEach(s=>{stepNum++;const _bloomExtra=(s.title&&s.title.includes('悶蒸')&&(s.duration||0)>0?bloomTimeAddition:0);const _dispTime=_adjTimeLabel(s.time,_bloomOffset);cumTime+=(s.duration||0)+_bloomExtra;_bloomOffset+=_bloomExtra;currentStepDurations.push(cumTime);currentAllStepsData.push({...s,stepNum,totalWater:t});const pct=Math.round((s.cum/t)*100);let wb='';if(s.water>0){wb=`<div class="step-water"><div class="step-water-pour">+${s.water}g</div><div class="step-water-bar"><div class="step-water-bar-fill" style="width:${pct}%"></div></div><div class="step-water-cum">累計 ${s.cum} / ${t}g</div></div>`}else if(s.cum>0){wb=`<div class="step-water"><div class="step-water-bar" style="flex:1"><div class="step-water-bar-fill" style="width:${pct}%"></div></div><div class="step-water-cum" style="opacity:0.7;">維持 ${s.cum} / ${t}g</div></div>`}let noteText=s.note||'';if(s.water>0&&s.duration>0&&!s.noRate&&!s.title.includes('悶蒸')){const rate=Math.round(s.water/(s.pour||s.duration)*10)/10;noteText=(noteText?noteText+' · ':'')+`注水速度 ${rate} g/s`;}const noteHtml=noteText?`<div class="step-note">${noteText}</div>`:'';h+=`<div class="step-item" data-step-idx="${currentStepDurations.length-1}"><div class="step-num" style="display:none"></div><div class="step-header"><div class="step-badge">${stepNum}</div><div class="step-body"><div class="step-row-top"><span class="step-title">${s.title}</span><span class="step-time">${_dispTime}</span></div>${wb}${noteHtml}</div></div></div>`})});$('stepsContent').innerHTML=h;_timerDom.stepItems=null;}
@@ -4284,7 +4389,7 @@ function startProTimerOverlay(m,dose,totalWater,ratio){
           </div>
         </div>
         <div class="pto-controls">
-          <button class="pto-ctrl-btn" id="ptoPause">⏸</button>
+          <button class="pto-ctrl-btn" id="ptoPause">⏸</button>${_sfxBtnHtml('pto-ctrl-btn')}
           <button class="pto-ctrl-btn" id="ptoReset">⟲</button>
         </div>
       </div>
@@ -4319,10 +4424,12 @@ function startProTimerOverlay(m,dose,totalWater,ratio){
       el.classList.toggle('active',idx===activeIdx);
       el.classList.toggle('done',idx<activeIdx);
     });
+    _stepCountdownTick(timerSeconds,currentStepDurations,brewCompleted);
     if(activeIdx!==ptoPrevActiveIdx){
       const activeEl=document.querySelector('#ptoStepsList .pto-step-item.active');
       if(activeEl)activeEl.scrollIntoView({behavior:'smooth',block:'nearest'});
       if(ptoPrevActiveIdx>=0&&navigator.vibrate)navigator.vibrate([100,50,100]);
+      if(ptoPrevActiveIdx>=0)_sfx('step');
       const si=document.getElementById('ptoStepInfo');
       if(si&&ptoPrevActiveIdx>=0){si.classList.add('step-flash');setTimeout(()=>si.classList.remove('step-flash'),550);}
       ptoPrevActiveIdx=activeIdx;
@@ -4359,6 +4466,7 @@ function startProTimerOverlay(m,dose,totalWater,ratio){
     if(!brewCompleted&&currentStepDurations.length>0&&timerSeconds>=currentStepDurations[currentStepDurations.length-1]){
       brewCompleted=true;clearInterval(timerInterval);timerRunning=false;releaseWakeLock();
       if(navigator.vibrate)navigator.vibrate([200,100,200,100,300]);
+      _sfx('done');
       if(stepIndEl)stepIndEl.textContent='COMPLETE';
       const pauseBtn=document.getElementById('ptoPause');if(pauseBtn)pauseBtn.textContent='✓';
       if(titleEl)titleEl.textContent='沖煮完成';
@@ -4407,6 +4515,7 @@ function updateTimerDisplay(){const m=Math.floor(timerSeconds/60),s=timerSeconds
 
 function showBrewComplete(){
   if(navigator.vibrate)navigator.vibrate([200,100,200,100,300]);
+  _sfx('done');
   const label=document.getElementById('timerLabel');if(label)label.textContent='沖煮完成！';
   const currentDisplay=document.querySelector('.current-step-display');
   if(currentDisplay)currentDisplay.innerHTML='<div class="current-step-title">沖煮完成</div><div class="current-step-water"><span style="color:var(--copper);">移除濾杯，享受這一杯</span></div>';
@@ -4518,6 +4627,7 @@ function startFreeTimer(){
     const list=document.getElementById('ftLapList');
     list.innerHTML=laps.map((t,i)=>'<div class="ft-lap-item"><span>標記 '+(i+1)+'</span><span class="ft-lap-time">'+t+'</span></div>').reverse().join('');
     if(navigator.vibrate)navigator.vibrate([50]);
+    _sfx('lap');
   });
   document.getElementById('ftReset').addEventListener('click',()=>{
     seconds=0;running=false;laps=[];
@@ -4713,7 +4823,7 @@ function _doStartQuickTimer(){
   let tickMarks='';
   for(let i=0;i<60;i++){const angle=(i*6)-90;const r1=i%5===0?56:57.5;const r2=60;const x1=60+r1*Math.cos(angle*Math.PI/180);const y1=60+r1*Math.sin(angle*Math.PI/180);const x2=60+r2*Math.cos(angle*Math.PI/180);const y2=60+r2*Math.sin(angle*Math.PI/180);tickMarks+='<line x1="'+x1.toFixed(1)+'" y1="'+y1.toFixed(1)+'" x2="'+x2.toFixed(1)+'" y2="'+y2.toFixed(1)+'" stroke="rgba(192,138,92,'+(i%5===0?'0.25':'0.08')+')" stroke-width="'+(i%5===0?'1':'0.5')+'"/>';}
   const stepTotal=allSteps.length;
-  overlay.innerHTML='<div class="qt-header"><button class="qt-exit" id="qtExit">✕ 結束</button><div class="qt-method-name">'+method.title+'</div></div><div class="qt-timer-section"><div class="qt-ring-wrap"><svg viewBox="0 0 120 120"><circle class="qt-ring-outer" cx="60" cy="60" r="59"/>'+tickMarks+'<circle class="qt-ring-bg" cx="60" cy="60" r="52"/><circle class="qt-ring-progress" id="qtRingProgress" cx="60" cy="60" r="52"/></svg><div class="qt-ring-inner"><div class="qt-step-indicator" id="qtStepInd">STEP 1/'+stepTotal+'</div><div class="qt-time" id="qtTime">0:00</div><div class="qt-label" id="qtLabel">準備悶蒸注水</div></div></div><div class="qt-current" id="qtCurrent"></div><div class="qt-controls"><button class="qt-ctrl-btn" id="qtPause">⏸</button><button class="qt-ctrl-btn" id="qtReset">⟲</button></div></div>';
+  overlay.innerHTML='<div class="qt-header"><button class="qt-exit" id="qtExit">✕ 結束</button><div class="qt-method-name">'+method.title+'</div></div><div class="qt-timer-section"><div class="qt-ring-wrap"><svg viewBox="0 0 120 120"><circle class="qt-ring-outer" cx="60" cy="60" r="59"/>'+tickMarks+'<circle class="qt-ring-bg" cx="60" cy="60" r="52"/><circle class="qt-ring-progress" id="qtRingProgress" cx="60" cy="60" r="52"/></svg><div class="qt-ring-inner"><div class="qt-step-indicator" id="qtStepInd">STEP 1/'+stepTotal+'</div><div class="qt-time" id="qtTime">0:00</div><div class="qt-label" id="qtLabel">準備悶蒸注水</div></div></div><div class="qt-current" id="qtCurrent"></div><div class="qt-controls"><button class="qt-ctrl-btn" id="qtPause">⏸</button><button class="qt-ctrl-btn" id="qtReset">⟲</button>'+_sfxBtnHtml('qt-ctrl-btn')+'</div></div>';
   document.body.appendChild(overlay);
   // Scroll page so step list is visible below the compact overlay
   setTimeout(()=>{const ov=document.getElementById('quickTimerOverlay');const activeEl=document.querySelector('#quickBrewResults .quick-step-row.active');if(activeEl&&ov){const ovH=ov.getBoundingClientRect().bottom;const elTop=activeEl.getBoundingClientRect().top+window.scrollY;window.scrollTo({top:Math.max(0,elTop-ovH-16),behavior:'smooth'});}else if(activeEl){activeEl.scrollIntoView({behavior:'smooth',block:'start'});}},400);
@@ -4730,10 +4840,12 @@ function _doStartQuickTimer(){
     let activeIdx=0;
     for(let i=qtDurations.length-1;i>=0;i--){if(seconds>=qtDurations[i]){activeIdx=i;break}}
     document.querySelectorAll('#quickBrewResults .quick-step-row').forEach((el)=>{const idx=parseInt(el.dataset.stepIdx||'-1');el.classList.toggle('active',idx===activeIdx);el.classList.toggle('done',idx<activeIdx)});
+    _stepCountdownTick(seconds,qtDurations,completed);
     if(activeIdx!==prevActiveIdx){
       const activeEl=document.querySelector('#quickBrewResults .quick-step-row.active');
       if(activeEl){const ovEl=document.getElementById('quickTimerOverlay');if(ovEl){const ovH=ovEl.getBoundingClientRect().bottom;const elTop=activeEl.getBoundingClientRect().top+window.scrollY;window.scrollTo({top:Math.max(0,elTop-ovH-16),behavior:'smooth'});}else{activeEl.scrollIntoView({behavior:'smooth',block:'center'});}activeEl.classList.remove('step-entered');void activeEl.offsetWidth;activeEl.classList.add('step-entered');}
       if(prevActiveIdx>=0&&navigator.vibrate)navigator.vibrate([100,50,100]);
+      if(prevActiveIdx>=0)_sfx('step');
       const cur2=document.getElementById('qtCurrent');
       if(cur2&&prevActiveIdx>=0){cur2.classList.add('step-flash');setTimeout(()=>cur2.classList.remove('step-flash'),550);}
       prevActiveIdx=activeIdx;
@@ -4770,7 +4882,7 @@ function _doStartQuickTimer(){
     const _qtWintonTemp=(currentQuickMethod==='winton'&&activeIdx>=3);const _qtTempBadge=_qtWintonTemp?'<div class="winton-temp-badge" style="margin-top:4px;">🌡 降溫至 88°C</div>':'';
     cur.innerHTML='<div class="qt-cur-title">'+step.title+'</div>'+_qtTempBadge+waterHtml+waitHtml+actionHtml;
     if(!completed&&seconds>=qtDurations[qtDurations.length-1]){
-      completed=true;clearInterval(qtInterval);running=false;
+      completed=true;clearInterval(qtInterval);running=false;_sfx('done');
       document.getElementById('quickTimerDot')?.classList.remove('active');
       if(navigator.vibrate)navigator.vibrate([200,100,200,100,300]);
       document.getElementById('qtLabel').textContent='沖煮完成！';
@@ -5138,6 +5250,10 @@ document.getElementById('segPro')?.addEventListener('click', () => {
 });
 
 if('serviceWorker' in navigator){navigator.serviceWorker.register('sw.js').catch(()=>{})}
+applyTheme(document.documentElement.getAttribute('data-theme')||'dark');
+document.getElementById('themeToggleBtn')?.addEventListener('click',toggleTheme);
+document.getElementById('recipeSaveBtn')?.addEventListener('click',saveMyRecipe);
+renderMyRecipes();
   
 
 // ===== TAB NAVIGATION SYSTEM =====
