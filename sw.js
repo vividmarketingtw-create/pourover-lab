@@ -1,5 +1,5 @@
-const CACHE_NAME = 'pourover-lab-v18';
-const ASSETS = [
+const CACHE_NAME = 'pourover-lab-v23';
+const LOCAL_ASSETS = [
   './',
   './index.html',
   './manifest.json',
@@ -8,12 +8,17 @@ const ASSETS = [
   './og-image.png',
   './en/',
   './en/index.html',
-  'https://fonts.googleapis.com/css2?family=Noto+Sans+TC:wght@300;400;500;700&family=DM+Sans:wght@400;500;700&family=Space+Mono:wght@400;700&family=Cormorant+Garamond:ital,wght@0,300;0,400;1,400&display=swap'
+  './en/manifest.json'
 ];
+const FONT_CSS = 'https://fonts.googleapis.com/css2?family=Noto+Sans+TC:wght@300;400;500;700&family=DM+Sans:wght@400;500;700&family=Space+Mono:wght@400;700&family=Cormorant+Garamond:ital,wght@0,300;0,400;1,400&display=swap';
 
 self.addEventListener('install', e => {
   e.waitUntil(
-    caches.open(CACHE_NAME).then(cache => cache.addAll(ASSETS)).then(() => self.skipWaiting())
+    caches.open(CACHE_NAME)
+      // Local assets are required; the Google Fonts stylesheet is best-effort so an
+      // unreachable fonts CDN can never block offline support for the app itself.
+      .then(cache => cache.addAll(LOCAL_ASSETS).then(() => cache.add(FONT_CSS).catch(() => {})))
+      .then(() => self.skipWaiting())
   );
 });
 
@@ -27,9 +32,10 @@ self.addEventListener('activate', e => {
 
 self.addEventListener('fetch', e => {
   const req = e.request;
+  if (req.method !== 'GET') return;
 
   // HTML navigations: network-first so deploys show up immediately;
-  // fall back to cache when offline.
+  // fall back to cache when offline (language-aware, query-string tolerant).
   if (req.mode === 'navigate') {
     e.respondWith(
       fetch(req).then(response => {
@@ -39,18 +45,23 @@ self.addEventListener('fetch', e => {
         }
         return response;
       }).catch(() =>
-        caches.match(req).then(c => c || caches.match('./index.html'))
+        caches.match(req, { ignoreSearch: true }).then(c =>
+          c || caches.match(new URL(req.url).pathname.includes('/en') ? './en/index.html' : './index.html')
+        )
       )
     );
     return;
   }
 
   // Static assets: cache-first with background refresh.
+  // Only cache same-origin assets and Google Fonts responses.
+  const url = new URL(req.url);
+  const cacheable = url.origin === self.location.origin || url.hostname.startsWith('fonts.');
   e.respondWith(
     caches.match(req).then(cached => {
       const fetched = fetch(req).then(response => {
-        const isFont = req.url.startsWith('https://fonts.');
-        if (response && (response.status === 200 || (isFont && response.type === 'opaque'))) {
+        const isFont = url.hostname.startsWith('fonts.');
+        if (cacheable && response && (response.status === 200 || (isFont && response.type === 'opaque'))) {
           const clone = response.clone();
           caches.open(CACHE_NAME).then(cache => cache.put(req, clone));
         }
