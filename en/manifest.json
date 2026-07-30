@@ -1,7 +1,7 @@
 {
   "name": "PourOver Lab — Pour-Over Coffee Lab",
   "short_name": "PourOver Lab",
-  "description": "Precise calculations, smart recommendations, complete guides — an interactive tool supporting eight pour-over brewing methods",
+  "description": "Precise calculations, smart recommendations, complete guides — an interactive tool supporting eleven pour-over brewing methods",
   "start_url": "./",
   "scope": "./",
   "display": "standalone",
