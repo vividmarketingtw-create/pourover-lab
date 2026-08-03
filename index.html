@@ -4286,10 +4286,10 @@ const _flowCalSelHtml=()=>{const c=_flowCal();return '<div class="pro-brew-note"
 const _pourT=(w,rate,mx)=>Math.max(10,Math.min(mx||90,_r5(w/rate)));
 /* ── 4:6 固定節奏引擎 (v3) ── */
 const _K_RATE=5.5;
-/* 4:6 原法為固定 45 秒節奏，不隨粉量變動；僅在濾杯/流速明顯偏慢時放寬到 55 秒 */
-const _kIv=(d,ef)=>Math.max(45,Math.min(55,_r5(45*Math.max(1,(ef||1)*_wF()))));
+/* 4:6 原法為固定 45 秒節奏，不隨粉量變動；由「我的流速／濾杯」上下微調，夾在 35–55 秒 */
+const _kIv=(d,ef)=>Math.max(35,Math.min(55,_r5(45*(ef||1)*_wF())));
 const _kDd=(d,ef)=>Math.max(15,Math.min(50,_r5((20+(d||20)*0.6)*(ef||1)*_wF())));
-const _kPourT=(w,iv)=>Math.max(5,Math.min(iv-15,Math.round(w/_K_RATE)));
+const _kPourT=(w,iv)=>Math.max(5,Math.min(iv-10,Math.round(w/_K_RATE)));
 
 /* ── V60 排水物理模型 (v5) ──────────────────────────────────────────────
    粉層上方的水以時間常數 τ 指數衰減（Darcy 近似），殘水降到 5g 視為「滴完」。
