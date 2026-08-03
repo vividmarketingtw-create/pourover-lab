@@ -4277,17 +4277,21 @@ const _r5=s=>Math.round(s/5)*5;
 /* ── Personal flow calibration (v4) ── scales WAIT time only, pour seconds unchanged */
 const FLOW_CAL={vfast:0.6,fast:0.78,std:1,slow:1.2};
 const FLOW_CAL_OPTS=[['vfast','Very fast'],['fast','Fast'],['std','Standard'],['slow','Slow']];
-const _flowCal=()=>{try{const v=localStorage.getItem('poFlowCal');return FLOW_CAL[v]?v:'std'}catch(e){return 'std'}};
+/* Default flow baseline: fast (real V60 drawdown runs faster than the old model; moved from std on 2026-08-03) */
+const FLOW_CAL_DEFAULT='fast';
+const _flowCal=()=>{try{const v=localStorage.getItem('poFlowCal');return FLOW_CAL[v]?v:FLOW_CAL_DEFAULT}catch(e){return FLOW_CAL_DEFAULT}};
 const _wF=()=>FLOW_CAL[_flowCal()]||1;
-const _flowCalSet=v=>{try{localStorage.setItem('poFlowCal',FLOW_CAL[v]?v:'std')}catch(e){}};
-const _flowCalNote=()=>{const v=_flowCal();if(v==='vfast')return '⚡ Very fast: every drawdown wait and between-pour gap is cut by 40%. Pour durations are unchanged.';if(v==='fast')return '⚡ Fast: waits are cut by about 22%. Pour durations are unchanged.';if(v==='slow')return '⏳ Slow: waits are extended by 20% so the timer does not end while the bed is still dripping.';return '';};
-const _flowCalHint='💡 Every time is derived for a <strong>Hario V60 (fast dripper)</strong>. If your bed keeps draining early, move toward Fast; if it is still dripping when the timer ends, move toward Slow. This only changes waiting time — pour durations stay the same.';
-const _flowCalSelHtml=()=>{const c=_flowCal();return '<div class="pro-brew-note" style="display:flex;align-items:center;gap:6px;flex-wrap:wrap;">🚤 My flow rate: '+FLOW_CAL_OPTS.map(o=>'<button class="fcal-btn'+(c===o[0]?' active':'')+'" data-fc="'+o[0]+'">'+o[1]+'</button>').join('')+'<span style="width:100%;opacity:0.85;">'+(_flowCalNote()||_flowCalHint)+'</span></div>'};
+const _flowCalSet=v=>{try{localStorage.setItem('poFlowCal',FLOW_CAL[v]?v:FLOW_CAL_DEFAULT)}catch(e){}};
+const _flowCalNote=()=>{const v=_flowCal();if(v==='vfast')return '⚡ Very fast: waits are 40% shorter than Standard. Pour durations are unchanged.';if(v==='fast')return '⚡ Fast (default): waits are about 22% shorter than Standard. Pour durations are unchanged.';if(v==='std')return '⏳ Standard: waits are about 28% longer than the Fast default.';if(v==='slow')return '⏳ Slow: waits are 20% longer than Standard, so the timer does not end while the bed is still dripping.';return '';};
+const _flowCalHint='💡 Default is <strong>Hario V60 · Fast</strong>. Judge it <strong>between pours</strong>: if the bed drains dry and leaves you waiting, move toward Fast; if it is still dripping when the timer ends, move toward Slow. This only changes waiting time — pour durations stay the same.';
+const _flowCalSelHtml=()=>{const c=_flowCal();return '<div class="pro-brew-note" style="display:flex;align-items:center;gap:6px;flex-wrap:wrap;">🚤 My flow rate: '+FLOW_CAL_OPTS.map(o=>'<button class="fcal-btn'+(c===o[0]?' active':'')+'" data-fc="'+o[0]+'">'+o[1]+'</button>').join('')+'<span style="width:100%;opacity:0.85;">'+(_flowCalNote()?_flowCalNote()+'<br>':'')+_flowCalHint+'</span></div>'};
 const _pourT=(w,rate,mx)=>Math.max(10,Math.min(mx||90,_r5(w/rate)));
 /* ── 4:6 固定節奏引擎 (v3) ── */
 const _K_RATE=5.5;
-/* 4:6 原法為固定 45 秒節奏，不隨粉量變動；由「我的流速／濾杯」上下微調，夾在 35–55 秒 */
-const _kIv=(d,ef)=>Math.max(35,Math.min(55,_r5(45*(ef||1)*_wF())));
+/* 4:6 cadence: at the default flow setting (Fast) this is Kasuya's 45s, dose-independent.
+   It only shifts when the user moves off the default — Very fast -> 35s, Standard/Slow -> 55s. */
+const _wFRel=()=>_wF()/(FLOW_CAL[FLOW_CAL_DEFAULT]||1);
+const _kIv=(d,ef)=>Math.max(35,Math.min(55,_r5(45*(ef||1)*_wFRel())));
 const _kDd=(d,ef)=>Math.max(15,Math.min(50,_r5((20+(d||20)*0.6)*(ef||1)*_wF())));
 const _kPourT=(w,iv)=>Math.max(5,Math.min(iv-10,Math.round(w/_K_RATE)));
 

@@ -4277,17 +4277,21 @@ const _r5=s=>Math.round(s/5)*5;
 /* ── 個人流速校正 (v4) ── 只縮放「等待」時間，注水秒數不動 */
 const FLOW_CAL={vfast:0.6,fast:0.78,std:1,slow:1.2};
 const FLOW_CAL_OPTS=[['vfast','很快'],['fast','偏快'],['std','標準'],['slow','偏慢']];
-const _flowCal=()=>{try{const v=localStorage.getItem('poFlowCal');return FLOW_CAL[v]?v:'std'}catch(e){return 'std'}};
+/* 預設流速基準：fast（實測 V60 排水比舊模型快，2026-08-03 起把預設從 std 移到 fast） */
+const FLOW_CAL_DEFAULT='fast';
+const _flowCal=()=>{try{const v=localStorage.getItem('poFlowCal');return FLOW_CAL[v]?v:FLOW_CAL_DEFAULT}catch(e){return FLOW_CAL_DEFAULT}};
 const _wF=()=>FLOW_CAL[_flowCal()]||1;
-const _flowCalSet=v=>{try{localStorage.setItem('poFlowCal',FLOW_CAL[v]?v:'std')}catch(e){}};
-const _flowCalNote=()=>{const v=_flowCal();if(v==='vfast')return '⚡ 很快：所有「等滴完」與「段間空檔」縮短 40%，注水秒數不變。';if(v==='fast')return '⚡ 偏快：等待時間縮短約 22%，注水秒數不變。';if(v==='slow')return '⏳ 偏慢：等待時間延長 20%，避免計時結束時還在滴。';return '';};
-const _flowCalHint='💡 所有時間以 <strong>Hario V60（快流速）</strong> 為基準推算。水常常提早滴完就往「快」調，計時結束還在滴就往「慢」調 — 只會改等待時間，注水秒數不變。';
-const _flowCalSelHtml=()=>{const c=_flowCal();return '<div class="pro-brew-note" style="display:flex;align-items:center;gap:6px;flex-wrap:wrap;">🚤 我的流速：'+FLOW_CAL_OPTS.map(o=>'<button class="fcal-btn'+(c===o[0]?' active':'')+'" data-fc="'+o[0]+'">'+o[1]+'</button>').join('')+'<span style="width:100%;opacity:0.85;">'+(_flowCalNote()||_flowCalHint)+'</span></div>'};
+const _flowCalSet=v=>{try{localStorage.setItem('poFlowCal',FLOW_CAL[v]?v:FLOW_CAL_DEFAULT)}catch(e){}};
+const _flowCalNote=()=>{const v=_flowCal();if(v==='vfast')return '⚡ 很快：等待時間比「標準」再縮短 40%，注水秒數不變。';if(v==='fast')return '⚡ 偏快（預設）：等待時間比「標準」縮短約 22%，注水秒數不變。';if(v==='std')return '⏳ 標準：等待時間比預設的「偏快」再拉長約 28%。';if(v==='slow')return '⏳ 偏慢：等待時間比「標準」再延長 20%，避免計時結束時還在滴。';return '';};
+const _flowCalHint='💡 預設為 <strong>Hario V60 · 偏快</strong>。判斷方式看<strong>每一注之間</strong>：水早就流乾還在空等就往「快」調，計時結束還在滴就往「慢」調 — 只會改等待時間，注水秒數不變。';
+const _flowCalSelHtml=()=>{const c=_flowCal();return '<div class="pro-brew-note" style="display:flex;align-items:center;gap:6px;flex-wrap:wrap;">🚤 我的流速：'+FLOW_CAL_OPTS.map(o=>'<button class="fcal-btn'+(c===o[0]?' active':'')+'" data-fc="'+o[0]+'">'+o[1]+'</button>').join('')+'<span style="width:100%;opacity:0.85;">'+(_flowCalNote()?_flowCalNote()+'<br>':'')+_flowCalHint+'</span></div>'};
 const _pourT=(w,rate,mx)=>Math.max(10,Math.min(mx||90,_r5(w/rate)));
 /* ── 4:6 固定節奏引擎 (v3) ── */
 const _K_RATE=5.5;
-/* 4:6 原法為固定 45 秒節奏，不隨粉量變動；由「我的流速／濾杯」上下微調，夾在 35–55 秒 */
-const _kIv=(d,ef)=>Math.max(35,Math.min(55,_r5(45*(ef||1)*_wF())));
+/* 4:6 節奏：預設檔位（偏快）＝ 粕谷原法的 45 秒，且不隨粉量變動。
+   只有當使用者把「我的流速」調離預設時才會平移 —— 很快→35s、標準/偏慢→55s。 */
+const _wFRel=()=>_wF()/(FLOW_CAL[FLOW_CAL_DEFAULT]||1);
+const _kIv=(d,ef)=>Math.max(35,Math.min(55,_r5(45*(ef||1)*_wFRel())));
 const _kDd=(d,ef)=>Math.max(15,Math.min(50,_r5((20+(d||20)*0.6)*(ef||1)*_wF())));
 const _kPourT=(w,iv)=>Math.max(5,Math.min(iv-10,Math.round(w/_K_RATE)));
 
