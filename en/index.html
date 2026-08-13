@@ -541,6 +541,91 @@
   .method-ratio { font-size: 0.8em; color: var(--text-secondary); margin-bottom: 4px; font-weight: 300; }
   .method-desc { font-size: 0.78em; color: var(--text-secondary); line-height: 1.6; font-weight: 300; }
 
+  .method-master { font-size: 0.72em; color: var(--copper-light); margin: 2px 0 6px; font-weight: 500; letter-spacing: 0.3px; line-height: 1.5; }
+  .method-master .method-cred { color: var(--text-secondary); font-weight: 300; }
+  .method-verified { display: inline-block; margin-left: 6px; padding: 1px 7px; border: 1px solid rgba(123,198,126,0.45); color: #7BC67E; border-radius: 9px; font-size: 0.88em; cursor: help; white-space: nowrap; }
+  .method-fit { font-size: 0.72em; color: var(--text-secondary); margin-top: 8px; padding-top: 8px; border-top: 1px dashed var(--border); line-height: 1.55; opacity: 0.9; }
+
+  .method-view-bar { display: flex; align-items: center; gap: 8px; margin: 0 0 10px; flex-wrap: wrap; }
+  .method-view-label { font-size: 0.72em; color: var(--text-secondary); letter-spacing: 1.5px; }
+  .method-view-btn { padding: 6px 14px; border-radius: 20px; font-size: 0.72em; background: var(--surface-2); border: 1px solid var(--border); color: var(--text-secondary); cursor: pointer; transition: all 0.25s; font-family: inherit; letter-spacing: 0.5px; }
+  .method-view-btn:hover { border-color: var(--copper); }
+  .method-view-btn.active { background: var(--copper); border-color: var(--copper); color: #fff; }
+  .method-group-header { grid-column: 1 / -1; margin: 14px 0 2px; padding-left: 12px; border-left: 3px solid var(--copper); }
+  .method-group-header:first-child { margin-top: 0; }
+  .mgh-title { font-size: 0.95em; color: var(--text-primary); font-weight: 600; letter-spacing: 0.5px; }
+  .mgh-sub { font-size: 0.72em; color: var(--copper-light); margin-top: 2px; }
+  .mgh-intro { font-size: 0.76em; color: var(--text-secondary); margin-top: 6px; line-height: 1.6; max-width: 640px; font-weight: 300; }
+  .method-series { display: inline-block; margin-left: 6px; padding: 2px 8px; border-radius: 10px; font-size: 0.65em; background: rgba(192,138,92,0.12); color: var(--copper-light); border: 1px solid rgba(192,138,92,0.3); vertical-align: 1px; }
+
+  .quick-wiz { margin: 0 0 18px; border: 1px solid var(--border); background: var(--surface-2); }
+  .quick-wiz-toggle { width: 100%; padding: 13px 16px; background: none; border: none; color: var(--copper-light); font-size: 0.88em; cursor: pointer; display: flex; align-items: center; justify-content: center; gap: 8px; font-family: inherit; letter-spacing: 0.5px; }
+  .quick-wiz-body { display: none; padding: 4px 16px 16px; }
+  .quick-wiz.open .quick-wiz-body { display: block; }
+  .quick-wiz.open .qw-arrow { transform: rotate(180deg); }
+  .qw-arrow { transition: transform 0.25s; font-size: 0.8em; }
+  .qw-q { margin: 10px 0; }
+  .qw-q-label { display: block; font-size: 0.78em; color: var(--text-secondary); margin-bottom: 6px; }
+  .qw-opts { display: flex; gap: 6px; flex-wrap: wrap; }
+  .qw-opt { padding: 8px 12px; font-size: 0.8em; background: var(--surface); border: 1px solid var(--border); color: var(--text-secondary); cursor: pointer; transition: all 0.2s; font-family: inherit; border-radius: 18px; }
+  .qw-opt:hover { border-color: var(--copper); }
+  .qw-opt.active { background: var(--copper); border-color: var(--copper); color: #fff; }
+  .qw-result { margin-top: 12px; }
+  .qw-card { border: 1px solid rgba(192,138,92,0.35); background: rgba(184,125,86,0.05); padding: 14px; margin-top: 8px; }
+  .qw-card.alt { opacity: 0.85; border-style: dashed; }
+  .qw-pick-label { font-size: 0.68em; color: var(--copper-light); letter-spacing: 1.5px; margin-bottom: 4px; }
+  .qw-pick-name { font-size: 0.98em; font-weight: 600; color: var(--text-primary); }
+  .qw-pick-reason { font-size: 0.78em; color: var(--text-secondary); margin-top: 4px; line-height: 1.6; }
+  .qw-use-btn { margin-top: 10px; padding: 9px 18px; background: var(--copper); color: #fff; border: none; cursor: pointer; font-size: 0.82em; font-family: inherit; letter-spacing: 0.5px; }
+  .qw-card.alt .qw-use-btn { background: var(--surface-2); color: var(--text-secondary); border: 1px solid var(--border); }
+  .qw-note { font-size: 0.72em; color: var(--text-secondary); margin-top: 8px; opacity: 0.8; line-height: 1.6; }
+  .fb-block { margin: 0 0 12px; padding: 10px 12px; border: 1px solid rgba(212,165,116,0.4); background: rgba(212,165,116,0.07); text-align: left; }
+  .fb-title { font-size: 0.8em; color: var(--copper-light); font-weight: 600; margin-bottom: 6px; }
+  .fb-row { font-size: 0.75em; color: var(--text-secondary); line-height: 1.6; margin-top: 4px; }
+  .fb-tag { display: inline-block; margin-right: 6px; padding: 1px 7px; font-size: 0.9em; background: rgba(192,138,92,0.15); color: var(--copper-light); border-radius: 8px; white-space: nowrap; }
+
+  .km-intro { font-size: 0.85em; color: var(--text-secondary); line-height: 1.7; margin: 6px 0 20px; max-width: 720px; font-weight: 300; }
+  .km-note { font-size: 0.78em; color: var(--text-secondary); margin: -4px 0 12px; opacity: 0.85; line-height: 1.6; }
+  .mt-track { display: flex; overflow-x: auto; padding: 4px 0 12px; scrollbar-width: thin; }
+  .mt-node { position: relative; min-width: 168px; flex: 1; padding: 0 12px 0 0; cursor: pointer; }
+  .mt-node::before { content: ''; position: absolute; top: 27px; left: 0; right: 0; height: 1px; background: var(--border); }
+  .mt-year { font-size: 0.82em; color: var(--copper-light); font-weight: 700; letter-spacing: 1px; margin-bottom: 12px; }
+  .mt-dot { position: absolute; top: 23.5px; left: 2px; width: 8px; height: 8px; border-radius: 50%; background: var(--mtc); box-shadow: 0 0 0 3px color-mix(in srgb, var(--mtc) 25%, transparent); }
+  .mt-title { font-size: 0.82em; color: var(--text-primary); font-weight: 600; margin: 10px 0 4px; }
+  .mt-desc { font-size: 0.7em; color: var(--text-secondary); line-height: 1.55; font-weight: 300; padding-right: 4px; }
+  .mt-node:hover .mt-title { color: var(--copper-light); }
+  .sm-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 12px; }
+  .sm-col { border: 1px solid var(--border); background: var(--surface-2); padding: 14px; }
+  .sm-head { font-size: 0.88em; font-weight: 600; color: var(--text-primary); margin-bottom: 4px; }
+  .sm-desc { font-size: 0.72em; color: var(--text-secondary); line-height: 1.55; margin-bottom: 10px; font-weight: 300; min-height: 2.6em; }
+  .sm-chips { display: flex; flex-wrap: wrap; gap: 6px; }
+  .sm-chip { padding: 5px 10px; font-size: 0.72em; background: color-mix(in srgb, var(--smc) 12%, transparent); color: var(--text-primary); border: 1px solid color-mix(in srgb, var(--smc) 40%, transparent); border-radius: 14px; cursor: pointer; font-family: inherit; transition: all 0.2s; }
+  .sm-chip:hover { background: color-mix(in srgb, var(--smc) 25%, transparent); }
+  .flavor-map-wrap { border: 1px solid var(--border); background: var(--surface-2); padding: 10px; }
+  .fm-svg { width: 100%; height: auto; display: block; }
+  .fm-axis { stroke: var(--border); stroke-width: 0.35; }
+  .fm-axlbl { font-size: 2.8px; fill: var(--text-secondary); letter-spacing: 0.3px; }
+  .fm-lbl { font-size: 2.9px; fill: var(--text-primary); font-weight: 600; }
+  .fm-note { font-size: 2.4px; fill: var(--text-secondary); opacity: 0.8; }
+  .fm-range { stroke: #C07830; stroke-width: 0.5; stroke-dasharray: 1.2 0.9; opacity: 0.6; }
+  .fm-pt { cursor: pointer; }
+  .fm-pt:hover .fm-lbl { fill: var(--copper-light); }
+  .practice-path { display: flex; flex-direction: column; gap: 12px; }
+  .pp-tier { border: 1px solid var(--border); border-left: 3px solid var(--ppc); background: var(--surface-2); padding: 12px 14px; }
+  .pp-tier-head { display: flex; align-items: center; justify-content: space-between; margin-bottom: 10px; }
+  .pp-tier-label { font-size: 0.85em; font-weight: 600; color: var(--text-primary); }
+  .pp-tier-prog { font-size: 0.72em; color: var(--text-secondary); }
+  .pp-methods { display: flex; flex-wrap: wrap; gap: 8px; }
+  .pp-m { display: flex; align-items: center; gap: 8px; padding: 7px 12px; background: var(--surface); border: 1px solid var(--border); color: var(--text-secondary); cursor: pointer; font-family: inherit; font-size: 0.76em; transition: all 0.2s; }
+  .pp-m:hover { border-color: var(--copper); }
+  .pp-m.done { border-color: rgba(123,198,126,0.5); }
+  .pp-m-name { color: var(--text-primary); }
+  .pp-dots { display: inline-flex; gap: 3px; }
+  .pp-dot { width: 6px; height: 6px; border-radius: 50%; background: var(--border); display: inline-block; }
+  .pp-dot.on { background: var(--copper); }
+  .pp-badge { color: #7BC67E; font-size: 0.92em; }
+  .pp-cnt { opacity: 0.7; font-size: 0.9em; }
+
   .selector-label { color: var(--copper-light); font-size: 0.78em; margin-top: 28px; margin-bottom: 12px; font-weight: 500; letter-spacing: 2px; text-transform: uppercase; position: relative; padding-left: 12px; }
   .selector-label::before { content: ''; position: absolute; left: 0; top: 50%; transform: translateY(-50%); width: 3px; height: 14px; background: var(--copper); border-radius: 1px; }
   h2.selector-label, h2.calc-title { font-size: 0.78em; }
@@ -3448,6 +3533,16 @@
         <div class="quick-flow-step" id="qfStep3"><span class="quick-flow-num">3</span>Brew</div>
       </div>
 
+      <div class="quick-wiz" id="quickWiz">
+        <button class="quick-wiz-toggle" id="quickWizToggle" aria-expanded="false">🧭 Not sure which one? Three questions<span class="qw-arrow">▼</span></button>
+        <div class="quick-wiz-body" id="quickWizBody">
+          <div class="qw-q"><span class="qw-q-label">1. Today’s beans?</span><div class="qw-opts" data-q="roast"><button class="qw-opt" data-v="light">Light</button><button class="qw-opt" data-v="medium">Medium</button><button class="qw-opt" data-v="dark">Dark</button><button class="qw-opt" data-v="unsure">Not sure</button></div></div>
+          <div class="qw-q"><span class="qw-q-label">2. What do you want to taste?</span><div class="qw-opts" data-q="want"><button class="qw-opt" data-v="bright">🍋 Bright acidity</button><button class="qw-opt" data-v="balanced">☕ Balanced</button><button class="qw-opt" data-v="rich">🫘 Rich body</button><button class="qw-opt" data-v="iced">🧊 Iced</button></div></div>
+          <div class="qw-q"><span class="qw-q-label">3. Today’s mood?</span><div class="qw-opts" data-q="state"><button class="qw-opt" data-v="quick">⚡ In a hurry</button><button class="qw-opt" data-v="practice">🎯 Practice mode</button><button class="qw-opt" data-v="guests">👥 Brewing for guests</button></div></div>
+          <div class="qw-result" id="quickWizResult"></div>
+        </div>
+      </div>
+
       <h3 class="selector-label">Choose a Method</h3>
       <div class="quick-method-grid" id="quickMethodGrid"></div>
 
@@ -3557,12 +3652,19 @@
         </div>
 
         <!-- Filters + method cards -->
+        <div class="method-view-bar" id="methodViewBar">
+          <span class="method-view-label">View</span>
+          <button class="method-view-btn active" data-view="tier">By Category</button>
+          <button class="method-view-btn" data-view="master">By Master</button>
+          <button class="method-view-btn" data-view="flavor">By Flavor</button>
+        </div>
         <div class="method-filter-bar" id="methodFilterBar">
-          <button class="method-filter-pill active" data-filter="all">All (11)</button>
-          <button class="method-filter-pill" data-filter="beginner">🌱 Beginner-Friendly</button>
-          <button class="method-filter-pill" data-filter="competition">🏆 Competition</button>
+          <button class="method-filter-pill active" data-filter="all">All</button>
+          <button class="method-filter-pill" data-filter="basics">🌱 Fundamentals</button>
+          <button class="method-filter-pill" data-filter="classic">☕ Modern Classics</button>
+          <button class="method-filter-pill" data-filter="worldstage">🏆 World Stage</button>
 
-          <button class="method-filter-pill" data-filter="iced">🧊 Iced</button>
+          <button class="method-filter-pill" data-filter="seasonal">🧊 Seasonal</button>
         </div>
         <div class="method-grid" id="methodGrid"></div>
         <div class="method-empty-state" id="methodEmptyState">
@@ -3761,6 +3863,7 @@
 
       <nav class="knowledge-toc">
         <a href="#" data-scroll-to="beginnerGuideSection" style="color:var(--copper);">☕ Getting Started</a>
+        <a href="#" data-scroll-to="knowledgeMapSection">Knowledge Map</a>
         <a href="#" data-scroll-to="knowledgeMethodOverview">Method Overview</a>
         <a href="#" data-scroll-to="dripperKnowledgeSection">Dripper Guide</a>
         <a href="#" data-scroll-to="troubleshootSection">Extraction Fixes</a>
@@ -3870,6 +3973,23 @@
 
       </section>
       <div class="section-divider"></div>
+
+      <!-- ===== KNOWLEDGE MAP ===== -->
+      <section class="section visible" id="knowledgeMapSection">
+        <div class="section-label">Knowledge Map</div>
+        <div class="section-title">A Decade of Pour-Over, One Map</div>
+        <p class="km-intro">The methods on this site are curated from publicly published recipes by World Brewers Cup champions and coffee experts, verified step by step and scaled to your dose. These maps show how they relate.</p>
+        <h3 class="selector-label">🏆 Master Timeline</h3>
+        <div class="master-timeline" id="masterTimeline"></div>
+        <h3 class="selector-label" style="margin-top:26px;">🗺️ Schools of Brewing · by Extraction Structure</h3>
+        <div class="school-map" id="schoolMap"></div>
+        <h3 class="selector-label" style="margin-top:26px;">🎯 Flavor × Difficulty Map</h3>
+        <div class="flavor-map-wrap" id="flavorMap"></div>
+        <h3 class="selector-label" style="margin-top:26px;">⛰️ The Practice Path</h3>
+        <p class="km-note">Log 3 brews of a method to light it up (save a brew note when the timer ends). Start from the fundamentals and brew your way to the world stage.</p>
+        <div class="practice-path" id="practicePath"></div>
+      </section>
+      <div class="section-divider" style="margin-top:30px;"></div>
 
       <h3 class="selector-label" style="margin-top:10px;">All 11 Methods at a Glance</h3>
       <div class="method-overview-grid" id="knowledgeMethodOverview"></div>
@@ -4509,12 +4629,44 @@ const BREW_NOTES_VERSION=1;
 function saveUserPrefs(){try{const prefs={v:PREFS_VERSION,quickDose:document.getElementById('quickDoseInput')?.value||'20',quickMethod:currentQuickMethod||'onePour',roast:document.getElementById('roastLevel')?.value||'medium',processing:document.getElementById('processing')?.value||'washed',flavor:document.getElementById('flavorPref')?.value||'50',dose:document.getElementById('doseInput')?.value||'20',dripper:document.getElementById('dripperType')?.value||'v60',selectedMethod:selectedMethod||''};localStorage.setItem('pouroverPrefs',JSON.stringify(prefs))}catch(e){}}
 function loadUserPrefs(){try{const raw=localStorage.getItem('pouroverPrefs');if(!raw)return;const p=JSON.parse(raw);if(!p.v||p.v!==PREFS_VERSION){localStorage.removeItem('pouroverPrefs');return;}const qd=document.getElementById('quickDoseInput');if(qd&&p.quickDose)qd.value=p.quickDose;if(p.quickMethod)currentQuickMethod=p.quickMethod;const rl=document.getElementById('roastLevel');if(rl&&p.roast)rl.value=p.roast;const pr=document.getElementById('processing');if(pr&&p.processing)pr.value=p.processing;const fp=document.getElementById('flavorPref');if(fp&&p.flavor){fp.value=p.flavor;const fv=document.getElementById('flavorValue');if(fv)fv.textContent=p.flavor}const di=document.getElementById('doseInput');if(di&&p.dose)di.value=p.dose;const dt=document.getElementById('dripperType');if(dt&&p.dripper)dt.value=p.dripper;if(p.selectedMethod&&BREW_METHODS[p.selectedMethod])window._restoreMethod=p.selectedMethod}catch(e){}}
 function initFlowCal(){const sel=document.getElementById('flowCalSel');if(!sel)return;sel.value=_flowCal();const paint=()=>{const n=document.getElementById('flowCalNote');if(n)n.innerHTML=_flowCalNote()||_flowCalHint;};paint();sel.addEventListener('change',()=>{_flowCalSet(sel.value);paint();recalcAll();_proRefresh();});}
-function init(){loadUserPrefs();renderMethodCards();attachEventListeners();initFlowCal();renderDripperInfo();renderDripperKnowledge();updateRecommendation();updateKnowledgeTips();updateGreeting();renderFAQ();renderBrewingTips();initGlossary();if(window._restoreMethod){selectMethod(window._restoreMethod,null,true);delete window._restoreMethod;}}
-const METHOD_FILTER_MAP={immersion:'beginner',kasuya:'competition',hoffmann:'beginner',rao:'competition',onePour:'beginner',chadwang:'competition',winton:'competition',icedBrew:'iced',kasuyaTen:'competition',woelfl:'competition',medina:'competition'};
+function init(){loadUserPrefs();renderMethodCards();attachEventListeners();_wireQuickWiz();initFlowCal();renderDripperInfo();renderDripperKnowledge();updateRecommendation();updateKnowledgeTips();updateGreeting();renderFAQ();renderBrewingTips();initGlossary();if(window._restoreMethod){selectMethod(window._restoreMethod,null,true);delete window._restoreMethod;}}
+const METHOD_META={
+immersion:{master:'Universal technique',cred:'curated by PourOver Lab',tier:'basics',vt:'Verified',fit:'you want a stable, tasty cup without pouring skills'},
+kasuya:{master:'Tetsu Kasuya',cred:'2016 World Brewers Cup Champion',tier:'classic',series:'Kasuya series 1/2 · 2016',vt:'Verified original',fit:'you want precise control of sweetness vs. acidity'},
+hoffmann:{master:'James Hoffmann',cred:'UK coffee expert · 2007 World Barista Champion',tier:'basics',vt:'Verified original',fit:'you like clean, bright cups and want solid V60 fundamentals'},
+rao:{master:'Scott Rao',cred:'US coffee consultant & author',tier:'classic',vt:'Verified original',fit:'you chase high extraction and even-bed technique'},
+onePour:{master:'Universal technique',cred:'curated by PourOver Lab',tier:'basics',vt:'Verified',fit:'you are short on time and want minimal steps'},
+chadwang:{master:'Chad Wang',cred:'2017 WBrC Champion · Taiwan’s first',tier:'worldstage',vt:'Verified original',fit:'you want to train a steady centre pour — bright and focused'},
+winton:{master:'Matt Winton',cred:'2021 WBrC Champion',tier:'worldstage',vt:'Verified original',fit:'you love floral complexity and two-kettle brewing'},
+icedBrew:{master:'Universal technique',cred:'Japanese-style iced · curated by PourOver Lab',tier:'seasonal',vt:'Verified',fit:'you want juicy, aroma-locked iced coffee in summer'},
+kasuyaTen:{master:'Tetsu Kasuya',cred:'2016 WBrC Champion · new 2026 recipe',tier:'worldstage',series:'Kasuya series 2/2 · 2026',vt:'Verified original',fit:'you want syrupy body and sweetness, and can handle many small pours'},
+woelfl:{master:'Martin Wölfl',cred:'2024 WBrC Champion',tier:'worldstage',vt:'Verified original',fit:'you want ultra-clean, fast-flow short extraction'},
+medina:{master:'Carlos Medina',cred:'2023 WBrC Champion',tier:'worldstage',vt:'Verified original',fit:'you want gentle, rounded balance and rhythm practice'}};
+const METHOD_TIERS={basics:{label:'🌱 Fundamentals',color:'#6BBF6B'},classic:{label:'☕ Modern Classics',color:'#B87D56'},worldstage:{label:'🏆 World Stage',color:'#C07830'},seasonal:{label:'🧊 Seasonal',color:'#6BB8D4'}};
+const _VERIFIED_TIP='Cross-checked step by step against the master’s original published source (grind, water temp, pour schedule and timing), then scaled to your dose. Last verified: Aug 2026';
+const METHOD_FILTER_MAP={immersion:'basics',kasuya:'classic',hoffmann:'basics',rao:'classic',onePour:'basics',chadwang:'worldstage',winton:'worldstage',icedBrew:'seasonal',kasuyaTen:'worldstage',woelfl:'worldstage',medina:'worldstage'};
+const METHOD_VIEWS={
+ master:{groups:[
+  {title:'Tetsu Kasuya',sub:'2016 World Brewers Cup Champion',intro:'One master, a decade apart — the 2016 4:6 method turns flavour into adjustable parameters; the 2026 Ten-Pour switches to many small pours chasing a syrupy texture. Pick 4:6 to tune sweetness/acidity, Ten-Pour for body.',keys:['kasuya','kasuyaTen']},
+  {title:'Chad Wang',sub:'2017 WBrC Champion · Taiwan’s first',keys:['chadwang']},
+  {title:'Matt Winton',sub:'2021 WBrC Champion',keys:['winton']},
+  {title:'Carlos Medina',sub:'2023 WBrC Champion',keys:['medina']},
+  {title:'Martin Wölfl',sub:'2024 WBrC Champion',keys:['woelfl']},
+  {title:'James Hoffmann',sub:'UK coffee expert · 2007 World Barista Champion',keys:['hoffmann']},
+  {title:'Scott Rao',sub:'US coffee consultant & author',keys:['rao']},
+  {title:'PourOver Lab Basics',sub:'Universal techniques · curated by PourOver Lab',keys:['immersion','onePour','icedBrew']}]},
+ flavor:{groups:[
+  {title:'✨ Clean & Bright',sub:'Crisp, focused, tea-like clarity',keys:['hoffmann','onePour','chadwang']},
+  {title:'🌸 Floral & Complex',sub:'Layered aromatics that keep unfolding',keys:['winton','woelfl']},
+  {title:'🍯 Sweet & Balanced',sub:'Rounded, gentle, sweet-acid harmony',keys:['kasuya','medina']},
+  {title:'🫘 Rich & Full-Bodied',sub:'Weighty, syrupy mouthfeel',keys:['immersion','rao','kasuyaTen']},
+  {title:'🧊 Iced',sub:'Aroma-locked, juicy and refreshing',keys:['icedBrew']}]}};
+let methodView=(function(){try{const v=localStorage.getItem('poMethodView');return(v==='master'||v==='flavor')?v:'tier'}catch(e){return 'tier'}})();
+function setMethodView(v){methodView=(v==='master'||v==='flavor')?v:'tier';try{localStorage.setItem('poMethodView',methodView)}catch(e){}renderMethodCards();}
 function applyMethodFilter(filter){document.querySelectorAll('#methodGrid .method-card').forEach(c=>{const k=c.dataset.methodKey;const cat=METHOD_FILTER_MAP[k]||'tasting';c.classList.toggle('hidden',filter!=='all'&&cat!==filter)});}
-function renderMethodCards(){const g=document.getElementById('methodGrid');g.innerHTML='';const diffTags={immersion:{label:'Beginner Pick',color:'#7BC67E'},kasuya:{label:'Competition',color:'#C07830'},hoffmann:{label:'Beginner-friendly',color:'#6BBF6B'},rao:{label:'Advanced',color:'#B87D56'},onePour:{label:'Beginner-friendly',color:'#6BBF6B'},chadwang:{label:'WBrC Champion',color:'#C07830'},winton:{label:'WBrC Champion',color:'#D4A574'},icedBrew:{label:'Summer Only',color:'#6BB8D4'},kasuyaTen:{label:'New 2026',color:'#C08A5C'},woelfl:{label:'WBrC Champion',color:'#6BB8D4'},medina:{label:'WBrC Champion',color:'#C07830'}};Object.entries(BREW_METHODS).forEach(([k,m])=>{const c=document.createElement('div');c.className='method-card';c.dataset.methodKey=k;const tag=diffTags[k]||{label:'',color:'var(--copper)'};c.style.setProperty('--card-accent',tag.color);c.innerHTML=`${METHOD_ICONS[k]||''}<div class="method-badge">${m.badge}</div><div class="method-tag" style="background:${tag.color}20;color:${tag.color};border:1px solid ${tag.color}40;padding:2px 8px;border-radius:10px;font-size:0.65em;font-weight:600;display:inline-block;margin-bottom:4px;">${tag.label}</div><div class="method-name">${m.title.split(' · ')[0]}</div><div class="method-ratio">1:${m.ratio} · ~${_estTotal(m,parseFloat(document.getElementById('doseInput')?.value)||20)}</div><div class="method-desc">${m.desc}</div><button class="compare-add-btn" data-method="${k}">+ Compare</button>`;c.addEventListener('click',(e)=>{if(e.target.classList.contains('compare-add-btn'))return;selectMethod(k,m)});c.querySelector('.compare-add-btn').addEventListener('click',(e)=>{e.stopPropagation();toggleCompareMethod(k,c)});g.appendChild(c)});
-// attach filter pill events
-document.getElementById('methodFilterBar')?.querySelectorAll('.method-filter-pill').forEach(pill=>{pill.addEventListener('click',()=>{document.querySelectorAll('.method-filter-pill').forEach(p=>p.classList.remove('active'));pill.classList.add('active');applyMethodFilter(pill.dataset.filter);});});}
+function renderMethodCards(){const g=document.getElementById('methodGrid');g.innerHTML='';const _ap=document.querySelector('#methodFilterBar .method-filter-pill[data-filter="all"]');if(_ap)_ap.textContent='All ('+Object.keys(BREW_METHODS).length+')';const fb=document.getElementById('methodFilterBar');if(fb)fb.style.display=(methodView==='tier')?'':'none';document.querySelectorAll('#methodViewBar .method-view-btn').forEach(b=>b.classList.toggle('active',b.dataset.view===methodView));const mk=(k)=>{const m=BREW_METHODS[k];const c=document.createElement('div');c.className='method-card';c.dataset.methodKey=k;const meta=METHOD_META[k]||{};const tier=METHOD_TIERS[meta.tier]||{label:'',color:'var(--copper)'};c.style.setProperty('--card-accent',tier.color);if(typeof selectedMethod!=='undefined'&&k===selectedMethod)c.classList.add('active');c.innerHTML=`${METHOD_ICONS[k]||''}<div class="method-badge">${m.badge}</div><div class="method-tag" style="background:${tier.color}20;color:${tier.color};border:1px solid ${tier.color}40;padding:2px 8px;border-radius:10px;font-size:0.65em;font-weight:600;display:inline-block;margin-bottom:4px;">${tier.label}</div>${meta.series?`<span class="method-series">${meta.series}</span>`:``}<div class="method-name">${m.title.split(' · ')[0]}</div>${meta.master?`<div class="method-master">${meta.master}<span class="method-cred"> · ${meta.cred}</span>${meta.vt?`<span class="method-verified" title="${_VERIFIED_TIP}">✓ ${meta.vt}</span>`:``}</div>`:``}<div class="method-ratio">1:${m.ratio} · ~${_estTotal(m,parseFloat(document.getElementById('doseInput')?.value)||20)}</div><div class="method-desc">${m.desc}</div>${meta.fit?`<div class="method-fit">For you, if: ${meta.fit}</div>`:``}<button class="compare-add-btn" data-method="${k}">+ Compare</button>`;c.addEventListener('click',(e)=>{if(e.target.classList.contains('compare-add-btn'))return;selectMethod(k,m)});c.querySelector('.compare-add-btn').addEventListener('click',(e)=>{e.stopPropagation();toggleCompareMethod(k,c)});return c;};if(methodView==='tier'){Object.keys(BREW_METHODS).forEach(k=>g.appendChild(mk(k)));applyMethodFilter(document.querySelector('#methodFilterBar .method-filter-pill.active')?.dataset.filter||'all');}else{(METHOD_VIEWS[methodView]||METHOD_VIEWS.master).groups.forEach(gr=>{const h=document.createElement('div');h.className='method-group-header';h.innerHTML='<div class="mgh-title">'+gr.title+'</div>'+(gr.sub?'<div class="mgh-sub">'+gr.sub+'</div>':'')+(gr.intro?'<div class="mgh-intro">'+gr.intro+'</div>':'');g.appendChild(h);gr.keys.forEach(k=>g.appendChild(mk(k)));});}
+// attach filter pill + view switcher events (wired once)
+document.getElementById('methodFilterBar')?.querySelectorAll('.method-filter-pill').forEach(pill=>{if(pill._wired)return;pill._wired=true;pill.addEventListener('click',()=>{document.querySelectorAll('.method-filter-pill').forEach(p=>p.classList.remove('active'));pill.classList.add('active');applyMethodFilter(pill.dataset.filter);});});document.querySelectorAll('#methodViewBar .method-view-btn').forEach(b=>{if(b._wired)return;b._wired=true;b.addEventListener('click',()=>setMethodView(b.dataset.view));});}
 function selectMethod(k,m,silent){if(!m)m=BREW_METHODS[k];selectedMethod=k;customRatio=null;const ems=document.getElementById('methodEmptyState');if(ems)ems.style.display='none';if(ratioLocked){const sl=document.getElementById('ratioSlider');const mi=document.getElementById('manualRatioInput');if(sl){sl.style.opacity='0.4';sl.style.pointerEvents='none'}if(mi){mi.style.opacity='0.4';mi.disabled=true}}const tempNum=(typeof m.tempC==='number')?m.tempC:parseInt(m.temp);if(!isNaN(tempNum))document.getElementById('currentTemp').value=tempNum;updateTempSuggestion();document.querySelectorAll('.method-card').forEach(c=>c.classList.remove('active'));if(!silent){if(event&&event.target){const card=event.target.closest('.method-card');if(card)card.classList.add('active')}}else{document.querySelectorAll('.method-card').forEach(c=>{if(c.querySelector('.compare-add-btn')?.dataset.method===k)c.classList.add('active')})}document.getElementById('calcPanel').style.display='block';if(!silent){document.getElementById('calcPanel').classList.remove('recipe-animate');void document.getElementById('calcPanel').offsetWidth;document.getElementById('calcPanel').classList.add('recipe-animate')}document.getElementById('stepsContainer').style.display='block';const _rb=document.getElementById('recommendBody');const _rt=document.getElementById('recommendToggleBtn');if(_rb&&_rb.classList.contains('open')){_rb.classList.remove('open');if(_rt){_rt.classList.remove('open');_rt.setAttribute('aria-expanded','false')}}if(!silent){document.getElementById('stepsContainer').classList.remove('recipe-animate');void document.getElementById('stepsContainer').offsetWidth;document.getElementById('stepsContainer').classList.add('recipe-animate')}const rs=document.getElementById('ratioSlider');rs.value=m.ratio;document.getElementById('ratioValue').textContent='1:'+m.ratio;showGuide(k,m);updateCalcPanel(m);updateSteps(m);renderRadar(k);renderGrindVisual(k);updateDripperKnowledgeTip();document.getElementById('radarWrap').style.display='block';if(!silent){setTimeout(()=>{document.getElementById('calcPanel').scrollIntoView({behavior:'smooth',block:'start'})},100)}saveUserPrefs();}
 // ===== My recipes (saved presets) =====
 function _getSavedRecipes(){try{return JSON.parse(localStorage.getItem('savedRecipes')||'[]')}catch(e){return[]}}
@@ -4713,7 +4865,7 @@ function startProTimerOverlay(m,dose,totalWater,ratio){
   });
   proTimerOverlay=ov;
 }
-function showBrewConfirmModal(m,d,tw,r){const existing=document.getElementById('brewConfirmModal');if(existing)existing.remove();const gl=GRIND_LEVELS[selectedMethod]||'Varies';const modal=document.createElement('div');modal.id='brewConfirmModal';modal.style.cssText='position:fixed;top:0;left:0;right:0;bottom:0;background:rgba(15,13,10,0.9);backdrop-filter:blur(12px);z-index:2000;display:flex;align-items:center;justify-content:center;animation:fadeIn 0.2s ease;';modal.innerHTML=`<div class="bcm-card"><div style="font-size:2.2em;margin-bottom:10px;">☕</div><div style="font-size:1.05em;font-weight:600;color:var(--copper-light);margin-bottom:2px;">${m.title.split(' · ')[0]}</div><div style="font-size:0.78em;color:var(--text-secondary);margin-bottom:4px;">Confirm the recipe below to start brewing</div><div class="bcm-grid"><div class="bcm-cell"><div class="bcm-val">${d}g</div><div class="bcm-lbl">Dose</div></div><div class="bcm-cell"><div class="bcm-val">${tw}g</div><div class="bcm-lbl">Water 1:${r}</div></div><div class="bcm-cell"><div class="bcm-val" style="font-size:1em;">${_dispTemp(m)}</div><div class="bcm-lbl">Water temp</div></div><div class="bcm-cell"><div class="bcm-val" style="font-size:1em;">${gl}</div><div class="bcm-lbl">Grind</div></div></div><button class="bcm-btn-primary" id="brewConfirmYes">Start Brewing ▶</button><button class="bcm-btn-secondary" id="brewConfirmNo">Cancel</button></div>`;document.body.appendChild(modal);document.getElementById('brewConfirmYes').addEventListener('click',()=>{modal.remove();window._brewConfirmed=true;startTimer();});document.getElementById('brewConfirmNo').addEventListener('click',()=>modal.remove());modal.addEventListener('click',e=>{if(e.target===modal)modal.remove();});}
+function showBrewConfirmModal(m,d,tw,r){const existing=document.getElementById('brewConfirmModal');if(existing)existing.remove();const gl=GRIND_LEVELS[selectedMethod]||'Varies';const modal=document.createElement('div');modal.id='brewConfirmModal';modal.style.cssText='position:fixed;top:0;left:0;right:0;bottom:0;background:rgba(15,13,10,0.9);backdrop-filter:blur(12px);z-index:2000;display:flex;align-items:center;justify-content:center;animation:fadeIn 0.2s ease;';modal.innerHTML=`<div class="bcm-card"><div style="font-size:2.2em;margin-bottom:10px;">☕</div><div style="font-size:1.05em;font-weight:600;color:var(--copper-light);margin-bottom:2px;">${m.title.split(' · ')[0]}</div><div style="font-size:0.78em;color:var(--text-secondary);margin-bottom:4px;">Confirm the recipe below to start brewing</div><div class="bcm-grid"><div class="bcm-cell"><div class="bcm-val">${d}g</div><div class="bcm-lbl">Dose</div></div><div class="bcm-cell"><div class="bcm-val">${tw}g</div><div class="bcm-lbl">Water 1:${r}</div></div><div class="bcm-cell"><div class="bcm-val" style="font-size:1em;">${_dispTemp(m)}</div><div class="bcm-lbl">Water temp</div></div><div class="bcm-cell"><div class="bcm-val" style="font-size:1em;">${gl}</div><div class="bcm-lbl">Grind</div></div></div>${_fbBlock(selectedMethod)}<button class="bcm-btn-primary" id="brewConfirmYes">Start Brewing ▶</button><button class="bcm-btn-secondary" id="brewConfirmNo">Cancel</button></div>`;document.body.appendChild(modal);document.getElementById('brewConfirmYes').addEventListener('click',()=>{_fbMark(selectedMethod);modal.remove();window._brewConfirmed=true;startTimer();});document.getElementById('brewConfirmNo').addEventListener('click',()=>modal.remove());modal.addEventListener('click',e=>{if(e.target===modal)modal.remove();});}
 function toggleTimer(){timerRunning=!timerRunning;document.getElementById('pausePlayBtn').textContent=timerRunning?'⏸':'▶';clearInterval(timerInterval);if(timerRunning){timerInterval=setInterval(()=>{timerSeconds++;updateTimerDisplay()},1000)}}
 function resetTimer(){timerSeconds=0;timerRunning=false;document.getElementById('pausePlayBtn').textContent='⏸';clearInterval(timerInterval);const ring=document.getElementById('timerRingProgress');if(ring)ring.style.strokeDashoffset=326.73;updateTimerDisplay();const td=document.getElementById('timerDisplay');td.style.display='none';td.classList.remove('timer-sticky');document.querySelectorAll('.step-item.active-step').forEach(el=>el.classList.remove('active-step'));document.currentActiveStep=undefined;const ftbr=document.getElementById('focusTempBadge');if(ftbr)ftbr.style.display='none';exitFocusMode()}
 function updateTimerDisplay(){const m=Math.floor(timerSeconds/60),s=timerSeconds%60;(_timerDom.timerTime||$('timerTime')).textContent=`${m}:${s.toString().padStart(2,'0')}`;const focusMode=document.body.classList.contains('focus-mode');if(focusMode){const stepItems=_timerDom.stepItems||(_timerDom.stepItems=Array.from(document.querySelectorAll('.step-item')));const activeStep=stepItems.find(el=>el.classList.contains('active-step'))||null;if(activeStep){const stepTitle=activeStep.querySelector('.step-title')?.textContent||'';const stepWaterPour=activeStep.querySelector('.step-water-pour')?.textContent||'';const stepWaterCum=activeStep.querySelector('.step-water-cum')?.textContent||'';const stepWaterBarFill=activeStep.querySelector('.step-water-bar-fill');const waterPct=stepWaterBarFill?stepWaterBarFill.style.width:'0%';let currentDisplay=_timerDom.currentDisplay||document.querySelector('.current-step-display');if(!currentDisplay){currentDisplay=document.createElement('div');currentDisplay.className='current-step-display';const timerRing=_timerDom.timerRingWrap||document.querySelector('.timer-ring-wrap');if(timerRing){timerRing.parentNode.insertBefore(currentDisplay,timerRing.nextSibling);_timerDom.timerRingWrap=timerRing;}_timerDom.currentDisplay=currentDisplay;}const stepNum=activeStep.querySelector('.step-badge')?.textContent||'';currentDisplay.innerHTML=`<div class="current-step-title">${stepNum?stepNum+'. ':''}${stepTitle}</div>${stepWaterPour||stepWaterCum?`<div class="current-step-water"><span class="focus-water-pour">${stepWaterPour}</span><span>${stepWaterCum}</span><div class="focus-water-bar"><div class="focus-water-bar-fill" style="width:${waterPct}"></div></div></div>`:''}`;}};const ring=_timerDom.ring||$('timerRingProgress');if(ring&&currentStepDurations.length>0){const totalTime=currentStepDurations[currentStepDurations.length-1]||180;const pct=Math.min(timerSeconds/totalTime,1);const circumference=326.73;ring.style.strokeDashoffset=circumference*(1-pct)}if(currentStepDurations.length>0){let activeIdx=currentStepDurations.length-1;for(let i=0;i<currentStepDurations.length;i++){if(timerSeconds<currentStepDurations[i]){activeIdx=i;break}}const prevActive=document.currentActiveStep;const stepItems=_timerDom.stepItems||(_timerDom.stepItems=Array.from(document.querySelectorAll('.step-item')));stepItems.forEach(el=>{const idx=parseInt(el.dataset.stepIdx);if(idx===activeIdx){el.classList.add('active-step');if(timerRunning&&prevActive!==activeIdx){if(navigator.vibrate)navigator.vibrate([100,50,100]);el.scrollIntoView({behavior:'smooth',block:'center'});const stepTitle=el.querySelector('.step-title')?.textContent||'';let tipKey='wait';if(stepTitle.includes('Bloom')||stepTitle.includes('bloom')){tipKey='bloom'}else if(stepTitle.includes('Pour')||stepTitle.includes('pour')){tipKey='pour'}else if(stepTitle.includes('Final')||stepTitle.includes('final')){tipKey='final'}const tip=STEP_TIPS[tipKey]||STEP_TIPS.wait;const label=_timerDom.label||document.getElementById('timerLabel');if(label)label.textContent=tip}}else{el.classList.remove('active-step')}});document.currentActiveStep=activeIdx}}
@@ -5007,11 +5159,11 @@ function showPreBrewChecklist(onConfirm){
   const el=document.createElement('div');el.id='preBrewChecklist';
   el.innerHTML=`<div class="pbc-card">
     <div class="pbc-header"><span class="pbc-icon">☑️</span><div class="pbc-title">Pre-Brew Checklist</div><div class="pbc-sub">${m?m.title.split(' · ')[0]:'Pour-Over Coffee'} · Confirm ready, then start</div></div>
-    <div class="pbc-items">${items.map((it,i)=>`<div class="pbc-item checked" data-idx="${i}"><span class="pbc-item-icon">${it.icon}</span><div class="pbc-item-text"><div class="pbc-item-label">${it.label}</div><div class="pbc-item-hint">${it.hint}</div></div><span class="pbc-item-check">✓</span></div>`).join('')}</div>
+    ${_fbBlock(currentQuickMethod)}<div class="pbc-items">${items.map((it,i)=>`<div class="pbc-item checked" data-idx="${i}"><span class="pbc-item-icon">${it.icon}</span><div class="pbc-item-text"><div class="pbc-item-label">${it.label}</div><div class="pbc-item-hint">${it.hint}</div></div><span class="pbc-item-check">✓</span></div>`).join('')}</div>
     <button class="pbc-start-btn ready" id="pbcStartBtn">Confirm all, start timer →</button>
   </div>`;
   document.body.appendChild(el);
-  document.getElementById('pbcStartBtn').addEventListener('click',()=>{el.remove();onConfirm();});
+  document.getElementById('pbcStartBtn').addEventListener('click',()=>{_fbMark(currentQuickMethod);el.remove();onConfirm();});
 }
 function startQuickTimer(){
   const method=BREW_METHODS[currentQuickMethod];
@@ -5525,6 +5677,7 @@ function switchTab(tabName) {
       renderBrewingTips();
       renderTroubleshoot();
     }
+    renderKnowledgeMaps();
     renderAllGuides(); // Re-render on every switch so showGuide() on the tools page does not leave only a single method
   }
   // Re-trigger fade-in for visible sections
@@ -5554,12 +5707,45 @@ function handleHashChange() {
 }
 
 // ===== QUICK BREW =====
+const FIRST_BREW_TIPS={
+immersion:{skill:'Preheat the brewer and swirl during pre-wet so all grounds get saturated',pitfall:'An unheated resin brewer steals heat — after a 3-minute steep the cup tastes flat'},
+kasuya:{skill:'Lock the 45-second rhythm: finish each pour in ~10s, hitting the target grams',pitfall:'Grinding finer to stretch total time — that over-extracts; the rhythm is the point'},
+hoffmann:{skill:'Stir the bloom so grounds wet evenly, then a gentle swirl to flatten the bed',pitfall:'Pouring too hard carves channels along the edge — uneven, muddled extraction'},
+rao:{skill:'Even spiral pours plus a gentle Rao Spin to level the bed',pitfall:'Spinning too hard sinks fines and clogs the paper — the drawdown never ends'},
+onePour:{skill:'One steady continuous pour at a fixed flow rate (g/s)',pitfall:'A wobbly flow rate makes every cup taste different'},
+chadwang:{skill:'From 0:30, one continuous thin centre pour with a steady water level',pitfall:'A stream that drifts off-centre or stutters causes channeling'},
+winton:{skill:'The two-kettle temperature switch: five pours on an even rhythm, unequal grams',pitfall:'Second kettle not ready — the kettle swap wrecks the rhythm'},
+icedBrew:{skill:'Precise ice mass (the recipe computes it) and large solid cubes',pitfall:'Small cubes melt too fast and water the brew down'},
+kasuyaTen:{skill:'A small pour every 20 seconds, precise grams, extra-coarse grind',pitfall:'Pouring too fast raises the water level and the layered build-up is lost'},
+woelfl:{skill:'Fast paper + high flow: four pours on a tight rhythm, short total time',pitfall:'Too fine a grind kills the flow rate — total time balloons, cup turns muddy'},
+medina:{skill:'91°C low temp, five equal pours, one steady rhythm',pitfall:'Water too hot loses this method’s rounded, gentle character'}};
+const _QW_REASONS={hoffmann:'Simple and forgiving — the steadiest clean, bright cup',onePour:'Fewest steps, fast and consistent; grind a touch finer for more body',chadwang:'A continuous centre pour is the best pouring practice there is',woelfl:'Fast four-pour — an advanced take on flow-rate control',kasuya:'The fixed 45s rhythm is the easiest to practise, and sweetness is tunable',medina:'91°C low-temp equal pours — rounded, gentle, easy to learn',immersion:'Most forgiving of all; steady even at big doses',rao:'Three-pour high extraction — rich and layered',kasuyaTen:'Ten small pours stack syrupy sweetness — proper practice material',icedBrew:'Aroma-locked flash brew — bursting, juicy and cold'};
+let _qwAns={roast:null,want:null,state:null};
+function _quickWizPick(roast,want,state){const dark=(roast==='dark');
+ if(want==='iced')return{p:'icedBrew',a:'hoffmann'};
+ if(want==='bright'){if(dark)return{p:'medina',a:'immersion'};if(state==='practice')return{p:'chadwang',a:'woelfl'};if(state==='guests')return{p:'hoffmann',a:'immersion'};return{p:'hoffmann',a:'onePour'};}
+ if(want==='balanced'){if(state==='practice')return dark?{p:'immersion',a:'kasuya'}:{p:'kasuya',a:'medina'};if(state==='guests')return{p:'immersion',a:'onePour'};return{p:'onePour',a:'immersion'};}
+ if(state==='practice')return dark?{p:'immersion',a:'rao'}:{p:'kasuyaTen',a:'rao'};
+ if(state==='quick')return{p:'onePour',a:'rao'};
+ return{p:'immersion',a:'rao'};}
+function renderQuickWizResult(){const el=document.getElementById('quickWizResult');if(!el)return;
+ if(!_qwAns.roast||!_qwAns.want||!_qwAns.state){el.innerHTML=(_qwAns.roast||_qwAns.want||_qwAns.state)?'<div class="qw-note">Answer all three and you’ll get a main pick + an alternative</div>':'';return;}
+ const pick=_quickWizPick(_qwAns.roast,_qwAns.want,_qwAns.state);const dose=parseFloat(document.getElementById('quickDoseInput')?.value)||20;
+ const mk=(k,alt)=>{const m=BREW_METHODS[k];const meta=METHOD_META[k]||{};return '<div class="qw-card'+(alt?' alt':'')+'"><div class="qw-pick-label">'+(alt?'Alternative':'Top pick')+'</div><div class="qw-pick-name">'+m.title.split(' · ')[0]+((meta.master&&m.title.split(' · ')[0].indexOf(meta.master.split(' ')[0])<0)?' <span style="font-weight:300;font-size:0.8em;color:var(--text-secondary);">'+meta.master+'</span>':'')+'</div><div class="qw-pick-reason">'+(_QW_REASONS[k]||'')+' · ~'+_estTotal(m,dose)+'</div><button class="qw-use-btn" data-method="'+k+'">'+(alt?'Switch to this':'Use this one →')+'</button></div>';};
+ el.innerHTML=mk(pick.p,false)+(pick.a?mk(pick.a,true):'')+(_qwAns.state==='guests'?'<div class="qw-note">👥 Guest mode: applying sets the dose to 30g (about two cups) — adjustable after</div>':'');}
+function _qwApply(k){currentQuickMethod=k;if(_qwAns.state==='guests'){const di=document.getElementById('quickDoseInput');if(di)di.value=30;}renderQuickMethodGrid();updateQuickBrewResults();updateQuickFlowSteps(2);saveUserPrefs();const grid=document.getElementById('quickMethodGrid');if(grid)grid.scrollIntoView({behavior:'smooth',block:'center'});}
+function _wireQuickWiz(){const wiz=document.getElementById('quickWiz');if(!wiz||wiz._wired)return;wiz._wired=true;
+ document.getElementById('quickWizToggle').addEventListener('click',()=>{const open=wiz.classList.toggle('open');document.getElementById('quickWizToggle').setAttribute('aria-expanded',open?'true':'false');});
+ document.getElementById('quickWizBody').addEventListener('click',(e)=>{const b=e.target.closest('.qw-opt');if(b){const q=b.parentElement.dataset.q;_qwAns[q]=b.dataset.v;b.parentElement.querySelectorAll('.qw-opt').forEach(x=>x.classList.toggle('active',x===b));renderQuickWizResult();return;}const u=e.target.closest('.qw-use-btn');if(u)_qwApply(u.dataset.method);});}
+function _fbSeen(k){try{return !!(JSON.parse(localStorage.getItem('poFirstBrewSeen')||'{}')[k])}catch(e){return true}}
+function _fbMark(k){try{const o=JSON.parse(localStorage.getItem('poFirstBrewSeen')||'{}');o[k]=1;localStorage.setItem('poFirstBrewSeen',JSON.stringify(o))}catch(e){}}
+function _fbBlock(k){const t=FIRST_BREW_TIPS[k];if(!t||_fbSeen(k))return '';return '<div class="fb-block"><div class="fb-title">🔰 First time brewing this method? Two things first</div><div class="fb-row"><span class="fb-tag">Skill to train</span>'+t.skill+'</div><div class="fb-row"><span class="fb-tag">Most common fail</span>'+t.pitfall+'</div></div>';}
 function renderQuickMethodGrid() {
   const grid = document.getElementById('quickMethodGrid');
   if (!grid) return;
-  const names = { immersion:'Immersion', kasuya:'4:6 Method', hoffmann:'Hoffmann', rao:'Rao Method', onePour:'Single Pour', chadwang:'Chad Wang', winton:'Winton', icedBrew:'Flash Brew' };
-  const quickDescs = { immersion:'Steep then drain, most forgiving', kasuya:'Precise sweet-acid control', hoffmann:'Top beginner pick, bright flavor', rao:'Three pours + Rao Spin, high yield', onePour:'Minimal steps, consistent cup', chadwang:'Continuous even pour, WBrC champion', winton:'Five unequal pours + two temps, floral', icedBrew:'Rapid chill, bursting fruit aroma' };
-  const quickTags = { hoffmann:'Beginner', onePour:'Beginner', immersion:'Beginner', kasuya:'Competition', rao:'Advanced', chadwang:'Champion', winton:'Champion', icedBrew:'Summer', kasuyaTen:'2026', woelfl:'Champion', medina:'Champion' };
+  const names = { immersion:'Immersion', kasuya:'4:6 Method', hoffmann:'Hoffmann', rao:'Rao Method', onePour:'Single Pour', chadwang:'Chad Wang', winton:'Winton', icedBrew:'Flash Brew', kasuyaTen:'Ten-Pour', woelfl:'Wölfl', medina:'Medina' };
+  const quickDescs = { immersion:'Steep then drain, most forgiving', kasuya:'Tetsu Kasuya · precise sweet-acid control', hoffmann:'James Hoffmann · top beginner pick, clean and bright', rao:'Scott Rao · three pours + spin, high extraction', onePour:'Minimal steps, consistent cup', chadwang:'Chad Wang · centre pour, 2017 WBrC champion original', winton:'Matt Winton · five pours, two temps, floral', icedBrew:'Rapid chill, bursting fruit aroma', kasuyaTen:'Kasuya 2026 · syrupy body and sweetness', woelfl:'Martin Wölfl · fast four-pour, 2024 WBrC champion', medina:'Carlos Medina · equal five-pour, 2023 WBrC champion' };
+  const quickTags = { hoffmann:'Fundamentals', onePour:'Fundamentals', immersion:'Fundamentals', kasuya:'Classic', rao:'Classic', chadwang:'World Stage', winton:'World Stage', icedBrew:'Seasonal', kasuyaTen:'World Stage', woelfl:'World Stage', medina:'World Stage' };
   const accentColors = { immersion:'#7BC67E', kasuya:'#C07830', hoffmann:'#6BBF6B', rao:'#B87D56', onePour:'#6BBF6B', chadwang:'#C07830', winton:'#D4A574', icedBrew:'#6BB8D4', kasuyaTen:'#C08A5C', woelfl:'#6BB8D4', medina:'#C07830' };
   let html = '';
   const methodOrder = ['hoffmann','onePour','rao','kasuya','kasuyaTen','immersion','chadwang','winton','medina','woelfl','icedBrew'];
@@ -5671,6 +5857,28 @@ function updateQuickBrewResults() {
     b.classList.toggle('active', parseFloat(b.dataset.dose) === dose);
   });
 }
+const _KM_COLORS={immersion:'#7BC67E',kasuya:'#C07830',hoffmann:'#6BBF6B',rao:'#B87D56',onePour:'#6BBF6B',chadwang:'#C07830',winton:'#D4A574',icedBrew:'#6BB8D4',kasuyaTen:'#C08A5C',woelfl:'#6BB8D4',medina:'#C07830'};
+const MASTER_TIMELINE=[{y:'2016',k:'kasuya',t:'Tetsu Kasuya 4:6',d:'WBrC champion recipe — first 40% tunes taste, last 60% strength'},{y:'2017',k:'chadwang',t:'Chad Wang Original',d:'Taiwan’s first WBrC title — continuous centre pour'},{y:'2021',k:'winton',t:'Matt Winton Five-Pour',d:'WBrC champion — two kettles, five unequal pours'},{y:'2023',k:'medina',t:'Carlos Medina Equal Five',d:'WBrC champion — gentle 91°C extraction'},{y:'2024',k:'woelfl',t:'Martin Wölfl Fast Four',d:'WBrC champion — fast paper, high flow, short brew'},{y:'2026',k:'kasuyaTen',t:'Tetsu Kasuya Ten-Pour',d:'Ten years after the title — from subtraction to addition'}];
+const SCHOOL_MAP=[{icon:'🫧',t:'Immersion',d:'No pouring skill needed — contact time drives extraction',keys:['immersion']},{icon:'💧',t:'Continuous Pour',d:'One breath — steady flow and water level are everything',keys:['onePour','hoffmann','chadwang']},{icon:'🎼',t:'Staged Rhythm',d:'Flavour built from pour structure — every pour has a job',keys:['kasuya','kasuyaTen','winton','medina','woelfl','rao']},{icon:'🧊',t:'Applied Variants',d:'Temperature and format twists on the base structures',keys:['icedBrew']}];
+const FLAVOR_MAP_POS={hoffmann:[0.12,0.15],onePour:[0.4,0.08],immersion:[0.72,0.06],medina:[0.62,0.24],icedBrew:[0.13,0.36],chadwang:[0.3,0.5],kasuya:[0.5,0.5],winton:[0.33,0.68],kasuyaTen:[0.87,0.55],rao:[0.74,0.82],woelfl:[0.1,0.82]};
+function _brewCountOf(k){try{return (JSON.parse(localStorage.getItem('brewNotes')||'[]')).filter(n=>n.method===k&&(n.duration||0)>=60).length}catch(e){return 0}}
+function renderMasterTimeline(){const el=document.getElementById('masterTimeline');if(!el)return;el.innerHTML='<div class="mt-track">'+MASTER_TIMELINE.map(n=>'<div class="mt-node" data-try-method="'+n.k+'" style="--mtc:'+(_KM_COLORS[n.k]||'#C08A5C')+'"><div class="mt-year">'+n.y+'</div><div class="mt-dot"></div><div class="mt-title">'+n.t+'</div><div class="mt-desc">'+n.d+'</div></div>').join('')+'</div>';}
+function renderSchoolMap(){const el=document.getElementById('schoolMap');if(!el)return;el.innerHTML='<div class="sm-grid">'+SCHOOL_MAP.map(s=>'<div class="sm-col"><div class="sm-head">'+s.icon+' '+s.t+'</div><div class="sm-desc">'+s.d+'</div><div class="sm-chips">'+s.keys.map(k=>'<button class="sm-chip" data-try-method="'+k+'" style="--smc:'+(_KM_COLORS[k]||'#C08A5C')+'">'+BREW_METHODS[k].title.split(' · ')[0]+'</button>').join('')+'</div></div>').join('')+'</div>';}
+function renderFlavorMap(){const el=document.getElementById('flavorMap');if(!el)return;
+ const X=p=>10+p*82, Y=p=>52-p*42;
+ let s='<svg viewBox="0 0 100 60" class="fm-svg" role="img">';
+ s+='<line x1="10" y1="52" x2="92" y2="52" class="fm-axis"/><line x1="10" y1="52" x2="10" y2="8" class="fm-axis"/>';
+ s+='<text x="10" y="57.5" class="fm-axlbl">Bright →</text><text x="92" y="57.5" text-anchor="end" class="fm-axlbl">← Rich</text>';
+ s+='<text x="11.8" y="10.6" class="fm-axlbl">↑ Advanced</text><text x="11.8" y="50" class="fm-axlbl">↓ Easy</text>';
+ s+='<line x1="'+X(0.35)+'" y1="'+Y(0.5)+'" x2="'+X(0.65)+'" y2="'+Y(0.5)+'" class="fm-range"/>';
+ s+='<text x="'+X(0.5)+'" y="'+(Y(0.5)+4.4)+'" text-anchor="middle" class="fm-note">4:6 tunable</text>';
+ for(const k in FLAVOR_MAP_POS){const p=FLAVOR_MAP_POS[k];const x=X(p[0]),y=Y(p[1]);const nm=(BREW_METHODS[k].badge||k);
+  s+='<g data-try-method="'+k+'" class="fm-pt"><circle cx="'+x+'" cy="'+y+'" r="1.7" fill="'+(_KM_COLORS[k]||'#C08A5C')+'"/><text x="'+x+'" y="'+(y-2.8)+'" text-anchor="middle" class="fm-lbl">'+nm+'</text></g>';}
+ s+='</svg>';el.innerHTML=s;}
+function renderPracticePath(){const el=document.getElementById('practicePath');if(!el)return;const tiers=['basics','classic','worldstage','seasonal'];
+ el.innerHTML=tiers.map(t=>{const keys=Object.keys(BREW_METHODS).filter(k=>METHOD_FILTER_MAP[k]===t);const done=keys.filter(k=>_brewCountOf(k)>=3).length;const tier=METHOD_TIERS[t];
+  return '<div class="pp-tier" style="--ppc:'+tier.color+'"><div class="pp-tier-head"><span class="pp-tier-label">'+tier.label+'</span><span class="pp-tier-prog">'+done+'/'+keys.length+' mastered</span></div><div class="pp-methods">'+keys.map(k=>{const c=Math.min(3,_brewCountOf(k));const dots='<span class="pp-dots">'+[0,1,2].map(i=>'<span class="pp-dot'+(i<c?' on':'')+'"></span>').join('')+'</span>';return '<button class="pp-m'+(c>=3?' done':'')+'" data-try-method="'+k+'"><span class="pp-m-name">'+BREW_METHODS[k].title.split(' · ')[0]+'</span>'+dots+(c>=3?'<span class="pp-badge">✓ Mastered</span>':'<span class="pp-cnt">'+c+'/3</span>')+'</button>';}).join('')+'</div></div>';}).join('');}
+function renderKnowledgeMaps(){renderMasterTimeline();renderSchoolMap();renderFlavorMap();renderPracticePath();}
 function renderMethodOverview() {
   const el = document.getElementById('knowledgeMethodOverview');
   if (!el) return;
@@ -5682,6 +5890,7 @@ function renderMethodOverview() {
     const accent = accentColors[k] || 'var(--copper)';
     html += '<div class="method-overview-card" style="cursor:pointer;--card-accent:' + accent + ';" data-try-method="' + k + '">' +
       '<div class="method-overview-name">' + m.title + '</div>' +
+      ((METHOD_META[k]&&METHOD_META[k].master)?('<div class="method-master" style="margin:-2px 0 8px;">'+METHOD_META[k].master+'<span class="method-cred"> · '+METHOD_META[k].cred+'</span><span class="method-verified" title="'+_VERIFIED_TIP+'">✓ '+METHOD_META[k].vt+'</span></div>'):'') +
       '<div class="method-overview-info">' +
       '<span>Ratio 1:' + m.ratio + ' | ' + m.temp + ' | ' + '~' + _estTotal(m,parseFloat(document.getElementById('doseInput')?.value)||20) + '</span>' +
       '<span>Grind: ' + grind + '</span>' +
