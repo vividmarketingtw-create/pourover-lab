@@ -1,4 +1,4 @@
-const CACHE_NAME = 'pourover-lab-v32';
+const CACHE_NAME = 'pourover-lab-v40';
 const LOCAL_ASSETS = [
   './',
   './index.html',
