@@ -1,6 +1,6 @@
 // PourOver Lab Service Worker
 // App 快取隨版本更新；字型另存一個永不清除的快取，改版時不會被連帶清掉。
-const CACHE_NAME = 'pourover-app-v46';
+const CACHE_NAME = 'pourover-app-v47';
 const FONT_CACHE = 'pourover-fonts-v1';
 
 // 少了就等於 App 壞掉的檔案 —— 必須全部成功
@@ -38,11 +38,20 @@ self.addEventListener('activate', e => {
   );
 });
 
+// 離線時的退路：先找這個網址本身，找不到就退回同語言的 App 外殼。
+// 注意 caches.match() 回傳的是 Promise（永遠 truthy），所以不能用 `a || b` 串接 ——
+// 那樣第二個 fallback 永遠不會被走到。預快取存的鍵是 './' 與 './en/'，
+// 不是 './index.html'，兩者是不同的快取鍵。
 function cacheFallback(req) {
-  return caches.match(req, { ignoreSearch: true }).then(c =>
-    c || caches.match(new URL(req.url).pathname.includes('/en') ? './en/index.html' : './index.html')
-       || caches.match(new URL(req.url).pathname.includes('/en') ? './en/' : './')
-  );
+  const isEn = new URL(req.url).pathname.includes('/en');
+  const shells = isEn ? ['./en/', './en/index.html'] : ['./', './index.html'];
+  return caches.match(req, { ignoreSearch: true }).then(c => {
+    if (c) return c;
+    return shells.reduce(
+      (chain, u) => chain.then(hit => hit || caches.match(u)),
+      Promise.resolve(null)
+    );
+  });
 }
 
 self.addEventListener('fetch', e => {

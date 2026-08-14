@@ -501,7 +501,6 @@ body::before {
 .selector-label { color: var(--copper-light); font-size: 0.78em; margin-top: 28px; margin-bottom: 12px; font-weight: 500; letter-spacing: 2px; text-transform: uppercase; position: relative; padding-left: 12px; }
 .selector-label::before { content: ''; position: absolute; left: 0; top: 50%; transform: translateY(-50%); width: 3px; height: 14px; background: var(--copper); border-radius: 1px; }
 h2.selector-label{ font-size: 0.78em; }
-.step-item.active-step { background: rgba(200,149,108,0.14); border-left-color: var(--copper); border-left-width: 4px; box-shadow: inset 0 0 12px rgba(184,125,86,0.06), 0 2px 8px rgba(0,0,0,0.15); }
 .selector-card {
     background: var(--surface-2); border: 1px solid var(--border);
     border-radius: 0; padding: 18px; margin-bottom: 16px;
@@ -683,16 +682,6 @@ input[type="range"]::-moz-range-thumb {
     background: var(--surface-3); border: 2px solid var(--border-hover);
     transition: all 0.3s;
   }
-.step-item.active-step::before {
-    background: var(--copper); border-color: var(--copper);
-    box-shadow: 0 0 8px rgba(192,138,92,0.4);
-  }
-.step-item.active-step {
-    border-left-color: var(--copper); border-left-width: 3px;
-    background: rgba(184,125,86,0.1); border-radius: 12px;
-    padding: 14px 16px 14px 18px; margin-left: -1px;
-    box-shadow: inset 0 0 12px rgba(184,125,86,0.06), 0 2px 8px rgba(0,0,0,0.15);
-  }
 /* Step card inner layout */
 .step-header { display: flex; gap: 12px; align-items: flex-start; }
 .step-badge {
@@ -702,7 +691,6 @@ input[type="range"]::-moz-range-thumb {
     display: flex; align-items: center; justify-content: center; margin-top: 1px;
     transition: background 0.25s, color 0.25s, border-color 0.25s;
   }
-.step-item.active-step .step-badge { background: var(--copper); color: #0F0D0A; border-color: var(--copper); }
 .step-body { flex: 1; min-width: 0; }
 .step-row-top { display: flex; align-items: baseline; justify-content: space-between; gap: 8px; margin-bottom: 2px; }
 .step-num { display: none; }
@@ -2170,9 +2158,6 @@ body.timer-open .steam, body.timer-open .water-stream, body.timer-open .water-st
   }
 .quick-float-group.visible { display: flex; animation: tabFadeIn 0.3s ease-out; }
 /* Expandable menu (hidden by default, shown on click) */
-.quick-float-menu.open {
-    opacity: 1; transform: translateY(0) scale(1); pointer-events: auto;
-  }
 /* Main trigger button */
 .quick-float-trigger {
     background: var(--copper); color: #fff; border: none; border-radius: 50px;
@@ -2382,7 +2367,7 @@ body.timer-open .steam, body.timer-open .water-stream, body.timer-open .water-st
     letter-spacing: 1px; margin-bottom: 6px;
   }
 .site-footer-sub {
-    font-size: 0.72em; color: var(--text-secondary); opacity: 0.5;
+    font-size: 0.72em; color: var(--text-secondary); opacity: 0.88;
     letter-spacing: 0.5px; margin-bottom: 14px;
   }
 .site-footer-nav {
@@ -2391,7 +2376,7 @@ body.timer-open .steam, body.timer-open .water-stream, body.timer-open .water-st
   }
 .site-footer-nav a {
     color: var(--text-secondary); font-size: 0.78em; text-decoration: none;
-    opacity: 0.6; transition: opacity 0.2s, color 0.2s; letter-spacing: 0.5px;
+    opacity: 0.88; transition: opacity 0.2s, color 0.2s; letter-spacing: 0.5px;
   }
 .site-footer-nav a:hover { opacity: 1; color: var(--copper-light); }
 .site-footer-methods-label {
@@ -3012,7 +2997,7 @@ input[type="range"] { padding: 10px 0; box-sizing: content-box; }
         <span class="quick-dose-label">Coffee Dose (g)</span>
         <div class="stepper-wrap" style="margin-bottom: 12px;">
           <button class="stepper-btn" data-target="quickDoseInput" data-delta="-1" aria-label="Decrease dose">−</button>
-          <input type="number" id="quickDoseInput" value="20" min="5" max="100" step="1" inputmode="numeric" pattern="[0-9]*">
+          <input type="number" id="quickDoseInput" aria-label="Coffee dose in grams" value="20" min="5" max="100" step="1" inputmode="numeric" pattern="[0-9]*">
           <button class="stepper-btn" data-target="quickDoseInput" data-delta="1" aria-label="Increase dose">+</button>
         </div>
         <div class="dose-quick-btns" id="quickDoseBtns">
@@ -3150,7 +3135,7 @@ input[type="range"] { padding: 10px 0; box-sizing: content-box; }
           <!-- Dripper (compact row) -->
           <div class="dripper-compact-row">
             <span class="dripper-compact-label">Dripper</span>
-            <select id="dripperType">
+            <select id="dripperType" aria-label="Dripper type">
               <option value="v60" selected>Hario V60</option>
               <option value="neo">Hario V60 NEO</option>
               <option value="kalita">Kalita Wave</option>
@@ -3166,7 +3151,7 @@ input[type="range"] { padding: 10px 0; box-sizing: content-box; }
           <!-- Personal flow calibration -->
           <div class="dripper-compact-row">
             <span class="dripper-compact-label">My flow</span>
-            <select id="flowCalSel">
+            <select id="flowCalSel" aria-label="Grinder for flow calibration">
               <option value="vfast">Very fast — drains way too early</option>
               <option value="fast" selected>Fast — drains before the timer</option>
               <option value="std">Standard</option>
@@ -3210,7 +3195,7 @@ input[type="range"] { padding: 10px 0; box-sizing: content-box; }
               <button class="ratio-lock-btn" id="ratioLockBtn" title="Lock ratio: water is auto-calculated when the dose changes" aria-label="Lock ratio">🔒</button>
               <input type="range" id="ratioSlider" min="12" max="18" step="0.1" value="15" style="flex:1;">
               <div class="ratio-input-wrap">
-                <input type="number" id="manualRatioInput" value="15" min="12" max="18" step="0.1" placeholder="15">
+                <input type="number" id="manualRatioInput" aria-label="Brew ratio (1 to N)" value="15" min="12" max="18" step="0.1" placeholder="15">
               </div>
               <span class="ratio-value" id="ratioValue">1:15</span>
             </div>
@@ -3888,8 +3873,8 @@ const _isQuick=()=>{try{return String(location.hash||'').indexOf('#quick')===0}c
 const _envF=(useDripper)=>{let f=1;try{if(useDripper!==false&&!_isQuick()){const dt=document.getElementById('dripperType');const DF={v60:1,neo:0.9,kalita:1.1,origami:1,melitta:1.18,kono:1.12,april:0.85,hswitch:1.05,other:1};if(dt&&DF[dt.value])f*=DF[dt.value]}const rl=document.getElementById('roastLevel');const RF={light:1.05,medium:1,dark:0.85};if(rl&&RF[rl.value])f*=RF[rl.value]}catch(e){_logErr('q',e)}return f};
 const _tScale=(t,ref,useDripper)=>Math.max(0.65,Math.min(1.25,Math.pow(t/ref,0.2)*_envF(useDripper)));
 const _bloomAdd=(rd,skip)=>{let a=skip?0:(rd<=1?10:rd<=5?5:0);try{const rl=document.getElementById('roastLevel');if(rl&&rl.value==='light')a+=5}catch(e){_logErr('q',e)}return Math.min(a,10)};
-const _estSec=(m,dose)=>{try{const t=Math.round(dose*m.ratio);return m.buildSteps(dose,t).groups.flatMap(g=>g.steps).reduce((a,st)=>a+(st.duration||0),0)}catch(e){return NaN}};
-const _estTotal=(m,dose)=>{const s=_estSec(m,dose);return isFinite(s)?_fmtT(s):m.time};
+const _estSec=(m,dose,water)=>{try{const t=water||Math.round(dose*m.ratio);return m.buildSteps(dose,t).groups.flatMap(g=>g.steps).reduce((a,st)=>a+(st.duration||0),0)}catch(e){return NaN}};
+const _estTotal=(m,dose,water)=>{const s=_estSec(m,dose,water);return isFinite(s)?_fmtT(s):m.time};
 const _sc=(sec,f)=>Math.round(sec*f/5)*5;
 const _r5=s=>Math.round(s/5)*5;
 /* ── Personal flow calibration (v4) ── scales WAIT time only, pour seconds unchanged */
@@ -4016,7 +4001,8 @@ const _heatWarn=(total,imm)=>total>240?(imm?'🌡 Long steep, so the water cools
 const DRAWDOWN_ADVICE={fast:'Drained early → extraction ran fast, flavor tends sour and weak. Grind 1-2 steps finer next time.',ontime:'Drained right as the timer ended - your grind is correct! Next cup, focus on pour stability (an uneven stream is the most common failure point).',slow:'Still dripping after the timer → extraction ran slow, prone to bitterness and astringency. Grind 1-2 steps coarser next time.'};
 const _drawdownHtml=()=>'<div class="bco-drawdown"><div class="bco-dd-title">When the timer ended, had the dripper finished draining?<span style="opacity:0.55;font-weight:400;font-size:0.85em;">(key to dialing in your grind)</span></div><div class="bco-dd-btns"><button class="bco-dd-btn" data-dd="fast">⚡ Drained early</button><button class="bco-dd-btn" data-dd="ontime">✓ About the same time</button><button class="bco-dd-btn" data-dd="slow">⏳ Still dripping</button></div><div class="bco-dd-advice" style="display:none;"></div></div>';
 function _proRefresh(){try{if(typeof currentQuickMethod!=='undefined'&&currentQuickMethod&&document.getElementById('quickBrewResults')&&document.getElementById('quickBrewResults').innerHTML)updateQuickBrewResults()}catch(e){_logErr('q',e)}try{if(typeof selectedMethod!=='undefined'&&selectedMethod&&BREW_METHODS[selectedMethod]&&document.getElementById('calcGrid'))updateCalcPanel(BREW_METHODS[selectedMethod])}catch(e){_logErr('q',e)}}
-const _ddLog=()=>{try{return JSON.parse(localStorage.getItem('poDrawdownLog')||'{}')}catch(e){return{}}};
+const _lastGrind=()=>{try{return _escRcp(localStorage.getItem('poLastGrind')||'')}catch(e){return ''}};
+const _ddLog=()=>{try{const o=JSON.parse(localStorage.getItem('poDrawdownLog')||'{}');return(o&&typeof o==='object'&&!Array.isArray(o))?o:{}}catch(e){return{}}};
 const _ddSave=(mk,r)=>{try{const l=_ddLog();(l[mk]=l[mk]||[]).push(r);if(l[mk].length>5)l[mk]=l[mk].slice(-5);localStorage.setItem('poDrawdownLog',JSON.stringify(l))}catch(e){}};
 const _ddStatus=mk=>{const a=(mk&&_ddLog()[mk])||[];if(!a.length)return null;return{last:a[a.length-1],cal:a.length>=2&&a[a.length-1]==='ontime'&&a[a.length-2]==='ontime'}};
 const _ddHint=mk=>{const st=_ddStatus(mk);if(!st)return '';const ref=(typeof GRIND_REFS!=='undefined'&&GRIND_REFS[mk])?' (current reference: '+GRIND_REFS[mk]+')':'';if(st.cal)return '<div class="pro-brew-note" style="border-color:rgba(123,198,126,0.5);">✅ Grind calibrated for this method - drained on time twice in a row. Keep your current setting'+ref+'</div>';if(st.last==='fast')return '<div class="pro-brew-note">🔧 Grind memory: last brew drained early (fast extraction) → grind 1 step finer this time'+ref+'</div>';if(st.last==='slow')return '<div class="pro-brew-note">🔧 Grind memory: last brew was still dripping past the timer (slow extraction) → grind 1 step coarser this time'+ref+'</div>';return '<div class="pro-brew-note" style="opacity:0.85;">🎯 Last brew drained right on time - your grind is on track; one more on-time brew completes calibration</div>'};
@@ -4284,8 +4270,9 @@ const debouncedRecalcAll=debounce(()=>recalcAll(),150);
 // Centralised read-only view of the most important runtime state.
 // Mutating AppState does NOT drive the app — it mirrors the live variables above.
 const AppState={get selectedMethod(){return selectedMethod},get timerSeconds(){return timerSeconds},get timerRunning(){return timerRunning},get brewCompleted(){return brewCompleted},get customRatio(){return customRatio},get currentStepDurations(){return currentStepDurations},get selectedCompareMethods(){return selectedCompareMethods}};
-function updateTempSuggestion(){const r=document.getElementById('roastLevel').value;const ct=parseInt(document.getElementById('currentTemp').value)||90;let suggestion='',ideal=90;if(r==='light'){ideal=93;suggestion='💡 Light roast: 93°C - higher heat helps extract florals and fruit acidity'}else if(r==='medium'){ideal=90;suggestion='💡 Medium roast: 90°C - balances sweetness and body'}else if(r==='dark'){ideal=88;suggestion='💡 Dark roast: 88°C - lower heat avoids bitterness and highlights caramel sweetness'}const diff=ct-ideal;if(Math.abs(diff)>=3){suggestion+=(diff>0?' ⚠️ Water temp is a bit high and may add bitterness':' ⚠️ Water temp is a bit low and may under-extract')}document.getElementById('tempSuggestion').innerHTML=suggestion}
-function autoAdjustTemp(){const r=document.getElementById('roastLevel').value;const tempInput=document.getElementById('currentTemp');if(r==='light')tempInput.value='93';else if(r==='medium')tempInput.value='90';else if(r==='dark')tempInput.value='85';updateTempSuggestion()}
+const _IDEAL_TEMP={light:{c:93,tip:'💡 Light roast: 93°C - higher heat helps extract florals and fruit acidity'},medium:{c:90,tip:'💡 Medium roast: 90°C - balances sweetness and body'},dark:{c:88,tip:'💡 Dark roast: 88°C - lower heat avoids bitterness and highlights caramel sweetness'}};
+function updateTempSuggestion(){const r=document.getElementById('roastLevel').value;const ct=parseInt(document.getElementById('currentTemp').value)||90;const _T=_IDEAL_TEMP[r]||_IDEAL_TEMP.medium;let ideal=_T.c,suggestion=_T.tip;const diff=ct-ideal;if(Math.abs(diff)>=3){suggestion+=(diff>0?' ⚠️ Water temp is a bit high and may add bitterness':' ⚠️ Water temp is a bit low and may under-extract')}document.getElementById('tempSuggestion').innerHTML=suggestion}
+function autoAdjustTemp(){const r=document.getElementById('roastLevel').value;const t=_IDEAL_TEMP[r];if(t)document.getElementById('currentTemp').value=String(t.c);updateTempSuggestion()}
 // ===== Theme (light/dark) =====
 function applyTheme(t){document.documentElement.setAttribute('data-theme',t);const btn=document.getElementById('themeToggleBtn');if(btn)btn.textContent=t==='light'?'\u263D':'\u2600\uFE0E';const mc=document.querySelector('meta[name="theme-color"]');if(mc)mc.setAttribute('content',t==='light'?'#F3EBDD':'#2C1A0E');}
 function toggleTheme(){const cur=document.documentElement.getAttribute('data-theme')==='light'?'dark':'light';try{localStorage.setItem('poTheme',cur)}catch(e){}applyTheme(cur);}
@@ -4388,10 +4375,11 @@ function _offerRestore(){let s=null;try{s=JSON.parse(sessionStorage.getItem('poA
   _confirmDialog({title:'Unfinished brew',desc:'Your {m} brew was interrupted at {t}. Resume it?'.replace('{m}',String(BREW_METHODS[s.k].title||'').split(' · ')[0]).replace('{t}',mm+':'+ss),
     actions:[{label:'Resume',primary:true,fn:()=>{try{selectMethod(s.k,null,true);window._brewConfirmed=true;startTimer();timerSeconds=s.sec;_clkSet(_ptoClk,s.sec);}catch(e){_logErr('restore',e)}}},{label:'Start over'}]})}
 // 粉量：把不合理的輸入夾回可用範圍，避免負水量 / Infinity / NaN
-function _clampDose(v){const n=parseFloat(v);if(!isFinite(n)||n<=0)return 20;return Math.min(100,Math.max(1,n))}
+function _restDays(fallback){const el=document.getElementById('restDays');const n=parseInt(el&&el.value,10);return Number.isFinite(n)?Math.min(60,Math.max(0,n)):(fallback===undefined?7:fallback)}
+function _clampDose(v){const n=parseFloat(v);if(!isFinite(n)||n<=0)return 20;return Math.min(100,Math.max(5,n))}
 // 沖煮筆記讀寫：抗損毀資料與容量爆掉
-function _notesLoad(){try{const p=_notesLoad();return Array.isArray(p)?p.filter(x=>x&&typeof x==='object'):[]}catch(e){return []}}
-function _notesSave(n){try{_notesSave(n);return true}catch(e){try{const t=n.slice(0,Math.max(5,Math.floor(n.length/2)));_notesSave(t);if(typeof showErrorToast==='function')showErrorToast('Storage full — some older logs were removed');return true}catch(e2){_logErr('notesSave',e2);if(typeof showErrorToast==='function')showErrorToast('Save failed: browser storage is full');return false}}}
+function _notesLoad(){try{const p=JSON.parse(localStorage.getItem('brewNotes')||'[]');return Array.isArray(p)?p.filter(x=>x&&typeof x==='object'):[]}catch(e){return []}}
+function _notesSave(n){const _put=a=>localStorage.setItem('brewNotes',JSON.stringify(a));try{_put(n);return true}catch(e){try{const t=n.slice(0,Math.max(5,Math.floor(n.length/2)));_put(t);if(typeof showErrorToast==='function')showErrorToast('Storage full — some older logs were removed');return true}catch(e2){_logErr('notesSave',e2);if(typeof showErrorToast==='function')showErrorToast('Save failed: browser storage is full');return false}}}
 
 function requestWakeLock(){if(!('wakeLock' in navigator)){if(_activeTimer)_wakeBadge(false);return}navigator.wakeLock.request('screen').then(lock=>{wakeLock=lock;if(_activeTimer)_wakeBadge(true);try{lock.addEventListener('release',()=>{wakeLock=null;if(_activeTimer)_wakeBadge(false)})}catch(e){}}).catch(()=>{wakeLock=null;if(_activeTimer)_wakeBadge(false)})}
 function releaseWakeLock(){if(wakeLock){wakeLock.release().then(()=>{wakeLock=null}).catch(()=>{})}}
@@ -4498,7 +4486,7 @@ function selectMethod(k,m,silent){if(!m)m=BREW_METHODS[k];
   if(!silent){setTimeout(()=>{document.getElementById('calcPanel').scrollIntoView({behavior:_scrollBehavior(),block:'start'})},100)}saveUserPrefs();
   }
 // ===== My recipes (saved presets) =====
-function _getSavedRecipes(){try{return JSON.parse(localStorage.getItem('savedRecipes')||'[]')}catch(e){return[]}}
+function _getSavedRecipes(){try{const r=JSON.parse(localStorage.getItem('savedRecipes')||'[]');return Array.isArray(r)?r.filter(x=>x&&typeof x==='object'):[]}catch(e){return[]}}
 function _escRcp(s){return String(s).replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]))}
 function renderMyRecipes(){const list=document.getElementById('myRecipesList');if(!list)return;const rs=_getSavedRecipes();if(!rs.length){list.innerHTML='<div class="my-recipes-empty">No saved recipes yet \u2014 dial in your settings and hit save above for one-tap loading next time.</div>';return}
 list.innerHTML=rs.map((r,i)=>'<div class="my-recipe-chip"><button class="my-recipe-load" data-i="'+i+'"><span class="my-recipe-name">'+_escRcp(r.name)+'</span><span class="my-recipe-meta">'+((BREW_METHODS[r.method]&&BREW_METHODS[r.method].badge)||r.method)+' \u00B7 '+r.dose+'g \u00B7 1:'+r.ratio+(r.temp?' \u00B7 '+r.temp+'\u00B0C':'')+'</span></button><button class="my-recipe-del" data-i="'+i+'" aria-label="Delete recipe">\u2715</button></div>').join('');
@@ -4526,7 +4514,7 @@ function _adjTimeLabel(t,offset){if(!offset)return t;
   return Math.floor(tot/60)+':'+(tot%60).toString().padStart(2,'0');
   }function updateSteps(m){const d=_clampDose($('doseInput').value),r=getEffectiveRatio(m),t=Math.round(d*r),sd=m.buildSteps(d,t);
   let bloomTimeAddition=0;
-  const skipRest=$('restDaysSkipBtn').classList.contains('active'),restDays=skipRest?7:(parseInt($('restDays').value)||7);
+  const skipRest=$('restDaysSkipBtn').classList.contains('active'),restDays=skipRest?7:(_restDays());
   bloomTimeAddition=_bloomAdd(restDays,skipRest);
   const _bloomApplied=(sd.groups||[]).some(g=>(g.steps||[]).some(s=>s.title&&_isBloom(s.title)&&(s.duration||0)>0));
   if(bloomTimeAddition>0&&_bloomApplied){$('freshBeanNote').classList.add('show');const _fbt=document.querySelector('#freshBeanNote .fresh-bean-note-text');if(_fbt)_fbt.textContent='Bloom auto-extended by '+bloomTimeAddition+' s (offsets degassing per resting days and roast level)'}else{$('freshBeanNote').classList.remove('show')}currentStepBloomTime=bloomTimeAddition;
@@ -4550,8 +4538,8 @@ function renderAllGuides(){const gc=document.getElementById('guideContainer');
 let currentRecommendedMethod=null;
 let ratioLocked=true;
 function updateRecommendation(){const r=document.getElementById('roastLevel').value,p=document.getElementById('processing').value;let k=r+'-'+p;if(!RECOMMENDATIONS[k])k='default';const rec=RECOMMENDATIONS[k],rp=document.getElementById('recommendationPanel'),rt=document.getElementById('recommendationText');currentRecommendedMethod=rec.method;let recText=`<strong>${BREW_METHODS[rec.method].title}</strong><br>${rec.reason}`;const month=new Date().getMonth()+1,isSummer=month>=5&&month<=9;if(isSummer&&rec.method!=='icedBrew'){recText+='<br><br><em style="color:var(--text-secondary);font-size:0.9em;">🌞 Summer tip: Also try a Flash Brew - a refreshingly cool take on the same beans!</em>'}else if((month>=11||month<=2)&&!isSummer){recText+='<br><br><em style="color:var(--text-secondary);font-size:0.9em;">❄️ Winter tip: Raise the water temperature 1-2°C for a fuller, warmer flavor.</em>'}rt.innerHTML=recText}
-function updateKnowledgeTips(){const r=document.getElementById('roastLevel').value,p=document.getElementById('processing').value,skipRest=document.getElementById('restDaysSkipBtn').classList.contains('active'),d=skipRest?7:(parseInt(document.getElementById('restDays').value)||7),f=parseInt(document.getElementById('flavorPref').value),mt=KNOWLEDGE_TIPS.filter(t=>t.condition(r,p,d,f)).slice(0,2),ktc=document.getElementById('knowledgeTipsContainer');if(mt.length===0){ktc.innerHTML='<div style="padding:12px 16px;color:var(--text-secondary);font-size:0.85em;opacity:0.6;">✓ Nothing needs special attention with the current settings - brew with confidence!</div>';return}ktc.innerHTML=mt.map((t,i)=>`<div class="knowledge-tip" id="tip-${i}"><div class="knowledge-tip-header"><div class="knowledge-tip-title">${t.title}</div><div class="knowledge-tip-toggle">▼</div></div><div class="knowledge-tip-text">${t.text}</div></div>`).join('');mt.forEach((_,i)=>{const el=document.getElementById(`tip-${i}`),h=el.querySelector('.knowledge-tip-header'),c=el.querySelector('.knowledge-tip-text'),tg=el.querySelector('.knowledge-tip-toggle');h.addEventListener('click',()=>{c.classList.toggle('open');tg.classList.toggle('open')})})}
-function attachEventListeners(){document.getElementById('doseInput').addEventListener('input',()=>{debouncedRecalcAll();updateDoseBtnActive()});document.getElementById('processing').addEventListener('change',()=>{updateRecommendation();updateKnowledgeTips()});document.getElementById('restDays').addEventListener('input',()=>{document.getElementById('restDaysSkipBtn').classList.remove('active');document.getElementById('restDays').disabled=false;document.getElementById('restDays').style.opacity='1';updateKnowledgeTips();recalcAll();_proRefresh()});document.getElementById('restDaysSkipBtn').addEventListener('click',()=>{const btn=document.getElementById('restDaysSkipBtn'),inp=document.getElementById('restDays');btn.classList.toggle('active');if(btn.classList.contains('active')){inp.disabled=true;inp.style.opacity='0.4'}else{inp.disabled=false;inp.style.opacity='1'}updateKnowledgeTips();_proRefresh()});document.getElementById('flavorPref').addEventListener('input',(e)=>{document.getElementById('flavorValue').textContent=e.target.value;updateRecommendation();updateKnowledgeTips()});document.querySelectorAll('.dose-btn:not(.ratio-preset)').forEach(btn=>{btn.addEventListener('click',()=>{const v=parseFloat(btn.dataset.dose);document.getElementById('doseInput').value=v;document.querySelectorAll('.dose-btn:not(.ratio-preset)').forEach(b=>b.classList.remove('active'));btn.classList.add('active');recalcAll()})});document.querySelectorAll('.stepper-btn').forEach(btn=>{btn.addEventListener('click',()=>{const tid=btn.dataset.target,delta=parseFloat(btn.dataset.delta),inp=document.getElementById(tid);if(inp.disabled)return;let v=parseFloat(inp.value)||0;v=Math.max(parseFloat(inp.min),Math.min(parseFloat(inp.max),v+delta));inp.value=v;inp.dispatchEvent(new Event('input',{bubbles:true}))})});document.getElementById('ratioSlider').addEventListener('input',(e)=>{const v=parseFloat(e.target.value);customRatio=v;document.getElementById('ratioValue').textContent='1:'+v;const _mri=document.getElementById('manualRatioInput');if(_mri)_mri.value=v.toFixed(1);debouncedRecalcAll();});document.getElementById('startTimerBtn').addEventListener('click',startTimer);document.getElementById('freeTimerBtn').addEventListener('click',startFreeTimer);document.getElementById('currentTemp').addEventListener('input',()=>{updateTempSuggestion();if(selectedMethod)updateCalcPanel(BREW_METHODS[selectedMethod])});document.getElementById('roastLevel').addEventListener('change',()=>{autoAdjustTemp();updateRecommendation();updateKnowledgeTips();recalcAll();_proRefresh()});document.getElementById('manualRatioInput').addEventListener('input',(e)=>{const v=parseFloat(e.target.value);if(v>=12&&v<=18){customRatio=v;document.getElementById('ratioSlider').value=v;document.getElementById('ratioValue').textContent='1:'+v;debouncedRecalcAll();}});document.querySelectorAll('.ratio-preset').forEach(btn=>{btn.addEventListener('click',()=>{const v=parseFloat(btn.dataset.ratio);customRatio=v;document.getElementById('ratioSlider').value=v;document.getElementById('ratioValue').textContent='1:'+v;document.getElementById('manualRatioInput').value=v;document.querySelectorAll('.ratio-preset').forEach(b=>b.classList.remove('active'));btn.classList.add('active');recalcAll()})});document.getElementById('compareBtn').addEventListener('click',()=>{selectedCompareMethods=[];renderCompareModal();document.getElementById('compareModal').classList.add('active')});document.getElementById('compareCloseBtn').addEventListener('click',()=>{document.getElementById('compareModal').classList.remove('active')});document.getElementById('compareModal').addEventListener('click',(e)=>{if(e.target===document.getElementById('compareModal'))document.getElementById('compareModal').classList.remove('active')});document.addEventListener('keydown',(e)=>{if(e.key==='Escape'){const cm=document.getElementById('compareModal');if(cm&&cm.classList.contains('active'))cm.classList.remove('active')}});['roastLevel','processing'].forEach(id=>{document.getElementById(id).addEventListener('change',saveUserPrefs)});['flavorPref','doseInput'].forEach(id=>{document.getElementById(id).addEventListener('change',saveUserPrefs)});document.getElementById('dripperType').addEventListener('change',()=>{renderDripperInfo();updateKnowledgeTips();recalcAll();saveUserPrefs()});document.getElementById('manualRatioInput').addEventListener('change',(e)=>{let v=parseFloat(e.target.value);if(!isFinite(v)){e.target.value=(customRatio||15).toFixed(1);return}const cl=Math.min(18,Math.max(12,v));e.target.value=cl.toFixed(1);if(cl!==v&&typeof showErrorToast==='function')showErrorToast('Ratio must be between 1:12 and 1:18');e.target.dispatchEvent(new Event('input',{bubbles:true}));});['doseInput','quickDoseInput'].forEach(id=>{const el=document.getElementById(id);if(!el)return;el.addEventListener('change',()=>{const c=_clampDose(el.value);if(String(c)!==String(el.value)){el.value=c;el.dispatchEvent(new Event('input',{bubbles:true}))}})});document.getElementById('useRecommendationBtn').addEventListener('click',()=>{if(currentRecommendedMethod&&BREW_METHODS[currentRecommendedMethod]){selectMethod(currentRecommendedMethod,BREW_METHODS[currentRecommendedMethod])}});
+function updateKnowledgeTips(){const r=document.getElementById('roastLevel').value,p=document.getElementById('processing').value,skipRest=document.getElementById('restDaysSkipBtn').classList.contains('active'),d=skipRest?7:(_restDays()),f=parseInt(document.getElementById('flavorPref').value),mt=KNOWLEDGE_TIPS.filter(t=>t.condition(r,p,d,f)).slice(0,2),ktc=document.getElementById('knowledgeTipsContainer');if(mt.length===0){ktc.innerHTML='<div style="padding:12px 16px;color:var(--text-secondary);font-size:0.85em;opacity:0.6;">✓ Nothing needs special attention with the current settings - brew with confidence!</div>';return}ktc.innerHTML=mt.map((t,i)=>`<div class="knowledge-tip" id="tip-${i}"><div class="knowledge-tip-header"><div class="knowledge-tip-title">${t.title}</div><div class="knowledge-tip-toggle">▼</div></div><div class="knowledge-tip-text">${t.text}</div></div>`).join('');mt.forEach((_,i)=>{const el=document.getElementById(`tip-${i}`),h=el.querySelector('.knowledge-tip-header'),c=el.querySelector('.knowledge-tip-text'),tg=el.querySelector('.knowledge-tip-toggle');h.addEventListener('click',()=>{c.classList.toggle('open');tg.classList.toggle('open')})})}
+function attachEventListeners(){document.getElementById('doseInput').addEventListener('input',()=>{debouncedRecalcAll();updateDoseBtnActive()});document.getElementById('processing').addEventListener('change',()=>{updateRecommendation();updateKnowledgeTips()});document.getElementById('restDays').addEventListener('input',()=>{document.getElementById('restDaysSkipBtn').classList.remove('active');document.getElementById('restDays').disabled=false;document.getElementById('restDays').style.opacity='1';updateKnowledgeTips();recalcAll();_proRefresh()});document.getElementById('restDaysSkipBtn').addEventListener('click',()=>{const btn=document.getElementById('restDaysSkipBtn'),inp=document.getElementById('restDays');btn.classList.toggle('active');if(btn.classList.contains('active')){inp.disabled=true;inp.style.opacity='0.4'}else{inp.disabled=false;inp.style.opacity='1'}updateKnowledgeTips();_proRefresh()});document.getElementById('flavorPref').addEventListener('input',(e)=>{document.getElementById('flavorValue').textContent=e.target.value;updateRecommendation();updateKnowledgeTips()});document.querySelectorAll('.dose-btn:not(.ratio-preset)').forEach(btn=>{btn.addEventListener('click',()=>{const v=parseFloat(btn.dataset.dose);document.getElementById('doseInput').value=v;document.querySelectorAll('.dose-btn:not(.ratio-preset)').forEach(b=>b.classList.remove('active'));btn.classList.add('active');recalcAll()})});document.querySelectorAll('.stepper-btn').forEach(btn=>{btn.addEventListener('click',()=>{const tid=btn.dataset.target,delta=parseFloat(btn.dataset.delta),inp=document.getElementById(tid);if(inp.disabled)return;let v=parseFloat(inp.value)||0;v=Math.max(parseFloat(inp.min),Math.min(parseFloat(inp.max),v+delta));inp.value=v;inp.dispatchEvent(new Event('input',{bubbles:true}))})});document.getElementById('ratioSlider').addEventListener('input',(e)=>{const v=parseFloat(e.target.value);customRatio=v;document.getElementById('ratioValue').textContent='1:'+v;const _mri=document.getElementById('manualRatioInput');if(_mri)_mri.value=v.toFixed(1);debouncedRecalcAll();});document.getElementById('startTimerBtn').addEventListener('click',startTimer);document.getElementById('freeTimerBtn').addEventListener('click',startFreeTimer);document.getElementById('currentTemp').addEventListener('change',(e)=>{const v=parseFloat(e.target.value);if(!isFinite(v)){e.target.value='90'}else{const c=Math.min(100,Math.max(75,v));if(c!==v)e.target.value=String(c)}e.target.dispatchEvent(new Event('input',{bubbles:true}))});document.getElementById('currentTemp').addEventListener('input',()=>{updateTempSuggestion();if(selectedMethod)updateCalcPanel(BREW_METHODS[selectedMethod])});document.getElementById('roastLevel').addEventListener('change',()=>{autoAdjustTemp();updateRecommendation();updateKnowledgeTips();recalcAll();_proRefresh()});document.getElementById('manualRatioInput').addEventListener('input',(e)=>{const v=parseFloat(e.target.value);if(v>=12&&v<=18){customRatio=v;document.getElementById('ratioSlider').value=v;document.getElementById('ratioValue').textContent='1:'+v;debouncedRecalcAll();}});document.querySelectorAll('.ratio-preset').forEach(btn=>{btn.addEventListener('click',()=>{const v=parseFloat(btn.dataset.ratio);customRatio=v;document.getElementById('ratioSlider').value=v;document.getElementById('ratioValue').textContent='1:'+v;document.getElementById('manualRatioInput').value=v;document.querySelectorAll('.ratio-preset').forEach(b=>b.classList.remove('active'));btn.classList.add('active');recalcAll()})});document.getElementById('compareBtn').addEventListener('click',()=>{selectedCompareMethods=[];renderCompareModal();document.getElementById('compareModal').classList.add('active')});document.getElementById('compareCloseBtn').addEventListener('click',()=>{document.getElementById('compareModal').classList.remove('active')});document.getElementById('compareModal').addEventListener('click',(e)=>{if(e.target===document.getElementById('compareModal'))document.getElementById('compareModal').classList.remove('active')});document.addEventListener('keydown',(e)=>{if(e.key==='Escape'){const cm=document.getElementById('compareModal');if(cm&&cm.classList.contains('active'))cm.classList.remove('active')}});['roastLevel','processing'].forEach(id=>{document.getElementById(id).addEventListener('change',saveUserPrefs)});['flavorPref','doseInput'].forEach(id=>{document.getElementById(id).addEventListener('change',saveUserPrefs)});document.getElementById('dripperType').addEventListener('change',()=>{renderDripperInfo();updateKnowledgeTips();recalcAll();saveUserPrefs()});document.getElementById('manualRatioInput').addEventListener('change',(e)=>{let v=parseFloat(e.target.value);if(!isFinite(v)){e.target.value=(customRatio||15).toFixed(1);return}const cl=Math.min(18,Math.max(12,v));e.target.value=cl.toFixed(1);if(cl!==v&&typeof showErrorToast==='function')showErrorToast('Ratio must be between 1:12 and 1:18');e.target.dispatchEvent(new Event('input',{bubbles:true}));});['doseInput','quickDoseInput'].forEach(id=>{const el=document.getElementById(id);if(!el)return;el.addEventListener('change',()=>{const c=_clampDose(el.value);if(String(c)!==String(el.value)){el.value=c;el.dispatchEvent(new Event('input',{bubbles:true}))}})});document.getElementById('useRecommendationBtn').addEventListener('click',()=>{if(currentRecommendedMethod&&BREW_METHODS[currentRecommendedMethod]){selectMethod(currentRecommendedMethod,BREW_METHODS[currentRecommendedMethod])}});
   // Recommendation collapse toggle
   const _recToggle=document.getElementById('recommendToggleBtn');
   const _recBody=document.getElementById('recommendBody');
@@ -4769,7 +4757,7 @@ function showBrewComplete(){const _bcEx=document.getElementById('brewCompleteOve
       <div class="bco-note-section" id="brewNoteSection"><div class="bco-note-inner">
         <div class="bco-rating-section"><div class="bco-rating-title">Taste Ratings <span style="font-size:0.8em;opacity:0.55;font-weight:400;">(optional)</span></div>${ratingRowsHtml}</div>
         <div class="bco-suggestion" id="brewSuggestion" style="display:none;"></div>
-        <input type="text" class="bco-textarea bco-grind" id="brewGrindInput" placeholder="Grind setting (e.g. C24 / Feima 4)"><textarea class="bco-textarea" id="brewNoteInput" placeholder="Note the flavors you tasted (optional)&#10;e.g. bright acidity, sweet finish..."></textarea>
+        <input type="text" class="bco-textarea bco-grind" id="brewGrindInput" aria-label="Grind setting" value="${_lastGrind()}" placeholder="Grind setting (e.g. C24 / Feima 4)"><textarea class="bco-textarea" id="brewNoteInput" aria-label="Tasting notes for this brew" placeholder="Note the flavors you tasted (optional)&#10;e.g. bright acidity, sweet finish..."></textarea>
         <button class="bco-btn-primary" id="brewSaveNoteBtn">Save and Finish</button>
         <button class="bco-btn-ghost" id="brewViewNotesBtn" style="border:1px solid rgba(192,138,92,0.2);margin-bottom:6px;">🗒 View All Logs</button>
       </div></div>
@@ -4816,7 +4804,7 @@ function showBrewComplete(){const _bcEx=document.getElementById('brewCompleteOve
     const el=document.getElementById('brewSuggestion');
     if(el){if(sugg.length){el.style.display='block';el.innerHTML='<div style="font-size:0.72em;color:var(--copper);letter-spacing:2px;text-transform:uppercase;margin-bottom:8px;">Adjustment Tips</div>'+sugg.map(s=>`<div style="font-size:0.85em;color:var(--text-secondary);line-height:1.6;padding:4px 0;border-bottom:1px solid var(--border);">${s}</div>`).join('')}else{el.style.display='none';}}
   }
-  function saveNote(){const note=document.getElementById('brewNoteInput')?.value?.trim();const grind=document.getElementById('brewGrindInput')?.value?.trim()||'';if(grind){try{localStorage.setItem('poLastGrind',grind)}catch(e){}}const roast=document.getElementById('roastLevel')?.value||'';const process=document.getElementById('processing')?.value||'';const temp=parseFloat(document.getElementById('currentTemp')?.value)||0;const dripper=document.getElementById('dripperType')?.value||'';const days=document.getElementById('restDaysSkipBtn')?.classList.contains('active')?7:(parseInt(document.getElementById('restDays')?.value)||0);try{const notes=_notesLoad();notes.unshift({v:BREW_NOTES_VERSION,time:new Date().toISOString(),method:selectedMethod||'',dose:d,water:tw,ratio:r,duration:timerSeconds,note:note||'',grind,ratings:{...ratings},roast,process,temp,dripper,days});if(notes.length>50)notes.pop();_notesSave(notes)}catch(e){}}
+  function saveNote(){const note=document.getElementById('brewNoteInput')?.value?.trim();const grind=document.getElementById('brewGrindInput')?.value?.trim()||'';if(grind){try{localStorage.setItem('poLastGrind',grind)}catch(e){}}const roast=document.getElementById('roastLevel')?.value||'';const process=document.getElementById('processing')?.value||'';const temp=parseFloat(document.getElementById('currentTemp')?.value)||0;const dripper=document.getElementById('dripperType')?.value||'';const days=document.getElementById('restDaysSkipBtn')?.classList.contains('active')?7:(_restDays(0));try{const notes=_notesLoad();notes.unshift({v:BREW_NOTES_VERSION,time:new Date().toISOString(),method:selectedMethod||'',dose:d,water:tw,ratio:r,duration:timerSeconds,note:note||'',grind,ratings:{...ratings},roast,process,temp,dripper,days});if(notes.length>50)notes.pop();_notesSave(notes)}catch(e){}}
   document.getElementById('brewSaveNoteBtn').addEventListener('click',()=>{saveNote();overlay.remove();});
   document.getElementById('brewViewNotesBtn').addEventListener('click',()=>{saveNote();overlay.remove();setTimeout(()=>showBrewNotes(),100);});
   document.getElementById('brewAgainBtn').addEventListener('click',()=>{saveNote();overlay.remove();resetTimer();});
@@ -5064,7 +5052,7 @@ function _doStartQuickTimer(){
   let cumTime=0;
   // Calculate extra bloom time for fresh beans
   const _qtSkipRest=document.getElementById('restDaysSkipBtn')?.classList.contains('active');
-  const _qtRestDays=_qtSkipRest?7:(parseInt(document.getElementById('restDays')?.value)||7);
+  const _qtRestDays=_qtSkipRest?7:(_restDays());
   const _qtBloomAdd=_bloomAdd(_qtRestDays,_qtSkipRest);
   allSteps.forEach(s=>{const _qtExtra=(s.title&&_isBloom(s.title)&&(s.duration||0)>0?_qtBloomAdd:0);cumTime+=(s.duration||0)+_qtExtra;qtDurations.push(cumTime)});
   const overlay=document.createElement('div');
@@ -5235,6 +5223,7 @@ function filterKnowledge(query){const q=query.toLowerCase().trim();
   let count=0;
   document.querySelectorAll('#faqList .knowledge-tip').forEach(el=>{const text=el.dataset.search||el.textContent.toLowerCase();const show=!q||text.includes(q);el.style.display=show?'':'none';if(show&&q)count++;});
   document.querySelectorAll('#troubleshootGrid .troubleshoot-card').forEach(el=>{const text=el.textContent.toLowerCase();const show=!q||text.includes(q);el.style.display=show?'':'none';if(show&&q)count++;});
+  document.querySelectorAll('#glossaryList .glossary-item').forEach(el=>{const text=el.textContent.toLowerCase();const show=!q||text.includes(q);el.style.display=show?'':'none';if(show&&q)count++;});
   const res=document.getElementById('knowledgeSearchResults');
   if(res)res.textContent=q?`Found ${count} results`:'';
   if(q){const faqSec=document.getElementById('faqSection');const tsSec=document.getElementById('troubleshootSection');const hasVisibleFaq=!!document.querySelector('#faqList .knowledge-tip[style=""]')||!!document.querySelector('#faqList .knowledge-tip:not([style])');const hasVisibleTs=!!document.querySelector('#troubleshootGrid .troubleshoot-card[style=""]')||!!document.querySelector('#troubleshootGrid .troubleshoot-card:not([style])');if(hasVisibleTs)setTimeout(()=>tsSec?.scrollIntoView({behavior:_scrollBehavior(),block:'start'}),150);else if(hasVisibleFaq)setTimeout(()=>faqSec?.scrollIntoView({behavior:_scrollBehavior(),block:'start'}),150);}}
@@ -5252,7 +5241,7 @@ function copyRecipe(){
   const r=getEffectiveRatio(m);
   const tw=Math.round(d*r);
   const gl=GRIND_LEVELS[selectedMethod]||'varies by bean';
-  const text=`☕ ${m.title.split(' · ')[0]}\nDose: ${d}g  Water: ${tw}g (1:${r})\nTemp: ${m.temp}  Grind: ${gl}\nEst. time: ${_estTotal(m,d)}`;
+  const text=`☕ ${m.title.split(' · ')[0]}\nDose: ${d}g  Water: ${tw}g (1:${r})\nTemp: ${m.temp}  Grind: ${gl}\nEst. time: ${_estTotal(m,d,tw)}`;
   navigator.clipboard.writeText(text).then(()=>{
     const btn=document.getElementById('recipeCopyBtn');
     if(!btn)return;
@@ -5304,11 +5293,11 @@ function showBrewNotes(){
     if(n.process)details.push({l:'Process',v:PROCESS_LBL[n.process]||n.process});
     if(n.temp)details.push({l:'Water Temp',v:n.temp+'°C'});
     if(n.dripper)details.push({l:'Dripper',v:DRIPPER_LBL[n.dripper]||n.dripper});
-    if(n.ratio)details.push({l:'Ratio',v:'1:'+n.ratio});if(n.grind)details.push({l:'Grind',v:n.grind});
+    if(n.ratio)details.push({l:'Ratio',v:'1:'+n.ratio});if(n.grind)details.push({l:'Grind',v:_escRcp(n.grind)});
     if(n.days)details.push({l:'Rest Days',v:n.days+' days'});
     const ratingEntries=Object.entries(n.ratings||{}).filter(([,v])=>v>0);
     const hasDetail=details.length>0||ratingEntries.length>0||n.note;
-    const detailHtml=hasDetail?`<div class="bnm-detail" id="bnmd-${idx}" style="display:none;">${details.length?`<div class="bnm-detail-grid">${details.map(d=>`<div class="bnm-detail-cell"><span class="bnm-detail-lbl">${d.l}</span><span class="bnm-detail-val">${d.v}</span></div>`).join('')}</div>`:''}${ratingEntries.length?`<div class="bnm-detail-ratings">${ratingEntries.map(([k,v])=>`<div class="bnm-rating-row"><span class="bnm-rating-lbl">${RATING_LBL[k]||k}</span><span class="bnm-rating-dots">${'●'.repeat(v)+'○'.repeat(5-v)}</span></div>`).join('')}</div>`:''}${n.note?`<div class="bnm-item-note">${n.note}</div>`:''}</div>`:'';
+    const detailHtml=hasDetail?`<div class="bnm-detail" id="bnmd-${idx}" style="display:none;">${details.length?`<div class="bnm-detail-grid">${details.map(d=>`<div class="bnm-detail-cell"><span class="bnm-detail-lbl">${d.l}</span><span class="bnm-detail-val">${d.v}</span></div>`).join('')}</div>`:''}${ratingEntries.length?`<div class="bnm-detail-ratings">${ratingEntries.map(([k,v])=>`<div class="bnm-rating-row"><span class="bnm-rating-lbl">${RATING_LBL[k]||k}</span><span class="bnm-rating-dots">${'●'.repeat(v)+'○'.repeat(5-v)}</span></div>`).join('')}</div>`:''}${n.note?`<div class="bnm-item-note">${_escRcp(n.note)}</div>`:''}</div>`:'';
     return`<div class="bnm-item${hasDetail?' bnm-expandable':''}" data-idx="${idx}"><div class="bnm-item-header"><span class="bnm-item-method">${methodNames[n.method]||n.method||'Pour-Over'}</span><div style="display:flex;align-items:center;gap:4px;"><span class="bnm-item-date">${dateStr}</span>${hasDetail?`<span class="bnm-expand-arrow" id="bnma-${idx}">›</span>`:''}<button class="bnm-delete" data-time="${n.time}" title="Delete">🗑</button></div></div><div class="bnm-item-stats"><span class="bnm-stat">Dose ${n.dose}g</span><span class="bnm-stat">Water ${n.water}g</span>${dur?`<span class="bnm-stat">${dur}</span>`:''}</div>${detailHtml}</div>`;
   }).join('');
   const modal=document.createElement('div');modal.id='brewNotesModal';
@@ -5705,7 +5694,7 @@ function updateQuickBrewResults() {
   const allSteps = steps.groups.flatMap(g => g.steps);
   // Bean age → extra bloom time (matches timer logic)
   const _qbSkipRest = document.getElementById('restDaysSkipBtn')?.classList.contains('active');
-  const _qbRestDays = _qbSkipRest ? 7 : (parseInt(document.getElementById('restDays')?.value) || 7);
+  const _qbRestDays = _qbSkipRest ? 7 : (_restDays());
   const _qbBloomAdd = _bloomAdd(_qbRestDays, _qbSkipRest);
 
   let stepsHtml = '';
