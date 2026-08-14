@@ -1836,6 +1836,42 @@
   .ft-ctrl-btn:hover { border-color: var(--copper); background: rgba(184,125,86,0.15); }
   .ft-ctrl-btn.lap-btn { font-size: 0.85em; width: auto; border-radius: 26px; padding: 0 18px; }
 
+  /* 音效開關：明確的開 / 關視覺狀態 */
+  .sfx-toggle-btn { position: relative; }
+  .sfx-toggle-btn.sfx-on {
+    border-color: var(--copper) !important;
+    background: rgba(184,125,86,0.18) !important;
+    color: var(--copper-light) !important;
+    opacity: 1;
+  }
+  .sfx-toggle-btn.sfx-off {
+    border-color: rgba(192,138,92,0.15) !important;
+    background: transparent !important;
+    color: var(--text-secondary) !important;
+    opacity: 0.5;
+  }
+  .sfx-toggle-btn.sfx-off::after {
+    content: ''; position: absolute; left: 15%; right: 15%; top: calc(50% - 1px);
+    height: 2px; background: currentColor; border-radius: 2px;
+    transform: rotate(-45deg); pointer-events: none; opacity: 0.9;
+  }
+  .sfx-toggle-btn:active { transform: scale(0.9); }
+  @keyframes sfxPulse {
+    0% { box-shadow: 0 0 0 0 rgba(184,125,86,0.5); }
+    100% { box-shadow: 0 0 0 14px rgba(184,125,86,0); }
+  }
+  .sfx-toggle-btn.sfx-pulse { animation: sfxPulse 0.55s ease-out; }
+  #sfxToast {
+    position: fixed; left: 50%; transform: translateX(-50%);
+    bottom: calc(28px + env(safe-area-inset-bottom, 0px));
+    z-index: 3000; padding: 9px 20px; border-radius: 999px;
+    font-size: 0.82em; letter-spacing: 0.04em; white-space: nowrap;
+    background: rgba(28,20,14,0.94); color: #F3EBDD;
+    border: 1px solid rgba(192,138,92,0.4);
+    pointer-events: none; opacity: 0; transition: opacity 0.22s ease;
+  }
+  #sfxToast.show { opacity: 1; }
+
   /* ===== Quick Timer Overlay ===== */
   #quickTimerOverlay {
     position: fixed;
@@ -4604,8 +4640,12 @@ function _sfxInit(){if(!_sfxCtx){try{_sfxCtx=new (window.AudioContext||window.we
 document.addEventListener('pointerdown',_sfxInit,{capture:true});
 function _beep(freq,dur,delay,vol){if(!_sfxCtx)return;const t=_sfxCtx.currentTime+(delay||0);const o=_sfxCtx.createOscillator(),g=_sfxCtx.createGain();o.type='sine';o.frequency.value=freq;g.gain.setValueAtTime(0.0001,t);g.gain.exponentialRampToValueAtTime(vol||0.22,t+0.012);g.gain.exponentialRampToValueAtTime(0.0001,t+dur);o.connect(g);g.connect(_sfxCtx.destination);o.start(t);o.stop(t+dur+0.05);}
 function _sfx(kind){if(!_sfxOn)return;_sfxInit();if(!_sfxCtx)return;if(kind==='step'){_beep(880,0.12,0,0.24);_beep(1318,0.2,0.14,0.22)}else if(kind==='tick'){_beep(1046,0.055,0,0.13)}else if(kind==='done'){_beep(659,0.16,0,0.24);_beep(880,0.16,0.19,0.24);_beep(1046,0.4,0.38,0.24)}else if(kind==='lap'){_beep(1174,0.07,0,0.18)}}
-function toggleSfx(){_sfxOn=!_sfxOn;try{localStorage.setItem('poSoundOn',_sfxOn?'1':'0')}catch(e){}document.querySelectorAll('.sfx-toggle-btn').forEach(b=>{b.textContent=_sfxOn?'\uD83D\uDD0A':'\uD83D\uDD07';b.setAttribute('aria-label',_sfxOn?'\u95DC\u9589\u97F3\u6548':'\u958B\u555F\u97F3\u6548')});if(_sfxOn)_sfx('tick');}
-function _sfxBtnHtml(cls){return '<button class="'+cls+' sfx-toggle-btn" onclick="toggleSfx()" aria-label="\u97F3\u6548\u958B\u95DC">'+(_sfxOn?'\uD83D\uDD0A':'\uD83D\uDD07')+'</button>'}
+function _sfxSyncBtns(){document.querySelectorAll('.sfx-toggle-btn').forEach(b=>{b.textContent=_sfxOn?'🔊':'🔇';b.classList.toggle('sfx-on',_sfxOn);b.classList.toggle('sfx-off',!_sfxOn);b.setAttribute('aria-pressed',_sfxOn?'true':'false');b.setAttribute('aria-label',_sfxOn?'\u95DC\u9589\u97F3\u6548':'\u958B\u555F\u97F3\u6548');b.setAttribute('title',_sfxOn?'\u97F3\u6548\uFF1A\u958B\uFF08\u9EDE\u64CA\u95DC\u9589\uFF09':'\u97F3\u6548\uFF1A\u95DC\uFF08\u9EDE\u64CA\u958B\u555F\uFF09')})}
+let _sfxToastT=null;
+function _sfxToast(msg){let el=document.getElementById('sfxToast');if(!el){el=document.createElement('div');el.id='sfxToast';document.body.appendChild(el)}el.textContent=msg;el.classList.add('show');clearTimeout(_sfxToastT);_sfxToastT=setTimeout(()=>el.classList.remove('show'),1500)}
+function _sfxCue(on){_sfxInit();if(!_sfxCtx)return false;if(on){_beep(784,0.14,0,0.3);_beep(1175,0.24,0.12,0.28)}else{_beep(587,0.13,0,0.26);_beep(392,0.22,0.12,0.24)}return _sfxCtx.state==='running'}
+function toggleSfx(){_sfxOn=!_sfxOn;try{localStorage.setItem('poSoundOn',_sfxOn?'1':'0')}catch(e){}_sfxSyncBtns();document.querySelectorAll('.sfx-toggle-btn').forEach(b=>{b.classList.remove('sfx-pulse');void b.offsetWidth;b.classList.add('sfx-pulse')});if(navigator.vibrate)navigator.vibrate(_sfxOn?[30,40,30]:[30]);const ok=_sfxCue(_sfxOn);_sfxToast(_sfxOn?(ok?'\uD83D\uDD0A \u97F3\u6548\u5DF2\u958B\u555F':'\u26A0\uFE0F \u700F\u89BD\u5668\u963B\u64CB\u4E86\u8072\u97F3\uFF08iPhone \u8ACB\u95DC\u9589\u975C\u97F3\u9375\uFF09'):'\uD83D\uDD07 \u97F3\u6548\u5DF2\u95DC\u9589')}
+function _sfxBtnHtml(cls){return '<button class="'+cls+' sfx-toggle-btn '+(_sfxOn?'sfx-on':'sfx-off')+'" onclick="toggleSfx()" aria-pressed="'+(_sfxOn?'true':'false')+'" aria-label="'+(_sfxOn?'\u95DC\u9589\u97F3\u6548':'\u958B\u555F\u97F3\u6548')+'" title="'+(_sfxOn?'\u97F3\u6548\uFF1A\u958B\uFF08\u9EDE\u64CA\u95DC\u9589\uFF09':'\u97F3\u6548\uFF1A\u95DC\uFF08\u9EDE\u64CA\u958B\u555F\uFF09')+'">'+(_sfxOn?'🔊':'🔇')+'</button>'}
 function _stepCountdownTick(seconds,durations,completed){if(completed||!durations||!durations.length)return;for(let i=0;i<durations.length;i++){if(durations[i]>seconds){const d=durations[i]-seconds;if(d<=3&&_lastTickAt!==seconds){_lastTickAt=seconds;_sfx('tick')}return}}}
 let wakeLock=null;
 function requestWakeLock(){if('wakeLock' in navigator){navigator.wakeLock.request('screen').then(lock=>{wakeLock=lock}).catch(()=>{})}}
@@ -4709,6 +4749,7 @@ function startTimer(){if(!selectedMethod){showErrorToast('請先選擇沖法');r
   startProTimerOverlay(m,d,tw,r);
 }
 function startProTimerOverlay(m,dose,totalWater,ratio){
+  _lastTickAt=-1;
   const existing=document.getElementById('proTimerOverlay');if(existing)existing.remove();
   let tickMarks='';
   for(let i=0;i<60;i++){const angle=(i*6)-90;const r1=i%5===0?56:57.5;const r2=60;const x1=60+r1*Math.cos(angle*Math.PI/180);const y1=60+r1*Math.sin(angle*Math.PI/180);const x2=60+r2*Math.cos(angle*Math.PI/180);const y2=60+r2*Math.sin(angle*Math.PI/180);tickMarks+='<line x1="'+x1.toFixed(1)+'" y1="'+y1.toFixed(1)+'" x2="'+x2.toFixed(1)+'" y2="'+y2.toFixed(1)+'" stroke="rgba(192,138,92,'+(i%5===0?'0.25':'0.08')+')" stroke-width="'+(i%5===0?'1':'0.5')+'"/>';}
@@ -4948,7 +4989,7 @@ function startFreeTimer(){
   overlay.id='freeTimerOverlay';
   let tickMarks='';
   for(let i=0;i<60;i++){const angle=(i*6)-90;const r1=i%5===0?56:57.5;const r2=60;const x1=60+r1*Math.cos(angle*Math.PI/180);const y1=60+r1*Math.sin(angle*Math.PI/180);const x2=60+r2*Math.cos(angle*Math.PI/180);const y2=60+r2*Math.sin(angle*Math.PI/180);tickMarks+='<line x1="'+x1.toFixed(1)+'" y1="'+y1.toFixed(1)+'" x2="'+x2.toFixed(1)+'" y2="'+y2.toFixed(1)+'" stroke="rgba(192,138,92,'+(i%5===0?'0.25':'0.08')+')" stroke-width="'+(i%5===0?'1':'0.5')+'"/>';}
-  overlay.innerHTML='<div class="ft-header"><button class="ft-exit" id="ftExit">✕ 結束</button><div class="ft-title">自由計時</div></div><div class="ft-ring-wrap"><svg viewBox="0 0 120 120"><circle class="ft-ring-outer" cx="60" cy="60" r="59"/>'+tickMarks+'<circle class="ft-ring-bg" cx="60" cy="60" r="52"/><circle class="ft-ring-progress" id="ftRingProgress" cx="60" cy="60" r="52"/></svg><div class="ft-ring-inner"><div class="ft-time" id="ftTime">0:00</div><div class="ft-label" id="ftLabel">點擊開始</div></div></div><div class="ft-lap-list" id="ftLapList"></div><div class="ft-controls"><button class="ft-ctrl-btn" id="ftPlayPause">▶</button><button class="ft-ctrl-btn lap-btn" id="ftLap">📍 標記</button><button class="ft-ctrl-btn" id="ftReset">⟲</button></div>';
+  overlay.innerHTML='<div class="ft-header"><button class="ft-exit" id="ftExit">✕ 結束</button><div class="ft-title">自由計時</div></div><div class="ft-ring-wrap"><svg viewBox="0 0 120 120"><circle class="ft-ring-outer" cx="60" cy="60" r="59"/>'+tickMarks+'<circle class="ft-ring-bg" cx="60" cy="60" r="52"/><circle class="ft-ring-progress" id="ftRingProgress" cx="60" cy="60" r="52"/></svg><div class="ft-ring-inner"><div class="ft-time" id="ftTime">0:00</div><div class="ft-label" id="ftLabel">點擊開始</div></div></div><div class="ft-lap-list" id="ftLapList"></div><div class="ft-controls"><button class="ft-ctrl-btn" id="ftPlayPause">▶</button><button class="ft-ctrl-btn lap-btn" id="ftLap">📍 標記</button><button class="ft-ctrl-btn" id="ftReset">⟲</button>'+_sfxBtnHtml('ft-ctrl-btn')+'</div>';
   document.body.appendChild(overlay);
   let seconds=0,running=false,ftInterval=null,laps=[];
   function updateFtDisplay(){
