@@ -1,0 +1,4 @@
+User-agent: *
+Allow: /
+
+Sitemap: https://vividmarketingtw-create.github.io/pourover-lab/sitemap.xml

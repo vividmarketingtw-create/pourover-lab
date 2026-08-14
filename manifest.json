@@ -1,8 +1,8 @@
 {
   "name": "PourOver Lab — 手沖咖啡實驗室",
   "short_name": "手沖實驗室",
-  "description": "精準計算、智慧推薦、完整指南 — 支援十一種手沖咖啡沖法的互動工具",
-  "start_url": "./index.html",
+  "description": "精準計算、智慧推薦、完整指南 — 支援十二種手沖咖啡沖法的互動工具",
+  "start_url": "./",
   "scope": "./",
   "display": "standalone",
   "background_color": "#0F0D0B",
@@ -19,9 +19,86 @@
       "src": "icon-512.png",
       "sizes": "512x512",
       "type": "image/png",
-      "purpose": "any maskable"
+      "purpose": "any"
+    },
+    {
+      "src": "icon-512-maskable.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "maskable"
     }
   ],
-  "categories": ["food", "lifestyle", "utilities"],
-  "lang": "zh-TW"
+  "categories": [
+    "food",
+    "lifestyle",
+    "utilities"
+  ],
+  "lang": "zh-TW",
+  "id": "/pourover-lab/",
+  "display_override": [
+    "standalone",
+    "minimal-ui"
+  ],
+  "dir": "ltr",
+  "shortcuts": [
+    {
+      "name": "快速沖煮",
+      "short_name": "快速沖煮",
+      "description": "選好沖法直接開始計時",
+      "url": "./#quick",
+      "icons": [
+        {
+          "src": "icon-192.png",
+          "sizes": "192x192"
+        }
+      ]
+    },
+    {
+      "name": "進階工具",
+      "short_name": "進階工具",
+      "description": "完整參數計算與沖煮計時",
+      "url": "./#tools",
+      "icons": [
+        {
+          "src": "icon-192.png",
+          "sizes": "192x192"
+        }
+      ]
+    },
+    {
+      "name": "知識庫",
+      "short_name": "知識庫",
+      "description": "十二種沖法指南與沖煮知識",
+      "url": "./#knowledge",
+      "icons": [
+        {
+          "src": "icon-192.png",
+          "sizes": "192x192"
+        }
+      ]
+    }
+  ],
+  "screenshots": [
+    {
+      "src": "screenshot-mobile.png",
+      "sizes": "780x1688",
+      "type": "image/png",
+      "form_factor": "narrow",
+      "label": "Home"
+    },
+    {
+      "src": "screenshot-timer.png",
+      "sizes": "780x1688",
+      "type": "image/png",
+      "form_factor": "narrow",
+      "label": "Brew timer"
+    },
+    {
+      "src": "screenshot-wide.png",
+      "sizes": "1280x800",
+      "type": "image/png",
+      "form_factor": "wide",
+      "label": "Knowledge base"
+    }
+  ]
 }
