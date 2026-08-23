@@ -78,7 +78,7 @@ html[data-theme="light"] .section-label { color: #5A360F; }
 body.timer-open #poInstallBtn { display: none; }
 html[data-theme="light"] .site-header { background: transparent; }
 /* Light-theme overrides for timer surfaces (previously hard-coded dark) */
-html[data-theme="light"] #quickTimerOverlay { background: linear-gradient(180deg, #FBF6EE 0%, rgba(247,241,232,0.98) 100%); box-shadow: 0 6px 40px rgba(90,64,40,0.18); border-bottom: 1px solid rgba(122,89,60,0.25); }
+html[data-theme="light"] #quickTimerOverlay { background: linear-gradient(180deg, #FBF6EE 0%, #F7F1E8 100%); box-shadow: 0 6px 40px rgba(90,64,40,0.18); border-bottom: 1px solid rgba(122,89,60,0.25); }
 html[data-theme="light"] #freeTimerOverlay { background: linear-gradient(180deg, #F7F1E8 0%, #F3EBDD 100%); }
 html[data-theme="light"] .quick-float-group.menu-open .quick-float-trigger { background: rgba(251,246,238,0.95); }
 html[data-theme="light"] .qt-paused #qtTime { color: #9A7414; }
@@ -236,12 +236,14 @@ body::before {
     animation: water-pour 2.5s ease-in-out infinite;
     animation-delay: 0.5s;
   }
+/* 只動 opacity 與 transform，兩者都能交給合成器；
+   原本動的是 stroke-dashoffset / stroke-dasharray，會讓首頁閒置時每幀重算樣式（實測 16% CPU）。*/
 @keyframes water-pour {
-    0% { opacity: 0; stroke-dashoffset: 40; stroke-dasharray: 10 40; }
+    0% { opacity: 0; transform: translateY(-14px); }
     10% { opacity: 0.6; }
     50% { opacity: 0.5; }
     90% { opacity: 0; }
-    100% { opacity: 0; }
+    100% { opacity: 0; transform: translateY(10px); }
   }
 /* Steam animation */
 .steam-container {
@@ -826,7 +828,7 @@ input[type="range"]::-moz-range-thumb {
 .compare-table td { color: var(--text-primary); }
 .compare-empty { text-align: center; color: var(--text-secondary); padding: 30px 0; }
 @media (max-width: 600px) {
-.hero { padding: 48px 16px 28px; min-height: 45vh; min-height: 45dvh; }
+.hero { padding: 48px 16px 28px; } /* min-height 移到檔尾修正區（寫這裡會被後面的 50dvh 蓋掉） */
 .hero h1 { font-size: 2.2em; }
 .hero-en { font-size: 0.8em; letter-spacing: 2px; }
 .hero-tagline { font-size: 0.85em; margin-bottom: 28px; }
@@ -843,13 +845,7 @@ input[type="range"]::-moz-range-thumb {
 .dose-btn { padding: 7px 2px; font-size: 0.8em; }
 .radar-svg { max-width: 200px; }
 .method-icon { width: 32px; height: 32px; }
-.tab-nav { height: 56px; }
-.tab-btn { font-size: 0.52em; gap: 2px; padding: 6px 4px; }
-.tab-btn-icon { font-size: 1.15em; }
-}
-@media (max-width: 360px) {
-.tab-btn { font-size: 0.48em; padding: 4px 2px; letter-spacing: 0.5px; }
-.tab-btn-icon { font-size: 1.2em; }
+/* 分頁列的手機版尺寸已移到檔尾的「版面修正總表」，寫在這裡會被第 880 行之後的無條件規則蓋掉 */
 }
 /* ===== TAB NAVIGATION ===== */
 /* Desktop site header */
@@ -873,7 +869,7 @@ input[type="range"]::-moz-range-thumb {
       font-size: 0.6em; color: var(--text-secondary);
       letter-spacing: 3px; text-transform: uppercase; font-weight: 300;
     }
-.tab-nav { padding-left: 280px; }
+/* .tab-nav 的桌機內距移到檔尾修正區（寫這裡會被下一行的 padding:0 蓋掉） */
 }
 .tab-nav {
     position: fixed; bottom: 0; left: 0; right: 0; z-index: 200;
@@ -1351,7 +1347,7 @@ input[type="number"], input[type="range"], select, .selector-row input, .selecto
     stroke-linecap: round;
     stroke-dasharray: 326.73; stroke-dashoffset: 326.73;
     transform: rotate(-90deg); transform-origin: 50% 50%;
-    transition: stroke-dashoffset 0.3s linear;
+    transition: stroke-dashoffset 0.18s linear; /* 同上：短於 250ms tick */
   }
 .ft-ring-inner {
     position: absolute; top: 50%; left: 50%;
@@ -1483,21 +1479,14 @@ html, body { overscroll-behavior-y: contain; }
 .sim-range { height: 44px; }
 .sim-range::-webkit-slider-thumb { width: 26px; height: 26px; }
 .lang-switch-btn, #themeToggleBtn { min-width: 44px; min-height: 40px; }
-/* ===== 橫式與矮螢幕：不要把步驟列擠出畫面 ===== */
-@media (max-height: 460px) {
-.pto-header { padding: 6px 12px; }
-.pto-info { display: none; }
-.pto-main { gap: 12px; }
-.pto-ring-wrap { width: 92px; height: 92px; }
-.pto-time { font-size: 1.5em; }
-.pto-cur-title { font-size: 0.95em; margin-bottom: 4px; }
-.pto-steps-list { max-height: none; }
-.pto-ctrl-btn { width: 40px; height: 40px; font-size: 1em; }
-}
-/* ===== iPhone SE 等小螢幕：快速沖煮不要只剩 53px 可視 ===== */
-@media (max-height: 700px) {
-#quickTimerOverlay { max-height: 52vh; overflow: auto; }
-}
+/* ===== 橫式與矮螢幕：不要把步驟列擠出畫面 =====
+   這一段整個移到檔尾的「版面修正總表」（第 3 項）。
+   放在這裡的話，下面第 1730 行之後的無條件規則會把它全部蓋掉，
+   結果就是橫式時「✕ 結束」被推到畫面外而且推不回來。*/
+/* ===== iPhone SE 等小螢幕：快速沖煮不要只剩 53px 可視 =====
+   高度上限與面板內捲動改由檔案最後一段 <style> 的「計時面板高度保險」統一處理。
+   放這裡會被下面的 #quickTimerOverlay{overflow:hidden}
+   以及 @media (max-width:600px) 的字級規則蓋掉，導致面板被硬裁切。*/
 body.timer-open .tab-nav, body.timer-open #backToTop, body.timer-open .quick-float-group { display: none !important; }
 /* ===== 計時中把看不見的背景動畫停掉（省電） ===== */
 body.timer-open .steam, body.timer-open .water-stream, body.timer-open .water-stream-2,
@@ -1525,7 +1514,7 @@ body.timer-open .steam, body.timer-open .water-stream, body.timer-open .water-st
 #quickTimerOverlay {
     position: fixed;
     top: 0; left: 0; right: 0;
-    background: linear-gradient(180deg, #1a1210 0%, rgba(13,11,9,0.97) 100%);
+    background: linear-gradient(180deg, #1a1210 0%, #0D0B09 100%);
     z-index: 500;
     display: flex;
     flex-direction: column;
@@ -1597,7 +1586,7 @@ body.timer-open .steam, body.timer-open .water-stream, body.timer-open .water-st
     stroke-linecap: round;
     stroke-dasharray: 326.73;
     stroke-dashoffset: 326.73;
-    transition: stroke-dashoffset 0.8s cubic-bezier(0.25,0.46,0.45,0.94);
+    transition: stroke-dashoffset 0.18s linear; /* 必須短於 250ms 的 tick，否則過場永遠跑不完、整場沖煮持續重繪 */
     filter: drop-shadow(0 0 6px rgba(192,138,92,0.3));
   }
 .qt-ring-inner {
@@ -2824,7 +2813,256 @@ input[type="range"] { padding: 10px 0; box-sizing: content-box; }
 </style>
 <script type="application/ld+json">{"@context":"https://schema.org","@graph":[{"@type":"WebApplication","name":"PourOver Lab — Pour-Over Coffee Lab","url":"https://vividmarketingtw-create.github.io/pourover-lab/en/","description":"An interactive pour-over coffee tool with twelve world-class brewing methods, a timer, flavor analysis, and smart recommendations.","applicationCategory":"LifestyleApplication","operatingSystem":"Any","inLanguage":"en","offers":{"@type":"Offer","price":"0","priceCurrency":"TWD"}},{"@type":"FAQPage","mainEntity":[{"@type":"Question","name":"Why does my coffee always taste bitter?","acceptedAnswer":{"@type":"Answer","text":"Bitterness usually comes from over-extraction, commonly caused by water that is too hot, a grind that is too fine, or a brew time that is too long. Try lowering the water temperature by 2°C, adjusting the grind half a step coarser, and starting from a 1:15 ratio."}},{"@type":"Question","name":"How do I adjust grind size?","acceptedAnswer":{"@type":"Answer","text":"Start with a medium-fine grind between caster sugar and coarse sugar. Grind finer if it tastes weak, coarser if it tastes bitter, adjusting half a step at a time and noting the difference in taste."}},{"@type":"Question","name":"How many days of bean resting are enough?","acceptedAnswer":{"@type":"Answer","text":"Light roast: 7 to 14 days; medium roast: 5 to 10 days; dark roast: 3 to 7 days (light roasts keep a more intact, less porous structure, so they degas slowly). A vigorous bloom means the beans are still too fresh; peak flavor is usually 7 to 21 days after roasting."}},{"@type":"Question","name":"Should I rinse the filter first?","acceptedAnswer":{"@type":"Answer","text":"Yes, rinse the filter with hot water to remove papery taste and preheat the dripper and server. Remember to discard the rinse water before brewing."}},{"@type":"Question","name":"Why does the same coffee taste different every time?","acceptedAnswer":{"@type":"Answer","text":"Water temperature, grind size, flow rate, and water quality all affect the result. Change only one variable at a time and keep brewing conditions fixed to greatly improve consistency."}},{"@type":"Question","name":"Can I brew with tap water?","acceptedAnswer":{"@type":"Answer","text":"Yes, but filtered water is recommended. Ideal brewing water targets a TDS of about 150 ppm, with 75 to 250 ppm acceptable; chlorine adds off-flavors, while pure water makes the flavor flat and dull."}},{"@type":"Question","name":"What is bloom and why does it matter?","acceptedAnswer":{"@type":"Answer","text":"Bloom means wetting the grounds with 2 to 3 times their weight in hot water and waiting 30 to 45 seconds to release carbon dioxide, making the rest of the extraction more even."}},{"@type":"Question","name":"What equipment do I need for pour-over?","acceptedAnswer":{"@type":"Answer","text":"Essentials: a dripper, filters, a gooseneck kettle, a grinder, a scale, and a timer. A thermometer or temperature-control kettle is a worthwhile addition."}},{"@type":"Question","name":"How should I store coffee beans? Can I freeze them?","acceptedAnswer":{"@type":"Answer","text":"Keep whole beans in a one-way-valve bag or airtight canister at room temperature, away from light, heat and moisture; do not refrigerate. Freezing works if you portion into single doses, seal out the air, grind straight from frozen without warming, and never refreeze. Ground coffee loses aroma within minutes, so grind fresh."}}]}]}</script>
 <script type="application/ld+json">{"@context":"https://schema.org","@graph":[{"@type":"Recipe","@id":"https://vividmarketingtw-create.github.io/pourover-lab/en/#recipe-immersion","name":"Immersion Pour-Over · Most Beginner-Friendly","description":"Steep first, then drain Extremely forgiving · No pouring skill needed","url":"https://vividmarketingtw-create.github.io/pourover-lab/en/#immersion","inLanguage":"en","image":"https://vividmarketingtw-create.github.io/pourover-lab/og-image.png","author":{"@type":"Person","name":"Universal technique"},"recipeCategory":"Pour-over coffee","recipeCuisine":"Coffee","recipeYield":"300 g","keywords":"Immersion Pour-Over · Most Beginner-Friendly, pour over coffee, Universal technique","totalTime":"PT5M","recipeIngredient":["Coffee 20 g (Medium grind)","Water 300 g (93°C)"],"recipeInstructions":[{"@type":"HowToStep","position":1,"name":"Pre-infusion","text":"Pour to 40g。First rinse the paper filter with hot water and preheat the dripper (rinse with the valve open, then discard the water) — immersion brewers are usually resin, a cold body steals heat, and you are abou"},{"@type":"HowToStep","position":2,"name":"Fill with remaining water","text":"Pour to 300g。93°C, pour in the remaining water over about 43 seconds. Speed genuinely does not matter — the valve is closed, so nothing escapes and pour technique has almost no effect here. After pouring, give one"},{"@type":"HowToStep","position":3,"name":"Steep for 3:05","text":"Cover with a lid to keep warm (optional). The grounds steep fully in the water - no action needed. This full contact makes the extraction even and stable."},{"@type":"HowToStep","position":4,"name":"Open valve and drain","text":"Open the valve and let the coffee drain naturally (about 50 seconds). Remove the dripper once drained and enjoy. Note: do not shake or press mid-drain - let it flow on its own."}]},{"@type":"Recipe","@id":"https://vividmarketingtw-create.github.io/pourover-lab/en/#recipe-kasuya","name":"Kasuya 4:6 · World Champion Method","description":"Precise sweet-acid control Highly tunable · Competition recipe","url":"https://vividmarketingtw-create.github.io/pourover-lab/en/#kasuya","inLanguage":"en","image":"https://vividmarketingtw-create.github.io/pourover-lab/og-image.png","author":{"@type":"Person","name":"Tetsu Kasuya"},"recipeCategory":"Pour-over coffee","recipeCuisine":"Coffee","recipeYield":"300 g","keywords":"Kasuya 4:6 · World Champion Method, pour over coffee, Tetsu Kasuya","totalTime":"PT4M","recipeIngredient":["Coffee 20 g (Medium-coarse grind)","Water 300 g (92-93°C)"],"recipeInstructions":[{"@type":"HowToStep","position":1,"name":"Pour 1: bloom (first 40% sets sweet/acid)","text":"Pour to 60g。Pour 92-93°C water in a spiral from the center outward, about 9 seconds (be decisive, roughly 6.7 g/s — do not trickle); this pour doubles as the bloom and degassing. ⏱ 4:6 runs on a fixed cadence: st"},{"@type":"HowToStep","position":2,"name":"Pour 2 (first 40% sets sweet/acid)","text":"Pour to 120g。92-93°C, start at 0:45, about 9 seconds. Pours 1 and 2 together make up 40% of the total water; their split sets the sweet-acid direction — currently set to \"Balanced\" (60g → 60g). Next pour starts 36"},{"@type":"HowToStep","position":3,"name":"Pour 3 (last 60% controls strength)","text":"Pour to 180g。92-93°C, start at 1:30, about 9 seconds. The last 3 pours total 60%: the standard 3 pours give balanced strength (= Kasuya's original recipe). Keep the 45s cadence."},{"@type":"HowToStep","position":4,"name":"Pour 4 (last 60% controls strength)","text":"Pour to 240g。92-93°C, start at 2:15, about 9 seconds. The last 3 pours total 60%: the standard 3 pours give balanced strength (= Kasuya's original recipe). Keep the 45s cadence."},{"@type":"HowToStep","position":5,"name":"Pour 5 (last 60% controls strength)","text":"Pour to 300g。92-93°C, start at 3:00, about 9 seconds. The last 3 pours total 60%: the standard 3 pours give balanced strength (= Kasuya's original recipe). This is the last pour — now just wait for drawdown."},{"@type":"HowToStep","position":6,"name":"Let it drain","text":"Wait until the coffee has fully drained, then remove the dripper and enjoy. 💡 Target total for this volume is about 3:34 (5 pours × 45s + ~25s drawdown). Kasuya's original benchmark for 20g/300g, bal"}]},{"@type":"Recipe","@id":"https://vividmarketingtw-create.github.io/pourover-lab/en/#recipe-hoffmann","name":"James Hoffmann · Clean and Bright","description":"Simple, even extraction Top beginner pick · Bright flavor","url":"https://vividmarketingtw-create.github.io/pourover-lab/en/#hoffmann","inLanguage":"en","image":"https://vividmarketingtw-create.github.io/pourover-lab/og-image.png","author":{"@type":"Person","name":"James Hoffmann"},"recipeCategory":"Pour-over coffee","recipeCuisine":"Coffee","recipeYield":"334 g","keywords":"James Hoffmann · Clean and Bright, pour over coffee, James Hoffmann","totalTime":"PT3M","recipeIngredient":["Coffee 20 g (Medium-fine grind)","Water 334 g (Boiling (as hot as possible))"],"recipeInstructions":[{"@type":"HowToStep","position":1,"name":"Bloom pour","text":"Pour to 40g。Rinse the paper filter with hot water and preheat the dripper , discard the water, add the grounds and press a small well into the center of the dry bed (both are part of the original technique), then"},{"@type":"HowToStep","position":2,"name":"First main pour (up to 60% of total)","text":"Pour to 200g。Keep the water near boiling (~100°C) and pour steadily in circles from the center, finishing in about 30 seconds (about 5.3 g/s). = the original 30-second window (0:45 → 1:15)."},{"@type":"HowToStep","position":3,"name":"Second main pour (up to 100%)","text":"Pour to 334g。~100°C, same technique but a little slower than the first pour , finishing in about 30 seconds (about 4.5 g/s). = the original 30-second window (1:15 → 1:45)."},{"@type":"HowToStep","position":4,"name":"Stir and swirl","text":"First stir once clockwise and once counterclockwise with a stirrer to knock grounds off the paper walls; then, once the water level has dropped a little , swirl the dripper gently to level the bed. Th"},{"@type":"HowToStep","position":5,"name":"Let it drain","text":"Wait for the coffee to drain fully - about 2:35 overall - then remove the dripper and enjoy. 💡 Hoffmann's own benchmark is 30g / 500g finishing at about 3:30 . If your total is far off, correct the w"}]},{"@type":"Recipe","@id":"https://vividmarketingtw-create.github.io/pourover-lab/en/#recipe-rao","name":"Scott Rao · Three-Pour High Extraction","description":"Rao Spin levels the bed Advanced · high extraction yield 💡 Use 20-22g or more — Rao argues small doses force too fine a grind","url":"https://vividmarketingtw-create.github.io/pourover-lab/en/#rao","inLanguage":"en","image":"https://vividmarketingtw-create.github.io/pourover-lab/og-image.png","author":{"@type":"Person","name":"Scott Rao"},"recipeCategory":"Pour-over coffee","recipeCuisine":"Coffee","recipeYield":"330 g","keywords":"Scott Rao · Three-Pour High Extraction, pour over coffee, Scott Rao","totalTime":"PT3M","recipeIngredient":["Coffee 20 g (Medium-fine grind)","Water 330 g (97°C)"],"recipeInstructions":[{"@type":"HowToStep","position":1,"name":"Bloom + aggressive Rao Spin","text":"Pour to 60g。Rinse the paper filter with hot water and preheat the dripper (Rao prefers a plastic V60 — better heat retention than glass or ceramic). Discard the water, add the grounds, and press a bird's-nest wel"},{"@type":"HowToStep","position":2,"name":"Second pour (up to 200g)","text":"Pour to 200g。97°C. Keep the spout low, the stream vertical and the height constant , spiralling steadily from the center outward for 140g in about 35 seconds (about 4 g/s). Finish with a gentle Rao Spin lasting un"},{"@type":"HowToStep","position":3,"name":"Wait until about 70% drained","text":"Watch the dripper here, not the clock — Rao's trigger is the slurry dropping by roughly 70% before the next pour. The site converts that to about 19 seconds with the V60 drawdown model (it scales with"},{"@type":"HowToStep","position":4,"name":"Third pour (up to 330g)","text":"Pour to 330g。97°C, same low steady spiral, adding the remaining 130g in about 33 seconds (about 3.9 g/s)."},{"@type":"HowToStep","position":5,"name":"Final Rao Spin + drawdown","text":"Immediately give one more gentle Rao Spin to level the bed — this is the whole point of the technique, an uneven bed channels. Then do not touch it again ; let it drain, about 2:47 overall. 💡 Rao has"}]},{"@type":"Recipe","@id":"https://vividmarketingtw-create.github.io/pourover-lab/en/#recipe-onePour","name":"Single Pour · Bloom, Then One Pour","description":"Minimal steps, consistent cups Beginner-friendly · bloom + one continuous pour 💡 Too weak → grind half a step finer or try 1:14; too bitter → grind half a step coarser","url":"https://vividmarketingtw-create.github.io/pourover-lab/en/#onePour","inLanguage":"en","image":"https://vividmarketingtw-create.github.io/pourover-lab/og-image.png","author":{"@type":"Person","name":"Universal technique"},"recipeCategory":"Pour-over coffee","recipeCuisine":"Coffee","recipeYield":"300 g","keywords":"Single Pour · Bloom, Then One Pour, pour over coffee, Universal technique","totalTime":"PT2M","recipeIngredient":["Coffee 20 g (Medium-fine grind)","Water 300 g (92°C)"],"recipeInstructions":[{"@type":"HowToStep","position":1,"name":"Bloom pour","text":"Pour to 40g。Bloom with 92°C water - blooming releases CO2 from the grounds so the later pour contacts the coffee evenly. Pour in 2x the dose and wait about 20 seconds for the grounds to fully wet and degas. Grind"},{"@type":"HowToStep","position":2,"name":"Finish in one pour","text":"Pour to 300g。92°C, pour steadily without interruption, spiraling from the center outward and back to the center - about 74 seconds (about 3.5 g/s)"},{"@type":"HowToStep","position":3,"name":"Let it drain","text":"No stirring, no swirling - wait until the coffee has fully drained, then remove the dripper"}]},{"@type":"Recipe","@id":"https://vividmarketingtw-create.github.io/pourover-lab/en/#recipe-chadwang","name":"Chad Wang · Competition Continuous Centre Pour","description":"The original WBrC 2017 winning recipe Bloom, then one unbroken centre pour · very short total","url":"https://vividmarketingtw-create.github.io/pourover-lab/en/#chadwang","inLanguage":"en","image":"https://vividmarketingtw-create.github.io/pourover-lab/og-image.png","author":{"@type":"Person","name":"Chad Wang"},"recipeCategory":"Pour-over coffee","recipeCuisine":"Coffee","recipeYield":"334 g","keywords":"Chad Wang · Competition Continuous Centre Pour, pour over coffee, Chad Wang","totalTime":"PT2M","recipeIngredient":["Coffee 20 g (Medium-fine grind)","Water 334 g (93°C)"],"recipeInstructions":[{"@type":"HowToStep","position":1,"name":"Bloom (fixed 30 seconds)","text":"Pour to 40g。Rinse the paper filter and the dripper with hot water first — Wang stresses this step; he says an unrinsed filter strips the juicy aromatics from the coffee. The original uses a ceramic V60 with a whi"},{"@type":"HowToStep","position":2,"name":"Continuous centre pour (up to 334g)","text":"Pour to 334g。93°C. From 0:30, pour without ever breaking the stream, straight into the centre of the bed — no spiral, no stages — adding the remaining 294g in about 59 seconds (about 5 g/s). A centre pour keeps th"},{"@type":"HowToStep","position":3,"name":"Let it drain","text":"No stirring, no swirling — just let it drain, about 2:14 overall. 💡 The original 15g / 250g finishes draining at 2:00-2:15 (a circulating 15g / 300g, 92°C version finishing 2:05-2:10 is labelled in its source as his 2016 recipe"}]},{"@type":"Recipe","@id":"https://vividmarketingtw-create.github.io/pourover-lab/en/#recipe-winton","name":"Matt Winton · Five Unequal Pours","description":"The WBrC 2021 competition recipe 50/70/60/60/60g · two temperatures (93→88°C) · no stirring","url":"https://vividmarketingtw-create.github.io/pourover-lab/en/#winton","inLanguage":"en","image":"https://vividmarketingtw-create.github.io/pourover-lab/og-image.png","author":{"@type":"Person","name":"Matt Winton"},"recipeCategory":"Pour-over coffee","recipeCuisine":"Coffee","recipeYield":"300 g","keywords":"Matt Winton · Five Unequal Pours, pour over coffee, Matt Winton","totalTime":"PT3M","recipeIngredient":["Coffee 20 g (Medium-coarse grind)","Water 300 g (93°C → 88°C)"],"recipeInstructions":[{"@type":"HowToStep","position":1,"name":"Pour 1: 50g (93°C) · bloom","text":"Pour to 50g。Pour the first 50g at 93°C (about 11s). The pour path is what replaces stirring here: pour into the centre to flood the bed, then circle outward to agitate the rest, then come back to the centre for c"},{"@type":"HowToStep","position":2,"name":"Pour 2: 70g (93°C)","text":"Pour to 120g。Still 93°C , pour 2 of 70g (about 16s, roughly 4.4 g/s). Centre, then circles, then back to centre — decisive, no hesitation."},{"@type":"HowToStep","position":3,"name":"Pour 3: 60g (93°C)","text":"Pour to 180g。Still 93°C , pour 3 of 60g (about 13s, roughly 4.6 g/s). Centre, then circles, then back to centre — decisive, no hesitation."},{"@type":"HowToStep","position":4,"name":"Pour 4: 60g (88°C) · switch to cool","text":"Pour to 240g。Switch to the cooler kettle: 88°C. Pour 4 of 60g (about 13s), same centre-circle-centre path. The drop mimics a kettle cooling naturally and adds sweetness late without sharpening the acidity."},{"@type":"HowToStep","position":5,"name":"Pour 5: 60g (88°C)","text":"Pour to 300g。Still 88°C , final pour of 60g (about 13s). Once it is in, do not touch it — no stirring, no swirling, just let it drain."},{"@type":"HowToStep","position":6,"name":"Let it drain","text":"Wait for the coffee to drain fully, about 2:43 overall. 💡 The original 20g / 300g drains at an estimated 2:40 (no source records the competition total; the widely shared five-equal-pour home version runs ~3:30). Use his own rule to dial in: too slow or bitter, grind coarser; too fast or sour, grind finer "}]},{"@type":"Recipe","@id":"https://vividmarketingtw-create.github.io/pourover-lab/en/#recipe-sherry","name":"Sherry Hsu · Cool-Start Four-Pour","description":"2022 WBrC champion original 75°C start → 95°C main · four equal pours · flat-bottom brewer","url":"https://vividmarketingtw-create.github.io/pourover-lab/en/#sherry","inLanguage":"en","image":"https://vividmarketingtw-create.github.io/pourover-lab/og-image.png","author":{"@type":"Person","name":"Sherry Hsu"},"recipeCategory":"Pour-over coffee","recipeCuisine":"Coffee","recipeYield":"286 g","keywords":"Sherry Hsu · Cool-Start Four-Pour, pour over coffee, Sherry Hsu","totalTime":"PT2M","recipeIngredient":["Coffee 20 g (Medium-coarse grind)","Water 286 g (75°C → 95°C)"],"recipeInstructions":[{"@type":"HowToStep","position":1,"name":"Pour 1: 72g (75°C) · Cool start","text":"Pour to 72g。Pour the first 72g in circles with 75°C water (~16s). The cool start is the soul of this recipe — it wets the bed gently, locks in floral-fruity aromatics, and keeps fines from over-extracting into as"},{"@type":"HowToStep","position":2,"name":"Pour 2: 72g (95°C) · Hot kettle","text":"Pour to 144g。Switch to the 95°C kettle . Pour 2: 72g (~16s), still in circles. After the cool start, the heat pulls out sweetness and tropical-fruit notes — aromatics first, sweetness second."},{"@type":"HowToStep","position":3,"name":"Pour 3: 72g (95°C) · Centre pour","text":"Pour to 216g。Stay at 95°C . Pour 3: 72g (~16s) — switch to a steady centre pour : keep the stream on the middle of the bed, no more circles, so the late extraction stays clean and focused."},{"@type":"HowToStep","position":4,"name":"Pour 4: 70g (95°C)","text":"Pour to 286g。95°C , final pour 70g (~16s), still on the centre. Then hands off — let it draw down."},{"@type":"HowToStep","position":5,"name":"Wait for drawdown","text":"Let it finish dripping — about 2:11 overall. 💡 The original 14g/200g finishes around 2:00 in a flat-bottom brewer. Too slow/astringent → grind half a step coarser; too fast/sour → half a step finer."}]},{"@type":"Recipe","@id":"https://vividmarketingtw-create.github.io/pourover-lab/en/#recipe-icedBrew","name":"Flash Brew Iced Pour-Over","description":"Brew with 40% ice + 60% hot water Effective brew ratio about 1:9 · Rapid chill","url":"https://vividmarketingtw-create.github.io/pourover-lab/en/#icedBrew","inLanguage":"en","image":"https://vividmarketingtw-create.github.io/pourover-lab/og-image.png","author":{"@type":"Person","name":"Universal technique"},"recipeCategory":"Pour-over coffee","recipeCuisine":"Coffee","recipeYield":"300 g","keywords":"Flash Brew Iced Pour-Over, pour over coffee, Universal technique","totalTime":"PT2M","recipeIngredient":["Coffee 20 g (Medium-fine to fine grind)","Water 300 g (96°C)"],"recipeInstructions":[{"@type":"HowToStep","position":1,"name":"Add ice (40% of total water)","text":"Pour to 120g。Put the ice in the server — it counts toward the total liquid, it is not an extra. ⚠️ Weigh the ice; never eyeball it — it is part of the recipe, and guessing throws the whole strength off. ⚠️ Ice goe"},{"@type":"HowToStep","position":2,"name":"Bloom pour","text":"Pour to 40g。Flash brew blooms hot (96°C) to maximize extraction from a smaller water volume — pour in 2x the dose (40g) and hold a fixed 30-second bloom (common practice is 30-45s), leaving about 22 seconds of de"},{"@type":"HowToStep","position":3,"name":"Main pour (only the remaining 60% hot water)","text":"Pour to 180g。96°C, pour steadily until the hot water is used up, about 47 seconds (about 3 g/s). Note: brew with the hot water only - the ice waits in the server"},{"@type":"HowToStep","position":4,"name":"Drain and chill","text":"The coffee drips onto the ice and chills rapidly (about 40 seconds); gently swirl the server when done"}]},{"@type":"Recipe","@id":"https://vividmarketingtw-create.github.io/pourover-lab/en/#recipe-kasuyaTen","name":"Tetsu Kasuya 2026 · Ten-Pour Method","description":"Super-coarse grind × high heat × ten small pours Syrupy sweetness · the 4:6 inventor's 10th-anniversary recipe 🔻 Published on the HARIO V60 NEO (a standard V60 works too)","url":"https://vividmarketingtw-create.github.io/pourover-lab/en/#kasuyaTen","inLanguage":"en","image":"https://vividmarketingtw-create.github.io/pourover-lab/og-image.png","author":{"@type":"Person","name":"Tetsu Kasuya"},"recipeCategory":"Pour-over coffee","recipeCuisine":"Coffee","recipeYield":"300 g","keywords":"Tetsu Kasuya 2026 · Ten-Pour Method, pour over coffee, Tetsu Kasuya","totalTime":"PT3M","recipeIngredient":["Coffee 20 g (Extra-coarse grind)","Water 300 g (95-96°C)"],"recipeInstructions":[{"@type":"HowToStep","position":1,"name":"Pour 1 (bloom)","text":"Pour to 30g。🔻 Gear: the original specifies the HARIO V60 NEO — its 72 ultra-fine upper ribs distribute each small pour evenly down the wall, which is exactly what ten little pours need, while nine converging rib"},{"@type":"HowToStep","position":2,"name":"Pour 2","text":"Pour to 60g。95-96°C, one pour every 15s, 30g each. Repeated small pours re-wet the bed, stacking sweetness and body (\"additive\" extraction)"},{"@type":"HowToStep","position":3,"name":"Pour 3","text":"Pour to 90g。95-96°C, steady small pour of 30g (~8s, about 3.8 g/s)"},{"@type":"HowToStep","position":4,"name":"Pour 4","text":"Pour to 120g。95-96°C, steady small pour of 30g (~8s, about 3.8 g/s)"},{"@type":"HowToStep","position":5,"name":"Pour 5","text":"Pour to 150g。95-96°C, steady small pour of 30g (~8s, about 3.8 g/s)"},{"@type":"HowToStep","position":6,"name":"Pour 6","text":"Pour to 180g。95-96°C, steady small pour of 30g (~8s, about 3.8 g/s)"},{"@type":"HowToStep","position":7,"name":"Pour 7","text":"Pour to 210g。95-96°C, steady small pour of 30g (~8s, about 3.8 g/s)"},{"@type":"HowToStep","position":8,"name":"Pour 8","text":"Pour to 240g。95-96°C, steady small pour of 30g (~8s, about 3.8 g/s)"},{"@type":"HowToStep","position":9,"name":"Pour 9","text":"Pour to 270g。95-96°C, steady small pour of 30g (~8s, about 3.8 g/s)"},{"@type":"HowToStep","position":10,"name":"Pour 10 (final)","text":"Pour to 300g。Final pour. Then let it draw down — the coarse bed drains fast; total time ~2:53"},{"@type":"HowToStep","position":11,"name":"Wait for drawdown","text":"Let it drain fully. If total time runs long, grind even coarser; brewed right, this cup is thick and sweet with very little bitterness"}]},{"@type":"Recipe","@id":"https://vividmarketingtw-create.github.io/pourover-lab/en/#recipe-woelfl","name":"Martin Wölfl · Fast Four-Pour","description":"Four pours of 60/60/50/100g at 0:00/0:40/1:20/2:00 2024 WBrC Champion · fast cone + fast paper · ultra-clean","url":"https://vividmarketingtw-create.github.io/pourover-lab/en/#woelfl","inLanguage":"en","image":"https://vividmarketingtw-create.github.io/pourover-lab/og-image.png","author":{"@type":"Person","name":"Martin Wölfl"},"recipeCategory":"Pour-over coffee","recipeCuisine":"Coffee","recipeYield":"318 g","keywords":"Martin Wölfl · Fast Four-Pour, pour over coffee, Martin Wölfl","totalTime":"PT3M","recipeIngredient":["Coffee 20 g (Medium-fine grind)","Water 318 g (93°C)"],"recipeInstructions":[{"@type":"HowToStep","position":1,"name":"Pour 1 (bloom)","text":"Pour to 71g。93°C — pour 71g (22% of the total, about 3.5x the dose, more than most recipes) and swirl gently to wet all the grounds. Wait until 0:40 for pour 2 — the four pours start at a fixed 0:00 / 0:40 / 1:20"},{"@type":"HowToStep","position":2,"name":"Pour 2","text":"Pour to 142g。93°C, about 14s to pour 71g in small steady circles at the centre (about 5.1 g/s). Then wait until 1:20 for the next pour"},{"@type":"HowToStep","position":3,"name":"Pour 3","text":"Pour to 201g。93°C, about 12s to pour 59g, same technique. Then wait until 2:00 for the last pour"},{"@type":"HowToStep","position":4,"name":"Pour 4 (the big one)","text":"Pour to 318g。The biggest pour: 117g (about 23s, 37.0% of the total). Raise the water level to stir the bed — this is the only really assertive agitation in the whole method. Once it is in, do not touch it again."},{"@type":"HowToStep","position":5,"name":"Wait for drawdown","text":"Fast paper drains quickly, so this finishes soon after the last pour — the on-screen target is about 2:58 (V60 baseline). 💡 The original, on an Orea V4 Fast with Sibarist FAST paper, is fully drained"}]},{"@type":"Recipe","@id":"https://vividmarketingtw-create.github.io/pourover-lab/en/#recipe-medina","name":"Carlos Medina · Equal Five-Pour","description":"Five equal pours × gentle 91°C 2023 WBrC Champion · round and balanced","url":"https://vividmarketingtw-create.github.io/pourover-lab/en/#medina","inLanguage":"en","image":"https://vividmarketingtw-create.github.io/pourover-lab/og-image.png","author":{"@type":"Person","name":"Carlos Medina"},"recipeCategory":"Pour-over coffee","recipeCuisine":"Coffee","recipeYield":"320 g","keywords":"Carlos Medina · Equal Five-Pour, pour over coffee, Carlos Medina","totalTime":"PT3M","recipeIngredient":["Coffee 20 g (Medium grind)","Water 320 g (91°C)"],"recipeInstructions":[{"@type":"HowToStep","position":1,"name":"Pour 1 (bloom)","text":"Pour to 64g。91°C — pour 64g (~16s); the first pour doubles as the bloom. The pour path is a spiral outward and then back in (the original wording: spiraling out and in). Pours start at a fixed 0:00 / 0:30 / 1:00 "},{"@type":"HowToStep","position":2,"name":"Pour 2","text":"Pour to 128g。91°C, pour 64g every 30s (~16s each), again spiralling out and back in . Fixed rhythm, repeated motion — consistency is the whole technique"},{"@type":"HowToStep","position":3,"name":"Pour 3","text":"Pour to 192g。91°C, pour 64g every 30s (~16s each), again spiralling out and back in . Fixed rhythm, repeated motion — consistency is the whole technique"},{"@type":"HowToStep","position":4,"name":"Pour 4","text":"Pour to 256g。91°C, pour 64g every 30s (~16s each), again spiralling out and back in . Fixed rhythm, repeated motion — consistency is the whole technique"},{"@type":"HowToStep","position":5,"name":"Pour 5 (final)","text":"Pour to 320g。After the final 64g, a gentle single stir helps integrate flavors (Medina's touch). Let it draw down — total ~2:46"},{"@type":"HowToStep","position":6,"name":"Wait for drawdown","text":"Just let it finish. This method is famous for repeatability — a great daily driver"}]}]}</script>
-<style>.kconc-btn,.kbal-btn,.fcal-btn{background:transparent;border:1px solid rgba(192,138,92,0.35);color:var(--text-secondary);padding:4px 10px;border-radius:14px;font-size:0.85em;cursor:pointer;transition:all .2s;font-family:inherit}.kconc-btn.active,.kbal-btn.active,.fcal-btn.active{background:var(--copper);color:#0F0D0A;border-color:var(--copper);font-weight: 700}.kconc-btn:hover,.kbal-btn:hover,.fcal-btn:hover{border-color:var(--copper)}.qt-pour-verb,.pto-pour-verb{display:block;font-size:0.3em;letter-spacing:3px;opacity:0.6;margin-bottom:2px;font-family:'DM Sans',sans-serif;}.pto-water-cum.sec{font-size:1.05em;opacity:0.9}.qt-water-cum.sec{font-size:1.4em;opacity:0.9}.pto-water-cum.sec .pto-pour-total,.qt-water-cum.sec .qt-pour-total{font-size:0.8em;margin-left:3px}.pto-water-cum.sec .qt-water-cum-label,.qt-water-cum.sec .qt-water-cum-label{font-size:0.75em}</style>
+<style>.kconc-btn,.kbal-btn,.fcal-btn{background:transparent;border:1px solid rgba(192,138,92,0.35);color:var(--text-secondary);padding:4px 10px;border-radius:14px;font-size:0.85em;cursor:pointer;transition:all .2s;font-family:inherit}.kconc-btn.active,.kbal-btn.active,.fcal-btn.active{background:var(--copper);color:#0F0D0A;border-color:var(--copper);font-weight: 700}.kconc-btn:hover,.kbal-btn:hover,.fcal-btn:hover{border-color:var(--copper)}.qt-pour-verb,.pto-pour-verb{display:block;font-size:0.3em;letter-spacing:3px;opacity:0.6;margin-bottom:2px;font-family:'DM Sans',sans-serif;}.pto-water-cum.sec{font-size:1.05em;opacity:0.9}.qt-water-cum.sec{font-size:1.4em;opacity:0.9}.pto-water-cum.sec .pto-pour-total,.qt-water-cum.sec .qt-pour-total{font-size:0.8em;margin-left:3px}.pto-water-cum.sec .qt-water-cum-label,.qt-water-cum.sec .qt-water-cum-label{font-size:0.75em}/* ===== 計時面板高度保險（必須放在最後，才不會被前面的規則蓋掉） ===== */#quickTimerOverlay{max-height:86vh;max-height:min(86dvh,calc(100dvh - 120px));overflow-x:hidden;overflow-y:auto;-webkit-overflow-scrolling:touch;overscroll-behavior:contain;}/* 短螢幕（iPhone Safari 帶網址列時約 660-700px）：壓縮計時面板，   讓內容完整放得下，下方步驟卡也還看得到 */@media (max-height:780px){.qt-header{padding:max(8px,env(safe-area-inset-top,8px)) 16px 8px;}.qt-timer-section{padding:8px 12px 4px;}.qt-ring-wrap{width:150px;height:150px;margin-bottom:6px;}.qt-time{font-size:2.2em;letter-spacing:2px;}.qt-label{margin-top:2px;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden;}.qt-step-indicator{margin-bottom:2px;}.qt-current{margin-bottom:4px;min-height:0;}.qt-cur-title{font-size:0.9em;}.qt-water-pour{font-size:2.2em;}.qt-water-cum{font-size:2.2em;margin-top:2px;}.qt-water-cum.sec{font-size:1.15em;}.qt-ctrl-btn{width:46px;height:46px;font-size:1.1em;}.qt-controls{gap:16px;margin-bottom:2px;}}@media (max-height:640px){.qt-ring-wrap{width:124px;height:124px;}.qt-time{font-size:1.8em;}.qt-label{display:none;}.qt-water-pour{font-size:1.9em;}.qt-water-cum{font-size:1.9em;}}
+/* ==================================================================
+   版面修正總表（2026-08-23）
+   這一段刻意放在整份檔案最後面 —— CSS 同權重時「後面的贏」，
+   放在這裡才不會被前面的基礎規則或 @media (max-width:600px) 蓋掉。
+   以後要調版面，請一律加在這一段裡面，不要回頭改上面的規則。
+   ================================================================== */
+
+/* ---- 1. 沖前確認清單：以前內容比螢幕高就整個卡死（按鈕在畫面外、又不能捲） ---- */
+#preBrewChecklist{
+    align-items:flex-start;
+    padding:max(16px,env(safe-area-inset-top,0px)) 16px calc(24px + env(safe-area-inset-bottom,0px));
+    overflow-y:auto;-webkit-overflow-scrolling:touch;overscroll-behavior:contain;
+  }
+.pbc-card{margin:auto 0;}
+.pbc-item{cursor:pointer;}
+.pbc-item:not(.checked){opacity:0.55;}
+.pbc-item:not(.checked) .pbc-item-check{opacity:0.25;}
+.pbc-cancel-btn{
+    width:100%;margin-top:8px;padding:12px 16px;min-height:44px;
+    background:transparent;border:1px solid var(--border);border-radius:12px;
+    color:var(--text-secondary);font-family:inherit;font-size:0.85em;cursor:pointer;
+    letter-spacing:0.5px;transition:all 0.25s;
+  }
+.pbc-cancel-btn:hover{border-color:var(--copper);color:var(--copper-light);}
+@media (max-height:700px){
+  .pbc-header{margin-bottom:10px;}
+  .pbc-icon{font-size:1.4em;}
+  .pbc-items{gap:6px;margin-bottom:12px;}
+  .pbc-item{padding:8px 12px;}
+  .pbc-item-hint{display:none;}
+}
+
+/* ---- 2. 沖煮紀錄：研磨結論（把「滴完時間」與「風味」兩則相反的建議合成一句） ---- */
+.bco-advice-verdict{
+    margin-top:10px;padding:10px 12px;border-radius:10px;
+    background:rgba(184,125,86,0.10);border:1px solid rgba(184,125,86,0.35);
+    color:var(--text-primary);font-size:0.86em;line-height:1.65;
+  }
+
+/* ---- 3. 進階計時器：橫式短螢幕以前會把「✕ 結束」推到畫面外且推不回來 ---- */
+#proTimerOverlay{overflow-y:auto;overscroll-behavior:contain;-webkit-overflow-scrolling:touch;}
+@media (max-height:520px){
+  .pto-header{padding:6px 12px;}
+  .pto-info{display:none;}
+  .pto-main{gap:12px;}
+  .pto-ring-wrap{width:92px;height:92px;}
+  .pto-cur-title{font-size:0.95em;margin-bottom:4px;}
+  .pto-steps-list{max-height:none;}
+  .pto-ctrl-btn{width:44px;height:44px;font-size:1em;}
+}
+/* v22 想把計時字級從 2.4em 拉到 3.1em，但被後面的規則蓋掉了，這裡補回來。
+   注意順序：無條件的值一定要寫在各種 @media 之前，否則又會把矮螢幕的設定蓋掉。*/
+.pto-time{font-size:3.1em;}
+@media (max-width:600px){.pto-time{font-size:2.6em;}}
+@media (max-height:520px){.pto-time{font-size:1.6em;}}
+
+/* ---- 4. 兩個 modal：橫式下按鈕會落在畫面外且不能捲 ---- */
+#brewConfirmModal .bcm-card,#brewNotesModal .bnm-card{margin:auto 0;}
+#brewNotesModal .bnm-card{max-height:min(80vh,80dvh);}
+/* 橫式短螢幕再壓縮一次，讓「開始沖煮 / 取消」不用捲就看得到 */
+@media (max-height:520px){
+  #brewConfirmModal .bcm-card{padding:14px 16px 16px;}
+  #brewConfirmModal .bcm-card > div:first-child{font-size:1.4em;margin-bottom:4px;}
+  #brewConfirmModal .bcm-grid{gap:6px;margin:8px 0;}
+  #brewConfirmModal .bcm-cell{padding:6px 4px;}
+  #brewConfirmModal .bcm-val{font-size:0.95em;}
+  #brewConfirmModal .bcm-btn-primary,#brewConfirmModal .bcm-btn-secondary{padding:10px 16px;min-height:44px;}
+}
+
+/* ---- 5. 口味按鈕：英文版以前被切成「Too s / Too b / Too w / Too s」無法分辨 ---- */
+.bco-taste-btns{display:flex;flex-wrap:wrap;gap:8px;}
+.bco-taste-btn{
+    flex:1 1 calc(50% - 8px);min-width:0;max-width:none;
+    white-space:normal;word-break:break-word;line-height:1.3;
+    padding:10px 8px;font-size:0.84em;min-height:44px;
+  }
+
+/* ---- 6. 桌機／平板：站名以前直接壓在分頁列上，英文版點分頁會跳去中文站 ---- */
+/* 分頁列在 ≥768px 是固定在「上方」的，左邊要讓出站名、右邊要讓出 EN / 主題鈕。
+   768–1100px 空間不夠，所以站名副標與主標先收起來、分頁左右內距也縮小。 */
+@media (min-width:768px){
+  .tab-nav{
+    padding:0 calc(112px + env(safe-area-inset-right,0px)) 0 calc(92px + env(safe-area-inset-left,0px));
+  }
+  .site-header-sub{display:none;}
+  .tab-btn{padding:0 14px;letter-spacing:1.2px;}
+}
+@media (min-width:768px) and (max-width:1100px){.site-header-title{display:none;}}
+@media (min-width:1101px){
+  .tab-nav{padding-left:calc(300px + env(safe-area-inset-left,0px));}
+  .tab-btn{padding:0 28px;letter-spacing:2px;}
+}
+.top-actions{right:max(12px,env(safe-area-inset-right,12px));}
+
+/* ---- 7. 有 Home Indicator 的 iPhone：分頁鈕以前被安全區壓成 29px ---- */
+/* 只針對「分頁列在下方」的手機版；≥768px 時分頁列在上方、固定 52px，不要動它 */
+@media (max-width:767px){
+  .tab-nav{height:auto;min-height:64px;}
+  .tab-btn{min-height:56px;min-width:0;}
+}
+@media (max-width:600px){
+  .tab-nav{min-height:58px;}
+  .tab-btn{min-height:52px;font-size:0.52em;gap:2px;padding:6px 4px;}
+}
+@media (max-width:360px){
+  .tab-btn{font-size:0.48em;padding:4px 2px;letter-spacing:0.5px;}
+}
+@media (max-width:767px){
+  body{padding-bottom:calc(92px + env(safe-area-inset-bottom,0px));}
+  .back-to-top{bottom:calc(80px + env(safe-area-inset-bottom,0px));}
+}
+/* 使用者把瀏覽器字級調大時，分頁標籤不再把最後一個分頁擠出畫面 */
+.tab-btn-sub{display:block;max-width:100%;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;}
+@media (max-width:600px){.tab-btn-sub{display:none;}}
+.segment-card,.segment-card > *{min-width:0;}
+.segment-card{overflow-wrap:anywhere;}
+
+/* ---- 8. 「螢幕可能會休眠」徽章以前蓋住沖煮中最關鍵的注水克數 ---- */
+#wakeBadge{z-index:400;}
+body.timer-open #wakeBadge{z-index:520;}
+.quick-steps-list,.pto-steps-list{padding-bottom:52px;}
+@media (max-height:460px){#wakeBadge{display:none;}}
+
+/* ---- 9. 觸控目標補到 44px（星星只有 12.6×17.6px、語系鈕被特異度打敗成 34px） ---- */
+.top-actions a.lang-switch-btn,.top-actions button#themeToggleBtn{min-width:44px;min-height:44px;}
+.bco-rating-stars{gap:2px;}
+.bco-star{min-width:36px;min-height:36px;padding:8px 4px;font-size:1.15em;}
+.fcal-btn,.kconc-btn,.kbal-btn,.sm-chip,.method-view-btn,.method-filter-pill,
+.lp-try-btn,.rest-skip-btn,.compare-add-btn,.bco-dd-btn{min-height:36px;padding-top:8px;padding-bottom:8px;}
+/* 滑桿：軌道維持原本的細線（改高度會變成一條胖方塊），只把「握把」放大 ——
+   拖曳時真正要碰到的是握把，16px 太小。 */
+.sim-range::-webkit-slider-thumb{width:22px;height:22px;}
+.sim-range::-moz-range-thumb{width:22px;height:22px;}
+
+/* ---- 10. 沖煮中的字級：以前操作提示只有 10.88px、時間終點只有 12px ----
+   順序很重要：無條件的值寫在前面，各種 @media 的覆寫寫在後面，
+   否則矮螢幕、窄螢幕的縮小設定會被無條件的值蓋掉。*/
+.qt-label{font-size:0.92em;line-height:1.5;max-width:200px;margin-left:auto;margin-right:auto;}
+.qt-step-indicator{font-size:0.72em;}
+.qt-next{font-size:0.95em;}
+.qt-wait-remaining{font-size:0.95em;opacity:0.9;}
+@media (max-width:600px){
+  .qt-label{font-size:0.86em;max-width:180px;}
+  .qt-next{font-size:0.9em;}
+}
+@media (max-height:780px){
+  .qt-label{font-size:0.8em;max-width:180px;}
+  .qt-step-indicator{font-size:0.62em;}
+}
+/* 主要控制是「暫停」，不是音效 —— 把填色從音效鈕移到暫停鈕 */
+#qtPause,#ptoPause{background:rgba(192,138,92,0.14);border-color:var(--copper);color:var(--copper-light);}
+/* 暫停狀態以前幾乎看不出來 */
+.qt-paused .qt-ring-inner::after,.pto-paused .pto-ring-inner::after{
+    content:'';display:block;height:2px;margin:6px auto 0;width:46px;
+    background:var(--copper);opacity:0.85;
+  }
+.qt-paused #qtLabel,.pto-paused #ptoTimeLabel{
+    font-size:1.05em;font-weight:700;color:var(--copper);letter-spacing:1px;opacity:1;
+  }
+.qt-paused #quickTimerOverlay,#quickTimerOverlay.qt-paused{box-shadow:inset 0 0 0 2px rgba(192,138,92,0.45),0 6px 40px rgba(0,0,0,0.5);}
+
+/* ---- 11. 結果格：英文版大粉量時右欄以前被切掉 ---- */
+@media (max-width:600px){
+  .quick-results-grid{grid-template-columns:repeat(2,minmax(0,1fr));gap:8px;}
+  .quick-result-item{min-width:0;}
+  .quick-result-value{font-size:1.2em;letter-spacing:0;overflow-wrap:anywhere;}
+  .quick-result-label{overflow-wrap:anywhere;}
+}
+
+/* ---- 12. 自由計時：橫式時標題以前直接切過計時環，圈記清單只剩 16px ---- */
+#freeTimerOverlay{justify-content:flex-start;padding-top:74px;overflow-y:auto;overscroll-behavior:contain;}
+@media (max-height:520px){
+  .ft-ring-wrap{width:130px;height:130px;}
+  .ft-time{font-size:1.8em;}
+  .ft-lap-list{max-height:80px;}
+  .ft-ctrl-btn{width:44px;height:44px;}
+}
+
+/* ---- 13. 首頁 hero：@media(max-width:600px) 的 45dvh 以前被無條件的 50dvh 蓋掉 ---- */
+@media (max-width:600px){.hero{min-height:45vh;min-height:45dvh;}}
+
+/* ---- 14. 沖煮紀錄視窗在淺色主題下「深字配深底」看不見 ----
+   #quickBrewNoteModal 沿用了 .bco-card 的結構，但 .bco-card 的樣式只寫在
+   `#brewCompleteOverlay .bco-card` 底下，所以這個視窗的卡片完全沒有底色。
+   深色主題剛好看得到（深底＋淺字），淺色主題就變成深字配深底，
+   「這次喝起來如何？」等標題實際上是隱形的。 */
+#quickBrewNoteModal .bco-card{
+    background:var(--surface-1);
+    border:1px solid rgba(192,138,92,0.25);
+    border-radius:20px;
+    padding:24px 20px;
+    max-width:420px;width:100%;
+    text-align:center;margin:auto 0;
+  }
+html[data-theme="light"] #quickBrewNoteModal,
+html[data-theme="light"] #brewCompleteOverlay,
+html[data-theme="light"] #brewNotesModal,
+html[data-theme="light"] #brewConfirmModal,
+html[data-theme="light"] #preBrewChecklist{
+    background:rgba(226,214,196,0.90) !important;
+  }
+
+/* ---- 15. 計時環內的文字被壓成兩三個字就換行 ----
+   .qt-ring-inner 是絕對定位 + left:50%，寬度會被「從中線到右緣」限制住，
+   實際只有 75px 左右，所以操作提示會被截斷成「注入悶蒸水…」。 */
+.qt-ring-inner,.pto-ring-inner,.ft-ring-inner{width:min(86vw,240px);}
+
+/* ---- 16. 主要控制是「暫停」，音效鈕不該是畫面上最顯眼的按鈕 ---- */
+.sfx-toggle-btn{background:transparent !important;border-color:rgba(192,138,92,0.22) !important;}
+
+/* ---- 17. 滴完回饋的三顆鈕在窄螢幕（尤其英文版）會擠到出框 ---- */
+.bco-dd-btns{display:flex;flex-wrap:wrap;justify-content:center;gap:8px;}
+.bco-dd-btn{flex:0 1 auto;min-width:0;white-space:normal;line-height:1.3;}
+
+/* ---- 18. iPhone SE 這類很矮的螢幕：計時面板再壓一次，讓控制鈕不用捲就按得到 ---- */
+@media (max-height:640px){
+  .qt-cur-title{font-size:0.85em;}
+  .qt-flow-hint{display:none;}
+  .qt-water-cum.sec{font-size:1em;}
+  .qt-next{font-size:0.8em;}
+  .qt-wait-remaining{font-size:0.85em;}
+  .qt-wait-wrap{margin-top:4px;}
+  .qt-controls{margin-bottom:0;gap:14px;}
+  .qt-header{padding:max(6px,env(safe-area-inset-top,6px)) 12px 6px;}
+}
+
+/* ---- 19. 橫式手機（高度 ≤480px）：改成「環在左、數字在右」的橫向排法 ----
+   直式的上下堆疊在 390px 高的橫式螢幕塞不下，控制鈕會掉出畫面。 */
+@media (max-height:480px) and (orientation:landscape){
+  #quickTimerOverlay{max-height:100vh;max-height:100dvh;}
+  .qt-header{padding:max(4px,env(safe-area-inset-top,4px)) 12px 4px;}
+  .qt-timer-section{flex-direction:row;flex-wrap:wrap;align-items:center;justify-content:center;gap:16px;padding:6px 12px;}
+  .qt-ring-wrap{width:104px;height:104px;margin-bottom:0;flex:0 0 auto;}
+  .qt-ring-inner{width:96px;}
+  .qt-time{font-size:1.5em;letter-spacing:1px;}
+  .qt-label{display:none;}
+  .qt-step-indicator{font-size:0.55em;margin-bottom:0;}
+  .qt-current{flex:1 1 240px;min-width:0;margin-bottom:0;}
+  .qt-cur-title{font-size:0.82em;}
+  .qt-water-pour{font-size:1.7em;}
+  .qt-water-cum{font-size:1.7em;}
+  .qt-water-cum.sec{font-size:0.95em;}
+  .qt-flow-hint{display:none;}
+  .qt-next{font-size:0.78em;}
+  .qt-wait-remaining{font-size:0.8em;}
+  .qt-controls{flex:0 0 auto;gap:12px;margin-bottom:0;}
+  .qt-ctrl-btn{width:42px;height:42px;font-size:1em;}
+}
+</style>
 </head>
 <body>
 <a class="po-skip-link" href="#poMain">Skip to main content</a>
@@ -4318,8 +4556,13 @@ function applyTheme(t){document.documentElement.setAttribute('data-theme',t);con
 function toggleTheme(){const cur=document.documentElement.getAttribute('data-theme')==='light'?'dark':'light';try{localStorage.setItem('poTheme',cur)}catch(e){}applyTheme(cur);}
 // ===== Brew sound cues (Web Audio; iOS has no vibration support) =====
 let _sfxCtx=null,_sfxOn=(function(){try{return localStorage.getItem('poSoundOn')!=='0'}catch(e){return true}})(),_lastTickAt=-1;
-function _sfxInit(){if(!_sfxCtx){try{_sfxCtx=new (window.AudioContext||window.webkitAudioContext)()}catch(e){}}if(_sfxCtx&&_sfxCtx.state==='suspended')_sfxCtx.resume().catch(()=>{});}
-document.addEventListener('pointerdown',_sfxInit,{capture:true});
+function _sfxInit(){if(!_sfxOn)return;if(!_sfxCtx){try{_sfxCtx=new (window.AudioContext||window.webkitAudioContext)()}catch(e){}}if(_sfxCtx&&_sfxCtx.state==='suspended')_sfxCtx.resume().catch(()=>{});}
+/* 只在真的要出聲的手勢上解鎖音訊（開始沖煮／自由計時／音效開關），
+   以前是綁在整頁的 pointerdown 上，碰一下網頁就接管 iOS 的音訊 session。*/
+function _sfxUnlockOn(sel){document.addEventListener('pointerdown',e=>{if(e.target&&e.target.closest&&e.target.closest(sel))_sfxInit()},{capture:true});}
+_sfxUnlockOn('.sfx-toggle-btn,#quickStartTimerBtn,#quickFloatTrigger,#pbcStartBtn,#brewConfirmYes,#startTimerBtn,.btn-start-timer,.ft-ctrl-btn,.qt-ctrl-btn,.pto-ctrl-btn');
+/* 切到背景就把音訊停掉，回前景再喚醒 */
+document.addEventListener('visibilitychange',()=>{try{if(!_sfxCtx)return;if(document.hidden){if(_sfxCtx.state==='running')_sfxCtx.suspend()}else if(_sfxOn&&_sfxCtx.state==='suspended'&&_activeTimer)_sfxCtx.resume().catch(()=>{})}catch(e){}});
 function _beep(freq,dur,delay,vol){if(!_sfxCtx)return;const t=_sfxCtx.currentTime+(delay||0);const o=_sfxCtx.createOscillator(),g=_sfxCtx.createGain();o.type='sine';o.frequency.value=freq;g.gain.setValueAtTime(0.0001,t);g.gain.exponentialRampToValueAtTime(vol||0.22,t+0.012);g.gain.exponentialRampToValueAtTime(0.0001,t+dur);o.connect(g);g.connect(_sfxCtx.destination);o.start(t);o.stop(t+dur+0.05);}
 function _sfx(kind){if(!_sfxOn)return;_sfxInit();if(!_sfxCtx)return;if(kind==='step'){_beep(880,0.12,0,0.24);_beep(1318,0.2,0.14,0.22)}else if(kind==='tick'){_beep(1046,0.055,0,0.13)}else if(kind==='done'){_beep(659,0.16,0,0.24);_beep(880,0.16,0.19,0.24);_beep(1046,0.4,0.38,0.24)}else if(kind==='lap'){_beep(1174,0.07,0,0.18)}}
 function _sfxSyncBtns(){document.querySelectorAll('.sfx-toggle-btn').forEach(b=>{b.textContent=_sfxOn?'🔊':'🔇';b.classList.toggle('sfx-on',_sfxOn);b.classList.toggle('sfx-off',!_sfxOn);b.setAttribute('aria-pressed',_sfxOn?'true':'false');b.setAttribute('aria-label',_sfxOn?'Mute sound':'Enable sound');b.setAttribute('title',_sfxOn?'Sound: on (tap to mute)':'Sound: off (tap to enable)')})}
@@ -4413,7 +4656,22 @@ function _offerRestore(){let s=null;try{s=JSON.parse(sessionStorage.getItem('poA
   _brewStateClear();
   const mm=Math.floor(s.sec/60),ss=('0'+(s.sec%60)).slice(-2);
   _confirmDialog({title:'Unfinished brew',desc:'Your {m} brew was interrupted at {t}. Resume it?'.replace('{m}',String(BREW_METHODS[s.k].title||'').split(' · ')[0]).replace('{t}',mm+':'+ss),
-    actions:[{label:'Resume',primary:true,fn:()=>{try{selectMethod(s.k,null,true);window._brewConfirmed=true;startTimer();timerSeconds=s.sec;_clkSet(_ptoClk,s.sec);}catch(e){_logErr('restore',e)}}},{label:'Start over'}]})}
+    actions:[{label:'Resume',primary:true,fn:()=>{try{
+      if(s.mode==='quick'){
+        // 快速沖煮的中斷復原（以前只有進階工具會存檔，快速沖煮重新整理就整杯不見）
+        currentQuickMethod=s.k;
+        const _qd=document.getElementById('quickDoseInput');if(_qd&&s.d)_qd.value=s.d;
+        window.location.hash='#quick';
+        setTimeout(()=>{
+          document.querySelectorAll('.quick-method-card').forEach(c=>c.classList.toggle('active',c.dataset.method===s.k));
+          try{updateQuickBrewResults()}catch(e){}
+          _doStartQuickTimer();
+          setTimeout(()=>{if(window._qtRestoreTo)window._qtRestoreTo(s.sec)},60);
+        },220);
+        return;
+      }
+      selectMethod(s.k,null,true);window._brewConfirmed=true;startTimer();timerSeconds=s.sec;_clkSet(_ptoClk,s.sec);
+    }catch(e){_logErr('restore',e)}}},{label:'Start over'}]})}
 // 粉量：把不合理的輸入夾回可用範圍，避免負水量 / Infinity / NaN
 function _restDays(fallback){const el=document.getElementById('restDays');const n=parseInt(el&&el.value,10);return Number.isFinite(n)?Math.min(60,Math.max(0,n)):(fallback===undefined?7:fallback)}
 function _clampDose(v){const n=parseFloat(v);if(!isFinite(n)||n<=0)return 20;return Math.min(100,Math.max(5,n))}
@@ -4626,7 +4884,7 @@ function startProTimerOverlay(m,dose,totalWater,ratio){
   const existing=document.getElementById('proTimerOverlay');if(existing)existing.remove();
   const stepTotal=currentAllStepsData.length||currentStepDurations.length;
   const ov=document.createElement('div');ov.id='proTimerOverlay';
-  ov.style.cssText='position:fixed;top:0;left:0;right:0;bottom:0;background:var(--surface);z-index:2000;display:flex;flex-direction:column;overflow:hidden;animation:fadeIn 0.25s ease;padding-left:env(safe-area-inset-left,0);padding-right:env(safe-area-inset-right,0);';
+  ov.style.cssText='position:fixed;top:0;left:0;right:0;bottom:0;background:var(--surface);z-index:2000;display:flex;flex-direction:column;overflow-x:hidden;overflow-y:auto;overscroll-behavior:contain;animation:fadeIn 0.25s ease;padding-left:env(safe-area-inset-left,0);padding-right:env(safe-area-inset-right,0);';
   ov.innerHTML=`
     <div class="pto-header">
       <button class="pto-exit" id="ptoExit">✕ Exit</button>
@@ -4783,7 +5041,7 @@ function showBrewConfirmModal(m,d,tw,r){const existing=document.getElementById('
   const gl=GRIND_LEVELS[selectedMethod]||'Varies';
   const modal=document.createElement('div');
   modal.id='brewConfirmModal';
-  modal.style.cssText='position:fixed;top:0;left:0;right:0;bottom:0;background:rgba(15,13,10,0.9);backdrop-filter:blur(12px);z-index:2000;display:flex;align-items:center;justify-content:center;animation:fadeIn 0.2s ease;';
+  modal.style.cssText='position:fixed;top:0;left:0;right:0;bottom:0;background:rgba(15,13,10,0.9);backdrop-filter:blur(12px);z-index:2000;display:flex;align-items:flex-start;justify-content:center;padding:max(16px,env(safe-area-inset-top,0px)) 16px calc(24px + env(safe-area-inset-bottom,0px));overflow-y:auto;overscroll-behavior:contain;animation:fadeIn 0.2s ease;';
   modal.innerHTML=`<div class="bcm-card"><div style="font-size:2.2em;margin-bottom:10px;">☕</div><div style="font-size:1.05em;font-weight: 700;color:var(--copper-light);margin-bottom:2px;">${m.title.split(' · ')[0]}</div><div style="font-size:0.78em;color:var(--text-secondary);margin-bottom:4px;">Confirm the recipe below to start brewing</div><div class="bcm-grid"><div class="bcm-cell"><div class="bcm-val">${d}g</div><div class="bcm-lbl">Dose</div></div><div class="bcm-cell"><div class="bcm-val">${tw}g</div><div class="bcm-lbl">Water 1:${r}</div></div><div class="bcm-cell"><div class="bcm-val" style="font-size:1em;">${_dispTemp(m)}</div><div class="bcm-lbl">Water temp</div></div><div class="bcm-cell"><div class="bcm-val" style="font-size:1em;">${gl}</div><div class="bcm-lbl">Grind</div></div></div>${_fbBlock(selectedMethod)}<button class="bcm-btn-primary" id="brewConfirmYes">Start Brewing ▶</button><button class="bcm-btn-secondary" id="brewConfirmNo">Cancel</button></div>`;
   document.body.appendChild(modal);
   document.getElementById('brewConfirmYes').addEventListener('click',()=>{_fbMark(selectedMethod);modal.remove();window._brewConfirmed=true;startTimer();});
@@ -5007,14 +5265,15 @@ function showQuickBrewNoteModal(method,dose,water,seconds){
           <button class="bco-taste-btn bco-taste-perfect" data-taste="perfect">✨ Just right</button>
         </div>
         <div class="bco-taste-advice" id="qbnTasteAdvice" style="display:none;"></div>
+        <div class="bco-advice-verdict" id="qbnVerdict" style="display:none;"></div>
       </div>
-      <button class="bco-btn-note" id="qbnNoteToggle">✎ Add Notes</button>
+      <button class="bco-btn-note" id="qbnNoteToggle">✎ Add Notes (optional)</button>
       <div class="bco-note-section" id="qbnNoteSection"><div class="bco-note-inner">
         <div class="bco-rating-section"><div class="bco-rating-title">Taste Ratings <span style="font-size:0.8em;opacity:0.55;font-weight:400;">(optional)</span></div>${qbnRatingRowsHtml}</div>
         <input type="text" class="bco-textarea bco-grind" id="qbnGrind" placeholder="Grind setting (e.g. C24 / Feima 4)"><textarea class="bco-textarea" id="qbnInput" placeholder="e.g. bright acidity, floral, sweet finish..."></textarea>
-        <button class="bco-btn-primary" id="qbnSave">Save Log</button>
-        <button class="bco-btn-ghost" id="qbnViewAll" style="border:1px solid rgba(192,138,92,0.2);margin-bottom:6px;">🗒 View All Logs</button>
       </div></div>
+      <button class="bco-btn-primary" id="qbnSave">Save Log</button>
+      <button class="bco-btn-ghost" id="qbnViewAll" style="border:1px solid rgba(192,138,92,0.2);margin-bottom:6px;">🗒 View All Logs</button>
       <button class="bco-btn-ghost" id="qbnSkip" style="opacity:0.5;">Skip without saving</button>
     </div>
   </div>`;
@@ -5022,12 +5281,30 @@ function showQuickBrewNoteModal(method,dose,water,seconds){
   try{const _lg=localStorage.getItem('poLastGrind');if(_lg)document.getElementById('qbnGrind').value=_lg}catch(e){}
   _wireDrawdown(modal,method);
   // Taste buttons
+  let qbnTaste='';
   const tasteAdviceEl=document.getElementById('qbnTasteAdvice');
+  // 「滴完時間」與「風味」以前會各自給一句相反的研磨指令（一個叫你調粗、一個叫你調細）。
+  // 這裡把兩者合成單一結論：研磨一律由滴完時間決定，風味只負責水溫與粉水比。
+  const _qbnDd=()=>{const b=modal.querySelector('.bco-dd-btn.active[data-dd]');return b?b.dataset.dd:''};
+  function _qbnRenderVerdict(){
+    const el=document.getElementById('qbnVerdict');if(!el)return;
+    const dd=_qbnDd();if(!dd||!qbnTaste){el.style.display='none';return}
+    const G={fast:'grind 1-2 clicks finer',slow:'grind 1-2 clicks coarser',ontime:'keep the same setting'};
+    const gDir={fast:'fine',slow:'coarse',ontime:''}[dd]||'';
+    const tDir={sour:'fine',bitter:'coarse'}[qbnTaste]||'';
+    const tLabel={sour:'finer',bitter:'coarser'}[qbnTaste]||'';
+    let msg;
+    if(dd==='ontime')msg='⚑ Verdict: your grind is on target (drained on time). Leave the setting alone and fine-tune flavor with water temp and ratio only.';
+    else if(tDir&&gDir&&tDir!==gDir)msg='⚑ Verdict: go with the drawdown timing — {g} for this brew. Once the grind is right, use water temp and ratio to fine-tune sour/bitter. (Skip the "{t}" suggestion from the flavor side this time — doing both cancels them out.)'.replace('{g}',G[dd]).replace('{t}',tLabel);
+    else msg='⚑ Verdict: both agree — {g} for this brew.'.replace('{g}',G[dd]);
+    el.textContent=msg;el.style.display='block';
+  }
+  modal.addEventListener('click',e=>{const b=e.target.closest&&e.target.closest('.bco-dd-btn[data-dd]');if(b)setTimeout(_qbnRenderVerdict,0)});
   modal.querySelectorAll('.bco-taste-btn').forEach(btn=>{
     btn.addEventListener('click',()=>{
       modal.querySelectorAll('.bco-taste-btn').forEach(b=>b.classList.remove('active'));
       btn.classList.add('active');
-      const taste=btn.dataset.taste;
+      const taste=btn.dataset.taste;qbnTaste=taste;
       if(typeof _beanMemSave==='function')_beanMemSave(method,{taste:taste,grind:_lastGrind()});
       const adviceMap=TASTE_ADVICE[taste]||{};
       const advice=adviceMap[method]||adviceMap['default']||'';
@@ -5036,7 +5313,7 @@ function showQuickBrewNoteModal(method,dose,water,seconds){
       } else {
         tasteAdviceEl.innerHTML=`<div class="bco-taste-advice-label">Adjustments for next time</div><div class="bco-taste-advice-text">${advice}</div>`;
       }
-      tasteAdviceEl.style.display='block';
+      tasteAdviceEl.style.display='block';_qbnRenderVerdict();
       setTimeout(()=>tasteAdviceEl.scrollIntoView({behavior:_scrollBehavior(),block:'nearest'}),100);
     });
   });
@@ -5062,10 +5339,13 @@ function showQuickBrewNoteModal(method,dose,water,seconds){
       });
     });
   });
-  function saveQbn(){const note=document.getElementById('qbnInput')?.value?.trim();const grind=document.getElementById('qbnGrind')?.value?.trim()||'';if(grind){try{localStorage.setItem('poLastGrind',grind)}catch(e){}}try{const notes=_notesLoad();notes.unshift({v:BREW_NOTES_VERSION,time:new Date().toISOString(),method:method||'',dose:dose,water:water,duration:seconds,note:note||'',grind,ratings:{...qbnRatings}});if(notes.length>50)notes.pop();_notesSave(notes)}catch(e){}}
+  function saveQbn(){const note=document.getElementById('qbnInput')?.value?.trim();const grind=document.getElementById('qbnGrind')?.value?.trim()||'';if(grind){try{localStorage.setItem('poLastGrind',grind)}catch(e){}}try{const notes=_notesLoad();notes.unshift({v:BREW_NOTES_VERSION,time:new Date().toISOString(),method:method||'',dose:dose,water:water,duration:seconds,note:note||'',grind,taste:qbnTaste||'',dd:_qbnDd(),ratings:{...qbnRatings}});if(notes.length>50)notes.pop();_notesSave(notes)}catch(e){}}
   document.getElementById('qbnSave').addEventListener('click',()=>{saveQbn();modal.remove();showCompareToast('Saved to brew log ✓');});
   document.getElementById('qbnViewAll').addEventListener('click',()=>{saveQbn();modal.remove();setTimeout(()=>showBrewNotes(),100);});
-  document.getElementById('qbnSkip').addEventListener('click',()=>modal.remove());
+  // 略過也要保住回饋 —— 使用者已經回答了「滴完了嗎」與「風味如何」，不該直接丟掉
+  document.getElementById('qbnSkip').addEventListener('click',()=>{
+    if(qbnTaste||_qbnDd()){saveQbn();modal.remove();showCompareToast('Feedback saved ✓');return}
+    modal.remove();});
   modal.addEventListener('click',e=>{if(e.target===modal)modal.remove();});
 }
 function showPreBrewChecklist(onConfirm){
@@ -5082,9 +5362,21 @@ function showPreBrewChecklist(onConfirm){
     <div class="pbc-header"><span class="pbc-icon">☑️</span><div class="pbc-title">Pre-Brew Checklist</div><div class="pbc-sub">${m?m.title.split(' · ')[0]:'Pour-Over Coffee'} · Confirm ready, then start</div></div>
     ${_fbBlock(currentQuickMethod)}<div class="pbc-items">${items.map((it,i)=>`<div class="pbc-item checked" data-idx="${i}"><span class="pbc-item-icon">${it.icon}</span><div class="pbc-item-text"><div class="pbc-item-label">${it.label}</div><div class="pbc-item-hint">${it.hint}</div></div><span class="pbc-item-check">✓</span></div>`).join('')}</div>
     <button class="pbc-start-btn ready" id="pbcStartBtn">Confirm all, start timer →</button>
+    <button class="pbc-cancel-btn" id="pbcCancelBtn">Cancel, not yet</button>
   </div>`;
   document.body.appendChild(el);
-  document.getElementById('pbcStartBtn').addEventListener('click',()=>{_fbMark(currentQuickMethod);el.remove();onConfirm();});
+  // 逃生路徑：取消鈕 / ESC / 點背景都能關掉（以前只有「開始」一條路，等於被鎖住）
+  function _pbcEsc(e){if(e.key==='Escape'){e.preventDefault();_pbcClose()}}
+  function _pbcClose(){el.remove();document.removeEventListener('keydown',_pbcEsc)}
+  document.addEventListener('keydown',_pbcEsc);
+  el.addEventListener('click',e=>{if(e.target===el)_pbcClose()});
+  // 四個項目改成真的可以勾／取消勾
+  el.querySelectorAll('.pbc-item').forEach(it=>{it.setAttribute('role','checkbox');it.setAttribute('tabindex','0');it.setAttribute('aria-checked','true');
+    const tog=()=>{const on=it.classList.toggle('checked');it.setAttribute('aria-checked',on?'true':'false')};
+    it.addEventListener('click',tog);
+    it.addEventListener('keydown',e=>{if(e.key==='Enter'||e.key===' '){e.preventDefault();tog()}});});
+  document.getElementById('pbcCancelBtn').addEventListener('click',_pbcClose);
+  document.getElementById('pbcStartBtn').addEventListener('click',()=>{_fbMark(currentQuickMethod);_pbcClose();onConfirm();});
 }
 function startQuickTimer(){
   const method=BREW_METHODS[currentQuickMethod];
@@ -5141,6 +5433,7 @@ function _doStartQuickTimer(){
       if(prevActiveIdx>=0)_sfx('step');
       const cur2=document.getElementById('qtCurrent');
       if(cur2&&prevActiveIdx>=0){cur2.classList.add('step-flash');setTimeout(()=>cur2.classList.remove('step-flash'),550);}
+      {const _a=allSteps[activeIdx];if(_a)_announce('Step {n}: '.replace('{n}',activeIdx+1)+_a.title+(_a.water>0?' — pour to '+_a.cum+'g':''));}
       prevActiveIdx=activeIdx;
     }
     currentActiveIdx=activeIdx;
@@ -5168,8 +5461,10 @@ function _doStartQuickTimer(){
       :step.cum>0
         ?'<div class="qt-cur-water"><span class="qt-water-cum"><span class="qt-water-cum-label">Total</span>'+step.cum+'g <span class="qt-pour-total">/ '+water+'g</span></span></div>'
         :'';
-    const waitHtml=isWaitStep&&stepDur>0
-      ?'<div class="qt-wait-wrap"><div class="qt-wait-bar-track"><div class="qt-wait-bar-fill" style="width:'+Math.min(100,elapsed/stepDur*100)+'%"></div></div><div class="qt-wait-remaining">Time left: '+remaining+'s</div></div>'
+    // Pour steps get a countdown too — previously only wait steps did, so you
+    // could not see how many seconds were left while actually pouring
+    const waitHtml=stepDur>0&&!isActionStep
+      ?'<div class="qt-wait-wrap"><div class="qt-wait-bar-track"><div class="qt-wait-bar-fill" style="width:'+Math.min(100,elapsed/stepDur*100)+'%"></div></div><div class="qt-wait-remaining">'+(isWaitStep?'Time left: ':'This pour: ')+remaining+'s</div></div>'
       :'';
     const actionHtml=isActionStep?'<button class="qt-action-done" id="qtActionDone">✓ Done, continue</button>':'';
     const _qtWintonTemp=(currentQuickMethod==='winton'&&activeIdx>=3);const _qtTempBadge=_qtWintonTemp?'<div class="winton-temp-badge" style="margin-top:4px;">🌡 Cool to 88°C</div>':'';
@@ -5179,7 +5474,7 @@ function _doStartQuickTimer(){
       completed=true;clearInterval(qtInterval);running=false;_sfx('done');
       document.getElementById('quickTimerDot')?.classList.remove('active');
       if(navigator.vibrate&&!_reduceMotion())navigator.vibrate([200,100,200,100,300]);
-      document.getElementById('qtLabel').textContent='Brew complete!';
+      document.getElementById('qtLabel').textContent='Brew complete!';_announce('Brew complete');
       if(stepInd)stepInd.textContent='COMPLETE';
       document.getElementById('qtPause').textContent='✓';
       cur.innerHTML='<div class="qt-complete-msg"><div class="qt-complete-icon">☕</div><div class="qt-complete-title">Brew Complete</div><div class="qt-complete-sub">Remove the dripper and enjoy your coffee</div></div>';
@@ -5192,40 +5487,45 @@ function _doStartQuickTimer(){
       updateQtDisplay();
     }
   });
-  const _qtResync=()=>{const v=_clkSec(_qtClk);if(v!==seconds){seconds=v;updateQtDisplay()}};
+  window._qtRestoreTo=(sec)=>{seconds=sec;_clkSet(_qtClk,sec);updateQtDisplay()};
+  const _qtResync=()=>{const v=_clkSec(_qtClk);if(v!==seconds){seconds=v;updateQtDisplay()}if(!completed)_brewStateSave({k:currentQuickMethod,sec:seconds,at:Date.now(),mode:'quick',d:dose})};
   qtInterval=setInterval(()=>{if(running&&!completed)_qtResync()},250);
   document.body.classList.add('timer-open');
-  _registerTimer({interval:qtInterval,resync:_qtResync,esc:qtEscHandler,untrap:_trapFocus(overlay),requestExit:()=>document.getElementById('qtExit')&&document.getElementById('qtExit').click()});
+  _registerTimer({interval:qtInterval,resync:_qtResync,esc:qtEscHandler,untrap:_trapFocus(overlay),requestExit:()=>_qtRequestExit()});
   _pushTimerState();
-  document.getElementById('qtPause').addEventListener('click',()=>{
-    if(completed){
-      // Brew complete: tapping ✓ opens the flavor log
-      clearInterval(qtInterval);running=false;releaseWakeLock();
-      document.getElementById('quickTimerDot')?.classList.remove('active');
-      const fg=document.getElementById('quickFloatGroup');
-      if(fg)fg.classList.add('visible');
-      if(overlay&&overlay.parentNode)overlay.parentNode.removeChild(overlay);
-      document.removeEventListener('keydown',qtEscHandler);showQuickBrewNoteModal(currentQuickMethod,dose,water,seconds);
-      return;
-    }
-    running=!running;document.getElementById('qtPause').textContent=running?'⏸':'▶';overlay.classList.toggle('qt-paused',!running);const _qtLbl=document.getElementById('qtLabel');if(_qtLbl&&!completed)_qtLbl.textContent=running?'Timing':'Paused';
-  });
-  document.getElementById('qtReset').addEventListener('click',()=>{
-    seconds=0;running=true;completed=false;prevActiveIdx=-1;
-    _clkSet(_qtClk,0);
-    document.getElementById('qtPause').textContent='⏸';updateQtDisplay();
-  });
-  document.getElementById('qtExit').addEventListener('click',(e)=>{
-    e.preventDefault();e.stopPropagation();
-    clearInterval(qtInterval);running=false;releaseWakeLock();
+  // 結束 / 重置 / ESC 一律走這三支，確保 _teardownTimer() 一定被呼叫到
+  // （否則 body.timer-open 不會被移除，底部導覽列會永久消失）
+  const _qtCleanup=()=>{_teardownTimer();try{clearInterval(qtInterval)}catch(e){}running=false;releaseWakeLock();
     document.getElementById('quickTimerDot')?.classList.remove('active');
     const fgE=document.getElementById('quickFloatGroup');
     if(fgE&&currentQuickMethod)fgE.classList.add('visible');
     document.removeEventListener('keydown',qtEscHandler);
-    if(overlay&&overlay.parentNode)overlay.parentNode.removeChild(overlay);
+    if(overlay&&overlay.parentNode)overlay.parentNode.removeChild(overlay);};
+  const _qtDoExit=(save)=>{const _sec=seconds;_qtCleanup();_brewStateClear();
+    if(save)showQuickBrewNoteModal(currentQuickMethod,dose,water,_sec);};
+  const _qtRequestExit=()=>{
+    if(completed||seconds<=30){_qtDoExit(completed);return}
+    _confirmDialog({title:'End this brew?',desc:'You are {t} in — you can save the log first.'.replace('{t}',_fmtT(seconds)),
+      actions:[{label:'Save log and end',primary:true,fn:()=>_qtDoExit(true)},{label:'End without saving',danger:true,fn:()=>_qtDoExit(false)},{label:'Cancel'}]});};
+  const _qtDoReset=()=>{seconds=0;running=true;completed=false;prevActiveIdx=-1;
+    _clkSet(_qtClk,0);overlay.classList.remove('qt-paused');
+    document.getElementById('qtPause').textContent='⏸';updateQtDisplay();};
+  document.getElementById('qtPause').addEventListener('click',()=>{
+    if(completed){// Brew complete: tapping ✓ opens the flavor log
+      _qtDoExit(true);return;
+    }
+    running=!running;document.getElementById('qtPause').textContent=running?'⏸':'▶';overlay.classList.toggle('qt-paused',!running);const _qtLbl=document.getElementById('qtLabel');if(_qtLbl&&!completed)_qtLbl.textContent=running?'Timing':'Paused';
   });
-  // Safety: also allow ESC key to exit
-  function qtEscHandler(e){if(e.key==='Escape'){clearInterval(qtInterval);running=false;releaseWakeLock();document.getElementById('quickTimerDot')?.classList.remove('active');const fgEsc=document.getElementById('quickFloatGroup');if(fgEsc&&currentQuickMethod)fgEsc.classList.add('visible');if(overlay&&overlay.parentNode)overlay.parentNode.removeChild(overlay);document.removeEventListener('keydown',qtEscHandler)}}
+  document.getElementById('qtReset').addEventListener('click',()=>{
+    if(seconds>10&&!completed){_confirmDialog({title:'Restart the timer?',desc:'Your current progress ({t}) will be lost and cannot be undone.'.replace('{t}',_fmtT(seconds)),
+      actions:[{label:'Restart',danger:true,fn:_qtDoReset},{label:'Cancel'}]});return}
+    _qtDoReset();
+  });
+  document.getElementById('qtExit').addEventListener('click',(e)=>{
+    e.preventDefault();e.stopPropagation();_qtRequestExit();
+  });
+  // Safety: ESC also ends the brew (with confirmation)
+  function qtEscHandler(e){if(e.key==='Escape')_qtRequestExit()}
   document.addEventListener('keydown',qtEscHandler);
 }
 function renderGrindVisual(k){const grindLevel=GRIND_LEVELS[k];
@@ -5358,7 +5658,7 @@ function showBrewNotes(){
     return`<div class="bnm-item${hasDetail?' bnm-expandable':''}" data-idx="${idx}"><div class="bnm-item-header"><span class="bnm-item-method">${methodNames[n.method]||n.method||'Pour-Over'}</span><div style="display:flex;align-items:center;gap:4px;"><span class="bnm-item-date">${dateStr}</span>${hasDetail?`<span class="bnm-expand-arrow" id="bnma-${idx}">›</span>`:''}<button class="bnm-delete" data-time="${n.time}" title="Delete">🗑</button></div></div><div class="bnm-item-stats"><span class="bnm-stat">Dose ${n.dose}g</span><span class="bnm-stat">Water ${n.water}g</span>${dur?`<span class="bnm-stat">${dur}</span>`:''}</div>${detailHtml}</div>`;
   }).join('');
   const modal=document.createElement('div');modal.id='brewNotesModal';
-  modal.style.cssText='position:fixed;top:0;left:0;right:0;bottom:0;background:rgba(15,13,10,0.9);backdrop-filter:blur(12px);z-index:2000;display:flex;align-items:center;justify-content:center;animation:fadeIn 0.2s ease;';
+  modal.style.cssText='position:fixed;top:0;left:0;right:0;bottom:0;background:rgba(15,13,10,0.9);backdrop-filter:blur(12px);z-index:2000;display:flex;align-items:flex-start;justify-content:center;padding:max(16px,env(safe-area-inset-top,0px)) 16px calc(24px + env(safe-area-inset-bottom,0px));overflow-y:auto;overscroll-behavior:contain;animation:fadeIn 0.2s ease;';
   const renderModal=()=>{
     const filtered=filterMethod==='all'?notes:notes.filter(n=>n.method===filterMethod);
     const listEl=modal.querySelector('.bnm-list');
@@ -5565,7 +5865,41 @@ document.getElementById('segPro')?.addEventListener('click', () => {
   window.location.hash = '#tools';
 });
 
-if('serviceWorker' in navigator){navigator.serviceWorker.register('../sw.js').catch(()=>{})}
+if('serviceWorker' in navigator){
+  // 有新版本時顯示提示，讓使用者自己決定什麼時候更新
+  // （以前 Service Worker 會無條件 skipWaiting，可能在正在沖煮時把版本抽換掉）
+  var _swUpdShown=false;
+  function _swUpdateToast(onTap){
+    if(_swUpdShown)return;_swUpdShown=true;
+    var t=document.createElement('button');t.id='swUpdateToast';t.type='button';
+    t.textContent='✨ New version available — tap to update';
+    t.style.cssText='position:fixed;left:50%;transform:translateX(-50%);bottom:calc(84px + env(safe-area-inset-bottom,0px));z-index:3200;padding:11px 18px;border-radius:999px;border:1px solid rgba(192,138,92,0.5);background:rgba(28,20,14,0.96);color:#F3EBDD;font-family:inherit;font-size:0.82em;letter-spacing:0.04em;cursor:pointer;box-shadow:0 4px 18px rgba(0,0,0,0.35);';
+    t.addEventListener('click',function(){t.remove();onTap()});
+    document.body.appendChild(t);
+    setTimeout(function(){if(t.parentNode)t.style.opacity='0.75'},9000);
+  }
+  navigator.serviceWorker.register('../sw.js').then(function(reg){
+    // (1) sw.js 本身換了新版 —— 等使用者點了再 skipWaiting
+    reg.addEventListener('updatefound',function(){
+      var nw=reg.installing;if(!nw)return;
+      nw.addEventListener('statechange',function(){
+        if(nw.state==='installed'&&navigator.serviceWorker.controller){
+          _swUpdateToast(function(){nw.postMessage({type:'SKIP_WAITING'})});
+        }
+      });
+    });
+  }).catch(function(){});
+  // (2) 只有網頁內容換了新版（sw.js 沒動）—— Service Worker 會傳訊息過來
+  navigator.serviceWorker.addEventListener('message',function(e){
+    if(e.data&&e.data.type==='update-ready')_swUpdateToast(function(){location.reload()});
+  });
+  var _swReloaded=false;
+  navigator.serviceWorker.addEventListener('controllerchange',function(){
+    if(_swReloaded)return;_swReloaded=true;location.reload();
+  });
+  // 主動問一次 —— 導覽的 fetch 常常在這頁的 JS 跑起來之前就結束了，光靠推播會漏掉
+  setTimeout(function(){try{if(navigator.serviceWorker.controller)navigator.serviceWorker.controller.postMessage({type:'CHECK_UPDATE'})}catch(e){}},1200);
+}
 applyTheme(document.documentElement.getAttribute('data-theme')||'dark');
 document.getElementById('themeToggleBtn')?.addEventListener('click',toggleTheme);
 document.getElementById('recipeSaveBtn')?.addEventListener('click',saveMyRecipe);
@@ -5800,7 +6134,7 @@ function updateQuickBrewResults() {
     '</div>' + '<div class="qratio-row">Ratio <button class="stepper-btn qratio-btn" data-qr="-0.5" aria-label="Lower ratio">−</button><span class="qratio-val">1:' + (Math.round(qratio*10)/10) + '</span><button class="stepper-btn qratio-btn" data-qr="0.5" aria-label="Raise ratio">+</button>' + (Math.abs(qratio-method.ratio)>0.01?'<button class="qratio-reset">Reset to 1:'+method.ratio+'</button>':'') + '</div>' + _qbNotes +
     '<div class="quick-steps-summary"><h4>Brew Steps</h4>' + stepsHtml + '</div>' +
     '<div style="text-align:center;margin-top:18px;padding-bottom:110px;">' +
-    '<button class="btn-start-timer" id="quickStartTimerBtn" style="font-size:0.95em;">▶ Start Timer Now</button>' +
+    '<button class="btn-start-timer" id="quickStartTimerBtn" style="font-size:0.95em;">▶ Start Timer</button>' +
     '<button class="btn-start-timer" id="quickShareBtn" style="font-size:0.85em;background:transparent;border:1px solid rgba(192,138,92,0.4);color:var(--copper);margin-left:10px;">🔗 Share Recipe</button>' +
     '</div>' +
     '</div>';
@@ -5930,10 +6264,10 @@ function renderMethodOverview() {
     }, 150);
   });
 
-  // Quick start timer button — open timer overlay directly, bypass checklist
+  // Start-timer button — same path as the floating button (both run the checklist first)
   document.getElementById('quickBrewResults')?.addEventListener('click', (e) => {
     if (e.target.id === 'quickStartTimerBtn' || e.target.closest('#quickStartTimerBtn')) {
-      _doStartQuickTimer();
+      startQuickTimer();
     }
   });
 
