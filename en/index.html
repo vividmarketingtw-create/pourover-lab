@@ -3115,6 +3115,57 @@ body.scrolled .top-actions:hover,body.scrolled .top-actions:focus-within,body.sc
 #flavorSimSection:not(.open) .section-sub,#flavorSimSection:not(.open) .flavor-sim-demo,#flavorSimSection:not(.open) #fsimCta{display:none;}
 #flavorSimSection.open{text-align:initial;}
 #flavorSimSection.open .fsim-toggle{display:block;}
+/* ===== 9. 常用沖法／紀錄摘要／計時焦點（2026-09-05） ===== */
+/* 快速沖煮卡片上的釘選鈕 */
+.quick-method-card{position:relative;}
+.qm-pin{position:absolute;top:4px;right:4px;width:26px;height:26px;line-height:1;padding:0;border:none;border-radius:50%;background:transparent;color:var(--text-secondary);font-size:0.78em;cursor:pointer;opacity:0.32;filter:grayscale(1);transition:opacity .15s,transform .15s,filter .15s;}
+.qm-pin:hover,.qm-pin:focus-visible{opacity:0.85;filter:none;transform:scale(1.12);}
+.qm-pin.on{opacity:1;filter:none;background:rgba(192,138,92,0.18);box-shadow:inset 0 0 0 1px rgba(192,138,92,0.5);}
+/* 快速沖煮頂端的回首頁連結 */
+.qb-home-link{display:inline-block;margin:0 0 2px 4px;padding:6px 2px;color:var(--copper-light);font-size:0.82em;letter-spacing:1px;text-decoration:none;opacity:0.85;}
+.qb-home-link:hover,.qb-home-link:focus-visible{opacity:1;text-decoration:underline;}
+/* 沖煮紀錄：每個沖法的摘要卡 */
+.bns-slot,#brewNotesModal .bnm-filter{flex:0 0 auto;}
+.bns-slot{max-height:34vh;overflow-y:auto;padding:0 16px;}
+.bns-wrap{display:flex;flex-direction:column;gap:8px;margin:10px 0 4px;}
+.bns-card{border:1px solid var(--border);border-radius:var(--radius-sm);background:var(--surface-2);padding:10px 12px;}
+.bns-head{display:flex;flex-wrap:wrap;align-items:baseline;justify-content:space-between;gap:6px;}
+.bns-name{color:var(--copper-light);font-size:0.92em;font-weight:700;}
+.bns-meta{color:var(--text-secondary);font-size:0.76em;opacity:0.85;}
+.bns-insight{margin-top:6px;color:var(--text-secondary);font-size:0.82em;line-height:1.6;}
+.bns-spark{display:flex;align-items:center;gap:8px;margin-top:8px;color:var(--copper);}
+.bns-spark svg{flex:0 0 auto;overflow:visible;}
+.bns-spark-lbl{color:var(--text-secondary);font-size:0.7em;letter-spacing:1px;opacity:0.7;white-space:nowrap;}
+/* 計時中最重要的兩個數字 */
+.tm-focus{margin:2px 0 4px;text-align:center;}
+.tm-focus-lbl{color:var(--text-secondary);font-size:0.74em;letter-spacing:2px;opacity:0.75;}
+.tm-focus-sec{color:var(--copper);font-size:2.9em;font-weight:700;line-height:1.05;letter-spacing:1px;font-variant-numeric:tabular-nums;}
+.tm-focus-unit{font-size:0.32em;letter-spacing:2px;margin-left:4px;opacity:0.65;font-weight:400;}
+.tm-focus-water{margin-top:2px;color:var(--text-primary);font-size:1.5em;line-height:1.25;}
+.tm-focus-water b{color:var(--copper-light);font-weight:700;}
+.tm-focus-water .tm-focus-sub{color:var(--text-secondary);font-size:0.55em;letter-spacing:1px;opacity:0.75;}
+.tm-focus.wait .tm-focus-sec{color:var(--text-primary);}
+.tm-focus.wait .tm-focus-water{font-size:1.15em;opacity:0.85;}
+/* 進階計時器的右欄比較窄，把「／ 總 Ng」放到下一行才不會斷在奇怪的位置 */
+.pto-water-row .tm-focus-water .tm-focus-sub{display:block;margin-top:2px;}
+/* 焦點區接手以後，總累計時間降級成小字 */
+#quickTimerOverlay .qt-time{font-size:1.5em;letter-spacing:2px;}
+#proTimerOverlay .pto-time{font-size:1.6em;letter-spacing:2px;}
+@media (max-width:600px){
+  .tm-focus-sec{font-size:2.6em;}
+  .tm-focus-water{font-size:1.35em;}
+  #quickTimerOverlay .qt-time{font-size:1.35em;}
+  #proTimerOverlay .pto-time{font-size:1.4em;}
+}
+@media (max-height:700px){
+  .tm-focus-sec{font-size:2.4em;}
+  .tm-focus-water{font-size:1.2em;}
+  .tm-focus-lbl{font-size:0.7em;}
+}
+@media (max-height:520px){
+  .tm-focus-sec{font-size:2em;}
+  .tm-focus-water{font-size:1.05em;}
+}
 </style>
 </head>
 <body>
@@ -3197,19 +3248,19 @@ body.scrolled .top-actions:hover,body.scrolled .top-actions:focus-within,body.sc
         <div class="segment-card" id="segBeginner">
           <div class="segment-icon">☕</div>
           <div class="segment-title">I'm a Beginner</div>
-          <div class="segment-desc">Pick a method, follow the steps, and brew your first cup fast</div>
+          <div class="segment-desc">Answer three questions to pick a method, then follow the steps to your first cup</div>
           <div class="segment-arrow">→</div>
         </div>
         <div class="segment-card" id="segFlavor">
           <div class="segment-icon">🧪</div>
           <div class="segment-title">I Want to Explore Flavor</div>
-          <div class="segment-desc">Recommends the best method and parameters for your beans and taste</div>
+          <div class="segment-desc">Enter your roast, process and taste — get a method and parameters to match</div>
           <div class="segment-arrow">→</div>
         </div>
         <div class="segment-card" id="segPro">
           <div class="segment-icon">🎯</div>
           <div class="segment-title">I Want to Experiment Freely</div>
-          <div class="segment-desc">All parameters fully open — adjust freely and log every experiment</div>
+          <div class="segment-desc">Any of the eighteen methods — set temperature, ratio and grind yourself, and log every brew</div>
           <div class="segment-arrow">→</div>
         </div>
       </div>
@@ -3217,11 +3268,11 @@ body.scrolled .top-actions:hover,body.scrolled .top-actions:focus-within,body.sc
       <div class="section-divider"></div>
 
     <!-- ===== FLAVOR SIMULATION PREVIEW ===== -->
-    <section class="section" id="flavorSimSection">
+    <section class="section open" id="flavorSimSection">
       <div class="section-label">Flavor Lab</div>
       <div class="section-title">Coffee is not just brewing — it's an experiment</div>
       <div class="section-sub">Adjust the parameters and watch the flavor change in real time.</div>
-      <button class="fsim-toggle" id="fsimToggle" aria-expanded="false" data-open="▼ Open the flavor simulator" data-close="▲ Close the flavor simulator">▼ Open the flavor simulator</button>
+      <button class="fsim-toggle" id="fsimToggle" aria-expanded="true" data-open="▼ Open the flavor simulator" data-close="▲ Close the flavor simulator">▲ Close the flavor simulator</button>
       <div class="flavor-sim-demo" id="flavorSimDemo">
         <div class="sim-slider-group">
           <div class="sim-slider-row">
@@ -3267,6 +3318,7 @@ body.scrolled .top-actions:hover,body.scrolled .top-actions:focus-within,body.sc
 
     <!-- ========== TAB 2: QUICK BREW ========== -->
     <div class="tab-content" id="quickTab" role="tabpanel" aria-labelledby="tab-quick">
+      <a href="#home" class="qb-home-link">← Home</a>
       <div class="quick-brew-header">
         <h2>Quick Brew</h2>
         <p>Already know which method you want? Pick it and brew right away.<br><span style="font-size:0.88em;opacity:0.65;">Not sure what to brew? → Try "Advanced Tools" for smart recommendations based on your beans.</span></p>
@@ -4215,6 +4267,10 @@ const _AP_GAPS=[40,30,30,30,30],_AP_RATE=5;
 // then a thin stream at 1.2 g/s and a medium stream at 2.0 g/s.
 // Drawdown coefficient 1.5: a Kono has no ribs up top and the paper clings to the wall, so it is far slower than a V60.
 const _DD_DRIP=90,_DD_R2=1.2,_DD_R3=2.0,_DD_G=1.5;
+// 點滞法大粉量護欄：點滞段 20g 以下鎖在 90 秒，之後每 +1g 加 3 秒、到 30g 封頂 120 秒；
+// 細／中水流的流速隨粉量等比放大（20g 為基準），40g 才不會拖到 7 分鐘以上
+const _ddDripT=d=>Math.round(Math.max(90,Math.min(120,90+(_clampDose(d)-20)*3)));
+const _ddF=d=>Math.max(1,_clampDose(d)/20);
 // Bypass: brew at 1:12 (75% of the total water); the remaining 25% goes straight into the server at the end.
 const _BP_BLOOM=40,_BP_IV=40,_BP_RATE=5,_BP_BREW=0.75;
 const _hPourT=(w,r)=>Math.max(_H_WIN,_pourT(w,r));
@@ -4322,7 +4378,7 @@ const _tempAdjNote=m=>{const r=_roastVal();if(r==='dark')return '🌡 Dark roast
 const _flowRate=s=>{if(!s||!s.pour||!(s.water>0))return '';const rate=s.water/s.pour;const lvl=rate<=3.5?'thin stream':rate<=5.5?'medium stream':'strong stream';return s.water+'g ÷ '+s.pour+'s ≈ '+(Math.round(rate*10)/10)+' g/s ('+lvl+')'};
 const _doseWarn=d=>d>=35?'⚠️ Dose '+d+'g is at or above the V60-02 working capacity: use a size 02 or larger dripper or split into two brews, or brew stronger and dilute with hot water (bypass); see the large-dose note below for the grind.':'';
 /* ── Large-dose (30-40g) support ── DOSE_FIT: 3=friendly 2=scales with adjustment 1=not recommended */
-const DOSE_FIT={immersion:3,hoffmann:3,kasuya:2,kasuyaTen:2,rao:2,onePour:2,winton:2,medina:2,woelfl:2,icedBrew:2,sherry:1,chadwang:1,hoffmannCup:1,kalita:3,wendelboe:2,april:2,dripDrop:2,bypass:3};
+const DOSE_FIT={immersion:3,hoffmann:3,kasuya:2,kasuyaTen:2,rao:2,onePour:2,winton:2,medina:2,woelfl:2,icedBrew:2,sherry:1,chadwang:1,hoffmannCup:1,kalita:3,wendelboe:2,april:2,dripDrop:1,bypass:3};
 const _BD_LABELS={3:'✅ Friendly',2:'🔧 Coarsen the grind',1:'⚠️ Not recommended'};
 const _bdBase=mk=>mk==='hoffmann'?30:20;
 const _bdC40=(d,b)=>Math.max(2,Math.round((d-b)*0.3));
@@ -4507,9 +4563,9 @@ const BREW_METHODS={immersion:{badge:'Immersion',title:'Immersion Pour-Over · M
     tempC:92,
     grind:'Medium-coarse',
     time:'3:45-4:45',
-    buildSummary:(d,t)=>{const w1=Math.round(d*1.5),pt1=_DD_DRIP,half=Math.round(t*0.5),p2=Math.max(0,half-w1),pt2=_pourT(p2,_DD_R2,120),p3=t-w1-p2,pt3=_pourT(p3,_DD_R3,120),ef=_envF(),dd=_ddOf([[w1,pt1,0],[p2,pt2,0],[p3,pt3,0]],d,_DD_G,ef),tot=pt1+pt2+pt3+dd;return[{label:'Drip stage water',value:w1,unit:'g'},{label:'Drip stage',value:_fmtT(pt1),unit:''},{label:'Total water',value:t,unit:'g'},{label:'Target time',value:_fmtT(tot),unit:''}]},
-    buildSteps:(d,t)=>{const w1=Math.round(d*1.5),pt1=_DD_DRIP,half=Math.round(t*0.5),p2=Math.max(0,half-w1),pt2=_pourT(p2,_DD_R2,120),p3=t-w1-p2,pt3=_pourT(p3,_DD_R3,120),ef=_envF(),dd=_ddOf([[w1,pt1,0],[p2,pt2,0],[p3,pt3,0]],d,_DD_G,ef),tot=pt1+pt2+pt3+dd;return{groups:[{label:'Drip by drip → thin stream → medium stream',color:'amber',steps:[
-      {num:1,time:'0:00',title:`Drip stage (${w1}g, about ${_fmtT(pt1)})`,note:`<strong>Rinse the filter and preheat the dripper</strong>, discard the water, then add and level the grounds.<br>At 92°C, <strong>hold the spout close to the centre of the bed and let the water fall one drop at a time</strong> (not a thin stream — you should be able to see individual drops). Everything lands on that small centre patch and soaks outwards; over about ${_fmtT(pt1)} you put in ${w1}g (1.5× the dose), and <strong>once coffee starts dripping into the server you can move on</strong>.<br>There is no bloom here — the dripping stage is the bloom, in extreme slow motion.<br><small style="opacity:0.7;">Grind reference: <strong>Feima 600N 4.5-5</strong> (like granulated sugar — coarser than a normal pour-over)<br>Other grinders: Comandante ~28-30 clicks / 1Zpresso JX ~2.8-3.0 turns<br>ℹ️ <strong>Curated by PourOver Lab</strong>: the common Japanese drip-by-drip practice (the Kono / flannel lineage) — 15g / 180g (1:12), 92°C, a granulated-sugar grind, about 4 minutes in total, in the order <strong>drip → thin stream → medium stream</strong>. Two cues are used for the end of the drip stage: about a third of the bed wet, or the first drops of coffee falling into the server; in practice they arrive at much the same time.<br>🌡 <strong>For dark roasts drop to 85-88°C</strong> — this technique was built for medium and darker roasts, and hot water drags the roast bitterness along with it.<br>🫗 Gear: <strong>a Kono suits it best</strong> (no ribs up top, paper clinging to the wall, slow flow); a V60 or Origami works too, it just asks for more patience.</small>`,water:w1,cum:w1,duration:pt1},
+    buildSummary:(d,t)=>{const w1=Math.round(d*1.5),pt1=_ddDripT(d),half=Math.round(t*0.5),p2=Math.max(0,half-w1),pt2=_pourT(p2,_DD_R2*_ddF(d),120),p3=t-w1-p2,pt3=_pourT(p3,_DD_R3*_ddF(d),120),ef=_envF(),dd=_ddOf([[w1,pt1,0],[p2,pt2,0],[p3,pt3,0]],d,_DD_G,ef),tot=pt1+pt2+pt3+dd;return[{label:'Drip stage water',value:w1,unit:'g'},{label:'Drip stage',value:_fmtT(pt1),unit:''},{label:'Total water',value:t,unit:'g'},{label:'Target time',value:_fmtT(tot),unit:''}]},
+    buildSteps:(d,t)=>{const w1=Math.round(d*1.5),pt1=_ddDripT(d),half=Math.round(t*0.5),p2=Math.max(0,half-w1),pt2=_pourT(p2,_DD_R2*_ddF(d),120),p3=t-w1-p2,pt3=_pourT(p3,_DD_R3*_ddF(d),120),ef=_envF(),dd=_ddOf([[w1,pt1,0],[p2,pt2,0],[p3,pt3,0]],d,_DD_G,ef),tot=pt1+pt2+pt3+dd;return{groups:[{label:'Drip by drip → thin stream → medium stream',color:'amber',steps:[
+      {num:1,time:'0:00',title:`Drip stage (${w1}g, about ${_fmtT(pt1)})`,note:`${d>25?'<div style="color:#E0A458;margin-bottom:6px;">⚠️ Drip by drip drags on badly at large doses — above 25g, split it into two brews or switch to the Bypass method.</div>':''}<strong>Rinse the filter and preheat the dripper</strong>, discard the water, then add and level the grounds.<br>At 92°C, <strong>hold the spout close to the centre of the bed and let the water fall one drop at a time</strong> (not a thin stream — you should be able to see individual drops). Everything lands on that small centre patch and soaks outwards; over about ${_fmtT(pt1)} you put in ${w1}g (1.5× the dose), and <strong>once coffee starts dripping into the server you can move on</strong>.<br>There is no bloom here — the dripping stage is the bloom, in extreme slow motion.<br><small style="opacity:0.7;">Grind reference: <strong>Feima 600N 4.5-5</strong> (like granulated sugar — coarser than a normal pour-over)<br>Other grinders: Comandante ~28-30 clicks / 1Zpresso JX ~2.8-3.0 turns<br>ℹ️ <strong>Curated by PourOver Lab</strong>: the common Japanese drip-by-drip practice (the Kono / flannel lineage) — 15g / 180g (1:12), 92°C, a granulated-sugar grind, about 4 minutes in total, in the order <strong>drip → thin stream → medium stream</strong>. Two cues are used for the end of the drip stage: about a third of the bed wet, or the first drops of coffee falling into the server; in practice they arrive at much the same time.<br>🌡 <strong>For dark roasts drop to 85-88°C</strong> — this technique was built for medium and darker roasts, and hot water drags the roast bitterness along with it.<br>🫗 Gear: <strong>a Kono suits it best</strong> (no ribs up top, paper clinging to the wall, slow flow); a V60 or Origami works too, it just asks for more patience.</small>`,water:w1,cum:w1,duration:pt1},
       {num:2,time:_fmtT(pt1),title:`Thin stream to halfway (${half}g)`,note:`When the dripping is done, <strong>join the drops into a very thin stream</strong>, still in small circles at the centre: about ${pt2}s for ${p2}g, up to ${half}g (half the total). The stream should be so fine that it <strong>barely disturbs the bed</strong> — this is the stage that builds the sweetness.`,water:p2,cum:half,duration:pt2,pour:pt2},
       {num:3,time:_fmtT(pt1+pt2),title:'Medium stream to the total',note:`Thicken the stream a little (still small circles), about ${pt3}s for the remaining ${p3}g. <strong>Watch the water level, not the clock</strong>: stop when the bed rises close to the rim, resume when it falls back to half — this is the one rule that matters in drip-by-drip. Better to break it into several goes than to let water spill over the wall of grounds.`,water:p3,cum:t,duration:pt3,pour:pt3},
       {num:4,time:'After the pour',title:'Drawdown (lift the dripper before the last drops)',note:`Let it drain; roughly ${_fmtT(tot)} in total (the original 15g / 180g runs about 4 minutes).<br><strong>You can lift the dripper off a few drops before it runs dry</strong> — the tail end carries the harshest, most astringent liquid, and Japanese practice usually leaves it behind.<br><small style="opacity:0.8;">💡 Bitter or slow → half a step coarser, or drop the water to 88-90°C; weak or sour → stretch the drip stage, or go half a step finer. This is a 1:12 concentrate: if it is too strong, just <strong>add hot water</strong> in the cup — the flavour holds up fine.</small>`,water:0,cum:t,duration:dd}]}]}}},
@@ -4856,6 +4912,38 @@ function _clampDose(v){const n=parseFloat(v);if(!isFinite(n)||n<=0)return 20;ret
 // 沖煮筆記讀寫：抗損毀資料與容量爆掉
 function _notesLoad(){try{const p=JSON.parse(localStorage.getItem('brewNotes')||'[]');return Array.isArray(p)?p.filter(x=>x&&typeof x==='object'):[]}catch(e){return []}}
 function _notesSave(n){const _put=a=>localStorage.setItem('brewNotes',JSON.stringify(a));try{_put(n);return true}catch(e){try{const t=n.slice(0,Math.max(5,Math.floor(n.length/2)));_put(t);if(typeof showErrorToast==='function')showErrorToast('Storage full — some older logs were removed');return true}catch(e2){_logErr('notesSave',e2);if(typeof showErrorToast==='function')showErrorToast('Save failed: browser storage is full');return false}}}
+// ===== My go-tos: pins + recently brewed =====
+// Pins live in pol_pins (max 3); "recent" is derived from the existing brew log (brewNotes), not stored twice.
+const PIN_KEY='pol_pins',PIN_MAX=3;
+function _pinsGet(){try{const a=JSON.parse(localStorage.getItem(PIN_KEY)||'[]');return Array.isArray(a)?a.filter(k=>typeof k==='string'&&BREW_METHODS[k]).slice(0,PIN_MAX):[]}catch(e){return[]}}
+function _pinsSet(a){try{localStorage.setItem(PIN_KEY,JSON.stringify(a.slice(0,PIN_MAX)))}catch(e){}}
+function _pinToggle(k){const a=_pinsGet(),i=a.indexOf(k);if(i>=0){a.splice(i,1);_pinsSet(a);return'off'}if(a.length>=PIN_MAX)return'full';a.push(k);_pinsSet(a);return'on'}
+function _recentMethods(n){try{const pins=_pinsGet(),out=[];for(const r of _notesLoad()){const k=r&&r.method;if(!k||!BREW_METHODS[k])continue;if(pins.indexOf(k)>=0||out.indexOf(k)>=0)continue;out.push(k);if(out.length>=(n||3))break}return out}catch(e){return[]}}
+// ===== Remember the last dose =====
+const LASTDOSE_KEY='pol_lastDose';
+function _lastDoseSave(v){try{const d=_clampDose(v);localStorage.setItem(LASTDOSE_KEY,String(d))}catch(e){}}
+function _lastDoseGet(){try{const v=parseFloat(localStorage.getItem(LASTDOSE_KEY));return(isFinite(v)&&v>=5&&v<=100)?v:null}catch(e){return null}}
+// ===== Large-dose hint: once per session, no nagging =====
+// The DOSE_FIT 3 group (immersion / Hoffmann / Kalita) and bypass already handle big doses, so they stay quiet.
+function _bigDoseSuggest(k,d){try{const dose=parseFloat(d);if(!k||!isFinite(dose))return;
+  // Drip by drip stays out of _DOSE_FIT_AUTO — that one rewrites the dose outright; a nudge is enough here
+  if(k==='dripDrop'&&dose>25){if(sessionStorage.getItem('pol_ddDoseTip'))return;sessionStorage.setItem('pol_ddDoseTip','1');
+    if(typeof showCompareToast==='function')showCompareToast('Drip by drip drags on above 25g — consider two brews');return}
+  if(!(dose>=30))return;if(DOSE_FIT[k]===3||k==='bypass')return;
+  if(sessionStorage.getItem('pol_bigDoseTip'))return;sessionStorage.setItem('pol_bigDoseTip','1');
+  if(typeof showCompareToast==='function')showCompareToast('Big dose? Try the Bypass method or an immersion brew')}catch(e){}}
+// ===== The two numbers that matter while brewing =====
+// Pouring: seconds left in this step + the target weight. Waiting: seconds to the next action. Shared by all three timers.
+function _tmFocusHtml(step,remaining,total){
+  if(!step)return'';
+  const pour=step.water>0,sec=Math.max(0,Math.round(remaining));
+  return'<div class="tm-focus'+(pour?' pour':' wait')+'">'+
+    '<div class="tm-focus-lbl">'+(pour?'left in this step':'until next step')+'</div>'+
+    '<div class="tm-focus-sec">'+sec+'<span class="tm-focus-unit">s</span></div>'+
+    (pour?'<div class="tm-focus-water">pour to <b>'+step.cum+'g</b><span class="tm-focus-sub"> / '+total+'g total</span></div>'
+        :(step.cum>0?'<div class="tm-focus-water tm-focus-hold">at <b>'+step.cum+'g</b><span class="tm-focus-sub"> / '+total+'g total</span></div>':''))+
+    '</div>';
+}
 
 function requestWakeLock(){if(!('wakeLock' in navigator)){if(_activeTimer)_wakeBadge(false);return}navigator.wakeLock.request('screen').then(lock=>{wakeLock=lock;if(_activeTimer)_wakeBadge(true);try{lock.addEventListener('release',()=>{wakeLock=null;if(_activeTimer)_wakeBadge(false)})}catch(e){}}).catch(()=>{wakeLock=null;if(_activeTimer)_wakeBadge(false)})}
 function releaseWakeLock(){if(wakeLock){wakeLock.release().then(()=>{wakeLock=null}).catch(()=>{})}}
@@ -4883,7 +4971,11 @@ function drawCompareRadar(methodKey,profile,svgId,color){const svg=document.getE
 const PREFS_VERSION=3;
 const BREW_NOTES_VERSION=1;
 function saveUserPrefs(){try{const prefs={v:PREFS_VERSION,quickDose:document.getElementById('quickDoseInput')?.value||'20',quickMethod:currentQuickMethod||'onePour',roast:document.getElementById('roastLevel')?.value||'medium',processing:document.getElementById('processing')?.value||'washed',flavor:document.getElementById('flavorPref')?.value||'50',dose:document.getElementById('doseInput')?.value||'20',dripper:document.getElementById('dripperType')?.value||'v60',selectedMethod:selectedMethod||''};localStorage.setItem('pouroverPrefs',JSON.stringify(prefs))}catch(e){}}
-function loadUserPrefs(){try{const raw=localStorage.getItem('pouroverPrefs');if(!raw)return;const p=JSON.parse(raw);if(!p.v||p.v!==PREFS_VERSION){localStorage.removeItem('pouroverPrefs');return;}const qd=document.getElementById('quickDoseInput');if(qd&&p.quickDose)qd.value=p.quickDose;if(p.quickMethod)currentQuickMethod=p.quickMethod;const rl=document.getElementById('roastLevel');if(rl&&p.roast)rl.value=p.roast;const pr=document.getElementById('processing');if(pr&&p.processing)pr.value=p.processing;const fp=document.getElementById('flavorPref');if(fp&&p.flavor){fp.value=p.flavor;const fv=document.getElementById('flavorValue');if(fv)fv.textContent=p.flavor}const di=document.getElementById('doseInput');if(di&&p.dose)di.value=p.dose;const dt=document.getElementById('dripperType');if(dt&&p.dripper)dt.value=p.dripper;if(p.selectedMethod&&BREW_METHODS[p.selectedMethod])window._restoreMethod=p.selectedMethod}catch(e){_logErr('q',e)}}
+function loadUserPrefs(){try{const raw=localStorage.getItem('pouroverPrefs');if(!raw)return;const p=JSON.parse(raw);if(!p.v||p.v!==PREFS_VERSION){localStorage.removeItem('pouroverPrefs');return;}const qd=document.getElementById('quickDoseInput');if(qd&&p.quickDose)qd.value=p.quickDose;if(p.quickMethod)currentQuickMethod=p.quickMethod;const rl=document.getElementById('roastLevel');if(rl&&p.roast)rl.value=p.roast;const pr=document.getElementById('processing');if(pr&&p.processing)pr.value=p.processing;const fp=document.getElementById('flavorPref');if(fp&&p.flavor){fp.value=p.flavor;const fv=document.getElementById('flavorValue');if(fv)fv.textContent=p.flavor}const di=document.getElementById('doseInput');if(di&&p.dose)di.value=p.dose;const dt=document.getElementById('dripperType');if(dt&&p.dripper)dt.value=p.dripper;if(p.selectedMethod&&BREW_METHODS[p.selectedMethod])window._restoreMethod=p.selectedMethod}catch(e){_logErr('q',e)}
+ // The last dose used wins over the older saved preference; if it clashes with a method, the existing _doseFitAuto handles it
+ try{const ld=_lastDoseGet();if(ld!==null){const q=document.getElementById('quickDoseInput');if(q)q.value=ld;const t=document.getElementById('doseInput');if(t)t.value=ld;
+  document.querySelectorAll('#quickDoseBtns .dose-btn').forEach(b=>b.classList.toggle('active',parseFloat(b.dataset.dose)===ld));
+  if(currentQuickMethod)_doseFitAuto(currentQuickMethod,'quickDoseInput','#quickDoseBtns .dose-btn')}}catch(e){_logErr('lastDose',e)}}
 function initFlowCal(){const sel=document.getElementById('flowCalSel');if(!sel)return;sel.value=_flowCal();const paint=()=>{const n=document.getElementById('flowCalNote');if(n)n.innerHTML=_flowCalNote()||_flowCalHint;};paint();sel.addEventListener('change',()=>{_flowCalSet(sel.value);paint();recalcAll();_proRefresh();});}
 function init(){loadUserPrefs();renderMethodCards();attachEventListeners();_wireQuickWiz();initFlowCal();renderDripperInfo();renderDripperKnowledge();updateRecommendation();updateKnowledgeTips();updateGreeting();renderFAQ();renderBrewingTips();initGlossary();if(window._restoreMethod){selectMethod(window._restoreMethod,null,true);delete window._restoreMethod;}}
 const METHOD_META={
@@ -5042,7 +5134,7 @@ let currentRecommendedMethod=null;
 let ratioLocked=true;
 function updateRecommendation(){const r=document.getElementById('roastLevel').value,p=document.getElementById('processing').value;let k=r+'-'+p;if(!RECOMMENDATIONS[k])k='default';const rec=RECOMMENDATIONS[k],rp=document.getElementById('recommendationPanel'),rt=document.getElementById('recommendationText');currentRecommendedMethod=rec.method;let recText=`<strong>${BREW_METHODS[rec.method].title}</strong><br>${rec.reason}`;const month=new Date().getMonth()+1,isSummer=month>=5&&month<=9;if(isSummer&&rec.method!=='icedBrew'){recText+='<br><br><em style="color:var(--text-secondary);font-size:0.9em;">🌞 Summer tip: Also try a Flash Brew - a refreshingly cool take on the same beans!</em>'}else if((month>=11||month<=2)&&!isSummer){recText+='<br><br><em style="color:var(--text-secondary);font-size:0.9em;">❄️ Winter tip: Raise the water temperature 1-2°C for a fuller, warmer flavor.</em>'}rt.innerHTML=recText}
 function updateKnowledgeTips(){const r=document.getElementById('roastLevel').value,p=document.getElementById('processing').value,skipRest=document.getElementById('restDaysSkipBtn').classList.contains('active'),d=skipRest?7:(_restDays()),f=parseInt(document.getElementById('flavorPref').value),mt=KNOWLEDGE_TIPS.filter(t=>t.condition(r,p,d,f)).slice(0,2),ktc=document.getElementById('knowledgeTipsContainer');if(mt.length===0){ktc.innerHTML='<div style="padding:12px 16px;color:var(--text-secondary);font-size:0.85em;opacity:0.6;">✓ Nothing needs special attention with the current settings - brew with confidence!</div>';return}ktc.innerHTML=mt.map((t,i)=>`<div class="knowledge-tip" id="tip-${i}"><div class="knowledge-tip-header"><div class="knowledge-tip-title">${t.title}</div><div class="knowledge-tip-toggle">▼</div></div><div class="knowledge-tip-text">${t.text}</div></div>`).join('');mt.forEach((_,i)=>{const el=document.getElementById(`tip-${i}`),h=el.querySelector('.knowledge-tip-header'),c=el.querySelector('.knowledge-tip-text'),tg=el.querySelector('.knowledge-tip-toggle');h.addEventListener('click',()=>{c.classList.toggle('open');tg.classList.toggle('open')})})}
-function attachEventListeners(){document.getElementById('doseInput').addEventListener('input',()=>{debouncedRecalcAll();updateDoseBtnActive()});document.getElementById('processing').addEventListener('change',()=>{updateRecommendation();updateKnowledgeTips()});document.getElementById('restDays').addEventListener('input',()=>{document.getElementById('restDaysSkipBtn').classList.remove('active');document.getElementById('restDays').disabled=false;document.getElementById('restDays').style.opacity='1';updateKnowledgeTips();recalcAll();_proRefresh()});document.getElementById('restDaysSkipBtn').addEventListener('click',()=>{const btn=document.getElementById('restDaysSkipBtn'),inp=document.getElementById('restDays');btn.classList.toggle('active');if(btn.classList.contains('active')){inp.disabled=true;inp.style.opacity='0.4'}else{inp.disabled=false;inp.style.opacity='1'}updateKnowledgeTips();_proRefresh()});document.getElementById('flavorPref').addEventListener('input',(e)=>{document.getElementById('flavorValue').textContent=e.target.value;updateRecommendation();updateKnowledgeTips()});document.querySelectorAll('.dose-btn:not(.ratio-preset)').forEach(btn=>{btn.addEventListener('click',()=>{const v=parseFloat(btn.dataset.dose);document.getElementById('doseInput').value=v;document.querySelectorAll('.dose-btn:not(.ratio-preset)').forEach(b=>b.classList.remove('active'));btn.classList.add('active');recalcAll()})});document.querySelectorAll('.stepper-btn').forEach(btn=>{btn.addEventListener('click',()=>{const tid=btn.dataset.target,delta=parseFloat(btn.dataset.delta),inp=document.getElementById(tid);if(inp.disabled)return;let v=parseFloat(inp.value)||0;v=Math.max(parseFloat(inp.min),Math.min(parseFloat(inp.max),v+delta));inp.value=v;inp.dispatchEvent(new Event('input',{bubbles:true}))})});document.getElementById('ratioSlider').addEventListener('input',(e)=>{const v=parseFloat(e.target.value);customRatio=v;document.getElementById('ratioValue').textContent='1:'+v;const _mri=document.getElementById('manualRatioInput');if(_mri)_mri.value=v.toFixed(1);debouncedRecalcAll();});document.getElementById('startTimerBtn').addEventListener('click',startTimer);document.getElementById('freeTimerBtn').addEventListener('click',startFreeTimer);document.getElementById('currentTemp').addEventListener('change',(e)=>{const v=parseFloat(e.target.value);if(!isFinite(v)){e.target.value='90'}else{const c=Math.min(100,Math.max(75,v));if(c!==v)e.target.value=String(c)}e.target.dispatchEvent(new Event('input',{bubbles:true}))});document.getElementById('currentTemp').addEventListener('input',()=>{updateTempSuggestion();if(selectedMethod)updateCalcPanel(BREW_METHODS[selectedMethod])});document.getElementById('roastLevel').addEventListener('change',()=>{autoAdjustTemp();updateRecommendation();updateKnowledgeTips();recalcAll();_proRefresh()});document.getElementById('manualRatioInput').addEventListener('input',(e)=>{const v=parseFloat(e.target.value);if(v>=12&&v<=18){customRatio=v;document.getElementById('ratioSlider').value=v;document.getElementById('ratioValue').textContent='1:'+v;debouncedRecalcAll();}});document.querySelectorAll('.ratio-preset').forEach(btn=>{btn.addEventListener('click',()=>{const v=parseFloat(btn.dataset.ratio);customRatio=v;document.getElementById('ratioSlider').value=v;document.getElementById('ratioValue').textContent='1:'+v;document.getElementById('manualRatioInput').value=v;document.querySelectorAll('.ratio-preset').forEach(b=>b.classList.remove('active'));btn.classList.add('active');recalcAll()})});document.getElementById('compareBtn').addEventListener('click',()=>{selectedCompareMethods=[];renderCompareModal();document.getElementById('compareModal').classList.add('active')});document.getElementById('compareCloseBtn').addEventListener('click',()=>{document.getElementById('compareModal').classList.remove('active')});document.getElementById('compareModal').addEventListener('click',(e)=>{if(e.target===document.getElementById('compareModal'))document.getElementById('compareModal').classList.remove('active')});document.addEventListener('keydown',(e)=>{if(e.key==='Escape'){const cm=document.getElementById('compareModal');if(cm&&cm.classList.contains('active'))cm.classList.remove('active')}});['roastLevel','processing'].forEach(id=>{document.getElementById(id).addEventListener('change',saveUserPrefs)});['flavorPref','doseInput'].forEach(id=>{document.getElementById(id).addEventListener('change',saveUserPrefs)});document.getElementById('dripperType').addEventListener('change',()=>{renderDripperInfo();updateKnowledgeTips();recalcAll();saveUserPrefs()});document.getElementById('manualRatioInput').addEventListener('change',(e)=>{let v=parseFloat(e.target.value);if(!isFinite(v)){e.target.value=(customRatio||15).toFixed(1);return}const cl=Math.min(18,Math.max(12,v));e.target.value=cl.toFixed(1);if(cl!==v&&typeof showErrorToast==='function')showErrorToast('Ratio must be between 1:12 and 1:18');e.target.dispatchEvent(new Event('input',{bubbles:true}));});['doseInput','quickDoseInput'].forEach(id=>{const el=document.getElementById(id);if(!el)return;el.addEventListener('change',()=>{const c=_clampDose(el.value);if(String(c)!==String(el.value)){el.value=c;el.dispatchEvent(new Event('input',{bubbles:true}))}})});document.getElementById('useRecommendationBtn').addEventListener('click',()=>{if(currentRecommendedMethod&&BREW_METHODS[currentRecommendedMethod]){selectMethod(currentRecommendedMethod,BREW_METHODS[currentRecommendedMethod])}});
+function attachEventListeners(){document.getElementById('doseInput').addEventListener('input',()=>{debouncedRecalcAll();updateDoseBtnActive();_lastDoseSave(document.getElementById('doseInput').value)});document.getElementById('processing').addEventListener('change',()=>{updateRecommendation();updateKnowledgeTips()});document.getElementById('restDays').addEventListener('input',()=>{document.getElementById('restDaysSkipBtn').classList.remove('active');document.getElementById('restDays').disabled=false;document.getElementById('restDays').style.opacity='1';updateKnowledgeTips();recalcAll();_proRefresh()});document.getElementById('restDaysSkipBtn').addEventListener('click',()=>{const btn=document.getElementById('restDaysSkipBtn'),inp=document.getElementById('restDays');btn.classList.toggle('active');if(btn.classList.contains('active')){inp.disabled=true;inp.style.opacity='0.4'}else{inp.disabled=false;inp.style.opacity='1'}updateKnowledgeTips();_proRefresh()});document.getElementById('flavorPref').addEventListener('input',(e)=>{document.getElementById('flavorValue').textContent=e.target.value;updateRecommendation();updateKnowledgeTips()});document.querySelectorAll('.dose-btn:not(.ratio-preset)').forEach(btn=>{btn.addEventListener('click',()=>{const v=parseFloat(btn.dataset.dose);document.getElementById('doseInput').value=v;document.querySelectorAll('.dose-btn:not(.ratio-preset)').forEach(b=>b.classList.remove('active'));btn.classList.add('active');recalcAll();_lastDoseSave(v)})});document.querySelectorAll('.stepper-btn').forEach(btn=>{btn.addEventListener('click',()=>{const tid=btn.dataset.target,delta=parseFloat(btn.dataset.delta),inp=document.getElementById(tid);if(inp.disabled)return;let v=parseFloat(inp.value)||0;v=Math.max(parseFloat(inp.min),Math.min(parseFloat(inp.max),v+delta));inp.value=v;inp.dispatchEvent(new Event('input',{bubbles:true}))})});document.getElementById('ratioSlider').addEventListener('input',(e)=>{const v=parseFloat(e.target.value);customRatio=v;document.getElementById('ratioValue').textContent='1:'+v;const _mri=document.getElementById('manualRatioInput');if(_mri)_mri.value=v.toFixed(1);debouncedRecalcAll();});document.getElementById('startTimerBtn').addEventListener('click',startTimer);document.getElementById('freeTimerBtn').addEventListener('click',startFreeTimer);document.getElementById('currentTemp').addEventListener('change',(e)=>{const v=parseFloat(e.target.value);if(!isFinite(v)){e.target.value='90'}else{const c=Math.min(100,Math.max(75,v));if(c!==v)e.target.value=String(c)}e.target.dispatchEvent(new Event('input',{bubbles:true}))});document.getElementById('currentTemp').addEventListener('input',()=>{updateTempSuggestion();if(selectedMethod)updateCalcPanel(BREW_METHODS[selectedMethod])});document.getElementById('roastLevel').addEventListener('change',()=>{autoAdjustTemp();updateRecommendation();updateKnowledgeTips();recalcAll();_proRefresh()});document.getElementById('manualRatioInput').addEventListener('input',(e)=>{const v=parseFloat(e.target.value);if(v>=12&&v<=18){customRatio=v;document.getElementById('ratioSlider').value=v;document.getElementById('ratioValue').textContent='1:'+v;debouncedRecalcAll();}});document.querySelectorAll('.ratio-preset').forEach(btn=>{btn.addEventListener('click',()=>{const v=parseFloat(btn.dataset.ratio);customRatio=v;document.getElementById('ratioSlider').value=v;document.getElementById('ratioValue').textContent='1:'+v;document.getElementById('manualRatioInput').value=v;document.querySelectorAll('.ratio-preset').forEach(b=>b.classList.remove('active'));btn.classList.add('active');recalcAll()})});document.getElementById('compareBtn').addEventListener('click',()=>{selectedCompareMethods=[];renderCompareModal();document.getElementById('compareModal').classList.add('active')});document.getElementById('compareCloseBtn').addEventListener('click',()=>{document.getElementById('compareModal').classList.remove('active')});document.getElementById('compareModal').addEventListener('click',(e)=>{if(e.target===document.getElementById('compareModal'))document.getElementById('compareModal').classList.remove('active')});document.addEventListener('keydown',(e)=>{if(e.key==='Escape'){const cm=document.getElementById('compareModal');if(cm&&cm.classList.contains('active'))cm.classList.remove('active')}});['roastLevel','processing'].forEach(id=>{document.getElementById(id).addEventListener('change',saveUserPrefs)});['flavorPref','doseInput'].forEach(id=>{document.getElementById(id).addEventListener('change',saveUserPrefs)});document.getElementById('dripperType').addEventListener('change',()=>{renderDripperInfo();updateKnowledgeTips();recalcAll();saveUserPrefs()});document.getElementById('manualRatioInput').addEventListener('change',(e)=>{let v=parseFloat(e.target.value);if(!isFinite(v)){e.target.value=(customRatio||15).toFixed(1);return}const cl=Math.min(18,Math.max(12,v));e.target.value=cl.toFixed(1);if(cl!==v&&typeof showErrorToast==='function')showErrorToast('Ratio must be between 1:12 and 1:18');e.target.dispatchEvent(new Event('input',{bubbles:true}));});['doseInput','quickDoseInput'].forEach(id=>{const el=document.getElementById(id);if(!el)return;el.addEventListener('change',()=>{const c=_clampDose(el.value);if(String(c)!==String(el.value)){el.value=c;el.dispatchEvent(new Event('input',{bubbles:true}))}})});document.getElementById('useRecommendationBtn').addEventListener('click',()=>{if(currentRecommendedMethod&&BREW_METHODS[currentRecommendedMethod]){selectMethod(currentRecommendedMethod,BREW_METHODS[currentRecommendedMethod])}});
   // Recommendation collapse toggle
   const _recToggle=document.getElementById('recommendToggleBtn');
   const _recBody=document.getElementById('recommendBody');
@@ -5059,7 +5151,7 @@ function renderRadar(k){const p=FLAVOR_PROFILES[k];
   const desc=FLAVOR_DESCRIPTIONS[k];
   if(desc){let descEl=document.querySelector('.radar-desc');if(!descEl){descEl=document.createElement('div');descEl.className='radar-desc';svg.parentNode.appendChild(descEl)}descEl.textContent=desc}}
 function updateMethodCardTimes(){const dv=_clampDose(document.getElementById('doseInput')?.value);document.querySelectorAll('.method-card').forEach(c=>{const k=c.dataset.methodKey,mm=k&&BREW_METHODS[k];if(!mm)return;const el=c.querySelector('.method-ratio');if(el)el.textContent='1:'+mm.ratio+' · ~'+_estTotal(mm,dv)})}
-function recalcAll(){updateMethodCardTimes();if(!selectedMethod)return;const m=BREW_METHODS[selectedMethod];updateCalcPanel(m);updateSteps(m)}
+function recalcAll(){updateMethodCardTimes();if(!selectedMethod)return;const m=BREW_METHODS[selectedMethod];updateCalcPanel(m);updateSteps(m);_bigDoseSuggest(selectedMethod,_clampDose(document.getElementById('doseInput')?.value))}
 function startTimer(){if(!selectedMethod){showErrorToast('Select a brewing method first');return}
   const m=BREW_METHODS[selectedMethod];const d=_clampDose(document.getElementById('doseInput').value);const r=getEffectiveRatio(m);const tw=Math.round(d*r);
   if(!window._brewConfirmed){showBrewConfirmModal(m,d,tw,r);return;}
@@ -5153,14 +5245,16 @@ function startProTimerOverlay(m,dose,totalWater,ratio){
       const ptoRemaining=Math.max(0,ptoStepEnd-timerSeconds);
       const ptoIsAction=step.water===0&&step.duration>0&&step.duration<=15&&(_isAction(step.title));
       const ptoIsWait=step.water===0&&step.cum>0&&!ptoIsAction;
+      // Same _tmFocusHtml as the quick timer: pour steps show 'left in this step' + the target weight; waits count down to the next action
+      const ptoFocus=(!ptoIsAction&&ptoStepDur>0&&!brewCompleted)?_tmFocusHtml(step,ptoRemaining,totalWater):'';
       if(waterEl){
         if(step.water>0){
-          waterEl.innerHTML=`<span class="pto-water-pour"><span class="pto-pour-verb">POUR TO</span>${step.cum}g</span><span class="pto-water-cum sec" style="margin-top:8px;">+${step.water}g <span class="pto-pour-total">/ ${totalWater}g</span></span>${step.pour?'<span class="qt-flow-hint">💧 '+_flowRate(step)+'</span>':''}`;
+          waterEl.innerHTML=ptoFocus+`<span class="pto-water-cum sec" style="margin-top:8px;">+${step.water}g <span class="pto-pour-total">/ ${totalWater}g</span></span>${step.pour?'<span class="qt-flow-hint">💧 '+_flowRate(step)+'</span>':''}`;
         }else if(ptoIsAction){
           waterEl.innerHTML=`<button class="qt-action-done" id="ptoActionDone">✓ Done, continue</button>`;
         }else if(ptoIsWait&&ptoStepDur>0){
           const pct=Math.min(100,ptoElapsed/ptoStepDur*100);
-          waterEl.innerHTML=`<span class="pto-water-cum"><span class="qt-water-cum-label">Total</span>${step.cum}g <span class="pto-pour-total">/ ${totalWater}g</span></span><div class="qt-wait-wrap"><div class="qt-wait-bar-track"><div class="qt-wait-bar-fill" style="width:${pct}%"></div></div><div class="qt-wait-remaining">${ptoRemaining}s left</div></div>`;
+          waterEl.innerHTML=ptoFocus+`<div class="qt-wait-wrap"><div class="qt-wait-bar-track"><div class="qt-wait-bar-fill" style="width:${pct}%"></div></div></div>`;
         }else if(step.cum>0){
           waterEl.innerHTML=`<span class="pto-water-cum"><span class="qt-water-cum-label">Total</span>${step.cum}g <span class="pto-pour-total">/ ${totalWater}g</span></span>`;
         }else{waterEl.innerHTML='';}
@@ -5487,6 +5581,7 @@ function showQuickBrewNoteModal(method,dose,water,seconds){
       </div></div>
       <button class="bco-btn-primary" id="qbnSave">Save Log</button>
       <button class="bco-btn-ghost" id="qbnViewAll" style="border:1px solid rgba(192,138,92,0.2);margin-bottom:6px;">🗒 View All Logs</button>
+      <button class="bco-btn-ghost" id="qbnBackList" style="border:1px solid rgba(192,138,92,0.2);margin-bottom:6px;">← Back to method list</button>
       <button class="bco-btn-ghost" id="qbnSkip" style="opacity:0.5;">Skip without saving</button>
     </div>
   </div>`;
@@ -5555,6 +5650,9 @@ function showQuickBrewNoteModal(method,dose,water,seconds){
   function saveQbn(){const note=document.getElementById('qbnInput')?.value?.trim();const grind=document.getElementById('qbnGrind')?.value?.trim()||'';if(grind){try{localStorage.setItem('poLastGrind',grind)}catch(e){}}try{const notes=_notesLoad();notes.unshift({v:BREW_NOTES_VERSION,time:new Date().toISOString(),method:method||'',dose:dose,water:water,duration:seconds,note:note||'',grind,taste:qbnTaste||'',dd:_qbnDd(),ratings:{...qbnRatings}});if(notes.length>50)notes.pop();_notesSave(notes)}catch(e){}}
   document.getElementById('qbnSave').addEventListener('click',()=>{saveQbn();modal.remove();showCompareToast('Saved to brew log ✓');});
   document.getElementById('qbnViewAll').addEventListener('click',()=>{saveQbn();modal.remove();setTimeout(()=>showBrewNotes(),100);});
+  // Straight back to picking another method: save, then return to the quick-brew grid
+  document.getElementById('qbnBackList')?.addEventListener('click',()=>{saveQbn();modal.remove();window.location.hash='#quick';
+    setTimeout(()=>{const g=document.getElementById('quickMethodGrid');if(g)g.scrollIntoView({behavior:_scrollBehavior(),block:'start'})},260);});
   // 略過也要保住回饋 —— 使用者已經回答了「滴完了嗎」與「風味如何」，不該直接丟掉
   document.getElementById('qbnSkip').addEventListener('click',()=>{
     if(qbnTaste||_qbnDd()){saveQbn();modal.remove();showCompareToast('Feedback saved ✓');return}
@@ -5669,19 +5767,22 @@ function _doStartQuickTimer(){
     const isActionStep=step.water===0&&step.duration>0&&step.duration<=15&&(_isAction(step.title));
     // Wait step detection
     const isWaitStep=step.water===0&&step.cum>0&&!isActionStep;
+    // The two numbers that matter most while brewing (step countdown + target weight)
+    // come from the shared _tmFocusHtml; the lines below drop to small text so no number repeats
+    const focusHtml=(!isActionStep&&stepDur>0&&!completed)?_tmFocusHtml(step,remaining,water):'';
     const waterHtml=step.water>0
-      ?'<div class="qt-cur-water"><span class="qt-water-pour"><span class="qt-pour-verb">POUR TO</span>'+step.cum+'g</span><span class="qt-water-cum sec" style="margin-top:8px;">+'+step.water+'g <span class="qt-pour-total">/ '+water+'g</span></span>'+(step.pour?'<span class="qt-flow-hint">💧 '+_flowRate(step)+'</span>':'')+'</div>'
-      :step.cum>0
+      ?'<div class="qt-cur-water">'+(focusHtml?'':'<span class="qt-water-pour"><span class="qt-pour-verb">POUR TO</span>'+step.cum+'g</span>')+'<span class="qt-water-cum sec" style="margin-top:8px;">+'+step.water+'g <span class="qt-pour-total">/ '+water+'g</span></span>'+(step.pour?'<span class="qt-flow-hint">💧 '+_flowRate(step)+'</span>':'')+'</div>'
+      :(step.cum>0&&!focusHtml)
         ?'<div class="qt-cur-water"><span class="qt-water-cum"><span class="qt-water-cum-label">Total</span>'+step.cum+'g <span class="qt-pour-total">/ '+water+'g</span></span></div>'
         :'';
     // Pour steps get a countdown too — previously only wait steps did, so you
     // could not see how many seconds were left while actually pouring
     const waitHtml=stepDur>0&&!isActionStep
-      ?'<div class="qt-wait-wrap"><div class="qt-wait-bar-track"><div class="qt-wait-bar-fill" style="width:'+Math.min(100,elapsed/stepDur*100)+'%"></div></div><div class="qt-wait-remaining">'+(isWaitStep?'Time left: ':'This pour: ')+remaining+'s</div></div>'
+      ?'<div class="qt-wait-wrap"><div class="qt-wait-bar-track"><div class="qt-wait-bar-fill" style="width:'+Math.min(100,elapsed/stepDur*100)+'%"></div></div>'+(focusHtml?'':'<div class="qt-wait-remaining">'+(isWaitStep?'Time left: ':'This pour: ')+remaining+'s</div>')+'</div>'
       :'';
     const actionHtml=isActionStep?'<button class="qt-action-done" id="qtActionDone">✓ Done, continue</button>':'';
     const _qtWintonTemp=(currentQuickMethod==='winton'&&activeIdx>=3);const _qtTempBadge=_qtWintonTemp?'<div class="winton-temp-badge" style="margin-top:4px;">🌡 Cool to 88°C</div>':'';
-    cur.innerHTML='<div class="qt-cur-title">'+step.title+'</div>'+_qtTempBadge+waterHtml+waitHtml+actionHtml;
+    cur.innerHTML='<div class="qt-cur-title">'+step.title+'</div>'+_qtTempBadge+focusHtml+waterHtml+waitHtml+actionHtml;
     const _nx=allSteps[activeIdx+1];if(_nx&&!completed){cur.innerHTML+='<div class="qt-next">Next ▸ '+_nx.title+(_nx.water>0?' <b>to '+_nx.cum+'g</b>':'')+' <span class="qt-next-at">@ '+_fmtT(qtDurations[activeIdx])+'</span></div>';}
     if(!completed&&seconds>=qtDurations[qtDurations.length-1]){
       completed=true;clearInterval(qtInterval);running=false;_sfx('done');
@@ -5841,6 +5942,56 @@ function showBrewNotes(){
   const PROCESS_LBL={'washed':'Washed','natural':'Natural','honey':'Honey','anaerobic_natural':'Anaerobic Natural','anaerobic_washed':'Anaerobic Washed','fruit_ferment':'Fruit Fermented'};
   const DRIPPER_LBL={'v60':'V60','kalita':'Kalita Wave','kono':'KONO','april':'April'};
   const RATING_LBL={'acidity':'Acidity','sweetness':'Sweetness','bitterness':'Bitterness','balance':'Balance'};
+  // Brew logs carry taste from two places: the taste chips on the quick-brew
+  // finish screen (sour/bitter/thin/strong/perfect) and the 1-5 ratings in the
+  // advanced tools (acidity/sweetness/bitterness/balance). Both count; chips win.
+  const TASTE_KEYS=['sour','bitter','thin','strong','perfect'];
+  // ── Insight rule table: to change the advice, edit this table, not the code below ──
+  const INSIGHT_RULES=[
+    {id:'sour',  hit:t=>t.sour>=2,   msg:'Sour in the last three — grinding finer is the right direction, go half a step finer'},
+    {id:'bitter',hit:t=>t.bitter>=2, msg:'Bitter in the last three — grind half a step coarser, or drop the water 2°C'},
+    {id:'thin',  hit:t=>t.thin>=2,   msg:'Thin in the last three — tighten the ratio to 1:14-1:15, or bloom a little longer'},
+    {id:'strong',hit:t=>t.strong>=2, msg:'Strong in the last three — open the ratio up, or dilute with the Bypass method'},
+    {id:'stable',hit:t=>t.perfect>=2,msg:'Steady over the last three — try opening the ratio up and see what happens'}
+  ];
+  const INSIGHT_FALLBACK='No clear direction in the last three — change one variable at a time: lock the grind and move only the temperature';
+  const _tasteOf=(n)=>{
+    if(n&&n.taste&&TASTE_KEYS.indexOf(n.taste)>=0)return n.taste;
+    const r=(n&&n.ratings)||{},a=parseFloat(r.acidity)||0,b=parseFloat(r.bitterness)||0,bal=parseFloat(r.balance)||0;
+    if(a>=4&&a>b)return'sour';
+    if(b>=4&&b>a)return'bitter';
+    if(bal>=4)return'perfect';
+    return'';
+  };
+  const _insight=(recs)=>{
+    const t={sour:0,bitter:0,thin:0,strong:0,perfect:0};let any=false;
+    recs.slice(0,3).forEach(n=>{const k=_tasteOf(n);if(k){t[k]++;any=true}});
+    if(!any)return'';
+    const r=INSIGHT_RULES.find(x=>x.hit(t));
+    return r?r.msg:INSIGHT_FALLBACK;
+  };
+  // Tiny sparkline: whichever taste axis has data (acidity first), 3-10 points, drawn with currentColor
+  const SPARK_AXES=[['acidity','Acidity'],['bitterness','Bitterness'],['sweetness','Sweetness'],['balance','Balance']];
+  const _sparkline=(recs)=>{
+    let best=null;
+    for(const ax of SPARK_AXES){
+      const pts=recs.slice(0,10).map(n=>parseFloat((n.ratings||{})[ax[0]])||0).filter(v=>v>0);
+      if(pts.length>=3&&(!best||pts.length>best.pts.length))best={lbl:ax[1],pts:pts};
+    }
+    if(!best)return'';
+    const pts=best.pts.slice().reverse(),W=72,H=20,n=pts.length;
+    const d=pts.map((v,i)=>(i?'L':'M')+(n>1?(i*(W-2)/(n-1)+1):W/2).toFixed(1)+' '+(H-1-((Math.min(5,Math.max(1,v))-1)/4)*(H-2)).toFixed(1)).join(' ');
+    return'<div class="bns-spark"><span class="bns-spark-lbl">'+best.lbl+' trend</span><svg viewBox="0 0 '+W+' '+H+'" width="'+W+'" height="'+H+'" role="img" aria-label="'+best.lbl+' over the last '+n+' brews"><path d="'+d+'" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linejoin="round" stroke-linecap="round"/></svg><span class="bns-spark-lbl">old → new</span></div>';
+  };
+  const buildSummary=()=>{
+    const by={};notes.forEach(n=>{if(n.method&&BREW_METHODS[n.method])(by[n.method]=by[n.method]||[]).push(n)});
+    const keys=Object.keys(by).filter(k=>by[k].length>=2).sort((a,b)=>by[b].length-by[a].length);
+    if(!keys.length)return'';
+    return'<div class="bns-wrap">'+keys.map(k=>{const rs=by[k],ins=_insight(rs);
+      return'<div class="bns-card"><div class="bns-head"><span class="bns-name">'+(methodNames[k]||k)+'</span><span class="bns-meta">'+rs.length+' brews · last '+timeAgo(rs[0].time)+'</span></div>'+
+        (ins?'<div class="bns-insight">'+ins+'</div>':'')+_sparkline(rs)+'</div>';
+    }).join('')+'</div>';
+  };
   let filterMethod='all';
   const buildStats=()=>{
     if(notes.length===0)return'';
@@ -5852,7 +6003,7 @@ function showBrewNotes(){
   };
   const buildFilterPills=()=>{
     const methods=[...new Set(notes.map(n=>n.method).filter(Boolean))];
-    if(methods.length<=1)return'';
+    if(methods.length<1)return'';
     return`<div class="bnm-filter" id="bnmFilter"><button class="bnm-filter-pill${filterMethod==='all'?' active':''}" data-method="all">All</button>${methods.map(k=>`<button class="bnm-filter-pill${filterMethod===k?' active':''}" data-method="${k}">${methodNames[k]||k}</button>`).join('')}</div>`;
   };
   const buildList=(ns)=>ns.length===0?`<div class="bnm-empty">${notes.length===0?'No entries yet<br>Log your tasting notes after a brew':'No entries for this method yet'}</div>`:ns.map((n,idx)=>{
@@ -5890,9 +6041,11 @@ function showBrewNotes(){
     }else if(statCells.length>=1&&notes.length===0){
       statCells[0].querySelector('.bnm-stat-num').textContent='0';
     }
+    const bnsSlot=modal.querySelector('.bns-slot');
+    if(bnsSlot)bnsSlot.innerHTML=buildSummary();
     attachListHandlers();
   };
-  modal.innerHTML=`<div class="bnm-card"><div class="bnm-header"><span class="bnm-title">🗒 Brew Log (${notes.length} entries)</span><span class="bnm-limit-note">Keeps up to 50 entries</span><div style="display:flex;align-items:center;gap:6px;"><button id="bnmImport" style="background:transparent;border:1px solid rgba(192,138,92,0.3);color:var(--copper-light);font-size:0.72em;padding:5px 10px;cursor:pointer;font-family:inherit;letter-spacing:0.5px;" title="Import JSON">↑ Import</button>${notes.length>0?`<button id="bnmExport" style="background:transparent;border:1px solid rgba(192,138,92,0.3);color:var(--copper-light);font-size:0.72em;padding:5px 10px;cursor:pointer;font-family:inherit;letter-spacing:0.5px;" title="Export JSON">↓ Export</button>`:''}<button class="bnm-close" id="bnmClose" aria-label="Close">✕</button></div></div><input type="file" id="bnmImportFile" accept=".json" style="display:none;">${buildStats()}${buildFilterPills()}<div class="bnm-list">${buildList(notes)}</div></div>`;
+  modal.innerHTML=`<div class="bnm-card"><div class="bnm-header"><span class="bnm-title">🗒 Brew Log (${notes.length} entries)</span><span class="bnm-limit-note">Keeps up to 50 entries</span><div style="display:flex;align-items:center;gap:6px;"><button id="bnmImport" style="background:transparent;border:1px solid rgba(192,138,92,0.3);color:var(--copper-light);font-size:0.72em;padding:5px 10px;cursor:pointer;font-family:inherit;letter-spacing:0.5px;" title="Import JSON">↑ Import</button>${notes.length>0?`<button id="bnmExport" style="background:transparent;border:1px solid rgba(192,138,92,0.3);color:var(--copper-light);font-size:0.72em;padding:5px 10px;cursor:pointer;font-family:inherit;letter-spacing:0.5px;" title="Export JSON">↓ Export</button>`:''}<button class="bnm-close" id="bnmClose" aria-label="Close">✕</button></div></div><input type="file" id="bnmImportFile" accept=".json" style="display:none;">${buildStats()}<div class="bns-slot">${buildSummary()}</div>${buildFilterPills()}<div class="bnm-list">${buildList(notes)}</div></div>`;
   document.body.appendChild(modal);
   document.getElementById('bnmClose').addEventListener('click',()=>modal.remove());
   modal.addEventListener('click',e=>{if(e.target===modal)modal.remove();});
@@ -6057,26 +6210,30 @@ function updateFlavorSim() {
 });
 updateFlavorSim();
 
-// ===== HERO BEGINNER CTA =====
-document.getElementById('heroBeginnerCta')?.addEventListener('click', () => {
-  window.location.hash = '#knowledge';
-  setTimeout(()=>{const el=document.getElementById('beginnerGuideSection');if(el)el.scrollIntoView({behavior:_scrollBehavior(),block:'start'});},200);
-});
 
 // ===== SEGMENT CARD CLICKS =====
-// Beginner → Knowledge tab, beginner guide section
-document.getElementById('segBeginner')?.addEventListener('click', () => {
-  window.location.hash = '#knowledge';
-  setTimeout(()=>{const el=document.getElementById('beginnerGuideSection');if(el)el.scrollIntoView({behavior:_scrollBehavior(),block:'start'});},200);
-});
-// Flavor explorer → Tools
-document.getElementById('segFlavor')?.addEventListener('click', () => {
-  window.location.hash = '#tools';
-});
-// Pro → Tools
-document.getElementById('segPro')?.addEventListener('click', () => {
-  window.location.hash = '#tools';
-});
+// 三張路線卡各自導到不同的地方：
+//   新手 → 快速沖煮，並自動展開「三個問題幫你選」
+//   探索風味 → 進階工具，並自動展開「幫我推薦適合的沖法」（豆子資料 → 推薦）
+//   自由實驗 → 進階工具，直接停在沖法格（所有參數開放），推薦區保持收合
+function _segGo(hash,openBtnId,openBoxId,scrollId,msg){
+  window.location.hash=hash;
+  setTimeout(()=>{
+    try{
+      const btn=openBtnId&&document.getElementById(openBtnId),box=openBoxId&&document.getElementById(openBoxId);
+      if(btn&&box&&!box.classList.contains('open'))btn.click();
+      else if(openBoxId==null){const rb=document.getElementById('recommendBody'),rt=document.getElementById('recommendToggleBtn');if(rb&&rb.classList.contains('open')&&rt)rt.click();}
+      const el=document.getElementById(scrollId);
+      if(el)el.scrollIntoView({behavior:_scrollBehavior(),block:'start'});
+      if(msg)showCompareToast(msg);
+    }catch(e){}
+  },260);
+}
+document.getElementById('segBeginner')?.addEventListener('click',()=>_segGo('#quick','quickWizToggle','quickWiz','quickWizToggle','Answer three quick questions to pick your first method'));
+document.getElementById('segFlavor')?.addEventListener('click',()=>_segGo('#tools','recommendToggleBtn','recommendBody','recommendToggleBtn','Tell us about your beans and we\'ll suggest a method and settings'));
+document.getElementById('segPro')?.addEventListener('click',()=>_segGo('#tools',null,null,'methodBars','Pick any method — every parameter is yours to change'));
+// 隱藏中的 hero「我是新手」鈕也走同一條路
+document.getElementById('heroBeginnerCta')?.addEventListener('click',()=>_segGo('#quick','quickWizToggle','quickWiz','quickWizToggle',''));
 
 if('serviceWorker' in navigator){
   // 有新版本時顯示提示，讓使用者自己決定什麼時候更新
@@ -6185,7 +6342,13 @@ function handleHashChange() {
     const m = q.get('m'), d = parseFloat(q.get('d'));
     if (m && BREW_METHODS[m]) currentQuickMethod = m;
     const di = document.getElementById('quickDoseInput');
-    if (di && d && d >= 8 && d <= 60) di.value = d;
+    // Shared-link dose: accepted between 5-100g (same range as _clampDose); older links without d still work
+    if (di && isFinite(d) && d >= 5 && d <= 100) {
+      di.value = d;
+      document.querySelectorAll('#quickDoseBtns .dose-btn').forEach(b => b.classList.toggle('active', parseFloat(b.dataset.dose) === d));
+      _lastDoseSave(d);
+      if (m && BREW_METHODS[m]) _doseFitAuto(m,'quickDoseInput','#quickDoseBtns .dose-btn');
+    }
     if (typeof renderQuickMethodGrid === 'function') renderQuickMethodGrid();
     if (m && BREW_METHODS[m]) updateQuickBrewResults();
     if (typeof saveUserPrefs === 'function') saveUserPrefs();
@@ -6275,6 +6438,26 @@ function renderQuickMethodGrid() {
   const quickDescs = { immersion:'Steep then drain, most forgiving', kasuya:'Tetsu Kasuya · precise sweet-acid control', hoffmann:'James Hoffmann · top beginner pick, clean and bright', rao:'Scott Rao · three pours + spin, high extraction', onePour:'Minimal steps, consistent cup', chadwang:'Chad Wang · centre pour, 2017 WBrC champion original', winton:'Matt Winton · five pours, two temps, floral', icedBrew:'Rapid chill, bursting fruit aroma', kasuyaTen:'Kasuya 2026 · syrupy body and sweetness', woelfl:'Martin Wölfl · fast four-pour, 2024 WBrC champion', medina:'Carlos Medina · equal five-pour, 2023 WBrC champion', sherry:'Sherry Hsu · cool-start four-pour, 2022 WBrC champion', hoffmannCup:'James Hoffmann · 1-cup four-pour, built for 15g', kalita:'Flat-bed three-pour · the hardest recipe to get wrong', wendelboe:'Tim Wendelboe · stir the bloom, then pour straight through', april:'April\'s official recipe · coarse grind, six equal pours', dripDrop:'Japanese drip-by-drip · thick and sweet', bypass:'1:12 concentrate, then dilute — no bitterness' };
   let html = '';
   const methodOrder = ['hoffmann','hoffmannCup','kalita','onePour','rao','kasuya','kasuyaTen','wendelboe','april','dripDrop','bypass','immersion','chadwang','winton','sherry','medina','woelfl','icedBrew'];
+  const pins = _pinsGet();
+  // One card's markup — "My go-tos" and the groups below share it, so clicking behaves identically
+  const cardHtml = (k) => { const m = BREW_METHODS[k];
+    const icon = METHOD_ICONS[k] || '';
+    const accent = _accentOf(k);
+    const nm = names[k] || [m.badge, ''];
+    const isPin = pins.indexOf(k) >= 0;
+    return '<div class="quick-method-card' + (k === currentQuickMethod ? ' active' : '') + '" data-method="' + k + '" style="--card-accent:' + accent + '">' +
+      '<button class="qm-pin' + (isPin ? ' on' : '') + '" data-pin="' + k + '" aria-pressed="' + (isPin ? 'true' : 'false') + '" aria-label="' + (isPin ? 'Unpin this method' : 'Pin this method') + '" title="' + (isPin ? 'Unpin this method' : 'Pin this method') + '">📌</button>' +
+      '<div class="method-icon">' + icon + '</div>' +
+      '<div class="quick-method-name">' + nm[0] + '</div>' +
+      (nm[1] ? '<div class="quick-method-sub">' + nm[1] + '</div>' : '') +
+      '<div class="quick-method-desc">' + (quickDescs[k] || '') + '</div></div>';
+  };
+  // My go-tos: pins (max 3) first, then the 3 most recently brewed methods that are not already pinned
+  const favs = pins.concat(_recentMethods(3)).filter(k => BREW_METHODS[k]);
+  if (favs.length) {
+    html += '<div class="qm-group-head">⭐ My go-tos</div>';
+    for (const k of favs) html += cardHtml(k);
+  }
   // 依四層分組（基本功→經典→世界舞台→情境特調），每組一個小標；組內順序沿用 methodOrder
   const tierOrder = ['basics','classic','worldstage','seasonal'];
   for (const t of tierOrder) {
@@ -6282,16 +6465,7 @@ function renderQuickMethodGrid() {
     if (!ks.length) continue;
     const tl = (METHOD_TIERS[t] || {}).label || t;
     html += '<div class="qm-group-head">' + tl + '</div>';
-    for (const k of ks) { const m = BREW_METHODS[k];
-      const icon = METHOD_ICONS[k] || '';
-      const accent = _accentOf(k);
-      const nm = names[k] || [m.badge, ''];
-      html += '<div class="quick-method-card' + (k === currentQuickMethod ? ' active' : '') + '" data-method="' + k + '" style="--card-accent:' + accent + '">' +
-        '<div class="method-icon">' + icon + '</div>' +
-        '<div class="quick-method-name">' + nm[0] + '</div>' +
-        (nm[1] ? '<div class="quick-method-sub">' + nm[1] + '</div>' : '') +
-        '<div class="quick-method-desc">' + (quickDescs[k] || '') + '</div></div>';
-    }
+    for (const k of ks) html += cardHtml(k);
   }
   grid.innerHTML = html;
 }
@@ -6389,6 +6563,7 @@ function updateQuickBrewResults() {
   document.querySelectorAll('#quickDoseBtns .dose-btn').forEach(b => {
     b.classList.toggle('active', parseFloat(b.dataset.dose) === dose);
   });
+  _bigDoseSuggest(currentQuickMethod, dose);
 }
 const MASTER_TIMELINE=[{y:'2004',k:'wendelboe',t:'Tim Wendelboe Continuous Pour',d:'World Barista Champion — stir the bloom, then pour without stopping'},{y:'2016',k:'kasuya',t:'Tetsu Kasuya 4:6',d:'WBrC champion recipe — first 40% tunes taste, last 60% strength'},{y:'2016',k:'april',t:'April Six Equal Pours',d:'The year Patrik Rolf took the Danish Brewers Cup — April\u2019s official Copenhagen V60 recipe'},{y:'2017',k:'chadwang',t:'Chad Wang Original',d:'Taiwan’s first WBrC title — continuous centre pour'},{y:'2021',k:'winton',t:'Matt Winton Five-Pour',d:'WBrC champion — two kettles, five unequal pours'},{y:'2022',k:'sherry',t:'Sherry Hsu Original',d:'Taiwan’s second WBrC title — 75°C cool start, four pours, two temps'},{y:'2023',k:'medina',t:'Carlos Medina Equal Five',d:'WBrC champion — gentle 91°C extraction'},{y:'2024',k:'woelfl',t:'Martin Wölfl Fast Four',d:'WBrC champion — fast paper, high flow, short brew'},{y:'2026',k:'kasuyaTen',t:'Tetsu Kasuya Ten-Pour',d:'Ten years after the title — from subtraction to addition'}];
 const SCHOOL_MAP=[{icon:'🫧',t:'Immersion',d:'No pouring skill needed — contact time drives extraction',keys:['immersion']},{icon:'💧',t:'Continuous Pour',d:'One breath — steady flow and water level are everything',keys:['onePour','chadwang','wendelboe','dripDrop']},{icon:'🎼',t:'Staged Rhythm',d:'Flavour built from pour structure — every pour has a job',keys:['hoffmann','hoffmannCup','kalita','kasuya','kasuyaTen','winton','sherry','medina','woelfl','rao','april']},{icon:'🧊',t:'Applied Variants',d:'Temperature and format twists on the base structures',keys:['icedBrew','bypass']}];
@@ -6447,11 +6622,21 @@ function renderMethodOverview() {
 
   // Quick brew events
   document.getElementById('quickMethodGrid')?.addEventListener('click', (e) => {
+    // Pin button: toggles the pin only, never selects the method
+    const pin = e.target.closest('.qm-pin');
+    if (pin) {
+      e.stopPropagation();
+      const r = _pinToggle(pin.dataset.pin);
+      if (r === 'full') { showCompareToast('You can pin three methods at most'); return; }
+      renderQuickMethodGrid();
+      showCompareToast(r === 'on' ? 'Pinned — it will show under My go-tos' : 'Unpinned');
+      return;
+    }
     const card = e.target.closest('.quick-method-card');
     if (!card) return;
-    document.querySelectorAll('.quick-method-card').forEach(c => c.classList.remove('active'));
-    card.classList.add('active');
     currentQuickMethod = card.dataset.method;
+    // A method can appear both under My go-tos and in its own group — light up both cards
+    document.querySelectorAll('.quick-method-card').forEach(c => c.classList.toggle('active', c.dataset.method === currentQuickMethod));
     _doseFitAuto(currentQuickMethod,'quickDoseInput','#quickDoseBtns .dose-btn');
     updateQuickBrewResults();
     updateQuickFlowSteps(2);
@@ -6460,7 +6645,7 @@ function renderMethodOverview() {
 
   const quickDoseEl = document.getElementById('quickDoseInput');
   if (quickDoseEl) {
-    quickDoseEl.addEventListener('input', ()=>{updateQuickBrewResults();saveUserPrefs()});
+    quickDoseEl.addEventListener('input', ()=>{updateQuickBrewResults();saveUserPrefs();_lastDoseSave(quickDoseEl.value)});
   }
 
   document.getElementById('quickDoseBtns')?.addEventListener('click', (e) => {
@@ -6473,6 +6658,7 @@ function renderMethodOverview() {
       btn.classList.add('active');
       updateQuickBrewResults();
       saveUserPrefs();
+      _lastDoseSave(dose);
     }
   });
 

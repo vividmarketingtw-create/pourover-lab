@@ -1,7 +1,7 @@
 // PourOver Lab Service Worker
 // App 快取隨版本更新；字型另存一個永不清除的快取，改版時不會被連帶清掉。
-const CACHE_NAME = 'pourover-app-v57';
-const FONT_CACHE = 'pourover-fonts-v1';
+const CACHE_NAME = 'pourover-app-v61';
+const FONT_CACHE = 'pourover-fonts-v2'; // v2：自架 Noto Sans TC 子集也放這裡（fonts/ 路徑），改版不清
 
 // 少了就等於 App 壞掉的檔案 —— 必須全部成功
 const CORE_ASSETS = ['./', './manifest.json'];
@@ -10,7 +10,7 @@ const CORE_ASSETS = ['./', './manifest.json'];
 // icon-512-maskable.png 補上：manifest 有列，之前漏掉。
 const OPTIONAL_ASSETS = ['./icon-192.png', './icon-512.png', './icon-512-maskable.png', './en/', './en/manifest.json'];
 
-const FONT_CSS = 'https://fonts.googleapis.com/css2?family=Noto+Sans+TC:wght@300;400;500;700&family=DM+Sans:wght@400;500;700&family=Space+Mono:wght@400;700&family=Cormorant+Garamond:ital,wght@0,300;0,400;1,400&display=swap';
+const FONT_CSS = 'https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;700&family=Space+Mono:wght@400;700&family=Cormorant+Garamond:ital,wght@0,300;0,400;1,400&display=swap';
 
 const NAV_TIMEOUT = 2500; // 只有「快取裡沒有這一頁」時才會用到（第一次造訪）
 
@@ -119,7 +119,7 @@ self.addEventListener('fetch', e => {
 
   // 靜態資源：cache-first + 背景更新。字型寫進獨立的字型快取。
   const url = new URL(req.url);
-  const isFont = url.hostname.startsWith('fonts.');
+  const isFont = url.hostname.startsWith('fonts.') || (url.origin === self.location.origin && url.pathname.includes('/fonts/'));
   const cacheable = url.origin === self.location.origin || isFont;
   const targetCache = isFont ? FONT_CACHE : CACHE_NAME;
   e.respondWith(

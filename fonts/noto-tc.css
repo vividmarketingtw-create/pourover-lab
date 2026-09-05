@@ -1,0 +1,4 @@
+/* 自架 Noto Sans TC 精準子集（可變字重 100-900，站上用到的字 ＋ 常用字安全網，約 470KB）
+   取代原本從 Google Fonts 載的 2.2MB。缺字會自動退回系統中文字型。
+   重新產生：見 README「字型自架子集」一節。 */
+@font-face{font-family:'Noto Sans TC';font-style:normal;font-weight:100 900;font-display:swap;src:url(NotoSansTC-sub.woff2) format('woff2')}
