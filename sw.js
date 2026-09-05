@@ -1,6 +1,6 @@
 // PourOver Lab Service Worker
 // App 快取隨版本更新；字型另存一個永不清除的快取，改版時不會被連帶清掉。
-const CACHE_NAME = 'pourover-app-v62';
+const CACHE_NAME = 'pourover-app-v63';
 const FONT_CACHE = 'pourover-fonts-v2'; // v2：自架 Noto Sans TC 子集也放這裡（fonts/ 路徑），改版不清
 
 // 少了就等於 App 壞掉的檔案 —— 必須全部成功

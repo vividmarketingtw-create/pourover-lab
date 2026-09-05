@@ -3171,6 +3171,10 @@ body.scrolled .top-actions:hover,body.scrolled .top-actions:focus-within,body.sc
 /* ===== 10. 我的常用：空狀態虛線框（2026-09-05） ===== */
 .qm-fav-empty{grid-column:1/-1;border:1px dashed var(--border);border-radius:6px;padding:14px 16px;font-size:0.8em;line-height:1.6;color:var(--text-secondary);text-align:center;background:transparent;}
 .qm-fav-empty b{color:var(--copper);font-weight:500;}
+/* ===== 11. 我的常用：最近沖過可移除（2026-09-05） ===== */
+.qm-rhide{position:absolute;top:4px;left:4px;width:24px;height:24px;line-height:1;padding:0;border:none;border-radius:50%;background:transparent;color:var(--text-secondary);font-size:0.78em;cursor:pointer;opacity:0.45;transition:opacity .15s,transform .15s;}
+.qm-rhide:hover,.qm-rhide:focus-visible{opacity:1;transform:scale(1.12);}
+.qm-recent-tag{position:absolute;bottom:6px;right:6px;font-size:0.6em;letter-spacing:0.5px;color:var(--text-secondary);opacity:0.6;pointer-events:none;}
 </style>
 </head>
 <body>
@@ -4868,7 +4872,11 @@ const PIN_KEY='pol_pins',PIN_MAX=3;
 function _pinsGet(){try{const a=JSON.parse(localStorage.getItem(PIN_KEY)||'[]');return Array.isArray(a)?a.filter(k=>typeof k==='string'&&BREW_METHODS[k]).slice(0,PIN_MAX):[]}catch(e){return[]}}
 function _pinsSet(a){try{localStorage.setItem(PIN_KEY,JSON.stringify(a.slice(0,PIN_MAX)))}catch(e){}}
 function _pinToggle(k){const a=_pinsGet(),i=a.indexOf(k);if(i>=0){a.splice(i,1);_pinsSet(a);return'off'}if(a.length>=PIN_MAX)return'full';a.push(k);_pinsSet(a);return'on'}
-function _recentMethods(n){try{const pins=_pinsGet(),out=[];for(const r of _notesLoad()){const k=r&&r.method;if(!k||!BREW_METHODS[k])continue;if(pins.indexOf(k)>=0||out.indexOf(k)>=0)continue;out.push(k);if(out.length>=(n||3))break}return out}catch(e){return[]}}
+// 「最近沖過」可以按 ✕ 移除：記下移除的時間（pol_recentHide），之後只要有比那時間更新的紀錄，就會再出現
+const RHIDE_KEY='pol_recentHide';
+function _rhideGet(){try{const o=JSON.parse(localStorage.getItem(RHIDE_KEY)||'{}');return o&&typeof o==='object'?o:{}}catch(e){return{}}}
+function _rhideSet(k){try{const o=_rhideGet();o[k]=new Date().toISOString();localStorage.setItem(RHIDE_KEY,JSON.stringify(o))}catch(e){}}
+function _recentMethods(n){try{const pins=_pinsGet(),hide=_rhideGet(),out=[];for(const r of _notesLoad()){const k=r&&r.method;if(!k||!BREW_METHODS[k])continue;if(pins.indexOf(k)>=0||out.indexOf(k)>=0)continue;if(hide[k]&&!(r.time&&r.time>hide[k]))continue;out.push(k);if(out.length>=(n||3))break}return out}catch(e){return[]}}
 // ===== 記住上次的粉量 =====
 const LASTDOSE_KEY='pol_lastDose';
 function _lastDoseSave(v){try{const d=_clampDose(v);localStorage.setItem(LASTDOSE_KEY,String(d))}catch(e){}}
@@ -6387,13 +6395,14 @@ function renderQuickMethodGrid() {
   const methodOrder = ['hoffmann','hoffmannCup','kalita','onePour','rao','kasuya','kasuyaTen','wendelboe','april','dripDrop','bypass','immersion','chadwang','winton','sherry','medina','woelfl','icedBrew'];
   const pins = _pinsGet();
   // 一張卡片的 HTML —— 「我的常用」與下面的分組共用同一段標記，點擊行為完全一樣
-  const cardHtml = (k) => { const m = BREW_METHODS[k];
+  const cardHtml = (k, recent) => { const m = BREW_METHODS[k];
     const icon = METHOD_ICONS[k] || '';
     const accent = _accentOf(k);
     const nm = names[k] || [m.badge, ''];
     const isPin = pins.indexOf(k) >= 0;
     return '<div class="quick-method-card' + (k === currentQuickMethod ? ' active' : '') + '" data-method="' + k + '" style="--card-accent:' + accent + '">' +
       '<button class="qm-pin' + (isPin ? ' on' : '') + '" data-pin="' + k + '" aria-pressed="' + (isPin ? 'true' : 'false') + '" aria-label="' + (isPin ? '取消釘選' : '釘選這個沖法') + '" title="' + (isPin ? '取消釘選' : '釘選這個沖法') + '">📌</button>' +
+      (recent ? '<button class="qm-rhide" data-rhide="' + k + '" aria-label="從常用移除（沖過之後會再出現）" title="從常用移除（沖過之後會再出現）">✕</button><span class="qm-recent-tag">最近沖過</span>' : '') +
       '<div class="method-icon">' + icon + '</div>' +
       '<div class="quick-method-name">' + nm[0] + '</div>' +
       (nm[1] ? '<div class="quick-method-sub">' + nm[1] + '</div>' : '') +
@@ -6404,7 +6413,7 @@ function renderQuickMethodGrid() {
   // 空狀態：畫一個虛線框告訴使用者怎麼釘選；一旦有釘選或沖煮紀錄，虛線框就不再出現
   html += '<div class="qm-group-head">⭐ 我的常用</div>';
   if (!favs.length) html += '<div class="qm-fav-empty"><b>還沒有常用沖法</b><br>點卡片右上角的 📌 釘選（最多三支），沖過的也會自動出現在這裡</div>';
-  for (const k of favs) html += cardHtml(k);
+  for (const k of favs) html += cardHtml(k, pins.indexOf(k) < 0);
   // 依四層分組（基本功→經典→世界舞台→情境特調），每組一個小標；組內順序沿用 methodOrder
   const tierOrder = ['basics','classic','worldstage','seasonal'];
   for (const t of tierOrder) {
@@ -6570,6 +6579,8 @@ function renderMethodOverview() {
   // Quick brew events
   document.getElementById('quickMethodGrid')?.addEventListener('click', (e) => {
     // 釘選鈕：只切釘選，不選沖法
+    const rh = e.target.closest('.qm-rhide');
+    if (rh) { e.stopPropagation(); _rhideSet(rh.dataset.rhide); renderQuickMethodGrid(); showCompareToast('已從「我的常用」移除，下次沖這支時會再出現'); return; }
     const pin = e.target.closest('.qm-pin');
     if (pin) {
       e.stopPropagation();
