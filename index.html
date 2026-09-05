@@ -3168,6 +3168,9 @@ body.scrolled .top-actions:hover,body.scrolled .top-actions:focus-within,body.sc
   .tm-focus-sec{font-size:2em;}
   .tm-focus-water{font-size:1.05em;}
 }
+/* ===== 10. 我的常用：空狀態虛線框（2026-09-05） ===== */
+.qm-fav-empty{grid-column:1/-1;border:1px dashed var(--border);border-radius:6px;padding:14px 16px;font-size:0.8em;line-height:1.6;color:var(--text-secondary);text-align:center;background:transparent;}
+.qm-fav-empty b{color:var(--copper);font-weight:500;}
 </style>
 </head>
 <body>
@@ -6398,10 +6401,10 @@ function renderQuickMethodGrid() {
   };
   // 我的常用：釘選（最多 3）在前，接著是沖煮紀錄裡最近沖過、還沒被釘選的 3 支
   const favs = pins.concat(_recentMethods(3)).filter(k => BREW_METHODS[k]);
-  if (favs.length) {
-    html += '<div class="qm-group-head">⭐ 我的常用</div>';
-    for (const k of favs) html += cardHtml(k);
-  }
+  // 空狀態：畫一個虛線框告訴使用者怎麼釘選；一旦有釘選或沖煮紀錄，虛線框就不再出現
+  html += '<div class="qm-group-head">⭐ 我的常用</div>';
+  if (!favs.length) html += '<div class="qm-fav-empty"><b>還沒有常用沖法</b><br>點卡片右上角的 📌 釘選（最多三支），沖過的也會自動出現在這裡</div>';
+  for (const k of favs) html += cardHtml(k);
   // 依四層分組（基本功→經典→世界舞台→情境特調），每組一個小標；組內順序沿用 methodOrder
   const tierOrder = ['basics','classic','worldstage','seasonal'];
   for (const t of tierOrder) {
