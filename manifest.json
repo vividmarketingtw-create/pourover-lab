@@ -1,7 +1,7 @@
 {
   "name": "PourOver Lab — 手沖咖啡實驗室",
   "short_name": "手沖實驗室",
-  "description": "精準計算、智慧推薦、完整指南 — 支援十四種手沖咖啡沖法的互動工具",
+  "description": "精準計算、智慧推薦、完整指南 — 支援十八種手沖咖啡沖法的互動工具",
   "start_url": "./",
   "scope": "./",
   "display": "standalone",
@@ -68,7 +68,7 @@
     {
       "name": "知識庫",
       "short_name": "知識庫",
-      "description": "十四種沖法指南與沖煮知識",
+      "description": "十八種沖法指南與沖煮知識",
       "url": "./#knowledge",
       "icons": [
         {
