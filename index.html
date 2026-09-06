@@ -3148,6 +3148,13 @@ body.scrolled .top-actions:hover,body.scrolled .top-actions:focus-within,body.sc
 .tm-focus-water .tm-focus-sub{color:var(--text-secondary);font-size:0.55em;letter-spacing:1px;opacity:0.75;}
 .tm-focus.wait .tm-focus-sec{color:var(--text-primary);}
 .tm-focus.wait .tm-focus-water{font-size:1.15em;opacity:0.85;}
+/* 注水段：目標克數放最大（沖煮時第一眼要看到的），倒數秒數退到下面一行 */
+.tm-focus.pour .tm-focus-water{margin-top:0;font-size:2.9em;line-height:1.05;font-weight:700;font-variant-numeric:tabular-nums;}
+.tm-focus.pour .tm-focus-water .tm-focus-sub{display:block;font-size:0.3em;margin-top:2px;letter-spacing:1px;}
+.tm-focus.pour .tm-focus-sec{font-size:1.5em;color:var(--text-primary);opacity:0.9;line-height:1.3;}
+.tm-focus-pre{font-size:0.62em;letter-spacing:2px;margin-right:6px;opacity:0.7;font-weight:400;}
+.tm-focus.pour.poured .tm-focus-water b{color:var(--text-primary);}
+.tm-focus.pour.poured .tm-focus-water{opacity:0.92;}
 /* 進階計時器的右欄比較窄，把「／ 總 Ng」放到下一行才不會斷在奇怪的位置 */
 .pto-water-row .tm-focus-water .tm-focus-sub{display:block;margin-top:2px;}
 /* 焦點區接手以後，總累計時間降級成小字 */
@@ -3156,17 +3163,23 @@ body.scrolled .top-actions:hover,body.scrolled .top-actions:focus-within,body.sc
 @media (max-width:600px){
   .tm-focus-sec{font-size:2.6em;}
   .tm-focus-water{font-size:1.35em;}
+  .tm-focus.pour .tm-focus-water{font-size:2.6em;}
+  .tm-focus.pour .tm-focus-sec{font-size:1.35em;}
   #quickTimerOverlay .qt-time{font-size:1.35em;}
   #proTimerOverlay .pto-time{font-size:1.4em;}
 }
 @media (max-height:700px){
   .tm-focus-sec{font-size:2.4em;}
   .tm-focus-water{font-size:1.2em;}
+  .tm-focus.pour .tm-focus-water{font-size:2.4em;}
+  .tm-focus.pour .tm-focus-sec{font-size:1.2em;}
   .tm-focus-lbl{font-size:0.7em;}
 }
 @media (max-height:520px){
   .tm-focus-sec{font-size:2em;}
   .tm-focus-water{font-size:1.05em;}
+  .tm-focus.pour .tm-focus-water{font-size:2em;}
+  .tm-focus.pour .tm-focus-sec{font-size:1.05em;}
 }
 /* ===== 10. 我的常用：空狀態虛線框（2026-09-05） ===== */
 .qm-fav-empty{grid-column:1/-1;border:1px dashed var(--border);border-radius:6px;padding:14px 16px;font-size:0.8em;line-height:1.6;color:var(--text-secondary);text-align:center;background:transparent;}
@@ -4892,14 +4905,24 @@ function _bigDoseSuggest(k,d){try{const dose=parseFloat(d);if(!k||!isFinite(dose
   if(typeof showCompareToast==='function')showCompareToast('大粉量可以試試 Bypass 稀釋法或浸泡式')}catch(e){}}
 // ===== 計時中最重要的兩個數字 =====
 // 注水段：這段還剩幾秒 ＋ 要注到幾克；等待段：距離下一步還剩幾秒。三個計時器共用這一支。
-function _tmFocusHtml(step,remaining,total){
+function _tmFocusHtml(step,remaining,total,elapsed){
   if(!step)return'';
-  const pour=step.water>0,sec=Math.max(0,Math.round(remaining));
-  return'<div class="tm-focus'+(pour?' pour':' wait')+'">'+
-    '<div class="tm-focus-lbl">'+(pour?'這段還剩':'距離下一步')+'</div>'+
+  const sec=Math.max(0,Math.round(remaining));
+  if(step.water>0){
+    // 注水段有兩個小階段：注水窗（要把水注到目標克數）→ 等下一注（水已經注完，只是在等節奏）
+    const win=step.pour||step.duration||0,hasEl=(typeof elapsed==='number');
+    const pouring=!(hasEl&&win>0&&elapsed>=win);
+    const left=(pouring&&hasEl&&win>0)?Math.min(sec,Math.max(0,Math.ceil(win-elapsed))):sec;
+    return'<div class="tm-focus pour'+(pouring?'':' poured')+'">'+
+      '<div class="tm-focus-lbl">'+(pouring?'這段注到':'這段已注到')+'</div>'+
+      '<div class="tm-focus-water"><b>'+step.cum+'g</b><span class="tm-focus-sub">總 '+total+'g</span></div>'+
+      '<div class="tm-focus-sec"><span class="tm-focus-pre">'+(pouring?'注水還剩':'距離下一步')+'</span>'+left+'<span class="tm-focus-unit">秒</span></div>'+
+      '</div>';
+  }
+  return'<div class="tm-focus wait">'+
+    '<div class="tm-focus-lbl">距離下一步</div>'+
     '<div class="tm-focus-sec">'+sec+'<span class="tm-focus-unit">秒</span></div>'+
-    (pour?'<div class="tm-focus-water">注到 <b>'+step.cum+'g</b><span class="tm-focus-sub"> ／ 總 '+total+'g</span></div>'
-        :(step.cum>0?'<div class="tm-focus-water tm-focus-hold">已注 <b>'+step.cum+'g</b><span class="tm-focus-sub"> ／ 總 '+total+'g</span></div>':''))+
+    (step.cum>0?'<div class="tm-focus-water tm-focus-hold">已注 <b>'+step.cum+'g</b><span class="tm-focus-sub"> ／ 總 '+total+'g</span></div>':'')+
     '</div>';
 }
 
@@ -5204,7 +5227,7 @@ function startProTimerOverlay(m,dose,totalWater,ratio){
       const ptoIsAction=step.water===0&&step.duration>0&&step.duration<=15&&(_isAction(step.title));
       const ptoIsWait=step.water===0&&step.cum>0&&!ptoIsAction;
       // 與快速沖煮同一支 _tmFocusHtml：注水段給「這段還剩 N 秒 ＋ 注到 Ng」，等待段給到下一步的倒數
-      const ptoFocus=(!ptoIsAction&&ptoStepDur>0&&!brewCompleted)?_tmFocusHtml(step,ptoRemaining,totalWater):'';
+      const ptoFocus=(!ptoIsAction&&ptoStepDur>0&&!brewCompleted)?_tmFocusHtml(step,ptoRemaining,totalWater,ptoElapsed):'';
       if(waterEl){
         if(step.water>0){
           waterEl.innerHTML=ptoFocus+`<span class="pto-water-cum sec" style="margin-top:8px;"><span class="qt-water-cum-label">本段</span>+${step.water}g <span class="pto-pour-total">/ ${totalWater}g</span></span>${step.pour?'<span class="qt-flow-hint">💧 '+_flowRate(step)+'</span>':''}`;
@@ -5727,7 +5750,7 @@ function _doStartQuickTimer(){
     const isWaitStep=step.water===0&&step.cum>0&&!isActionStep;
     // 沖煮中最大的兩個數字（本段倒數 ＋ 目標克數）交給共用的 _tmFocusHtml，
     // 下面的注水量與倒數文字就降級成小字，同一個數字不重複兩次
-    const focusHtml=(!isActionStep&&stepDur>0&&!completed)?_tmFocusHtml(step,remaining,water):'';
+    const focusHtml=(!isActionStep&&stepDur>0&&!completed)?_tmFocusHtml(step,remaining,water,elapsed):'';
     const waterHtml=step.water>0
       ?'<div class="qt-cur-water">'+(focusHtml?'':'<span class="qt-water-pour"><span class="qt-pour-verb">注到</span>'+step.cum+'g</span>')+'<span class="qt-water-cum sec" style="margin-top:8px;"><span class="qt-water-cum-label">本段</span>+'+step.water+'g <span class="qt-pour-total">/ '+water+'g</span></span>'+(step.pour?'<span class="qt-flow-hint">💧 '+_flowRate(step)+'</span>':'')+'</div>'
       :(step.cum>0&&!focusHtml)
