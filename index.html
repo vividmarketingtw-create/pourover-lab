@@ -3188,6 +3188,20 @@ body.scrolled .top-actions:hover,body.scrolled .top-actions:focus-within,body.sc
 .qm-rhide{position:absolute;top:4px;left:4px;width:24px;height:24px;line-height:1;padding:0;border:none;border-radius:50%;background:transparent;color:var(--text-secondary);font-size:0.78em;cursor:pointer;opacity:0.45;transition:opacity .15s,transform .15s;}
 .qm-rhide:hover,.qm-rhide:focus-visible{opacity:1;transform:scale(1.12);}
 .qm-recent-tag{position:absolute;bottom:6px;right:6px;font-size:0.6em;letter-spacing:0.5px;color:var(--text-secondary);opacity:0.6;pointer-events:none;}
+
+/* ===== 粉床診斷（沖完回饋的第三題） ===== */
+.bco-bed{margin:0 0 16px;padding:14px;background:rgba(192,138,92,0.05);border:1px solid rgba(192,138,92,0.18);border-radius:12px;}
+.bco-bed-note{font-size:0.76em;line-height:1.5;color:var(--text-secondary);text-align:center;margin:-2px 0 10px;opacity:0.85;}
+.bco-bed-btns{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;}
+.bco-bed-btn{display:flex;flex-direction:column;align-items:center;gap:4px;background:var(--surface-2);color:var(--text-secondary);border:1px solid var(--border);border-radius:12px;padding:9px 4px;font-family:inherit;font-size:0.74em;line-height:1.25;cursor:pointer;transition:all 0.18s;min-height:66px;}
+.bco-bed-btn:hover{border-color:var(--copper);}
+.bco-bed-btn.active{background:rgba(192,138,92,0.18);border-color:var(--copper);color:var(--text-primary);}
+.bco-bed-svg{width:44px;height:28px;color:var(--copper-light);flex:0 0 auto;}
+.bco-bed-btn.active .bco-bed-svg{color:var(--copper);}
+.bco-bed-advice{margin-top:10px;}
+/* 下一步那一行的時間不要斷成兩行（以前會把 @ 留在上一行） */
+.qt-next-at{white-space:nowrap;}
+@media (max-width:360px){.bco-bed-btns{gap:6px;}.bco-bed-btn{font-size:0.7em;padding:8px 2px;}.bco-bed-svg{width:38px;height:24px;}}
 </style>
 </head>
 <body>
@@ -4417,6 +4431,39 @@ const _kBalName=()=>({sweet:'偏甜',balanced:'均衡',bright:'明亮偏酸'})[_
 const _kBalSelHtml=()=>{const c=_kBal();const opts=[['sweet','偏甜（前段 5:7）'],['balanced','均衡（前段 6:6）'],['bright','明亮（前段 7:5）']];return '<div class="pro-brew-note" style="display:flex;align-items:center;gap:6px;flex-wrap:wrap;">⚖️ 4:6 甜酸：'+opts.map(o=>'<button class="kbal-btn'+(c===o[0]?' active':'')+'" data-kb="'+o[0]+'">'+o[1]+'</button>').join('')+'<span style="width:100%;opacity:0.85;">前 40% 兩注的比例決定甜酸走向：第一注越少越甜，越多越明亮。<strong>均衡 6:6 ＝ 粕谷原始配方</strong>（60g＋60g），預設即為此。</span></div>'};
 const _kConcSelHtml=()=>{const c=_kConc();const opts=[['strong','濃（後段4注）'],['std','標準（後段3注）'],['light','淡（後段2注）']];return '<div class="pro-brew-note" style="display:flex;align-items:center;gap:6px;flex-wrap:wrap;">🎚 4:6 濃度：'+opts.map(o=>'<button class="kconc-btn'+(c===o[0]?' active':'')+'" data-kc="'+o[0]+'">'+o[1]+'</button>').join('')+'</div>'};
 function _wireKasuyaBtns(root,m){if(!root)return;root.querySelectorAll('.kbal-btn').forEach(b=>b.addEventListener('click',()=>{try{localStorage.setItem('poKasuyaBal',b.dataset.kb)}catch(e){}_proRefresh();if(m){try{updateSteps(m)}catch(e){}}}));root.querySelectorAll('.kconc-btn').forEach(b=>b.addEventListener('click',()=>{try{localStorage.setItem('poKasuyaConc',b.dataset.kc)}catch(e){}_proRefresh();if(m){try{updateSteps(m)}catch(e){}}}));}
+/* ===== 粉床診斷 =====
+   滴完之後的粉床，是唯一能慢慢看的萃取證據 —— 沖煮中手忙，看不了那麼細。
+   六種狀態各對應一個成因與一個下次的動作；判準會隨濾杯形狀變，所以要一起看 dripperType。 */
+const _BED_SVG=(inner)=>'<svg class="bco-bed-svg" viewBox="0 0 48 30" aria-hidden="true"><path d="M4 4 L18 26 L30 26 L44 4" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linejoin="round" stroke-linecap="round" opacity="0.55"/>'+inner+'</svg>';
+const BED_ICON={
+  flat:_BED_SVG('<path d="M10.6 13 L37.4 13 L30 26 L18 26 Z" fill="currentColor" opacity="0.8"/>'),
+  crater:_BED_SVG('<path d="M10.6 13 L17 13 L24 22.5 L31 13 L37.4 13 L30 26 L18 26 Z" fill="currentColor" opacity="0.8"/>'),
+  wall:_BED_SVG('<path d="M13 18 L35 18 L30 26 L18 26 Z" fill="currentColor" opacity="0.8"/><path d="M7.6 7 L11.4 13 L14 11.4 L10.2 5.4 Z" fill="currentColor" opacity="0.55"/><path d="M40.4 7 L36.6 13 L34 11.4 L37.8 5.4 Z" fill="currentColor" opacity="0.55"/>'),
+  holes:_BED_SVG('<path d="M10.6 13 L15.6 13 L17.6 21.5 L19.6 13 L26.4 13 L28.4 20.5 L30.4 13 L37.4 13 L30 26 L18 26 Z" fill="currentColor" opacity="0.8"/>'),
+  tilt:_BED_SVG('<path d="M10.6 8.5 L37.4 18.5 L30 26 L18 26 Z" fill="currentColor" opacity="0.8"/>'),
+  patchy:_BED_SVG('<path d="M10.6 13 L25 13 L25 26 L18 26 Z" fill="currentColor" opacity="0.8"/><path d="M25 13 L37.4 13 L30 26 L25 26 Z" fill="currentColor" opacity="0.26"/>')};
+const BED_STATES=[
+  {k:'flat',lbl:'平整均勻',adv:'粉床平整、顏色均勻 —— 注水很穩，這杯的萃取是均勻的。下次照這樣做就好。'},
+  {k:'crater',lbl:'中間深坑',adv:'中間被水柱打出一個坑 → 水流太強、或太集中在中心。下次把壺嘴放低、水流收細一點，繞圈範圍拉到粉面的三分之二。'},
+  {k:'wall',lbl:'邊緣粉牆',adv:'水位衝太高或直接沖到濾紙壁，那一圈粉幾乎沒被萃取到 → 整杯會偏淡。下次注水收在粉面內、水位別超過粉層太多，最後一注完輕輕晃一下濾杯把粉帶下來。'},
+  {k:'holes',lbl:'裂縫孔洞',adv:'通道效應 —— 水找到捷徑直接穿過去，同一杯會又酸又澀。下次悶蒸完確實 swirl 一次，注水前先把乾粉鋪平、結塊打散。'},
+  {k:'tilt',lbl:'粉床是斜的',adv:'濾杯沒放平、或注水一直偏同一側 → 兩邊萃取程度不一樣。下次先確認濾杯與下壺是平的，繞圈時把圈畫完整。'},
+  {k:'patchy',lbl:'淺色斑塊',adv:'顏色淺的那一塊沒吃到水。下次悶蒸水量加到粉量的 2-3 倍，注完立刻 swirl，確認沒有一撮乾粉留在角落。'}];
+const BED_LBL=BED_STATES.reduce((o,s)=>{o[s.k]=s.lbl;return o},{});
+// 同一種粉床在不同濾杯代表的意思不一樣，先給一句話定調
+const BED_DRIPPER_NOTE={v60:'V60 這類錐形濾杯，粉床中間比邊緣低一點點是正常的 —— 明顯的坑才算問題。',neo:'V60 這類錐形濾杯，粉床中間比邊緣低一點點是正常的 —— 明顯的坑才算問題。',kono:'KONO 這類錐形濾杯，粉床中間比邊緣低一點點是正常的 —— 明顯的坑才算問題。',april:'錐形濾杯的粉床中間比邊緣低一點點是正常的 —— 明顯的坑才算問題。',melitta:'扇形濾杯的粉床會往出水孔那側略低，這是正常的 —— 看的是「有沒有一整塊沒吃到水」。',kalita:'平底濾杯的粉床本來就該是平的一片，中間下凹反而不正常。',origami:'Origami 配波浪濾紙時看平底的標準（要平），配錐形濾紙時中間微微下凹是正常的。',hswitch:'浸泡式的粉床比較鬆散，形狀不用太計較 —— 看「顏色有沒有一整片不均」比看形狀準。',_default:'粉床的標準會隨濾杯形狀變：錐形中間微凹正常、平底要平的一片。'};
+const _bedDripperNote=()=>{try{const v=(document.getElementById('dripperType')||{}).value||'v60';return BED_DRIPPER_NOTE[v]||BED_DRIPPER_NOTE._default||''}catch(e){return''}};
+const _bedHtml=()=>'<div class="bco-bed"><div class="bco-dd-title">滴完後，粉床長什麼樣子？<span style="opacity:0.55;font-weight:400;font-size:0.85em;">（可選）</span></div><div class="bco-bed-note" style="display:none;"></div><div class="bco-bed-btns">'+BED_STATES.map(s=>'<button class="bco-bed-btn" data-bed="'+s.k+'" type="button">'+BED_ICON[s.k]+'<span>'+s.lbl+'</span></button>').join('')+'</div><div class="bco-dd-advice bco-bed-advice" style="display:none;"></div></div>';
+function _wireBed(rootEl){const box=rootEl.querySelector('.bco-bed');if(!box)return;
+  const note=box.querySelector('.bco-bed-note'),d=_bedDripperNote();
+  if(note&&d){note.textContent=d;note.style.display='block';}
+  const adv=box.querySelector('.bco-bed-advice');
+  box.querySelectorAll('.bco-bed-btn[data-bed]').forEach(b=>b.addEventListener('click',()=>{
+    box.querySelectorAll('.bco-bed-btn[data-bed]').forEach(x=>x.classList.remove('active'));
+    b.classList.add('active');
+    const s=BED_STATES.filter(x=>x.k===b.dataset.bed)[0];
+    if(adv){adv.textContent=s?s.adv:'';adv.style.display=s?'block':'none';}}));}
+const _bedPick=(rootEl)=>{const b=(rootEl||document).querySelector('.bco-bed-btn.active[data-bed]');return b?b.dataset.bed:''};
 function _wireDrawdown(rootEl,mk){const box=rootEl.querySelector('.bco-drawdown');if(!box)return;const adv=box.querySelector('.bco-dd-advice');box.querySelectorAll('.bco-dd-btn[data-dd]').forEach(b=>b.addEventListener('click',()=>{box.querySelectorAll('.bco-dd-btn[data-dd]').forEach(x=>x.classList.remove('active'));b.classList.add('active');if(mk)_ddSave(mk,b.dataset.dd);if(mk&&typeof _beanMemSave==='function')_beanMemSave(mk,{dd:b.dataset.dd,grind:_lastGrind()});adv.textContent=DRAWDOWN_ADVICE[b.dataset.dd]||'';adv.style.display='block';}));}
 const BREW_METHODS={immersion:{badge:'浸泡式',title:'浸泡式手沖 · 新手最友善法',desc:'先浸泡後滴濾<br>容錯率極高 · 不依賴注水技巧',ratio:15,temp:'93°C',tempC:93,grind:'中研磨',time:'4:50-6:30',buildSummary:(d,t)=>{const b=Math.round(d*2),ef=_envF(false),soak=Math.max(150,Math.min(240,_r5((150+d*1.8)*ef)));return[{label:'悶蒸水量',value:b,unit:'g'},{label:'主注水',value:t-b,unit:'g'},{label:'浸泡時間',value:_fmtT(soak),unit:''},{label:'總水量',value:t,unit:'g'}]},buildSteps:(d,t)=>{const b=Math.round(d*2),m=t-b,ef=_envF(false),fill=_pourT(m,6,120),drain=Math.max(60,_ddV(Math.max(20,t-d*2),d,0.85,1)),soak=Math.max(150,Math.min(240,_r5((150+d*1.8)*ef)));return{groups:[{label:'浸泡 + 滴濾',color:'amber',steps:[{num:1,time:'0:00',title:'預浸（預潤）',note:'<strong>先把濾紙用熱水沖過、順便預熱濾杯</strong>（開著閥沖，倒掉熱水）— 浸泡式的杯體多是樹脂，冷杯會偷走熱量，而且要泡三分鐘以上，這一步比滴濾式更重要。<br><strong>關上底閥</strong>（Clever Dripper / Hario Switch），以93°C熱水注入粉量2倍的水，讓水均勻覆蓋所有粉層，接著<strong>輕輕搖晃濾杯（swirl）</strong>把乾粉全部浸潤，等待約30秒排氣。<br><small style="opacity:0.75;">ℹ️ 底閥關著時嚴格說不算「悶蒸」（那是滴濾式的概念）— 這一步正確的說法是<strong>預浸／預潤</strong>，目的是排氣＋讓粉均勻吃到水。</small><br><small style="opacity:0.7;">研磨參考：<strong>小飛馬600N 刻度 4-4.5</strong>（口感像粗砂糖偏細）<br>其他磨豆機：Comandante 約24-27格 / 1Zpresso JX 約2.4-2.7圈</small>',water:b,cum:b,duration:40},{num:2,time:_fmtT(40),title:'注滿剩餘水量',note:`93°C，約${fill}秒內注入剩餘水量。<strong>速度不拘</strong> — 底閥關著，水不會流走，注水手法對這個沖法幾乎沒有影響。注完後輕攪一圈（或再 swirl 一次）確保沒有結塊浮在表面。`,water:m,cum:t,duration:fill,noRate:true},{num:3,time:_fmtT(40+fill),title:`靜置浸泡 ${_fmtT(soak)}`,note:'蓋上壺蓋保溫（可選）。咖啡粉在水中完整浸泡，不需要任何操作。這段時間水與咖啡粉充分接觸，萃取均勻且穩定。',water:0,cum:t,duration:soak},{num:4,time:_fmtT(40+fill+soak),title:'開閥滴濾',note:`打開底閥，讓咖啡液自然滴出（約 ${drain} 秒完成）。滴完後移除濾杯即可享用。注意：不要在中途搖晃或按壓，讓液體自然流下。`,water:0,cum:t,duration:drain}]}]}}},
   kasuya:{badge:'粕谷',
@@ -4954,13 +5001,14 @@ function _tmFocusHtml(step,remaining,total,elapsed){
   const sec=Math.max(0,Math.round(remaining));
   if(step.water>0){
     // 注水段有兩個小階段：注水窗（要把水注到目標克數）→ 等下一注（水已經注完，只是在等節奏）
-    const win=step.pour||step.duration||0,hasEl=(typeof elapsed==='number');
-    const pouring=!(hasEl&&win>0&&elapsed>=win);
-    const left=(pouring&&hasEl&&win>0)?Math.min(sec,Math.max(0,Math.ceil(win-elapsed))):sec;
-    return'<div class="tm-focus pour'+(pouring?'':' poured')+'">'+
-      '<div class="tm-focus-lbl">'+(pouring?'這段注到':'這段已注到')+'</div>'+
+    // 有 step.pour 才知道注水窗有多長；沒有的（悶蒸那種）就只給到下一步的倒數，不要謊稱還在注水
+    const win=step.pour||0,hasEl=(typeof elapsed==='number'),known=(win>0&&hasEl);
+    const pouring=known?(elapsed<win):null;
+    const left=(pouring===true)?Math.min(sec,Math.max(0,Math.ceil(win-elapsed))):sec;
+    return'<div class="tm-focus pour'+(pouring===false?' poured':'')+'">'+
+      '<div class="tm-focus-lbl">'+(pouring===false?'這段已注到':'這段注到')+'</div>'+
       '<div class="tm-focus-water"><b>'+step.cum+'g</b><span class="tm-focus-sub">總 '+total+'g</span></div>'+
-      '<div class="tm-focus-sec"><span class="tm-focus-pre">'+(pouring?'注水還剩':'距離下一步')+'</span>'+left+'<span class="tm-focus-unit">秒</span></div>'+
+      '<div class="tm-focus-sec"><span class="tm-focus-pre">'+(pouring===true?'注水還剩':'距離下一步')+'</span>'+left+'<span class="tm-focus-unit">秒</span></div>'+
       '</div>';
   }
   return'<div class="tm-focus wait">'+
@@ -5244,7 +5292,7 @@ function startProTimerOverlay(m,dose,totalWater,ratio){
       el.classList.toggle('done',idx<activeIdx);
     });
     _stepCountdownTick(timerSeconds,currentStepDurations,brewCompleted);
-    const _pnEl=document.getElementById('ptoNext');if(_pnEl){const _nx2=currentAllStepsData[activeIdx+1];_pnEl.innerHTML=(_nx2&&!brewCompleted)?'下一步 ▸ '+_nx2.title+(_nx2.water>0?' <b>注到 '+_nx2.cum+'g</b>':'')+' <span class="qt-next-at">@ '+_fmtT(currentStepDurations[activeIdx])+'</span>':'';}
+    const _pnEl=document.getElementById('ptoNext');if(_pnEl){const _nx2=currentAllStepsData[activeIdx+1];_pnEl.innerHTML=(_nx2&&!brewCompleted)?'下一步 ▸ '+_nx2.title+(_nx2.water>0?' <b>注到 '+_nx2.cum+'g</b>':'')+' <span class="qt-next-at">'+_fmtT(currentStepDurations[activeIdx])+' 開始</span>':'';}
     if(activeIdx!==ptoPrevActiveIdx){
       const activeEl=document.querySelector('#ptoStepsList .pto-step-item.active');
       if(activeEl)activeEl.scrollIntoView({behavior:_scrollBehavior(),block:'nearest'});
@@ -5274,7 +5322,8 @@ function startProTimerOverlay(m,dose,totalWater,ratio){
       const ptoFocus=(!ptoIsAction&&ptoStepDur>0&&!brewCompleted)?_tmFocusHtml(step,ptoRemaining,totalWater,ptoElapsed):'';
       if(waterEl){
         if(step.water>0){
-          waterEl.innerHTML=ptoFocus+`<span class="pto-water-cum sec" style="margin-top:8px;"><span class="qt-water-cum-label">本段</span>+${step.water}g <span class="pto-pour-total">/ ${totalWater}g</span></span>${step.pour?'<span class="qt-flow-hint">💧 '+_flowRate(step)+'</span>':''}`;
+          const _ptoStillPouring=step.pour?(ptoElapsed<step.pour):true;
+          waterEl.innerHTML=ptoFocus+(ptoFocus?'':`<span class="pto-water-cum sec" style="margin-top:8px;"><span class="qt-water-cum-label">本段</span>+${step.water}g <span class="pto-pour-total">/ ${totalWater}g</span></span>`)+((step.pour&&_ptoStillPouring)?'<span class="qt-flow-hint">💧 '+_flowRate(step)+'</span>':'');
         }else if(ptoIsAction){
           waterEl.innerHTML=`<button class="qt-action-done" id="ptoActionDone">✓ 完成動作，繼續</button>`;
         }else if(ptoIsWait&&ptoStepDur>0){
@@ -5375,6 +5424,7 @@ function showBrewComplete(){const _bcEx=document.getElementById('brewCompleteOve
     <div class="bco-grid"><div class="bco-cell"><div class="bco-val">${d}g</div><div class="bco-lbl">粉量</div></div><div class="bco-cell"><div class="bco-val">${tw}g</div><div class="bco-lbl">水量</div></div><div class="bco-cell"><div class="bco-val">${timeStr}</div><div class="bco-lbl">時間</div></div></div>
     <div class="bco-actions">
       ${_drawdownHtml()}
+      ${_bedHtml()}
       <button class="bco-btn-note" id="brewNoteToggle">✎ 記錄心得</button>
       <div class="bco-note-section" id="brewNoteSection"><div class="bco-note-inner">
         <div class="bco-rating-section"><div class="bco-rating-title">感受評量 <span style="font-size:0.8em;opacity:0.55;font-weight:400;">（可選）</span></div>${ratingRowsHtml}</div>
@@ -5388,7 +5438,7 @@ function showBrewComplete(){const _bcEx=document.getElementById('brewCompleteOve
     </div>
   </div>`;
   document.body.appendChild(overlay);
-  _wireDrawdown(overlay,selectedMethod);
+  _wireDrawdown(overlay,selectedMethod);_wireBed(overlay);
   // Toggle note section — auto-open for better discoverability
   const noteToggle=document.getElementById('brewNoteToggle');
   const noteSection=document.getElementById('brewNoteSection');
@@ -5426,7 +5476,7 @@ function showBrewComplete(){const _bcEx=document.getElementById('brewCompleteOve
     const el=document.getElementById('brewSuggestion');
     if(el){if(sugg.length){el.style.display='block';el.innerHTML='<div style="font-size:0.72em;color:var(--copper);letter-spacing:2px;text-transform:uppercase;margin-bottom:8px;">調整建議</div>'+sugg.map(s=>`<div style="font-size:0.85em;color:var(--text-secondary);line-height:1.6;padding:4px 0;border-bottom:1px solid var(--border);">${s}</div>`).join('')}else{el.style.display='none';}}
   }
-  function saveNote(){const note=document.getElementById('brewNoteInput')?.value?.trim();const grind=document.getElementById('brewGrindInput')?.value?.trim()||'';if(grind){try{localStorage.setItem('poLastGrind',grind)}catch(e){}}const roast=document.getElementById('roastLevel')?.value||'';const process=document.getElementById('processing')?.value||'';const temp=parseFloat(document.getElementById('currentTemp')?.value)||0;const dripper=document.getElementById('dripperType')?.value||'';const days=document.getElementById('restDaysSkipBtn')?.classList.contains('active')?7:(_restDays(0));try{const notes=_notesLoad();notes.unshift({v:BREW_NOTES_VERSION,time:new Date().toISOString(),method:selectedMethod||'',dose:d,water:tw,ratio:r,duration:timerSeconds,note:note||'',grind,ratings:{...ratings},roast,process,temp,dripper,days});if(notes.length>50)notes.pop();_notesSave(notes)}catch(e){}}
+  function saveNote(){const note=document.getElementById('brewNoteInput')?.value?.trim();const grind=document.getElementById('brewGrindInput')?.value?.trim()||'';if(grind){try{localStorage.setItem('poLastGrind',grind)}catch(e){}}const roast=document.getElementById('roastLevel')?.value||'';const process=document.getElementById('processing')?.value||'';const temp=parseFloat(document.getElementById('currentTemp')?.value)||0;const dripper=document.getElementById('dripperType')?.value||'';const days=document.getElementById('restDaysSkipBtn')?.classList.contains('active')?7:(_restDays(0));try{const notes=_notesLoad();notes.unshift({v:BREW_NOTES_VERSION,time:new Date().toISOString(),method:selectedMethod||'',dose:d,water:tw,ratio:r,duration:timerSeconds,note:note||'',grind,ratings:{...ratings},roast,process,temp,dripper,days,bed:_bedPick(document)});if(notes.length>50)notes.pop();_notesSave(notes)}catch(e){}}
   document.getElementById('brewSaveNoteBtn').addEventListener('click',()=>{saveNote();overlay.remove();});
   document.getElementById('brewViewNotesBtn').addEventListener('click',()=>{saveNote();overlay.remove();setTimeout(()=>showBrewNotes(),100);});
   document.getElementById('brewAgainBtn').addEventListener('click',()=>{saveNote();overlay.remove();resetTimer();});
@@ -5587,6 +5637,7 @@ function showQuickBrewNoteModal(method,dose,water,seconds){
     <div class="bco-grid"><div class="bco-cell"><div class="bco-val">${dose}g</div><div class="bco-lbl">粉量</div></div><div class="bco-cell"><div class="bco-val">${water}g</div><div class="bco-lbl">水量</div></div><div class="bco-cell"><div class="bco-val">${timeStr}</div><div class="bco-lbl">時間</div></div></div>
     <div class="bco-actions">
       ${_drawdownHtml()}
+      ${_bedHtml()}
       <div class="bco-taste-section">
         <div class="bco-taste-title">這次的風味如何？</div>
         <div class="bco-taste-btns">
@@ -5612,7 +5663,7 @@ function showQuickBrewNoteModal(method,dose,water,seconds){
   </div>`;
   document.body.appendChild(modal);
   try{const _lg=localStorage.getItem('poLastGrind');if(_lg)document.getElementById('qbnGrind').value=_lg}catch(e){}
-  _wireDrawdown(modal,method);
+  _wireDrawdown(modal,method);_wireBed(modal);
   // Taste buttons
   let qbnTaste='';
   const tasteAdviceEl=document.getElementById('qbnTasteAdvice');
@@ -5672,7 +5723,7 @@ function showQuickBrewNoteModal(method,dose,water,seconds){
       });
     });
   });
-  function saveQbn(){const note=document.getElementById('qbnInput')?.value?.trim();const grind=document.getElementById('qbnGrind')?.value?.trim()||'';if(grind){try{localStorage.setItem('poLastGrind',grind)}catch(e){}}try{const notes=_notesLoad();notes.unshift({v:BREW_NOTES_VERSION,time:new Date().toISOString(),method:method||'',dose:dose,water:water,duration:seconds,note:note||'',grind,taste:qbnTaste||'',dd:_qbnDd(),ratings:{...qbnRatings}});if(notes.length>50)notes.pop();_notesSave(notes)}catch(e){}}
+  function saveQbn(){const note=document.getElementById('qbnInput')?.value?.trim();const grind=document.getElementById('qbnGrind')?.value?.trim()||'';if(grind){try{localStorage.setItem('poLastGrind',grind)}catch(e){}}try{const notes=_notesLoad();notes.unshift({v:BREW_NOTES_VERSION,time:new Date().toISOString(),method:method||'',dose:dose,water:water,duration:seconds,note:note||'',grind,taste:qbnTaste||'',dd:_qbnDd(),ratings:{...qbnRatings},bed:_bedPick(document)});if(notes.length>50)notes.pop();_notesSave(notes)}catch(e){}}
   document.getElementById('qbnSave').addEventListener('click',()=>{saveQbn();modal.remove();showCompareToast('已儲存至沖煮紀錄 ✓');});
   document.getElementById('qbnViewAll').addEventListener('click',()=>{saveQbn();modal.remove();setTimeout(()=>showBrewNotes(),100);});
   // 沖完想直接再挑一支：存檔後回到快速沖煮的沖法格
@@ -5795,8 +5846,12 @@ function _doStartQuickTimer(){
     // 沖煮中最大的兩個數字（本段倒數 ＋ 目標克數）交給共用的 _tmFocusHtml，
     // 下面的注水量與倒數文字就降級成小字，同一個數字不重複兩次
     const focusHtml=(!isActionStep&&stepDur>0&&!completed)?_tmFocusHtml(step,remaining,water,elapsed):'';
+    // 焦點區已經把「注到 Ng ／ 總 Ng」放大了，這裡就不再重複同一組數字；
+    // 注水速度只在「還在注的那幾秒」留著 —— 注完之後它就只是雜訊
+    const _stillPouring=step.pour?(elapsed<step.pour):true;
+    const _qtWaterInner=(focusHtml?'':'<span class="qt-water-pour"><span class="qt-pour-verb">注到</span>'+step.cum+'g</span><span class="qt-water-cum sec" style="margin-top:8px;"><span class="qt-water-cum-label">本段</span>+'+step.water+'g <span class="qt-pour-total">/ '+water+'g</span></span>')+((step.pour&&_stillPouring)?'<span class="qt-flow-hint">💧 '+_flowRate(step)+'</span>':'');
     const waterHtml=step.water>0
-      ?'<div class="qt-cur-water">'+(focusHtml?'':'<span class="qt-water-pour"><span class="qt-pour-verb">注到</span>'+step.cum+'g</span>')+'<span class="qt-water-cum sec" style="margin-top:8px;"><span class="qt-water-cum-label">本段</span>+'+step.water+'g <span class="qt-pour-total">/ '+water+'g</span></span>'+(step.pour?'<span class="qt-flow-hint">💧 '+_flowRate(step)+'</span>':'')+'</div>'
+      ?(_qtWaterInner?'<div class="qt-cur-water">'+_qtWaterInner+'</div>':'')
       :(step.cum>0&&!focusHtml)
         ?'<div class="qt-cur-water"><span class="qt-water-cum"><span class="qt-water-cum-label">累計</span>'+step.cum+'g <span class="qt-pour-total">/ '+water+'g</span></span></div>'
         :'';
@@ -5807,7 +5862,7 @@ function _doStartQuickTimer(){
     const actionHtml=isActionStep?'<button class="qt-action-done" id="qtActionDone">✓ 完成動作，繼續</button>':'';
     const _qtWintonTemp=(currentQuickMethod==='winton'&&activeIdx>=3);const _qtTempBadge=_qtWintonTemp?'<div class="winton-temp-badge" style="margin-top:4px;">🌡 降溫至 88°C</div>':'';
     cur.innerHTML='<div class="qt-cur-title">'+step.title+'</div>'+_qtTempBadge+focusHtml+waterHtml+waitHtml+actionHtml;
-    const _nx=allSteps[activeIdx+1];if(_nx&&!completed){cur.innerHTML+='<div class="qt-next">下一步 ▸ '+_nx.title+(_nx.water>0?' <b>注到 '+_nx.cum+'g</b>':'')+' <span class="qt-next-at">@ '+_fmtT(qtDurations[activeIdx])+'</span></div>';}
+    const _nx=allSteps[activeIdx+1];if(_nx&&!completed){cur.innerHTML+='<div class="qt-next">下一步 ▸ '+_nx.title+(_nx.water>0?' <b>注到 '+_nx.cum+'g</b>':'')+' <span class="qt-next-at">'+_fmtT(qtDurations[activeIdx])+' 開始</span></div>';}
     if(!completed&&seconds>=qtDurations[qtDurations.length-1]){
       completed=true;clearInterval(qtInterval);running=false;_sfx('done');
       document.getElementById('quickTimerDot')?.classList.remove('active');
@@ -6039,6 +6094,7 @@ function showBrewNotes(){
     if(n.temp)details.push({l:'水溫',v:n.temp+'°C'});
     if(n.dripper)details.push({l:'濾杯',v:DRIPPER_LBL[n.dripper]||n.dripper});
     if(n.ratio)details.push({l:'粉水比',v:'1:'+n.ratio});if(n.grind)details.push({l:'研磨刻度',v:_escRcp(n.grind)});
+    if(n.bed&&BED_LBL[n.bed])details.push({l:'粉床',v:BED_LBL[n.bed]});
     if(n.days)details.push({l:'養豆天數',v:n.days+'天'});
     const ratingEntries=Object.entries(n.ratings||{}).filter(([,v])=>v>0);
     const hasDetail=details.length>0||ratingEntries.length>0||n.note;
