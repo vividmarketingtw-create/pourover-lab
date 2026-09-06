@@ -4806,21 +4806,68 @@ function autoAdjustTemp(){const r=document.getElementById('roastLevel').value;co
 function applyTheme(t){document.documentElement.setAttribute('data-theme',t);const btn=document.getElementById('themeToggleBtn');if(btn)btn.textContent=t==='light'?'\u263D':'\u2600\uFE0E';const mc=document.querySelector('meta[name="theme-color"]');if(mc)mc.setAttribute('content',t==='light'?'#F3EBDD':'#2C1A0E');}
 function toggleTheme(){const cur=document.documentElement.getAttribute('data-theme')==='light'?'dark':'light';try{localStorage.setItem('poTheme',cur)}catch(e){}applyTheme(cur);}
 // ===== Brew sound cues (Web Audio; iOS has no vibration support) =====
+/* ===== Cue sounds =====
+   On iOS the hardware mute switch silences Web Audio (synthesised sound) outright, and the volume
+   keys cannot bring it back. An <audio> element goes through the media channel instead, so it still
+   sounds with the switch flipped - your hands are wet while brewing, you should not have to reach
+   for that switch.
+   How: the first time a sound is needed, every cue is rendered into ONE WAV (a Blob URL) played by a
+   single <audio>; to play a cue we jump currentTime to its segment (an audio sprite: only one element
+   to unlock, and no delay from swapping src). If the browser refuses, we fall back to the original
+   Web Audio beeps.
+   NB: playing media audio on iOS pauses background music for a moment - that is OS behaviour. */
 let _sfxCtx=null,_sfxOn=(function(){try{return localStorage.getItem('poSoundOn')!=='0'}catch(e){return true}})(),_lastTickAt=-1;
-function _sfxInit(){if(!_sfxOn)return;if(!_sfxCtx){try{_sfxCtx=new (window.AudioContext||window.webkitAudioContext)()}catch(e){}}if(_sfxCtx&&_sfxCtx.state==='suspended')_sfxCtx.resume().catch(()=>{});}
-/* 只在真的要出聲的手勢上解鎖音訊（開始沖煮／自由計時／音效開關），
-   以前是綁在整頁的 pointerdown 上，碰一下網頁就接管 iOS 的音訊 session。*/
+const _SFX_SR=11025,_SFX_LEN=3.2,_SFX_ARM=3.0;
+// Each segment: [start second inside the sprite, length, notes [freq, delay, length, volume]]
+const _SFX_SEG={on:[0.10,0.40,[[784,0,0.14,0.30],[1175,0.12,0.24,0.28]]],
+  off:[0.60,0.40,[[587,0,0.13,0.26],[392,0.12,0.22,0.24]]],
+  step:[1.10,0.40,[[880,0,0.12,0.24],[1318,0.14,0.20,0.22]]],
+  tick:[1.60,0.12,[[1046,0,0.055,0.13]]],
+  done:[1.80,0.85,[[659,0,0.16,0.24],[880,0.19,0.16,0.24],[1046,0.38,0.40,0.24]]],
+  lap:[2.75,0.14,[[1174,0,0.07,0.18]]]};
+let _sfxEl=null,_sfxElTried=false,_sfxArmed=false,_sfxStopT=null;
+function _sfxSpriteUrl(){
+  const sr=_SFX_SR,len=Math.ceil(sr*_SFX_LEN),pcm=new Float32Array(len);
+  for(const k in _SFX_SEG){const seg=_SFX_SEG[k],base=Math.floor(seg[0]*sr);
+    seg[2].forEach(function(n){const s0=base+Math.floor(n[1]*sr),ns=Math.floor(n[2]*sr),amp=Math.min(0.9,n[3]*3);
+      for(let i=0;i<ns;i++){const t=i/sr,atk=Math.min(1,t/0.012),dec=Math.pow(0.0008,t/n[2]),rel=Math.min(1,(ns-i)/(sr*0.006));
+        if(s0+i<len)pcm[s0+i]+=Math.sin(2*Math.PI*n[0]*t)*atk*dec*rel*amp;}});}
+  const buf=new ArrayBuffer(44+len*2),dv=new DataView(buf),
+    W=function(o,s){for(let i=0;i<s.length;i++)dv.setUint8(o+i,s.charCodeAt(i))};
+  W(0,'RIFF');dv.setUint32(4,36+len*2,true);W(8,'WAVEfmt ');dv.setUint32(16,16,true);
+  dv.setUint16(20,1,true);dv.setUint16(22,1,true);dv.setUint32(24,sr,true);dv.setUint32(28,sr*2,true);
+  dv.setUint16(32,2,true);dv.setUint16(34,16,true);W(36,'data');dv.setUint32(40,len*2,true);
+  for(let i=0;i<len;i++){const v=Math.max(-1,Math.min(1,pcm[i]));dv.setInt16(44+i*2,Math.round(v*32767),true);}
+  return URL.createObjectURL(new Blob([buf],{type:'audio/wav'}));}
+function _sfxElInit(){if(_sfxElTried)return;_sfxElTried=true;
+  try{const a=new Audio(_sfxSpriteUrl());a.preload='auto';a.playsInline=true;a.setAttribute('playsinline','');_sfxEl=a}catch(e){_sfxEl=null}}
+// iOS only trusts an element whose play() ran inside a user gesture; we unlock from the silent tail so nothing is heard
+function _sfxArm(){if(!_sfxEl||_sfxArmed)return;_sfxArmed=true;
+  try{_sfxEl.currentTime=_SFX_ARM;const p=_sfxEl.play();if(p&&p.catch)p.catch(function(){_sfxArmed=false})}catch(e){_sfxArmed=false}}
+function _sfxCtxInit(){if(!_sfxCtx){try{_sfxCtx=new (window.AudioContext||window.webkitAudioContext)()}catch(e){}}if(_sfxCtx&&_sfxCtx.state==='suspended')_sfxCtx.resume().catch(()=>{});}
+function _sfxInit(){if(!_sfxOn)return;
+  try{if(navigator.audioSession&&navigator.audioSession.type!=='playback')navigator.audioSession.type='playback'}catch(e){}
+  _sfxElInit();if(_sfxEl){_sfxArm();return}_sfxCtxInit();}
+function _sfxPlay(k){const seg=_SFX_SEG[k];if(!_sfxEl||!seg)return null;
+  try{if(_sfxStopT)clearTimeout(_sfxStopT);
+    _sfxEl.currentTime=seg[0];const p=_sfxEl.play();
+    _sfxStopT=setTimeout(function(){try{_sfxEl.pause()}catch(e){}},(seg[1]+0.05)*1000);
+    return p||true;}catch(e){return null}}
+/* Only unlock audio on gestures that really do make a sound (start brewing / free timer / sound toggle).
+   It used to be bound to pointerdown on the whole page, which grabbed the iOS audio session on any tap. */
 function _sfxUnlockOn(sel){document.addEventListener('pointerdown',e=>{if(e.target&&e.target.closest&&e.target.closest(sel))_sfxInit()},{capture:true});}
 _sfxUnlockOn('.sfx-toggle-btn,#quickStartTimerBtn,#quickFloatTrigger,#pbcStartBtn,#brewConfirmYes,#startTimerBtn,.btn-start-timer,.ft-ctrl-btn,.qt-ctrl-btn,.pto-ctrl-btn');
-/* 切到背景就把音訊停掉，回前景再喚醒 */
-document.addEventListener('visibilitychange',()=>{try{if(!_sfxCtx)return;if(document.hidden){if(_sfxCtx.state==='running')_sfxCtx.suspend()}else if(_sfxOn&&_sfxCtx.state==='suspended'&&_activeTimer)_sfxCtx.resume().catch(()=>{})}catch(e){}});
+/* Stop the sound when the page goes to the background, wake it again on return */
+document.addEventListener('visibilitychange',()=>{try{if(document.hidden&&_sfxEl)_sfxEl.pause();if(!_sfxCtx)return;if(document.hidden){if(_sfxCtx.state==='running')_sfxCtx.suspend()}else if(_sfxOn&&_sfxCtx.state==='suspended'&&_activeTimer)_sfxCtx.resume().catch(()=>{})}catch(e){}});
 function _beep(freq,dur,delay,vol){if(!_sfxCtx)return;const t=_sfxCtx.currentTime+(delay||0);const o=_sfxCtx.createOscillator(),g=_sfxCtx.createGain();o.type='sine';o.frequency.value=freq;g.gain.setValueAtTime(0.0001,t);g.gain.exponentialRampToValueAtTime(vol||0.22,t+0.012);g.gain.exponentialRampToValueAtTime(0.0001,t+dur);o.connect(g);g.connect(_sfxCtx.destination);o.start(t);o.stop(t+dur+0.05);}
-function _sfx(kind){if(!_sfxOn)return;_sfxInit();if(!_sfxCtx)return;if(kind==='step'){_beep(880,0.12,0,0.24);_beep(1318,0.2,0.14,0.22)}else if(kind==='tick'){_beep(1046,0.055,0,0.13)}else if(kind==='done'){_beep(659,0.16,0,0.24);_beep(880,0.16,0.19,0.24);_beep(1046,0.4,0.38,0.24)}else if(kind==='lap'){_beep(1174,0.07,0,0.18)}}
+// Fallback: when the browser will not give us <audio>, use the original Web Audio synth (silenced by the iOS mute switch)
+function _sfxBeeps(kind){const seg=_SFX_SEG[kind];if(!seg||!_sfxCtx)return;seg[2].forEach(function(n){_beep(n[0],n[2],n[1],n[3])});}
+function _sfx(kind){if(!_sfxOn)return;_sfxInit();if(_sfxPlay(kind))return;_sfxCtxInit();_sfxBeeps(kind);}
 function _sfxSyncBtns(){document.querySelectorAll('.sfx-toggle-btn').forEach(b=>{b.textContent=_sfxOn?'🔊':'🔇';b.classList.toggle('sfx-on',_sfxOn);b.classList.toggle('sfx-off',!_sfxOn);b.setAttribute('aria-pressed',_sfxOn?'true':'false');b.setAttribute('aria-label',_sfxOn?'Mute sound':'Enable sound');b.setAttribute('title',_sfxOn?'Sound: on (tap to mute)':'Sound: off (tap to enable)')})}
 let _sfxToastT=null;
 function _sfxToast(msg){let el=document.getElementById('sfxToast');if(!el){el=document.createElement('div');el.id='sfxToast';document.body.appendChild(el)}el.textContent=msg;el.classList.add('show');clearTimeout(_sfxToastT);_sfxToastT=setTimeout(()=>el.classList.remove('show'),1500)}
-function _sfxCue(on){_sfxInit();if(!_sfxCtx)return false;if(on){_beep(784,0.14,0,0.3);_beep(1175,0.24,0.12,0.28)}else{_beep(587,0.13,0,0.26);_beep(392,0.22,0.12,0.24)}return _sfxCtx.state==='running'}
-function toggleSfx(){_sfxOn=!_sfxOn;try{localStorage.setItem('poSoundOn',_sfxOn?'1':'0')}catch(e){}_sfxSyncBtns();document.querySelectorAll('.sfx-toggle-btn').forEach(b=>{b.classList.remove('sfx-pulse');void b.offsetWidth;b.classList.add('sfx-pulse')});if(navigator.vibrate&&!_reduceMotion())navigator.vibrate(_sfxOn?[30,40,30]:[30]);const ok=_sfxCue(_sfxOn);_sfxToast(_sfxOn?(ok?'\uD83D\uDD0A Sound on':'\u26A0\uFE0F Audio blocked by the browser (on iPhone, turn off the silent switch)'):'\uD83D\uDD07 Sound off')}
+function _sfxCue(on){_sfxInit();const r=_sfxPlay(on?'on':'off');if(r){if(r.catch)r.catch(function(){_sfxToast('⚠️ Sound was blocked — tap once more')});return true}_sfxCtxInit();if(!_sfxCtx)return false;_sfxBeeps(on?'on':'off');return _sfxCtx.state==='running'}
+function toggleSfx(){_sfxOn=!_sfxOn;try{localStorage.setItem('poSoundOn',_sfxOn?'1':'0')}catch(e){}_sfxSyncBtns();document.querySelectorAll('.sfx-toggle-btn').forEach(b=>{b.classList.remove('sfx-pulse');void b.offsetWidth;b.classList.add('sfx-pulse')});if(navigator.vibrate&&!_reduceMotion())navigator.vibrate(_sfxOn?[30,40,30]:[30]);const ok=_sfxCue(_sfxOn);_sfxToast(_sfxOn?(ok?'\uD83D\uDD0A Sound on':'\u26A0\uFE0F Sound was blocked \u2014 tap once more'):'\uD83D\uDD07 Sound off')}
 function _sfxBtnHtml(cls){return '<button class="'+cls+' sfx-toggle-btn '+(_sfxOn?'sfx-on':'sfx-off')+'" onclick="toggleSfx()" aria-pressed="'+(_sfxOn?'true':'false')+'" aria-label="'+(_sfxOn?'Mute sound':'Enable sound')+'" title="'+(_sfxOn?'Sound: on (tap to mute)':'Sound: off (tap to enable)')+'">'+(_sfxOn?'🔊':'🔇')+'</button>'}
 function _stepCountdownTick(seconds,durations,completed){if(completed||!durations||!durations.length)return;for(let i=0;i<durations.length;i++){if(durations[i]>seconds){const d=durations[i]-seconds;if(d<=3&&_lastTickAt!==seconds){_lastTickAt=seconds;_sfx('tick')}return}}}
 let wakeLock=null;
