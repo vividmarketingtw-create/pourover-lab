@@ -4275,11 +4275,18 @@ const FLOW_CAL_OPTS=[['vfast','很快'],['fast','偏快'],['std','標準'],['slo
 const FLOW_CAL_DEFAULT='fast';
 const _flowCal=()=>{try{const v=localStorage.getItem('poFlowCal');return FLOW_CAL[v]?v:FLOW_CAL_DEFAULT}catch(e){return FLOW_CAL_DEFAULT}};
 const _wF=()=>FLOW_CAL[_flowCal()]||1;
+/* ── 注水速度校正 (v5, 2026-09-09) ──
+   「我的流速」現在同時也縮放注水秒數，不再只管等待。
+   預設檔位 fast＝1，也就是各沖法原法的 g/s；往慢調注水秒數等比拉長，往快調則縮短。
+   起注間隔（4:6 的 45 秒、十段的 15 秒⋯）仍然鎖在原法值，只有注水秒數真的
+   塞不進間隔時，才由各沖法既有的 Math.max(間隔, 注水秒數+n) 自動撐開一點。 */
+const POUR_CAL={vfast:1.2,fast:1,std:0.85,slow:0.7};
+const _pR=()=>POUR_CAL[_flowCal()]||1;
 const _flowCalSet=v=>{try{localStorage.setItem('poFlowCal',FLOW_CAL[v]?v:FLOW_CAL_DEFAULT)}catch(e){}};
-const _flowCalNote=()=>{const v=_flowCal();if(v==='vfast')return '⚡ 很快：等待時間比「標準」再縮短 40%，注水秒數不變。';if(v==='fast')return '⚡ 偏快（預設）：等待時間比「標準」縮短約 22%，注水秒數不變。';if(v==='std')return '⏳ 標準：等待時間比預設的「偏快」再拉長約 28%。';if(v==='slow')return '⏳ 偏慢：等待時間比「標準」再延長 20%，避免計時結束時還在滴。';return '';};
-const _flowCalHint='💡 預設為 <strong>Hario V60 · 偏快</strong>。判斷方式看<strong>每一注之間</strong>：水早就流乾還在空等就往「快」調，計時結束還在滴就往「慢」調 — 只會改等待時間，注水秒數不變。<br>⏱ <strong>4:6 法例外</strong>：起注間隔固定為粕谷原法的 45 秒，不受此設定影響；這裡只會調整 4:6 最後一段「等待滴完」的長度。';
+const _flowCalNote=()=>{const v=_flowCal();if(v==='vfast')return '⚡ 很快：注水秒數比原法再快約 17%，等待時間比「標準」縮短 40%。';if(v==='fast')return '⚡ 偏快（預設）：注水秒數＝各沖法原法值，等待時間比「標準」縮短約 22%。';if(v==='std')return '⏳ 標準：注水秒數比原法多約 18%，等待時間比預設的「偏快」再拉長約 28%。';if(v==='slow')return '⏳ 偏慢：注水秒數比原法多約 43%，等待時間再延長 20% — 覺得每一注都在追秒數就選這個。';return '';};
+const _flowCalHint='💡 預設為 <strong>Hario V60 · 偏快</strong>（＝各沖法原法的注水速度）。<br>· <strong>注水的時候</strong>覺得秒數在追著你跑 → 往「慢」調，每一注會多給你幾秒。<br>· <strong>每一注之間</strong>水早就流乾還在空等 → 往「快」調；計時結束還在滴 → 往「慢」調。<br>⏱ <strong>起注間隔是原法值</strong>（4:6 每 45 秒、十段每 15 秒⋯）固定不動，只有注水秒數真的塞不下時才會自動撐開一點。';
 const _flowCalSelHtml=()=>{const c=_flowCal();return '<div class="pro-brew-note fcal-wrap"><div class="fcal-label">🚤 我的流速</div><div class="fcal-row">'+FLOW_CAL_OPTS.map(o=>'<button class="fcal-btn'+(c===o[0]?' active':'')+'" data-fc="'+o[0]+'">'+o[1]+'</button>').join('')+'</div>'+(_flowCalNote()?'<div class="fcal-note">'+_flowCalNote()+'</div>':'')+'<details class="fcal-help"><summary>怎麼判斷該選哪個？</summary><div>'+_flowCalHint+'</div></details></div>'};
-const _pourT=(w,rate,mx)=>Math.max(3,Math.min(mx||90,Math.round(w/rate)));
+const _pourT=(w,rate,mx)=>Math.max(3,Math.min(mx||90,Math.round(w/((rate||1)*_pR()))));
 /* ── Hoffmann Ultimate V60 引擎 (v7, 2026-08-13) ──
    原法基準 30g / 500g：主注水一 240g÷30s ＝ 8 g/s、主注水二 200g÷30s ＝ 6.7 g/s。
    注水秒數仍走「水量 ÷ 流速」，但下限 30 秒（＝原法的 30 秒注水窗），
@@ -4305,7 +4312,7 @@ const _ddDripT=d=>Math.round(Math.max(90,Math.min(120,90+(_clampDose(d)-20)*3)))
 const _ddF=d=>Math.max(1,_clampDose(d)/20);
 // Bypass 稀釋法：以 1:12 濃萃（總水量的 75%），剩下 25% 最後直接兌進下壺。
 const _BP_BLOOM=40,_BP_IV=40,_BP_RATE=5,_BP_BREW=0.75;
-const _hPourT=(w,r)=>Math.max(_H_WIN,_pourT(w,r));
+const _hPourT=(w,r)=>Math.max(Math.round(_H_WIN/_pR()),_pourT(w,r));
 /* ── 4:6 固定節奏引擎 (v3) ── */
 const _K_RATE=6.5;
 /* 4:6 節奏（v7，2026-08-13）：起注間隔**固定 45 秒＝粕谷原法**，
@@ -4320,7 +4327,7 @@ const _ktW=(t,i)=>{const b=Math.floor(t/10),x=t-b*10;return b+(i<x?1:0)};
 const _ktWLbl=t=>{const b=Math.floor(t/10);return t%10?b+'-'+(b+1):String(b)};
 const _kIv=(d,ef)=>_K_IV;
 const _kDd=(d,ef)=>Math.max(15,Math.min(50,_r5((20+(d||20)*0.6)*(ef||1)*_wF())));
-const _kPourT=(w,iv)=>Math.max(3,Math.min(iv-10,Math.round(w/_K_RATE)));
+const _kPourT=(w,iv)=>Math.max(3,Math.min(iv-10,Math.round(w/(_K_RATE*_pR()))));
 /* 十段注水（Neo Brew）節奏：預設檔位＝粕谷原法的 15 秒，隨「我的流速」相對平移 */
 /* 十段注水節奏（v9，2026-08-13）：起注間隔固定 15 秒、悶蒸固定 30 秒＝粕谷原法，
    與 4:6 同樣不受粉量／焙度／濾杯／「我的流速」影響（原法一樣是看碼表）。
@@ -6318,35 +6325,50 @@ document.getElementById('heroBeginnerCta')?.addEventListener('click',()=>_segGo(
 if('serviceWorker' in navigator){
   // 有新版本時顯示提示，讓使用者自己決定什麼時候更新
   // （以前 Service Worker 會無條件 skipWaiting，可能在正在沖煮時把版本抽換掉）
-  var _swUpdShown=false;
+  var _swUpdShown=false,_swReg=null,_swReloaded=false;
+  // 保險絲：同一個分頁最多提示兩次。點了更新就重載，如果更新因為任何理由沒生效，
+  // 提示最多再出現一次就安靜下來 —— 不會變成「按了又一直出現」的迴圈。
+  // Service Worker 回報 up-to-date 時歸零，之後真的有新版還是會正常提示。
+  function _swFuse(n){try{var k='poSwUpd';if(n!==undefined){sessionStorage.setItem(k,String(n));return n}return parseInt(sessionStorage.getItem(k)||'0',10)||0}catch(e){return 0}}
   function _swUpdateToast(onTap){
-    if(_swUpdShown)return;_swUpdShown=true;
+    if(_swUpdShown||_swFuse()>=2)return;_swUpdShown=true;
     var t=document.createElement('button');t.id='swUpdateToast';t.type='button';
     t.textContent='✨ 有新版本，點一下更新';
     t.style.cssText='position:fixed;left:50%;transform:translateX(-50%);bottom:calc(84px + env(safe-area-inset-bottom,0px));z-index:3200;padding:11px 18px;border-radius:999px;border:1px solid rgba(192,138,92,0.5);background:rgba(28,20,14,0.96);color:#F3EBDD;font-family:inherit;font-size:0.82em;letter-spacing:0.04em;cursor:pointer;box-shadow:0 4px 18px rgba(0,0,0,0.35);';
-    t.addEventListener('click',function(){t.remove();onTap()});
+    t.addEventListener('click',function(){t.remove();_swFuse(_swFuse()+1);onTap()});
     document.body.appendChild(t);
     setTimeout(function(){if(t.parentNode)t.style.opacity='0.75'},9000);
   }
+  function _swReload(){if(_swReloaded)return;_swReloaded=true;location.reload()}
+  // 按下更新：有等待中的 Service Worker 就先把它換上（換好會觸發 controllerchange 重載），
+  // 沒有的話先告訴 SW「這個更新我收下了」再重載，免得重載後又被通知一次。
+  function _swApplyUpdate(){
+    try{
+      if(_swReg&&_swReg.waiting){_swReg.waiting.postMessage({type:'SKIP_WAITING'});setTimeout(_swReload,1500);return}
+      if(navigator.serviceWorker.controller)navigator.serviceWorker.controller.postMessage({type:'UPDATE_TAKEN'});
+    }catch(e){}
+    setTimeout(_swReload,80);
+  }
   navigator.serviceWorker.register('sw.js').then(function(reg){
+    _swReg=reg;
+    // (0) 註冊時就已經有等待中的新版（上一次造訪裝好、還沒換上）——
+    //     這種情況不會再觸發 updatefound，要自己補一次提示，否則它會一直卡在那裡
+    if(reg.waiting&&navigator.serviceWorker.controller)_swUpdateToast(_swApplyUpdate);
     // (1) sw.js 本身換了新版 —— 等使用者點了再 skipWaiting
     reg.addEventListener('updatefound',function(){
       var nw=reg.installing;if(!nw)return;
       nw.addEventListener('statechange',function(){
-        if(nw.state==='installed'&&navigator.serviceWorker.controller){
-          _swUpdateToast(function(){nw.postMessage({type:'SKIP_WAITING'})});
-        }
+        if(nw.state==='installed'&&navigator.serviceWorker.controller)_swUpdateToast(_swApplyUpdate);
       });
     });
   }).catch(function(){});
   // (2) 只有網頁內容換了新版（sw.js 沒動）—— Service Worker 會傳訊息過來
   navigator.serviceWorker.addEventListener('message',function(e){
-    if(e.data&&e.data.type==='update-ready')_swUpdateToast(function(){location.reload()});
+    if(!e.data)return;
+    if(e.data.type==='update-ready')_swUpdateToast(_swApplyUpdate);
+    if(e.data.type==='up-to-date')_swFuse(0);
   });
-  var _swReloaded=false;
-  navigator.serviceWorker.addEventListener('controllerchange',function(){
-    if(_swReloaded)return;_swReloaded=true;location.reload();
-  });
+  navigator.serviceWorker.addEventListener('controllerchange',function(){_swReload()});
   // 主動問一次 —— 導覽的 fetch 常常在這頁的 JS 跑起來之前就結束了，光靠推播會漏掉
   setTimeout(function(){try{if(navigator.serviceWorker.controller)navigator.serviceWorker.controller.postMessage({type:'CHECK_UPDATE'})}catch(e){}},1200);
 }

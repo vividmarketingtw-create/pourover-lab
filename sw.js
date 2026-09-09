@@ -1,6 +1,6 @@
 // PourOver Lab Service Worker
 // App 快取隨版本更新；字型另存一個永不清除的快取，改版時不會被連帶清掉。
-const CACHE_NAME = 'pourover-app-v66';
+const CACHE_NAME = 'pourover-app-v67';
 const FONT_CACHE = 'pourover-fonts-v2'; // v2：自架 Noto Sans TC 子集也放這裡（fonts/ 路徑），改版不清
 
 // 少了就等於 App 壞掉的檔案 —— 必須全部成功
@@ -33,13 +33,22 @@ self.addEventListener('install', e => {
 
 // 頁面剛載入時來不及收到訊息（導覽的 fetch 通常比頁面的 JS 先跑完），
 // 所以除了主動推播，也讓頁面自己問一次。
-let updateReady = false;
+//
+// 這裡記的是「線上那一版的戳記」，不是一個 true/false 旗標（2026-09-09 修）。
+// 舊版用布林值：設成 true 之後，只能等下一次背景 fetch 回來才會被清掉。
+// 使用者點了「更新」→ 重新載入 → 頁面在 1.2 秒時問 SW，這個詢問常常比背景
+// fetch 更早到，於是拿到的還是上一次留下的 true，同一個提示就一直冒出來、
+// 怎麼點都消不掉。改成記戳記之後，只要送給頁面的快取副本已經是新版，
+// 在導覽的當下就會立刻清掉，不再有這個時間差。
+let pendingStamp = null;
 
 self.addEventListener('message', e => {
   if (!e.data) return;
   if (e.data.type === 'SKIP_WAITING') self.skipWaiting();
+  // 使用者已經按下「更新」—— 先收下，避免重載途中又被問到而重複提示
+  if (e.data.type === 'UPDATE_TAKEN') pendingStamp = null;
   if (e.data.type === 'CHECK_UPDATE' && e.source) {
-    e.source.postMessage({ type: updateReady ? 'update-ready' : 'up-to-date' });
+    e.source.postMessage({ type: pendingStamp ? 'update-ready' : 'up-to-date' });
   }
 });
 
@@ -91,16 +100,25 @@ self.addEventListener('fetch', e => {
   if (req.mode === 'navigate') {
     e.respondWith(
       caches.match(req, { ignoreSearch: true }).then(cached => {
-        const fromNet = fetch(req).then(response => {
+        const before = stamp(cached);
+        // 這一次送出去的快取副本就是先前通知過的那一版 → 更新已經生效，旗標當場清掉
+        if (pendingStamp && before === pendingStamp) pendingStamp = null;
+
+        // cache:'no-cache' 是必要的：GitHub Pages 給 max-age=600，
+        // 直接 fetch(req) 有機會拿到瀏覽器 HTTP 快取裡的舊回應，戳記一新一舊來回跳，
+        // 「有新版本」就會反覆出現。強制回伺服器驗證，命中時只是一個 304，很便宜。
+        const fromNet = fetch(req.url, { cache: 'no-cache', credentials: 'same-origin' }).then(response => {
           if (response && response.status === 200) {
-            const before = stamp(cached);
             const after = stamp(response);
             const clone = response.clone();
             caches.open(CACHE_NAME).then(cache => cache.put(req, clone));
             // 有快取、而且線上版本確實變了 → 記下來並通知頁面顯示「有新版本」
-            const changed = !!(cached && before && after && before !== after);
-            updateReady = changed;                       // 相同就順便把旗標清掉
-            if (changed) tellClients({ type: 'update-ready' });
+            if (cached && before && after && before !== after) {
+              pendingStamp = after;
+              tellClients({ type: 'update-ready' });
+            } else if (after && before === after) {
+              pendingStamp = null;                       // 相同就順便把旗標清掉
+            }
           }
           return response;
         }).catch(() => null);
