@@ -1,6 +1,6 @@
 // PourOver Lab Service Worker
 // App 快取隨版本更新；字型另存一個永不清除的快取，改版時不會被連帶清掉。
-const CACHE_NAME = 'pourover-app-v67';
+const CACHE_NAME = 'pourover-app-v68';
 const FONT_CACHE = 'pourover-fonts-v2'; // v2：自架 Noto Sans TC 子集也放這裡（fonts/ 路徑），改版不清
 
 // 少了就等於 App 壞掉的檔案 —— 必須全部成功
@@ -40,15 +40,20 @@ self.addEventListener('install', e => {
 // fetch 更早到，於是拿到的還是上一次留下的 true，同一個提示就一直冒出來、
 // 怎麼點都消不掉。改成記戳記之後，只要送給頁面的快取副本已經是新版，
 // 在導覽的當下就會立刻清掉，不再有這個時間差。
-let pendingStamp = null;
+let pendingKey = null;   // 線上那一版的 ETag（正規化過）
+let pendingFp = null;    // 線上那一版的內容指紋 —— 頁面拿它當「這個版本我已經按過了」的鑰匙
 
 self.addEventListener('message', e => {
   if (!e.data) return;
   if (e.data.type === 'SKIP_WAITING') self.skipWaiting();
   // 使用者已經按下「更新」—— 先收下，避免重載途中又被問到而重複提示
-  if (e.data.type === 'UPDATE_TAKEN') pendingStamp = null;
+  if (e.data.type === 'UPDATE_TAKEN') { pendingKey = null; pendingFp = null; }
+  // 頁面問「你是哪一版」—— 用來認出等待中的 Service Worker 是不是同一個
+  if (e.data.type === 'SW_VERSION' && e.ports && e.ports[0]) {
+    e.ports[0].postMessage({ type: 'sw-version', version: CACHE_NAME });
+  }
   if (e.data.type === 'CHECK_UPDATE' && e.source) {
-    e.source.postMessage({ type: pendingStamp ? 'update-ready' : 'up-to-date' });
+    e.source.postMessage({ type: pendingFp ? 'update-ready' : 'up-to-date', build: pendingFp });
   }
 });
 
@@ -83,10 +88,28 @@ function tellClients(msg) {
   return self.clients.matchAll({ type: 'window' }).then(cs => cs.forEach(c => c.postMessage(msg)));
 }
 
-// 用 ETag / Last-Modified 判斷線上是不是換了新版 —— 比比對 550KB 的 HTML 內容便宜太多
-function stamp(res) {
+/* 用 ETag / Last-Modified 判斷線上是不是換了新版 —— 比比對 550KB 的 HTML 內容便宜太多。
+   ★ 2026-09-09 修：ETag 一定要正規化，而且不能只信它。
+   GitHub Pages 對「同一份檔案」會依內容編碼給不同的 ETag：
+     Accept-Encoding 含 gzip → W/"6aa1ae45-a78f0"（弱標記）
+     沒有壓縮            → "6aa1ae45-a78f0"（強標記）
+   只要快取裡那份與背景 fetch 拿到的落在不同編碼，兩個字串就永遠不相等，
+   「有新版本」會每次載入都冒出來、而且怎麼點都消不掉（V 在 iPhone 上遇到的就是這個）。
+   所以：(1) 去掉 W/ 與引號再比；(2) 比出不同時，一定要用內容指紋再確認一次才通知。 */
+function stampKey(res) {
   if (!res) return null;
-  return res.headers.get('etag') || res.headers.get('last-modified') || null;
+  const v = res.headers.get('etag') || res.headers.get('last-modified');
+  return v ? v.replace(/^W\//i, '').replace(/"/g, '').trim() : null;
+}
+/* 內容指紋：長度 + FNV-1a 32bit。與編碼、ETag 格式都無關，是最後的仲裁者。
+   只在 ETag 比出不同時才會算到，正常情況不花這個成本。 */
+function fingerprint(res) {
+  if (!res) return Promise.resolve(null);
+  return res.text().then(t => {
+    let h = 0x811c9dc5;
+    for (let i = 0; i < t.length; i++) { h ^= t.charCodeAt(i); h = Math.imul(h, 0x01000193) >>> 0; }
+    return t.length + '-' + h.toString(16);
+  }).catch(() => null);
 }
 
 self.addEventListener('fetch', e => {
@@ -100,24 +123,32 @@ self.addEventListener('fetch', e => {
   if (req.mode === 'navigate') {
     e.respondWith(
       caches.match(req, { ignoreSearch: true }).then(cached => {
-        const before = stamp(cached);
+        const beforeKey = stampKey(cached);
         // 這一次送出去的快取副本就是先前通知過的那一版 → 更新已經生效，旗標當場清掉
-        if (pendingStamp && before === pendingStamp) pendingStamp = null;
+        if (pendingKey && beforeKey === pendingKey) { pendingKey = null; pendingFp = null; }
+        // 先留一份副本 —— 等一下算內容指紋要用，而原本那份會被頁面讀掉
+        const cachedCopy = cached ? cached.clone() : null;
 
         // cache:'no-cache' 是必要的：GitHub Pages 給 max-age=600，
         // 直接 fetch(req) 有機會拿到瀏覽器 HTTP 快取裡的舊回應，戳記一新一舊來回跳，
         // 「有新版本」就會反覆出現。強制回伺服器驗證，命中時只是一個 304，很便宜。
         const fromNet = fetch(req.url, { cache: 'no-cache', credentials: 'same-origin' }).then(response => {
           if (response && response.status === 200) {
-            const after = stamp(response);
-            const clone = response.clone();
-            caches.open(CACHE_NAME).then(cache => cache.put(req, clone));
-            // 有快取、而且線上版本確實變了 → 記下來並通知頁面顯示「有新版本」
-            if (cached && before && after && before !== after) {
-              pendingStamp = after;
-              tellClients({ type: 'update-ready' });
-            } else if (after && before === after) {
-              pendingStamp = null;                       // 相同就順便把旗標清掉
+            const afterKey = stampKey(response);
+            const forCache = response.clone();
+            const forHash = cachedCopy ? response.clone() : null;
+            caches.open(CACHE_NAME).then(cache => cache.put(req, forCache));
+            if (!cachedCopy || (beforeKey && afterKey && beforeKey === afterKey)) {
+              pendingKey = null; pendingFp = null;       // 戳記一樣就一定沒換版
+            } else {
+              // 戳記不同不代表真的換版（同一份檔案壓縮與否會給不同 ETag），
+              // 一定要用內容指紋確認過再通知，否則就是永遠消不掉的假警報
+              Promise.all([fingerprint(cachedCopy), fingerprint(forHash)]).then(fps => {
+                if (fps[0] && fps[1] && fps[0] !== fps[1]) {
+                  pendingKey = afterKey; pendingFp = fps[1];
+                  tellClients({ type: 'update-ready', build: fps[1] });
+                } else { pendingKey = null; pendingFp = null; }
+              });
             }
           }
           return response;

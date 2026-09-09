@@ -6383,16 +6383,38 @@ if('serviceWorker' in navigator){
   // 有新版本時顯示提示，讓使用者自己決定什麼時候更新
   // （以前 Service Worker 會無條件 skipWaiting，可能在正在沖煮時把版本抽換掉）
   var _swUpdShown=false,_swReg=null,_swReloaded=false;
-  // 保險絲：同一個分頁最多提示兩次。點了更新就重載，如果更新因為任何理由沒生效，
-  // 提示最多再出現一次就安靜下來 —— 不會變成「按了又一直出現」的迴圈。
-  // Service Worker 回報 up-to-date 時歸零，之後真的有新版還是會正常提示。
-  function _swFuse(n){try{var k='poSwUpd';if(n!==undefined){sessionStorage.setItem(k,String(n));return n}return parseInt(sessionStorage.getItem(k)||'0',10)||0}catch(e){return 0}}
-  function _swUpdateToast(onTap){
-    if(_swUpdShown||_swFuse()>=2)return;_swUpdShown=true;
+  function _swGet(k){try{return localStorage.getItem(k)}catch(e){return null}}
+  function _swSet(k,v){try{localStorage.setItem(k,v)}catch(e){}}
+  // 每個版本只問一次（關掉重開也記得）。按過更新就把那個版本記進 poSwAck，
+  // 之後同一個版本再被通知就不再打擾。
+  function _swAcked(b){return !!b&&_swGet('poSwAck')===b}
+  // 自癒：已經按過更新、卻又被通知同一個版本 → 代表換版沒有真的生效。
+  // 這時候直接把 Service Worker 註銷再重載一次，強制回到乾淨狀態。
+  // 每個版本最多做一次（poSwHeal 記著），所以不可能變成迴圈。
+  function _swHardReset(b){
+    if(!b||_swGet('poSwHeal')===b)return;
+    _swSet('poSwHeal',b);
+    try{navigator.serviceWorker.getRegistrations().then(function(rs){
+      return Promise.all(rs.map(function(r){return r.unregister()}))
+    }).then(_swReload)['catch'](_swReload)}catch(e){_swReload()}
+  }
+  // 問等待中的 Service Worker「你是哪一版」，用來當提示的鑰匙
+  function _swAskVersion(worker){return new Promise(function(res){
+    if(!worker||typeof MessageChannel==='undefined')return res(null);
+    try{var ch=new MessageChannel(),done=false;
+      var to=setTimeout(function(){if(!done){done=true;res(null)}},1000);
+      ch.port1.onmessage=function(ev){if(done)return;done=true;clearTimeout(to);res((ev.data&&ev.data.version)||null)};
+      worker.postMessage({type:'SW_VERSION'},[ch.port2]);
+    }catch(e){res(null)}
+  })}
+  function _swUpdateToast(build,onTap){
+    if(_swUpdShown)return;
+    if(_swAcked(build)){_swHardReset(build);return}
+    _swUpdShown=true;
     var t=document.createElement('button');t.id='swUpdateToast';t.type='button';
     t.textContent='✨ New version available — tap to update';
     t.style.cssText='position:fixed;left:50%;transform:translateX(-50%);bottom:calc(84px + env(safe-area-inset-bottom,0px));z-index:3200;padding:11px 18px;border-radius:999px;border:1px solid rgba(192,138,92,0.5);background:rgba(28,20,14,0.96);color:#F3EBDD;font-family:inherit;font-size:0.82em;letter-spacing:0.04em;cursor:pointer;box-shadow:0 4px 18px rgba(0,0,0,0.35);';
-    t.addEventListener('click',function(){t.remove();_swFuse(_swFuse()+1);onTap()});
+    t.addEventListener('click',function(){t.remove();_swSet('poSwAck',build||'');onTap()});
     document.body.appendChild(t);
     setTimeout(function(){if(t.parentNode)t.style.opacity='0.75'},9000);
   }
@@ -6406,24 +6428,24 @@ if('serviceWorker' in navigator){
     }catch(e){}
     setTimeout(_swReload,80);
   }
+  function _swWorkerToast(worker){_swAskVersion(worker).then(function(v){_swUpdateToast('sw:'+(v||'?'),_swApplyUpdate)})}
   navigator.serviceWorker.register('../sw.js').then(function(reg){
     _swReg=reg;
     // (0) 註冊時就已經有等待中的新版（上一次造訪裝好、還沒換上）——
     //     這種情況不會再觸發 updatefound，要自己補一次提示，否則它會一直卡在那裡
-    if(reg.waiting&&navigator.serviceWorker.controller)_swUpdateToast(_swApplyUpdate);
+    if(reg.waiting&&navigator.serviceWorker.controller)_swWorkerToast(reg.waiting);
     // (1) sw.js 本身換了新版 —— 等使用者點了再 skipWaiting
     reg.addEventListener('updatefound',function(){
       var nw=reg.installing;if(!nw)return;
       nw.addEventListener('statechange',function(){
-        if(nw.state==='installed'&&navigator.serviceWorker.controller)_swUpdateToast(_swApplyUpdate);
+        if(nw.state==='installed'&&navigator.serviceWorker.controller)_swWorkerToast(nw);
       });
     });
-  }).catch(function(){});
+  })['catch'](function(){});
   // (2) 只有網頁內容換了新版（sw.js 沒動）—— Service Worker 會傳訊息過來
   navigator.serviceWorker.addEventListener('message',function(e){
     if(!e.data)return;
-    if(e.data.type==='update-ready')_swUpdateToast(_swApplyUpdate);
-    if(e.data.type==='up-to-date')_swFuse(0);
+    if(e.data.type==='update-ready')_swUpdateToast(e.data.build,_swApplyUpdate);
   });
   navigator.serviceWorker.addEventListener('controllerchange',function(){_swReload()});
   // 主動問一次 —— 導覽的 fetch 常常在這頁的 JS 跑起來之前就結束了，光靠推播會漏掉
