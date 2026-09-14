@@ -4409,6 +4409,21 @@ const _tempAdjNote=m=>{const r=_roastVal();if(r==='dark')return '🌡 深焙已�
 const _flowRate=s=>{if(!s||!s.pour||!(s.water>0))return '';const rate=s.water/s.pour;const lvl=rate<=3.5?'細水流':rate<=5.5?'中水流':'大水流';return s.water+'g ÷ '+s.pour+'s ≈ '+(Math.round(rate*10)/10)+' g/s（'+lvl+'）'};
 const _doseWarn=d=>d>=35?'⚠️ 粉量 '+d+'g 已接近或超過 V60-02 工作容量：建議改用 02 以上濾杯或分兩杯沖煮，或改沖濃一點再兌熱水（bypass）；研磨調整見下方大杯量提示。':'';
 /* ── 大杯量（30-40g）支援 ── DOSE_FIT：3=大杯量友善 2=可放大需調整 1=不建議放大 */
+/* ── 手感警告 (v1, 2026-09-14) ──────────────────────────────────
+   固定節奏沖法的起注間隔鎖在原法值，粉量一放大，每注水量卻等比變多，
+   注水秒數就會一路吃掉原本的空檔（4:6 20g→40g：9s注/36s空 → 26s注/19s空）。
+   這裡把「目前設定」的忙碌佔比，跟「同一支沖法在 20g・預設流速」的基準相比，
+   明顯變忙時才提醒 —— 只出提示、不擋輸入，也不動任何原法值。
+   比較基準刻意用「同一個流速檔」的 20g —— 使用者自己的注水速度不是問題，不該每支沖法都跳。
+   門檻來源：全沖法 × 20-40g × 四個流速檔實測，取「原生粉量一律不跳」的最鬆值。 */
+const _RHY_DUTY_UP=12,_RHY_POUR_MIN=18,_RHY_BASE_DOSE=20;
+/* 飽和保險：有些沖法的間隔會自動撐開成「注水秒數+2」，忙碌佔比從一開始就很高、
+   再怎麼放大也漲不動 12 個百分點。這種「幾乎整段都在注水」的狀態另外抓。
+   只套用在原本就有空檔的沖法 —— 連續注水法（Hoffmann／Rao／一刀流）本來就是一路倒到底，不算忙。 */
+const _RHY_DUTY_SAT=85,_RHY_POUR_SAT=35;
+const _rhyWorst=(m,d,t)=>{try{const ps=m.buildSteps(d,t).groups.flatMap(g=>g.steps).filter(s=>s.pour>0&&s.water>0);let w=null;ps.slice(0,-1).forEach(s=>{const iv=Math.max(s.pour,s.duration||s.pour),rest=iv-s.pour;if(!w||s.pour-rest>w.pour-w.rest)w={pour:s.pour,rest:rest,water:s.water,duty:Math.round(s.pour/iv*100)}});return w}catch(e){_logErr('rhy',e);return null}};
+const _rhythmWarn=(m,d,t)=>{if(!m||!m.buildSteps||!(d>0)||!(t>0))return '';const cur=_rhyWorst(m,d,t);if(!cur||cur.pour<_RHY_POUR_MIN)return '';const bd=_RHY_BASE_DOSE,bt=Math.round(bd*(t/d));if(Math.abs(d-bd)<0.5)return '';const base=_rhyWorst(m,bd,bt);const sat=base&&base.rest>0&&cur.duty>=_RHY_DUTY_SAT&&cur.pour>=_RHY_POUR_SAT;if(!sat&&(!base||cur.duty-base.duty<_RHY_DUTY_UP))return '';return '⏱ <strong>這杯會很忙</strong>：最吃力的一注要在 '+cur.pour+' 秒內注入 '+cur.water+'g，注完只剩 '+cur.rest+' 秒就接下一注'+(base?'（同樣的流速設定，原法基準 '+bd+'g 是 '+base.pour+' 秒注完、空 '+base.rest+' 秒）':'')+'。<br><strong>起注間隔是原法值不會動</strong>，所以粉量一放大，每注水量變多、注水就會把空檔吃掉。<br>· <strong>想留在這支沖法</strong> → '+(_flowCal()==='vfast'?'把研磨調粗，讓水在下一注之前來得及走':'把「我的流速」往快調，或研磨調粗讓水來得及走')+'<br>· <strong>想輕鬆一點</strong> → 同粉量改用 <strong>Hoffmann 乾淨明亮法</strong>：原生 30g/500g 設計、只有兩注長注水，水量變多就是倒久一點，不會追秒數'};
+const _rhyNote=(m,d,t)=>{const w=_rhythmWarn(m,d,t);return w?'<div class="pro-brew-note warn">'+w+'</div>':''};
 const DOSE_FIT={immersion:3,hoffmann:3,kasuya:2,kasuyaTen:2,rao:2,onePour:2,winton:2,medina:2,woelfl:2,icedBrew:2,sherry:1,chadwang:1,hoffmannCup:1,kalita:3,wendelboe:2,april:2,dripDrop:1,bypass:3};
 const _BD_LABELS={3:'✅ 友善',2:'🔧 需調粗研磨',1:'⚠️ 不建議'};
 const _bdBase=mk=>mk==='hoffmann'?30:20;
@@ -5165,7 +5180,7 @@ if(r.temp)document.getElementById('currentTemp').value=r.temp;
 updateTempSuggestion();recalcAll();showCompareToast('\u5DF2\u8F09\u5165\u300C'+r.name+'\u300D');
 const cp=document.getElementById('calcPanel');if(cp)cp.scrollIntoView({behavior:_scrollBehavior(),block:'start'});}
 function getEffectiveRatio(m){return customRatio!==null?customRatio:m.ratio}
-function updateCalcPanel(m){const d=_clampDose($('doseInput').value),r=getEffectiveRatio(m),t=Math.round(d*r),s=m.buildSummary(d,t),g=$('calcGrid');g.innerHTML=s.map(i=>`<div class="calc-item"><div class="calc-value">${i.value}${i.unit?'<span style="font-size:0.55em;opacity:0.6;margin-left:2px;">'+i.unit+'</span>':''}</div><div class="calc-label">${i.label}</div></div>`).join('');const _cpTotal=m.buildSteps(d,t).groups.flatMap(gr=>gr.steps).reduce((a,st)=>a+(st.duration||0),0);const _cpNotes=[_tempAdjNote(m)?'<div class="pro-brew-note">'+_tempAdjNote(m)+'（顯示水溫已同步調整）</div>':'',_doseWarn(d)?'<div class="pro-brew-note warn">'+_doseWarn(d)+'</div>':'',_bigDoseNote(_mkOf(m),d)?'<div class="pro-brew-note">'+_bigDoseNote(_mkOf(m),d)+'</div>':'',_heatWarn(_cpTotal,m===BREW_METHODS.immersion)?'<div class="pro-brew-note">'+_heatWarn(_cpTotal,m===BREW_METHODS.immersion)+'</div>':'',(m===BREW_METHODS.kasuya?_kBalSelHtml()+_kConcSelHtml():'')].join('');if(_cpNotes){g.insertAdjacentHTML('beforeend','<div style="grid-column:1/-1;">'+_cpNotes+'</div>');_wireKasuyaBtns(g,m)}}
+function updateCalcPanel(m){const d=_clampDose($('doseInput').value),r=getEffectiveRatio(m),t=Math.round(d*r),s=m.buildSummary(d,t),g=$('calcGrid');g.innerHTML=s.map(i=>`<div class="calc-item"><div class="calc-value">${i.value}${i.unit?'<span style="font-size:0.55em;opacity:0.6;margin-left:2px;">'+i.unit+'</span>':''}</div><div class="calc-label">${i.label}</div></div>`).join('');const _cpTotal=m.buildSteps(d,t).groups.flatMap(gr=>gr.steps).reduce((a,st)=>a+(st.duration||0),0);const _cpNotes=[_tempAdjNote(m)?'<div class="pro-brew-note">'+_tempAdjNote(m)+'（顯示水溫已同步調整）</div>':'',_doseWarn(d)?'<div class="pro-brew-note warn">'+_doseWarn(d)+'</div>':'',_bigDoseNote(_mkOf(m),d)?'<div class="pro-brew-note">'+_bigDoseNote(_mkOf(m),d)+'</div>':'',_heatWarn(_cpTotal,m===BREW_METHODS.immersion)?'<div class="pro-brew-note">'+_heatWarn(_cpTotal,m===BREW_METHODS.immersion)+'</div>':'',_rhyNote(m,d,t),(m===BREW_METHODS.kasuya?_kBalSelHtml()+_kConcSelHtml():'')].join('');if(_cpNotes){g.insertAdjacentHTML('beforeend','<div style="grid-column:1/-1;">'+_cpNotes+'</div>');_wireKasuyaBtns(g,m)}}
 function _adjTimeLabel(t,offset){if(!offset)return t;
   const m=t.match(/^(\d+):(\d{2})$/);
   if(!m)return t;
@@ -6644,7 +6659,7 @@ function updateQuickBrewResults() {
   const _qbNotes = [_tempAdjNote(method) ? '<div class="pro-brew-note">' + _tempAdjNote(method) + '</div>' : '',
     _doseWarn(dose) ? '<div class="pro-brew-note warn">' + _doseWarn(dose) + '</div>' : '',
     (_bigDoseNote(currentQuickMethod, dose) ? '<div class="pro-brew-note">' + _bigDoseNote(currentQuickMethod, dose) + '</div>' : ''),
-    _heatWarn(_qbTotal, currentQuickMethod==='immersion') ? '<div class="pro-brew-note">' + _heatWarn(_qbTotal, currentQuickMethod==='immersion') + '</div>' : '', _qbDripperNote(), _flowCalSelHtml(), _ddHint(currentQuickMethod), (currentQuickMethod==='kasuya'?_kBalSelHtml()+_kConcSelHtml():'')].join('');
+    _heatWarn(_qbTotal, currentQuickMethod==='immersion') ? '<div class="pro-brew-note">' + _heatWarn(_qbTotal, currentQuickMethod==='immersion') + '</div>' : '', _rhyNote(method,dose,water), _qbDripperNote(), _flowCalSelHtml(), _ddHint(currentQuickMethod), (currentQuickMethod==='kasuya'?_kBalSelHtml()+_kConcSelHtml():'')].join('');
   resultsEl.innerHTML =
     '<div class="quick-results">' +
     '<div class="quick-results-title">' + method.title + '</div>' +

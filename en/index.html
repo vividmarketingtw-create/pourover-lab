@@ -4418,6 +4418,22 @@ const _tempAdjNote=m=>{const r=_roastVal();if(r==='dark')return '🌡 Dark roast
 const _flowRate=s=>{if(!s||!s.pour||!(s.water>0))return '';const rate=s.water/s.pour;const lvl=rate<=3.5?'thin stream':rate<=5.5?'medium stream':'strong stream';return s.water+'g ÷ '+s.pour+'s ≈ '+(Math.round(rate*10)/10)+' g/s ('+lvl+')'};
 const _doseWarn=d=>d>=35?'⚠️ Dose '+d+'g is at or above the V60-02 working capacity: use a size 02 or larger dripper or split into two brews, or brew stronger and dilute with hot water (bypass); see the large-dose note below for the grind.':'';
 /* ── Large-dose (30-40g) support ── DOSE_FIT: 3=friendly 2=scales with adjustment 1=not recommended */
+/* -- Pace warning (v1, 2026-09-14) --------------------------------------
+   Fixed-rhythm recipes keep the author's pour interval no matter the dose, so
+   scaling up makes every pour bigger while the clock stays put: the pour time
+   eats the gap (4:6 at 20g -> 40g: 9s pour / 36s gap becomes 26s pour / 19s gap).
+   We compare the busiest pour against the SAME recipe at 20g on the SAME flow
+   setting -- the user's own pouring speed is not the problem and must not trip it.
+   Advisory only: nothing is blocked and no original-recipe value is changed. */
+const _RHY_DUTY_UP=12,_RHY_POUR_MIN=18,_RHY_BASE_DOSE=20;
+/* Saturation guard: some recipes stretch the interval to "pour time + 2s", so their
+   busy ratio starts high and can never climb 12 points. Catch "pouring almost the
+   whole time" separately -- only for recipes that had a gap to begin with, since
+   continuous-pour methods (Hoffmann / Rao / single pour) are meant to run nonstop. */
+const _RHY_DUTY_SAT=85,_RHY_POUR_SAT=35;
+const _rhyWorst=(m,d,t)=>{try{const ps=m.buildSteps(d,t).groups.flatMap(g=>g.steps).filter(s=>s.pour>0&&s.water>0);let w=null;ps.slice(0,-1).forEach(s=>{const iv=Math.max(s.pour,s.duration||s.pour),rest=iv-s.pour;if(!w||s.pour-rest>w.pour-w.rest)w={pour:s.pour,rest:rest,water:s.water,duty:Math.round(s.pour/iv*100)}});return w}catch(e){_logErr('rhy',e);return null}};
+const _rhythmWarn=(m,d,t)=>{if(!m||!m.buildSteps||!(d>0)||!(t>0))return '';const cur=_rhyWorst(m,d,t);if(!cur||cur.pour<_RHY_POUR_MIN)return '';const bd=_RHY_BASE_DOSE,bt=Math.round(bd*(t/d));if(Math.abs(d-bd)<0.5)return '';const base=_rhyWorst(m,bd,bt);const sat=base&&base.rest>0&&cur.duty>=_RHY_DUTY_SAT&&cur.pour>=_RHY_POUR_SAT;if(!sat&&(!base||cur.duty-base.duty<_RHY_DUTY_UP))return '';return '&#9201; <strong>This one will keep you busy</strong>: the hardest pour asks for '+cur.water+'g in '+cur.pour+'s, leaving only '+cur.rest+'s before the next one'+(base?' (same flow setting, the '+bd+'g baseline is '+base.pour+'s pouring and '+base.rest+'s of gap)':'')+'.<br><strong>The pour interval is the author\'s value and does not move</strong>, so a bigger dose means more water per pour and the gap gets eaten.<br>&middot; <strong>To stay with this recipe</strong> &rarr; '+(_flowCal()==='vfast'?'grind coarser so the bed drains before the next pour':'set &ldquo;My flow rate&rdquo; faster, or grind coarser so the bed drains in time')+'<br>&middot; <strong>For an easier brew</strong> &rarr; try <strong>Hoffmann\'s Ultimate V60</strong> at the same dose: built for 30g/500g with just two long pours, so more water simply means pouring for longer, never racing the clock'};
+const _rhyNote=(m,d,t)=>{const w=_rhythmWarn(m,d,t);return w?'<div class="pro-brew-note warn">'+w+'</div>':''};
 const DOSE_FIT={immersion:3,hoffmann:3,kasuya:2,kasuyaTen:2,rao:2,onePour:2,winton:2,medina:2,woelfl:2,icedBrew:2,sherry:1,chadwang:1,hoffmannCup:1,kalita:3,wendelboe:2,april:2,dripDrop:1,bypass:3};
 const _BD_LABELS={3:'✅ Friendly',2:'🔧 Coarsen the grind',1:'⚠️ Not recommended'};
 const _bdBase=mk=>mk==='hoffmann'?30:20;
@@ -5221,7 +5237,7 @@ if(r.temp)document.getElementById('currentTemp').value=r.temp;
 updateTempSuggestion();recalcAll();showCompareToast('Loaded "'+r.name+'"');
 const cp=document.getElementById('calcPanel');if(cp)cp.scrollIntoView({behavior:_scrollBehavior(),block:'start'});}
 function getEffectiveRatio(m){return customRatio!==null?customRatio:m.ratio}
-function updateCalcPanel(m){const d=_clampDose($('doseInput').value),r=getEffectiveRatio(m),t=Math.round(d*r),s=m.buildSummary(d,t),g=$('calcGrid');g.innerHTML=s.map(i=>`<div class="calc-item"><div class="calc-value">${i.value}${i.unit?'<span style="font-size:0.55em;opacity:0.6;margin-left:2px;">'+i.unit+'</span>':''}</div><div class="calc-label">${i.label}</div></div>`).join('');const _cpTotal=m.buildSteps(d,t).groups.flatMap(gr=>gr.steps).reduce((a,st)=>a+(st.duration||0),0);const _cpNotes=[_tempAdjNote(m)?'<div class="pro-brew-note">'+_tempAdjNote(m)+' (displayed water temp adjusted to match)</div>':'',_doseWarn(d)?'<div class="pro-brew-note warn">'+_doseWarn(d)+'</div>':'',_bigDoseNote(_mkOf(m),d)?'<div class="pro-brew-note">'+_bigDoseNote(_mkOf(m),d)+'</div>':'',_heatWarn(_cpTotal,m===BREW_METHODS.immersion)?'<div class="pro-brew-note">'+_heatWarn(_cpTotal,m===BREW_METHODS.immersion)+'</div>':'',(m===BREW_METHODS.kasuya?_kBalSelHtml()+_kConcSelHtml():'')].join('');if(_cpNotes){g.insertAdjacentHTML('beforeend','<div style="grid-column:1/-1;">'+_cpNotes+'</div>');_wireKasuyaBtns(g,m)}}
+function updateCalcPanel(m){const d=_clampDose($('doseInput').value),r=getEffectiveRatio(m),t=Math.round(d*r),s=m.buildSummary(d,t),g=$('calcGrid');g.innerHTML=s.map(i=>`<div class="calc-item"><div class="calc-value">${i.value}${i.unit?'<span style="font-size:0.55em;opacity:0.6;margin-left:2px;">'+i.unit+'</span>':''}</div><div class="calc-label">${i.label}</div></div>`).join('');const _cpTotal=m.buildSteps(d,t).groups.flatMap(gr=>gr.steps).reduce((a,st)=>a+(st.duration||0),0);const _cpNotes=[_tempAdjNote(m)?'<div class="pro-brew-note">'+_tempAdjNote(m)+' (displayed water temp adjusted to match)</div>':'',_doseWarn(d)?'<div class="pro-brew-note warn">'+_doseWarn(d)+'</div>':'',_bigDoseNote(_mkOf(m),d)?'<div class="pro-brew-note">'+_bigDoseNote(_mkOf(m),d)+'</div>':'',_heatWarn(_cpTotal,m===BREW_METHODS.immersion)?'<div class="pro-brew-note">'+_heatWarn(_cpTotal,m===BREW_METHODS.immersion)+'</div>':'',_rhyNote(m,d,t),(m===BREW_METHODS.kasuya?_kBalSelHtml()+_kConcSelHtml():'')].join('');if(_cpNotes){g.insertAdjacentHTML('beforeend','<div style="grid-column:1/-1;">'+_cpNotes+'</div>');_wireKasuyaBtns(g,m)}}
 function _adjTimeLabel(t,offset){if(!offset)return t;
   const m=t.match(/^(\d+):(\d{2})$/);
   if(!m)return t;
@@ -6703,7 +6719,7 @@ function updateQuickBrewResults() {
   const _qbNotes = [_tempAdjNote(method) ? '<div class="pro-brew-note">' + _tempAdjNote(method) + '</div>' : '',
     _doseWarn(dose) ? '<div class="pro-brew-note warn">' + _doseWarn(dose) + '</div>' : '',
     (_bigDoseNote(currentQuickMethod, dose) ? '<div class="pro-brew-note">' + _bigDoseNote(currentQuickMethod, dose) + '</div>' : ''),
-    _heatWarn(_qbTotal, currentQuickMethod==='immersion') ? '<div class="pro-brew-note">' + _heatWarn(_qbTotal, currentQuickMethod==='immersion') + '</div>' : '', _qbDripperNote(), _flowCalSelHtml(), _ddHint(currentQuickMethod), (currentQuickMethod==='kasuya'?_kBalSelHtml()+_kConcSelHtml():'')].join('');
+    _heatWarn(_qbTotal, currentQuickMethod==='immersion') ? '<div class="pro-brew-note">' + _heatWarn(_qbTotal, currentQuickMethod==='immersion') + '</div>' : '', _rhyNote(method,dose,water), _qbDripperNote(), _flowCalSelHtml(), _ddHint(currentQuickMethod), (currentQuickMethod==='kasuya'?_kBalSelHtml()+_kConcSelHtml():'')].join('');
   resultsEl.innerHTML =
     '<div class="quick-results">' +
     '<div class="quick-results-title">' + method.title + '</div>' +
