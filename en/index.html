@@ -3205,14 +3205,15 @@ body.scrolled .top-actions:hover,body.scrolled .top-actions:focus-within,body.sc
    目標克數底下的「總 Ng」又貼著大數字，「下一步」那行常常斷成兩行。
    現在：小計時環放左邊、這一步的名稱放右邊 → 下面整排留給「注到幾克」與倒數 → 下一步收成一行 → 控制鈕。 */
 @media (max-width:600px) and (min-height:481px){
-  #quickTimerOverlay .qt-timer-section{display:grid;grid-template-columns:auto minmax(0,1fr);column-gap:16px;align-items:center;padding:14px 20px 12px;}
-  #quickTimerOverlay .qt-ring-wrap{grid-column:1;grid-row:1;width:104px;height:104px;margin:0;}
-  #quickTimerOverlay .qt-ring-inner{width:96px;}
+  #quickTimerOverlay .qt-timer-section{display:grid;grid-template-columns:minmax(0,1fr);justify-items:stretch;padding:14px 20px 12px;}
+  #quickTimerOverlay .qt-ring-wrap{grid-column:1;grid-row:1;justify-self:center;width:124px;height:124px;margin:0;}
+  #quickTimerOverlay .qt-ring-inner{width:112px;}
   #quickTimerOverlay .qt-step-indicator{font-size:0.6em;letter-spacing:1.5px;margin-bottom:1px;}
-  #quickTimerOverlay .qt-time{font-size:1.3em;letter-spacing:1px;}
+  #quickTimerOverlay .qt-time{font-size:1.45em;letter-spacing:1px;}
   #quickTimerOverlay .qt-label{display:block;font-size:0.72em;max-width:90px;margin-top:1px;-webkit-line-clamp:unset;}
   #quickTimerOverlay .qt-current{display:contents;}
-  #quickTimerOverlay .qt-cur-title{grid-column:2;grid-row:1;text-align:left;font-size:1.02em;line-height:1.5;margin:0;}
+  /* 2026-09-15 V：計時環上方只留計時器、置中；這一步的名稱下面步驟卡看得到，這裡收掉 */
+  #quickTimerOverlay .qt-cur-title{display:none;}
   #quickTimerOverlay .qt-current > :not(.qt-cur-title){grid-column:1/-1;}
   #quickTimerOverlay .qt-controls{grid-column:1/-1;justify-self:center;margin:14px 0 2px;gap:22px;}
   /* 焦點區：目標克數最大、總量跟在旁邊當小字、倒數另起一行 */
@@ -3237,8 +3238,8 @@ body.scrolled .top-actions:hover,body.scrolled .top-actions:focus-within,body.sc
 /* 很矮的直式螢幕（iPhone SE 帶網址列）再收一點 */
 @media (max-width:600px) and (min-height:481px) and (max-height:640px){
   #quickTimerOverlay .qt-timer-section{padding:8px 16px 8px;}
-  #quickTimerOverlay .qt-ring-wrap{width:88px;height:88px;}
-  #quickTimerOverlay .qt-ring-inner{width:84px;}
+  #quickTimerOverlay .qt-ring-wrap{width:100px;height:100px;}
+  #quickTimerOverlay .qt-ring-inner{width:92px;}
   #quickTimerOverlay .qt-label{display:none;}
   #quickTimerOverlay .tm-focus{margin-top:10px;}
   #quickTimerOverlay .tm-focus.pour .tm-focus-water{font-size:2.5em;}
