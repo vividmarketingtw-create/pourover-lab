@@ -1,6 +1,6 @@
 // PourOver Lab Service Worker
 // App 快取隨版本更新；字型另存一個永不清除的快取，改版時不會被連帶清掉。
-const CACHE_NAME = 'pourover-app-v70';
+const CACHE_NAME = 'pourover-app-v71';
 const FONT_CACHE = 'pourover-fonts-v2'; // v2：自架 Noto Sans TC 子集也放這裡（fonts/ 路徑），改版不清
 
 // 少了就等於 App 壞掉的檔案 —— 必須全部成功
@@ -19,8 +19,11 @@ self.addEventListener('install', e => {
     caches.open(CACHE_NAME)
       .then(cache =>
         // 核心必須成功；其餘逐一嘗試，任何一個 404 都不會讓整個 install 失敗
-        cache.addAll(CORE_ASSETS)
-          .then(() => Promise.all(OPTIONAL_ASSETS.map(u => cache.add(u).catch(() => {}))))
+        // cache:'reload'（2026-09-15）：一定要直接回伺服器拿。
+        // GitHub Pages 給 max-age=600，不加的話新版 Service Worker 可能把瀏覽器 HTTP 快取裡
+        // 「上一版」的網頁存進新快取，按了更新重新載入後又是舊畫面、提示再冒一次。
+        cache.addAll(CORE_ASSETS.map(u => new Request(u, { cache: 'reload' })))
+          .then(() => Promise.all(OPTIONAL_ASSETS.map(u => cache.add(new Request(u, { cache: 'reload' })).catch(() => {}))))
       )
       // 字型刻意不進 waitUntil ——
       // 字型 CDN 若沒有回應（不是 reject 而是 hang），install 仍然會完成。
@@ -51,6 +54,28 @@ self.addEventListener('message', e => {
   // 頁面問「你是哪一版」—— 用來認出等待中的 Service Worker 是不是同一個
   if (e.data.type === 'SW_VERSION' && e.ports && e.ports[0]) {
     e.ports[0].postMessage({ type: 'sw-version', version: CACHE_NAME });
+  }
+  // 使用者按了更新：直接從伺服器重抓網頁外殼（中、英文與目前這一頁）放進快取，好了再回報，
+  // 頁面收到回報才重新載入 —— 保證載入的就是新版，不會再冒第二次提示（2026-09-15）
+  if (e.data.type === 'REFRESH_SHELL') {
+    pendingKey = null; pendingFp = null;
+    const port = e.ports && e.ports[0];
+    const reply = () => { try { port && port.postMessage({ type: 'shell-refreshed' }); } catch (_) {} };
+    const urls = ['./', './en/'];
+    const put = (cache, key, u) => fetch(u, { cache: 'reload', credentials: 'same-origin' })
+      .then(r => { if (r && r.status === 200) return cache.put(key, r); }).catch(() => {});
+    e.waitUntil(caches.open(CACHE_NAME).then(cache => {
+      const jobs = urls.map(u => put(cache, u, u));
+      if (e.data.url) {
+        try {
+          const cu = new URL(e.data.url); cu.hash = ''; cu.search = '';
+          const base = new URL('./', self.registration.scope).href;
+          if (cu.href !== base && cu.href !== base + 'en/') jobs.push(put(cache, cu.href, cu.href));
+        } catch (_) {}
+      }
+      return Promise.all(jobs);
+    }).then(reply, reply));
+    return;
   }
   if (e.data.type === 'CHECK_UPDATE' && e.source) {
     e.source.postMessage({ type: pendingFp ? 'update-ready' : 'up-to-date', build: pendingFp });

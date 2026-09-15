@@ -3202,6 +3202,53 @@ body.scrolled .top-actions:hover,body.scrolled .top-actions:focus-within,body.sc
 /* 下一步那一行的時間不要斷成兩行（以前會把 @ 留在上一行） */
 .qt-next-at{white-space:nowrap;}
 @media (max-width:360px){.bco-bed-btns{gap:6px;}.bco-bed-btn{font-size:0.7em;padding:8px 2px;}.bco-bed-svg{width:38px;height:24px;}}
+
+/* ===== 2026-09-15 快速沖煮計時器（直式手機）：重新排版，不再擠成一團 =====
+   以前計時環 190px 佔掉大半高度，但環裡只剩「STEP／總時間」這種次要資訊；
+   目標克數底下的「總 Ng」又貼著大數字，「下一步」那行常常斷成兩行。
+   現在：小計時環放左邊、這一步的名稱放右邊 → 下面整排留給「注到幾克」與倒數 → 下一步收成一行 → 控制鈕。 */
+@media (max-width:600px) and (min-height:481px){
+  #quickTimerOverlay .qt-timer-section{display:grid;grid-template-columns:auto minmax(0,1fr);column-gap:16px;align-items:center;padding:14px 20px 12px;}
+  #quickTimerOverlay .qt-ring-wrap{grid-column:1;grid-row:1;width:104px;height:104px;margin:0;}
+  #quickTimerOverlay .qt-ring-inner{width:96px;}
+  #quickTimerOverlay .qt-step-indicator{font-size:0.6em;letter-spacing:1.5px;margin-bottom:1px;}
+  #quickTimerOverlay .qt-time{font-size:1.3em;letter-spacing:1px;}
+  #quickTimerOverlay .qt-label{display:block;font-size:0.72em;max-width:90px;margin-top:1px;-webkit-line-clamp:unset;}
+  #quickTimerOverlay .qt-current{display:contents;}
+  #quickTimerOverlay .qt-cur-title{grid-column:2;grid-row:1;text-align:left;font-size:1.02em;line-height:1.5;margin:0;}
+  #quickTimerOverlay .qt-current > :not(.qt-cur-title){grid-column:1/-1;}
+  #quickTimerOverlay .qt-controls{grid-column:1/-1;justify-self:center;margin:14px 0 2px;gap:22px;}
+  /* 焦點區：目標克數最大、總量跟在旁邊當小字、倒數另起一行 */
+  #quickTimerOverlay .tm-focus{margin:16px 0 0;}
+  #quickTimerOverlay .tm-focus-lbl{font-size:0.8em;letter-spacing:2px;}
+  #quickTimerOverlay .tm-focus.pour .tm-focus-water{font-size:3em;line-height:1.1;margin-top:2px;}
+  #quickTimerOverlay .tm-focus.pour .tm-focus-water .tm-focus-sub{display:inline-block;font-size:0.28em;font-weight:400;margin:0 0 0 10px;vertical-align:0.35em;}
+  #quickTimerOverlay .tm-focus.pour .tm-focus-sec{font-size:1.2em;margin-top:8px;line-height:1.3;}
+  #quickTimerOverlay .tm-focus.wait .tm-focus-sec{font-size:2.6em;}
+  #quickTimerOverlay .tm-focus.wait .tm-focus-water{margin-top:6px;}
+  #quickTimerOverlay .qt-cur-water{margin-top:10px;}
+  #quickTimerOverlay .qt-wait-wrap{margin-top:14px;}
+  #quickTimerOverlay .qt-wait-bar-track{height:4px;margin-bottom:0;}
+  #quickTimerOverlay .qt-next{margin-top:12px;font-size:0.9em;display:flex;justify-content:center;align-items:baseline;gap:8px;flex-wrap:wrap;line-height:1.4;}
+  #quickTimerOverlay .qt-next-title{max-width:60vw;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;}
+  #quickTimerOverlay .qt-action-done{margin-top:14px;}
+  #quickTimerOverlay .winton-temp-badge{justify-self:center;margin-top:8px;}
+  #quickTimerOverlay .qt-complete-msg{margin-top:12px;}
+  /* 版面改成格線後外框看不到了，換步驟的閃一下改由焦點區來閃 */
+  #quickTimerOverlay .qt-current.step-flash > .tm-focus{animation:stepFlash 0.5s ease-out;}
+}
+/* 很矮的直式螢幕（iPhone SE 帶網址列）再收一點 */
+@media (max-width:600px) and (min-height:481px) and (max-height:640px){
+  #quickTimerOverlay .qt-timer-section{padding:8px 16px 8px;}
+  #quickTimerOverlay .qt-ring-wrap{width:88px;height:88px;}
+  #quickTimerOverlay .qt-ring-inner{width:84px;}
+  #quickTimerOverlay .qt-label{display:none;}
+  #quickTimerOverlay .tm-focus{margin-top:10px;}
+  #quickTimerOverlay .tm-focus.pour .tm-focus-water{font-size:2.5em;}
+  #quickTimerOverlay .qt-controls{margin-top:10px;}
+}
+/* 下一步那一行的小標 */
+.qt-next-lbl{opacity:0.75;letter-spacing:1px;}
 </style>
 </head>
 <body>
@@ -5947,7 +5994,7 @@ function _doStartQuickTimer(){
     const actionHtml=isActionStep?'<button class="qt-action-done" id="qtActionDone">✓ 完成動作，繼續</button>':'';
     const _qtWintonTemp=(currentQuickMethod==='winton'&&activeIdx>=3);const _qtTempBadge=_qtWintonTemp?'<div class="winton-temp-badge" style="margin-top:4px;">🌡 降溫至 88°C</div>':'';
     cur.innerHTML='<div class="qt-cur-title">'+step.title+'</div>'+_qtTempBadge+focusHtml+waterHtml+waitHtml+actionHtml;
-    const _nx=allSteps[activeIdx+1];if(_nx&&!completed){cur.innerHTML+='<div class="qt-next">下一步 ▸ '+_nx.title+(_nx.water>0?' <b>注到 '+_nx.cum+'g</b>':'')+' <span class="qt-next-at">'+_fmtT(qtDurations[activeIdx])+' 開始</span></div>';}
+    const _nx=allSteps[activeIdx+1];if(_nx&&!completed){cur.innerHTML+='<div class="qt-next"><span class="qt-next-lbl">下一步</span><span class="qt-next-at">'+_fmtT(qtDurations[activeIdx])+'</span>'+(_nx.water>0?'<b>注到 '+_nx.cum+'g</b>':'<span class="qt-next-title">'+_nx.title+'</span>')+'</div>';}
     if(!completed&&seconds>=qtDurations[qtDurations.length-1]){
       completed=true;clearInterval(qtInterval);running=false;_sfx('done');
       document.getElementById('quickTimerDot')?.classList.remove('active');
@@ -6403,7 +6450,7 @@ document.getElementById('heroBeginnerCta')?.addEventListener('click',()=>_segGo(
 if('serviceWorker' in navigator){
   // 有新版本時顯示提示，讓使用者自己決定什麼時候更新
   // （以前 Service Worker 會無條件 skipWaiting，可能在正在沖煮時把版本抽換掉）
-  var _swUpdShown=false,_swReg=null,_swReloaded=false;
+  var _swUpdShown=false,_swReg=null,_swReloaded=false,_swSkipping=false,_swDeferT=null;
   function _swGet(k){try{return localStorage.getItem(k)}catch(e){return null}}
   function _swSet(k,v){try{localStorage.setItem(k,v)}catch(e){}}
   // 每個版本只問一次（關掉重開也記得）。按過更新就把那個版本記進 poSwAck，
@@ -6430,24 +6477,67 @@ if('serviceWorker' in navigator){
   })}
   function _swUpdateToast(build,onTap){
     if(_swUpdShown)return;
+    // 剛按過更新、重新載入後的 30 秒內，不再冒同一個提示（2026-09-15 修：以前要連點兩三次）
+    var _just=+(function(){try{return sessionStorage.getItem('poSwJust')}catch(e){return 0}})()||0;
+    if(_just&&Date.now()-_just<30000)return;
     if(_swAcked(build)){_swHardReset(build);return}
+    // 正在沖煮時先不打擾 —— 按了會重新載入，等計時器關掉再提示
+    if(document.body.classList.contains('timer-open')){
+      if(!_swDeferT)_swDeferT=setInterval(function(){if(!document.body.classList.contains('timer-open')){clearInterval(_swDeferT);_swDeferT=null;_swUpdateToast(build,onTap)}},4000);
+      return;
+    }
     _swUpdShown=true;
     var t=document.createElement('button');t.id='swUpdateToast';t.type='button';
     t.textContent='✨ 有新版本，點一下更新';
-    t.style.cssText='position:fixed;left:50%;transform:translateX(-50%);bottom:calc(84px + env(safe-area-inset-bottom,0px));z-index:3200;padding:11px 18px;border-radius:999px;border:1px solid rgba(192,138,92,0.5);background:rgba(28,20,14,0.96);color:#F3EBDD;font-family:inherit;font-size:0.82em;letter-spacing:0.04em;cursor:pointer;box-shadow:0 4px 18px rgba(0,0,0,0.35);';
-    t.addEventListener('click',function(){t.remove();_swSet('poSwAck',build||'');onTap()});
+    t.style.cssText='position:fixed;left:50%;transform:translateX(-50%);bottom:calc(84px + env(safe-area-inset-bottom,0px));z-index:3200;padding:11px 18px;border-radius:999px;border:1px solid rgba(192,138,92,0.5);background:rgba(28,20,14,0.96);color:#F3EBDD;font-family:inherit;font-size:0.82em;letter-spacing:0.04em;cursor:pointer;box-shadow:0 4px 18px rgba(0,0,0,0.35);white-space:nowrap;';
+    t.addEventListener('click',function(){
+      if(t.disabled)return;
+      // 按下去立刻有反應：鈕留著、改成「更新中…」，做完才重新載入
+      t.disabled=true;t.style.opacity='0.85';t.style.cursor='default';t.textContent='更新中…';
+      _swSet('poSwAck',build||'');onTap();
+    });
     document.body.appendChild(t);
-    setTimeout(function(){if(t.parentNode)t.style.opacity='0.75'},9000);
+    setTimeout(function(){if(t.parentNode&&!t.disabled)t.style.opacity='0.75'},9000);
   }
-  function _swReload(){if(_swReloaded)return;_swReloaded=true;location.reload()}
-  // 按下更新：有等待中的 Service Worker 就先把它換上（換好會觸發 controllerchange 重載），
-  // 沒有的話先告訴 SW「這個更新我收下了」再重載，免得重載後又被通知一次。
+  function _swReload(fromTap){if(_swReloaded)return;_swReloaded=true;if(fromTap){try{sessionStorage.setItem('poSwJust',String(Date.now()))}catch(e){}}location.reload()}
+  function _swWait(ms){return new Promise(function(r){setTimeout(r,ms)})}
+  // 等「正在安裝的新版 Service Worker」裝好（最多 ms 毫秒）
+  function _swWaitInstalled(reg,ms){return new Promise(function(res){
+    var w=reg&&reg.installing;if(!w)return res();
+    var to=setTimeout(res,ms);
+    w.addEventListener('statechange',function(){if(w.state!=='installing'){clearTimeout(to);res()}});
+  })}
+  // 請 Service Worker 直接從伺服器重抓一份網頁外殼放進快取，回報好了再重新載入
+  function _swRefreshShell(){return new Promise(function(res){
+    var c=navigator.serviceWorker.controller;
+    if(!c||typeof MessageChannel==='undefined')return res();
+    try{var ch=new MessageChannel(),to=setTimeout(res,5000);
+      ch.port1.onmessage=function(){clearTimeout(to);res()};
+      c.postMessage({type:'REFRESH_SHELL',url:location.href},[ch.port2]);
+    }catch(e){res()}
+  })}
+  // 按下更新（2026-09-15 重寫）：
+  // 以前「網頁內容換版」與「sw.js 換版」是兩個各自的提示，按完第一個重新載入後，
+  // 第二個又冒出來，看起來就像「一直點都沒反應」。現在一次做完全部：
+  //   1. 先問伺服器有沒有新的 sw.js，有就等它裝好
+  //   2. 有等待中的新版就換上，等它接手
+  //   3. 請 Service Worker 從伺服器重抓網頁放進快取（不經瀏覽器的 HTTP 快取）
+  //   4. 重新載入 —— 載入後 30 秒內不再重複提示
   function _swApplyUpdate(){
-    try{
-      if(_swReg&&_swReg.waiting){_swReg.waiting.postMessage({type:'SKIP_WAITING'});setTimeout(_swReload,1500);return}
+    var reg=_swReg;
+    Promise.resolve().then(function(){
       if(navigator.serviceWorker.controller)navigator.serviceWorker.controller.postMessage({type:'UPDATE_TAKEN'});
-    }catch(e){}
-    setTimeout(_swReload,80);
+      return reg?Promise.race([reg.update(),_swWait(4000)])['catch'](function(){}):null;
+    }).then(function(){return _swWaitInstalled(reg,6000)}).then(function(){
+      if(!(reg&&reg.waiting))return;
+      _swSkipping=true;
+      return new Promise(function(res){
+        var done=false,fin=function(){if(!done){done=true;res()}};
+        navigator.serviceWorker.addEventListener('controllerchange',fin);
+        setTimeout(fin,4000);
+        reg.waiting.postMessage({type:'SKIP_WAITING'});
+      });
+    }).then(_swRefreshShell)['catch'](function(){}).then(function(){_swReload(true)});
   }
   function _swWorkerToast(worker){_swAskVersion(worker).then(function(v){_swUpdateToast('sw:'+(v||'?'),_swApplyUpdate)})}
   navigator.serviceWorker.register('sw.js').then(function(reg){
@@ -6468,7 +6558,8 @@ if('serviceWorker' in navigator){
     if(!e.data)return;
     if(e.data.type==='update-ready')_swUpdateToast(e.data.build,_swApplyUpdate);
   });
-  navigator.serviceWorker.addEventListener('controllerchange',function(){_swReload()});
+  // 只有「我們自己按了更新」才跟著換版重新載入；更新流程裡的重新載入由 _swApplyUpdate 負責
+  navigator.serviceWorker.addEventListener('controllerchange',function(){if(!_swSkipping)_swReload()});
   // 主動問一次 —— 導覽的 fetch 常常在這頁的 JS 跑起來之前就結束了，光靠推播會漏掉
   setTimeout(function(){try{if(navigator.serviceWorker.controller)navigator.serviceWorker.controller.postMessage({type:'CHECK_UPDATE'})}catch(e){}},1200);
 }
