@@ -3247,6 +3247,45 @@ body.scrolled .top-actions:hover,body.scrolled .top-actions:focus-within,body.sc
 }
 /* label on the Next line */
 .qt-next-lbl{opacity:0.75;letter-spacing:1px;}
+/* ===== 2026-09-19 全面優化：手動節奏鈕／再沖一次／沖前確認精簡／路線卡排版／備份提醒 ===== */
+/* 首頁路線卡：標題在上、說明在下（以前四個元素排成一列，手機上標題被擠成一兩個字一行） */
+.segment-card{display:grid;grid-template-columns:auto minmax(0,1fr) auto;column-gap:16px;row-gap:2px;align-items:center;}
+.segment-card .segment-icon{grid-column:1;grid-row:1 / span 2;}
+.segment-card .segment-title{grid-column:2;grid-row:1;align-self:end;margin-bottom:0;overflow-wrap:normal;word-break:keep-all;}
+.segment-card .segment-desc{grid-column:2;grid-row:2;align-self:start;}
+.segment-card .segment-arrow{grid-column:3;grid-row:1 / span 2;margin-left:0;}
+/* 首頁「再沖一次」 */
+#rebrewSlot{max-width:500px;margin:0 auto 22px;}
+#rebrewSlot:empty{display:none;}
+.rebrew-btn{width:100%;display:flex;align-items:center;gap:14px;padding:16px 18px;background:var(--copper);color:#0F0D0A;border:0;border-radius:14px;font-family:inherit;text-align:left;cursor:pointer;transition:transform .15s ease,filter .2s ease;}
+.rebrew-btn:hover{filter:brightness(1.06);}
+.rebrew-btn:active{transform:scale(0.98);}
+.rebrew-ic{font-size:1.6em;flex:0 0 auto;}
+.rebrew-tx{display:flex;flex-direction:column;min-width:0;flex:1 1 auto;}
+.rebrew-t{font-weight:700;font-size:1.02em;line-height:1.3;}
+.rebrew-s{font-size:0.84em;opacity:0.8;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}
+.rebrew-go{flex:0 0 auto;font-size:0.84em;font-weight:700;white-space:nowrap;}
+/* 計時器手動節奏鈕 */
+.tm-pace{flex:0 0 auto;height:44px;min-width:64px;padding:0 12px;border-radius:22px;background:transparent;border:1px solid rgba(192,138,92,0.45);color:var(--copper-light);font-family:inherit;font-size:0.8em;font-weight:700;white-space:nowrap;cursor:pointer;transition:background .15s ease,transform .1s ease;}
+.tm-pace:hover{background:rgba(192,138,92,0.1);}
+.tm-pace:active{transform:scale(0.94);background:rgba(192,138,92,0.18);}
+.tm-pace-next{background:rgba(192,138,92,0.14);}
+.qt-controls.has-pace{align-items:center;}
+#quickTimerOverlay .qt-controls.has-pace{gap:10px;}
+.pto-pace-row{display:flex;gap:8px;margin-top:10px;flex-wrap:wrap;}
+.pto-pace-row .tm-pace{height:40px;}
+@media (max-width:360px){.tm-pace{min-width:56px;padding:0 9px;font-size:0.74em;}#quickTimerOverlay .qt-controls.has-pace{gap:7px;}}
+/* 沖完回饋：節奏提示 */
+.pace-hint{margin:0 0 12px;padding:10px 12px;border-left:3px solid var(--copper);background:rgba(192,138,92,0.08);font-size:0.86em;line-height:1.6;color:var(--text-primary);text-align:left;}
+/* 沖前確認精簡版（同一支沖法沖過 3 次以上） */
+#preBrewChecklist.pbc-compact .pbc-items{display:grid;grid-template-columns:1fr 1fr;gap:6px;margin-bottom:12px;}
+#preBrewChecklist.pbc-compact .pbc-item{padding:8px 10px;gap:8px;}
+#preBrewChecklist.pbc-compact .pbc-item-hint,#preBrewChecklist.pbc-compact .pbc-icon{display:none;}
+#preBrewChecklist.pbc-compact .pbc-item-label{font-size:0.86em;}
+.pbc-skip{display:flex;align-items:center;gap:8px;margin:0 0 12px;font-size:0.84em;color:var(--text-secondary);cursor:pointer;}
+.pbc-skip input{width:18px;height:18px;accent-color:var(--copper);flex:0 0 auto;}
+.pbc-skip-note{margin-top:8px;font-size:0.8em;color:var(--text-secondary);text-align:center;}
+.pbc-skip-undo{background:none;border:0;padding:4px 2px;color:var(--copper-light);font:inherit;text-decoration:underline;cursor:pointer;}
 </style>
 </head>
 <body>
@@ -3323,6 +3362,7 @@ body.scrolled .top-actions:hover,body.scrolled .top-actions:focus-within,body.sc
 
     <!-- ===== USER SEGMENTATION ===== -->
     <section class="section" id="segmentSection">
+      <div id="rebrewSlot"></div>
       <div class="section-label">What do you want to do</div>
       <div class="section-title">Find your brewing path</div>
       <div class="segment-cards">
@@ -5028,7 +5068,7 @@ function _sfxElInit(){if(_sfxElTried)return;_sfxElTried=true;
 function _sfxArm(){if(!_sfxEl||_sfxArmed)return;_sfxArmed=true;
   try{_sfxEl.currentTime=_SFX_ARM;const p=_sfxEl.play();if(p&&p.catch)p.catch(function(){_sfxArmed=false})}catch(e){_sfxArmed=false}}
 function _sfxCtxInit(){if(!_sfxCtx){try{_sfxCtx=new (window.AudioContext||window.webkitAudioContext)()}catch(e){}}if(_sfxCtx&&_sfxCtx.state==='suspended')_sfxCtx.resume().catch(()=>{});}
-function _sfxInit(){if(!_sfxOn)return;
+function _sfxInit(){if(!_sfxOn)return;_voiceArm();
   try{if(navigator.audioSession&&navigator.audioSession.type!=='playback')navigator.audioSession.type='playback'}catch(e){}
   _sfxElInit();if(_sfxEl){_sfxArm();return}_sfxCtxInit();}
 function _sfxPlay(k){const seg=_SFX_SEG[k];if(!_sfxEl||!seg)return null;
@@ -5039,19 +5079,41 @@ function _sfxPlay(k){const seg=_SFX_SEG[k];if(!_sfxEl||!seg)return null;
 /* Only unlock audio on gestures that really do make a sound (start brewing / free timer / sound toggle).
    It used to be bound to pointerdown on the whole page, which grabbed the iOS audio session on any tap. */
 function _sfxUnlockOn(sel){document.addEventListener('pointerdown',e=>{if(e.target&&e.target.closest&&e.target.closest(sel))_sfxInit()},{capture:true});}
-_sfxUnlockOn('.sfx-toggle-btn,#quickStartTimerBtn,#quickFloatTrigger,#pbcStartBtn,#brewConfirmYes,#startTimerBtn,.btn-start-timer,.ft-ctrl-btn,.qt-ctrl-btn,.pto-ctrl-btn');
+_sfxUnlockOn('#rebrewBtn,.sfx-toggle-btn,#quickStartTimerBtn,#quickFloatTrigger,#pbcStartBtn,#brewConfirmYes,#startTimerBtn,.btn-start-timer,.ft-ctrl-btn,.qt-ctrl-btn,.pto-ctrl-btn');
 /* Stop the sound when the page goes to the background, wake it again on return */
 document.addEventListener('visibilitychange',()=>{try{if(document.hidden&&_sfxEl)_sfxEl.pause();if(!_sfxCtx)return;if(document.hidden){if(_sfxCtx.state==='running')_sfxCtx.suspend()}else if(_sfxOn&&_sfxCtx.state==='suspended'&&_activeTimer)_sfxCtx.resume().catch(()=>{})}catch(e){}});
 function _beep(freq,dur,delay,vol){if(!_sfxCtx)return;const t=_sfxCtx.currentTime+(delay||0);const o=_sfxCtx.createOscillator(),g=_sfxCtx.createGain();o.type='sine';o.frequency.value=freq;g.gain.setValueAtTime(0.0001,t);g.gain.exponentialRampToValueAtTime(vol||0.22,t+0.012);g.gain.exponentialRampToValueAtTime(0.0001,t+dur);o.connect(g);g.connect(_sfxCtx.destination);o.start(t);o.stop(t+dur+0.05);}
 // Fallback: when the browser will not give us <audio>, use the original Web Audio synth (silenced by the iOS mute switch)
 function _sfxBeeps(kind){const seg=_SFX_SEG[kind];if(!seg||!_sfxCtx)return;seg[2].forEach(function(n){_beep(n[0],n[2],n[1],n[3])});}
+// ===== 語音報克數（Web Speech）=====
+// 沖的時候眼睛在壺嘴和磅秤上，不在手機。換段時唸一句「注到 200 克」。
+// 喇叭鈕三段循環：🔊 提示音＋語音 → 🔔 只留提示音 → 🔇 靜音。瀏覽器沒有語音功能時退回原本的兩段。
+// iOS 規定第一句 speak() 要在使用者手勢裡，_voiceArm() 掛在 _sfxInit()（開始沖煮那一下）先唸一句無聲的。
+let _voiceOn=(function(){try{return localStorage.getItem('poVoiceOn')!=='0'}catch(e){return true}})(),_voiceArmed=false,_voiceT=null;
+const _VOICE_LANG='en-US';
+function _voiceHas(){return typeof window!=='undefined'&&'speechSynthesis' in window&&typeof SpeechSynthesisUtterance==='function'}
+function _voiceOk(){return _sfxOn&&_voiceOn&&_voiceHas()}
+function _voiceSave(){try{localStorage.setItem('poVoiceOn',_voiceOn?'1':'0')}catch(e){}}
+function _sfxIcon(){return _sfxOn?(_voiceOk()?'🔊':'🔔'):'🔇'}
+function _voicePick(){try{const vs=speechSynthesis.getVoices()||[],n=s=>String(s||'').replace('_','-').toLowerCase(),full=_VOICE_LANG.toLowerCase(),base=full.split('-')[0];
+  return vs.find(v=>n(v.lang)===full&&v.localService)||vs.find(v=>n(v.lang)===full)||vs.find(v=>n(v.lang).indexOf(base)===0)||null}catch(e){return null}}
+function _voiceArm(){if(_voiceArmed||!_voiceOk())return;_voiceArmed=true;try{const u=new SpeechSynthesisUtterance(' ');u.volume=0;u.lang=_VOICE_LANG;speechSynthesis.speak(u)}catch(e){}}
+function _say(text,delay){if(!_voiceOk()||!text)return;clearTimeout(_voiceT);
+  _voiceT=setTimeout(function(){try{speechSynthesis.cancel();const u=new SpeechSynthesisUtterance(text);u.lang=_VOICE_LANG;u.rate=1.05;const v=_voicePick();if(v)u.voice=v;speechSynthesis.speak(u)}catch(e){}},delay==null?450:delay)}
+function _sayStop(){clearTimeout(_voiceT);try{if(_voiceHas())speechSynthesis.cancel()}catch(e){}}
+function _sayStep(step){if(!step)return;const t=String(step.title||'');
+  if(step.water>0){_say((_isBloom(t)?'Bloom. ':'')+'Pour to {g} grams'.replace('{g}',step.cum));return}
+  if(_isAction(t)){_say(t.replace(/[（(].*?[)）]/g,'').trim());return}
+  _say('Wait')}
+document.addEventListener('visibilitychange',function(){if(document.hidden)_sayStop()});
 function _sfx(kind){if(!_sfxOn)return;_sfxInit();if(_sfxPlay(kind))return;_sfxCtxInit();_sfxBeeps(kind);}
-function _sfxSyncBtns(){document.querySelectorAll('.sfx-toggle-btn').forEach(b=>{b.textContent=_sfxOn?'🔊':'🔇';b.classList.toggle('sfx-on',_sfxOn);b.classList.toggle('sfx-off',!_sfxOn);b.setAttribute('aria-pressed',_sfxOn?'true':'false');b.setAttribute('aria-label',_sfxOn?'Mute sound':'Enable sound');b.setAttribute('title',_sfxOn?'Sound: on (tap to mute)':'Sound: off (tap to enable)')})}
+function _sfxSyncBtns(){document.querySelectorAll('.sfx-toggle-btn').forEach(b=>{b.textContent=_sfxIcon();b.classList.toggle('sfx-on',_sfxOn);b.classList.toggle('sfx-off',!_sfxOn);b.setAttribute('aria-pressed',_sfxOn?'true':'false');b.setAttribute('aria-label',_sfxOn?'Mute sound':'Enable sound');b.setAttribute('title',_sfxOn?'Sound: on (tap to mute)':'Sound: off (tap to enable)')})}
 let _sfxToastT=null;
 function _sfxToast(msg){let el=document.getElementById('sfxToast');if(!el){el=document.createElement('div');el.id='sfxToast';document.body.appendChild(el)}el.textContent=msg;el.classList.add('show');clearTimeout(_sfxToastT);_sfxToastT=setTimeout(()=>el.classList.remove('show'),1500)}
 function _sfxCue(on){_sfxInit();const r=_sfxPlay(on?'on':'off');if(r){if(r.catch)r.catch(function(){_sfxToast('⚠️ Sound was blocked — tap once more')});return true}_sfxCtxInit();if(!_sfxCtx)return false;_sfxBeeps(on?'on':'off');return _sfxCtx.state==='running'}
-function toggleSfx(){_sfxOn=!_sfxOn;try{localStorage.setItem('poSoundOn',_sfxOn?'1':'0')}catch(e){}_sfxSyncBtns();document.querySelectorAll('.sfx-toggle-btn').forEach(b=>{b.classList.remove('sfx-pulse');void b.offsetWidth;b.classList.add('sfx-pulse')});if(navigator.vibrate&&!_reduceMotion())navigator.vibrate(_sfxOn?[30,40,30]:[30]);const ok=_sfxCue(_sfxOn);_sfxToast(_sfxOn?(ok?'\uD83D\uDD0A Sound on':'\u26A0\uFE0F Sound was blocked \u2014 tap once more'):'\uD83D\uDD07 Sound off')}
-function _sfxBtnHtml(cls){return '<button class="'+cls+' sfx-toggle-btn '+(_sfxOn?'sfx-on':'sfx-off')+'" onclick="toggleSfx()" aria-pressed="'+(_sfxOn?'true':'false')+'" aria-label="'+(_sfxOn?'Mute sound':'Enable sound')+'" title="'+(_sfxOn?'Sound: on (tap to mute)':'Sound: off (tap to enable)')+'">'+(_sfxOn?'🔊':'🔇')+'</button>'}
+function toggleSfx(){if(_voiceHas()&&_sfxOn&&_voiceOn){_voiceOn=false;_voiceSave();_sayStop();_sfxSyncBtns();_sfxCue(true);_sfxToast('🔔 Beeps only — voice off');return}
+  _sfxOn=!_sfxOn;if(_sfxOn){_voiceOn=true;_voiceSave();_voiceArm()}else{_sayStop()}try{localStorage.setItem('poSoundOn',_sfxOn?'1':'0')}catch(e){}_sfxSyncBtns();document.querySelectorAll('.sfx-toggle-btn').forEach(b=>{b.classList.remove('sfx-pulse');void b.offsetWidth;b.classList.add('sfx-pulse')});if(navigator.vibrate&&!_reduceMotion())navigator.vibrate(_sfxOn?[30,40,30]:[30]);const ok=_sfxCue(_sfxOn);_sfxToast(_sfxOn?(ok?(_voiceOk()?'🔊 Beeps + spoken targets on':null)||'\uD83D\uDD0A Sound on':'\u26A0\uFE0F Sound was blocked \u2014 tap once more'):'\uD83D\uDD07 Sound off')}
+function _sfxBtnHtml(cls){return '<button class="'+cls+' sfx-toggle-btn '+(_sfxOn?'sfx-on':'sfx-off')+'" onclick="toggleSfx()" aria-pressed="'+(_sfxOn?'true':'false')+'" aria-label="'+(_sfxOn?'Mute sound':'Enable sound')+'" title="'+(_sfxOn?'Sound: on (tap to mute)':'Sound: off (tap to enable)')+'">'+_sfxIcon()+'</button>'}
 function _stepCountdownTick(seconds,durations,completed){if(completed||!durations||!durations.length)return;for(let i=0;i<durations.length;i++){if(durations[i]>seconds){const d=durations[i]-seconds;if(d<=3&&_lastTickAt!==seconds){_lastTickAt=seconds;_sfx('tick')}return}}}
 let wakeLock=null;
 // ===== 安裝到主畫面：瀏覽器判定可安裝時才顯示按鈕 =====
@@ -5112,10 +5174,22 @@ function _clkSec(c){if(!c)return 0;const p=c.pausedAt?(Date.now()-c.pausedAt):0;
 function _clkPause(c){if(c&&!c.pausedAt)c.pausedAt=Date.now()}
 function _clkResume(c){if(c&&c.pausedAt){c.pausedTotal+=Date.now()-c.pausedAt;c.pausedAt=0}}
 function _clkSet(c,sec){if(c){c.start=Date.now()-sec*1000;c.pausedTotal=0;c.pausedAt=0}}
+// ===== 手動帶節奏：＋10 秒／下一步 =====
+// 計時器是「時間到就換段」。這兩支讓人可以反過來帶時鐘：
+//   _tmPaceShift(durs,idx,d) 把第 idx 段（含）之後的結束時間整批平移 d 秒。
+//   ＋10 秒 → d=+10；下一步 → d=-(這段剩下的秒數)。起注間隔的原法值不變，只是這一杯整批順延／提前。
+function _paceRec(){const p=window._poPace;return(p&&(p.plus||p.skip))?{plus:p.plus|0,skip:p.skip|0}:undefined}
+function _tmPaceShift(durs,idx,d){for(let j=Math.max(0,idx);j<durs.length;j++)durs[j]+=d}
+function _tmPaceBtns(pre){return['<button type="button" class="tm-pace tm-pace-plus" id="'+pre+'PacePlus" aria-label="Give this step 10 more seconds">+10 s</button>','<button type="button" class="tm-pace tm-pace-next" id="'+pre+'PaceNext" aria-label="Done with this step, go to the next one">Next ▸</button>']}
+// 沖完回饋用：這杯多要了幾秒／提前了幾秒
+function _paceHint(pc){try{if(!pc)return'';const cal=_flowCal(),ord=['vfast','fast','std','slow'],i=ord.indexOf(cal);
+  if(pc.plus>=20&&pc.plus>pc.skip){return'<div class="pace-hint">⏱ You asked for {n} extra seconds this brew.'.replace('{n}',pc.plus)+(i>=0&&i<ord.length-1?' Try setting “My flow rate” one notch slower next time so the pace fits your hand.':'')+'</div>'}
+  if(pc.skip>=20&&pc.skip>pc.plus){return'<div class="pace-hint">⏱ You moved ahead by {n} seconds this brew.'.replace('{n}',pc.skip)+(i>0?' Try setting “My flow rate” one notch faster next time so you wait less.':'')+'</div>'}
+  return''}catch(e){return''}}
 let _ptoClk=null;
 // 同時只允許一個計時器活著，避免舊的 interval / 監聽器 / setTimeout 殘留
 let _activeTimer=null;
-function _teardownTimer(){if(!_activeTimer)return;try{if(_sfxCtx&&_sfxCtx.state==='running')_sfxCtx.suspend()}catch(e){}document.body.classList.remove('timer-open');if(_activeTimer.untrap){try{_activeTimer.untrap()}catch(e){}}try{clearInterval(_activeTimer.interval)}catch(e){}try{clearTimeout(_activeTimer.done)}catch(e){}if(_activeTimer.esc)document.removeEventListener('keydown',_activeTimer.esc);_activeTimer=null;_wakeBadge(null)}
+function _teardownTimer(){if(!_activeTimer)return;try{_sayStop()}catch(e){}try{if(_sfxCtx&&_sfxCtx.state==='running')_sfxCtx.suspend()}catch(e){}document.body.classList.remove('timer-open');if(_activeTimer.untrap){try{_activeTimer.untrap()}catch(e){}}try{clearInterval(_activeTimer.interval)}catch(e){}try{clearTimeout(_activeTimer.done)}catch(e){}if(_activeTimer.esc)document.removeEventListener('keydown',_activeTimer.esc);_activeTimer=null;_wakeBadge(null)}
 function _registerTimer(o){_teardownTimer();_activeTimer=o;return o}
 function _wakeBadge(state){let el=document.getElementById('wakeBadge');if(state===null||state===undefined){if(el)el.remove();return}if(!el){el=document.createElement('div');el.id='wakeBadge';document.body.appendChild(el)}el.className=state?'on':'off';el.textContent=state?'📱 Screen stays awake':'⚠ Screen may sleep'}
 function _pushTimerState(){try{history.pushState({poTimer:1},'')}catch(e){}}
@@ -5160,8 +5234,35 @@ const _DOSE_FIT_AUTO={hoffmannCup:{max:18,to:15,msg:'The 1-cup recipe is built f
 function _doseFitAuto(k,inputId,btnSel){const r=_DOSE_FIT_AUTO[k];const el=document.getElementById(inputId);if(!r||!el)return false;const d=parseFloat(el.value);if(!isFinite(d))return false;if((r.max&&d>r.max)||(r.min&&d<r.min)){el.value=r.to;document.querySelectorAll(btnSel).forEach(b=>b.classList.toggle('active',parseFloat(b.dataset.dose)===r.to));try{showCompareToast(r.msg)}catch(e){}return true}return false}
 function _clampDose(v){const n=parseFloat(v);if(!isFinite(n)||n<=0)return 20;return Math.min(100,Math.max(5,n))}
 // 沖煮筆記讀寫：抗損毀資料與容量爆掉
+// ===== 流量統計（GoatCounter：免 cookie、不追個人）=====
+// 啟用方式：到 goatcounter.com 註冊，把你的代碼（網址 xxx.goatcounter.com 的 xxx）填進下面這一行，中英兩版都要填。
+// 留空字串 = 完全不載入、不發任何請求。
+const GC_CODE='';
+// 本站是單頁＋#hash 切換，所以每次換頁自己回報一次路徑；_track('brew/kasuya') 這種算事件。
+function _gcReady(){return !!(GC_CODE&&window.goatcounter&&typeof window.goatcounter.count==='function')}
+function _track(name){try{if(_gcReady())window.goatcounter.count({path:String(name),title:String(name),event:true})}catch(e){}}
+(function(){try{if(!GC_CODE||!/^[a-z0-9-]+$/i.test(GC_CODE))return;if(location.protocol==='file:'||/^(localhost|127\.|192\.168\.)/.test(location.hostname))return;
+  window.goatcounter={no_onload:true};
+  const page=()=>{try{if(_gcReady())window.goatcounter.count({path:location.pathname+(location.hash||'')})}catch(e){}};
+  const s=document.createElement('script');s.async=true;s.src='https://gc.zgo.at/count.js';s.setAttribute('data-goatcounter','https://'+GC_CODE+'.goatcounter.com/count');
+  s.onload=page;document.head.appendChild(s);window.addEventListener('hashchange',page)}catch(e){}})();
+// ===== 紀錄匯出＋備份提醒 =====
+// 紀錄只存在這台裝置的瀏覽器裡。累積 8 筆以上、距離上次匯出超過 30 天，就在存完紀錄後輕輕問一次（14 天內不重複問）。
+const BK_KEY='pol_backup';
+function _bkGet(){try{const o=JSON.parse(localStorage.getItem(BK_KEY)||'{}');return o&&typeof o==='object'?o:{}}catch(e){return{}}}
+function _bkSet(o){try{localStorage.setItem(BK_KEY,JSON.stringify(o))}catch(e){}}
+function _notesExport(){try{const notes=_notesLoad(),blob=new Blob([JSON.stringify(notes,null,2)],{type:'application/json'}),url=URL.createObjectURL(blob),a=document.createElement('a');
+  a.href=url;a.download='pourover-notes-'+new Date().toISOString().slice(0,10)+'.json';document.body.appendChild(a);a.click();
+  setTimeout(()=>{URL.revokeObjectURL(url);a.remove()},300);
+  const s=_bkGet();s.exp=Date.now();_bkSet(s);
+  if(typeof showCompareToast==='function')showCompareToast('Brew log exported ✓')}catch(e){_logErr('export',e)}}
+function _backupNudge(){try{const n=_notesLoad().length;if(n<8)return;const s=_bkGet(),now=Date.now(),D=86400000;
+  if(s.exp&&now-s.exp<30*D)return;if(s.ask&&now-s.ask<14*D)return;s.ask=now;_bkSet(s);
+  const ios=/iP(hone|ad|od)/.test(navigator.userAgent),alone=(window.matchMedia&&window.matchMedia('(display-mode: standalone)').matches)||navigator.standalone===true;
+  _confirmDialog({title:'Back up your brew log?',desc:'You have {n} brews logged, and they only live in this browser on this device. Export a copy so a new phone or a cleared browser never costs you your notes.'.replace('{n}',n)+(ios&&!alone?'<br><br>Also: add this site to your Home Screen so Safari won’t clear the log after a long gap.':''),
+    actions:[{label:'Export now',primary:true,fn:_notesExport},{label:'Later'}]})}catch(e){}}
 function _notesLoad(){try{const p=JSON.parse(localStorage.getItem('brewNotes')||'[]');return Array.isArray(p)?p.filter(x=>x&&typeof x==='object'):[]}catch(e){return []}}
-function _notesSave(n){const _put=a=>localStorage.setItem('brewNotes',JSON.stringify(a));try{_put(n);return true}catch(e){try{const t=n.slice(0,Math.max(5,Math.floor(n.length/2)));_put(t);if(typeof showErrorToast==='function')showErrorToast('Storage full — some older logs were removed');return true}catch(e2){_logErr('notesSave',e2);if(typeof showErrorToast==='function')showErrorToast('Save failed: browser storage is full');return false}}}
+function _notesSave(n){const _put=a=>localStorage.setItem('brewNotes',JSON.stringify(a));try{_put(n);try{_rebrewRender()}catch(e){}return true}catch(e){try{const t=n.slice(0,Math.max(5,Math.floor(n.length/2)));_put(t);if(typeof showErrorToast==='function')showErrorToast('Storage full — some older logs were removed');return true}catch(e2){_logErr('notesSave',e2);if(typeof showErrorToast==='function')showErrorToast('Save failed: browser storage is full');return false}}}
 // ===== My go-tos: pins + recently brewed =====
 // Pins live in pol_pins (max 3); "recent" is derived from the existing brew log (brewNotes), not stored twice.
 const PIN_KEY='pol_pins',PIN_MAX=3;
@@ -5426,6 +5527,7 @@ function startTimer(){if(!selectedMethod){showErrorToast('Select a brewing metho
   startProTimerOverlay(m,d,tw,r);
 }
 function startProTimerOverlay(m,dose,totalWater,ratio){
+  _track('brew-tools/'+selectedMethod);
   _lastTickAt=-1;_ptoClk=_clkNew();
   const existing=document.getElementById('proTimerOverlay');if(existing)existing.remove();
   const stepTotal=currentAllStepsData.length||currentStepDurations.length;
@@ -5456,6 +5558,7 @@ function startProTimerOverlay(m,dose,totalWater,ratio){
         <div class="pto-cur-title" id="ptoCurTitle">Get Ready</div>
         <div class="pto-water-row" id="ptoWaterRow"></div>
         <div class="qt-next" id="ptoNext"></div>
+        <div class="pto-pace-row">${_tmPaceBtns('pto').join('')}</div>
       </div>
     </div>
     <div class="pto-steps-list" id="ptoStepsList"></div>`;
@@ -5466,6 +5569,7 @@ function startProTimerOverlay(m,dose,totalWater,ratio){
     listEl.innerHTML=currentAllStepsData.map((s,i)=>{const noteText=(s.note||'').replace(/<[^>]+>/g,' ').replace(/\s+/g,' ').trim();return`<div class="pto-step-item" data-idx="${i}"><div class="pto-step-num">${s.stepNum}</div><div class="pto-step-body"><div class="pto-step-title">${s.title}</div>${s.water>0?`<div class="pto-step-water">Pour to ${s.cum}g <span style="opacity:0.5">(+${s.water}g)</span></div>`:s.cum>0?`<div class="pto-step-water" style="opacity:0.6">Total ${s.cum}g</div>`:''}`+(noteText?`<div class="pto-step-note">${noteText}</div>`:'')+`</div></div>`}).join('');
   }
   let ptoPrevActiveIdx=-1,ptoCurrentActiveIdx=0,ptoActionDone=false;
+  const _ptoBase=currentStepDurations.slice(),_ptoPace={plus:0,skip:0};window._poPace=_ptoPace;
   function updatePtoDisplay(){
     const timeEl=document.getElementById('ptoTime');if(timeEl)timeEl.textContent=_fmtClock(timerSeconds);
     const ring=document.getElementById('ptoRingProgress');
@@ -5490,7 +5594,7 @@ function startProTimerOverlay(m,dose,totalWater,ratio){
       if(activeEl)activeEl.scrollIntoView({behavior:_scrollBehavior(),block:'nearest'});
       if(ptoPrevActiveIdx>=0&&navigator.vibrate)navigator.vibrate([100,50,100]);
       if(ptoPrevActiveIdx>=0)_sfx('step');
-      {const _st=currentAllStepsData[activeIdx];if(_st)_announce('Step {n}: '.replace('{n}',activeIdx+1)+_st.title+(_st.water>0?' — '+_st.cum+'g':''));}
+      {const _st=currentAllStepsData[activeIdx];if(_st&&!brewCompleted)_sayStep(_st);if(_st)_announce('Step {n}: '.replace('{n}',activeIdx+1)+_st.title+(_st.water>0?' — '+_st.cum+'g':''));}
       const si=document.getElementById('ptoStepInfo');
       if(si&&ptoPrevActiveIdx>=0){si.classList.add('step-flash');setTimeout(()=>si.classList.remove('step-flash'),550);}
       ptoPrevActiveIdx=activeIdx;
@@ -5530,7 +5634,7 @@ function startProTimerOverlay(m,dose,totalWater,ratio){
     if(!brewCompleted&&currentStepDurations.length>0&&timerSeconds>=currentStepDurations[currentStepDurations.length-1]){
       brewCompleted=true;clearInterval(timerInterval);timerRunning=false;releaseWakeLock();
       if(navigator.vibrate&&!_reduceMotion())navigator.vibrate([200,100,200,100,300]);
-      _sfx('done');
+      _sfx('done');_say('Brew complete',700);
       if(stepIndEl)stepIndEl.textContent='COMPLETE';
       const pauseBtn=document.getElementById('ptoPause');if(pauseBtn)pauseBtn.textContent='✓';
       if(titleEl)titleEl.textContent='Brew complete';
@@ -5547,6 +5651,13 @@ function startProTimerOverlay(m,dose,totalWater,ratio){
   }
   updatePtoDisplay();
   ov.addEventListener('click',e=>{
+    const _pb=e.target.closest&&e.target.closest('.tm-pace');
+    if(_pb&&!brewCompleted){
+      if(_pb.id==='ptoPacePlus'){_tmPaceShift(currentStepDurations,ptoCurrentActiveIdx,10);_ptoPace.plus+=10;}
+      else{const _d=currentStepDurations[ptoCurrentActiveIdx]-timerSeconds;if(_d>0){_tmPaceShift(currentStepDurations,ptoCurrentActiveIdx,-_d);if(ptoCurrentActiveIdx<currentStepDurations.length-1)_ptoPace.skip+=_d;}}
+      if(navigator.vibrate)navigator.vibrate(30);
+      updatePtoDisplay();return;
+    }
     if(e.target.id==='ptoActionDone'){
       timerSeconds=currentStepDurations[ptoCurrentActiveIdx];_clkSet(_ptoClk,timerSeconds);
       updatePtoDisplay();
@@ -5568,7 +5679,7 @@ function startProTimerOverlay(m,dose,totalWater,ratio){
     const lblEl=document.getElementById('ptoTimeLabel');if(lblEl&&!brewCompleted)lblEl.textContent=timerRunning?'Running':'Paused';
     if(timerRunning)_clkResume(_ptoClk);else _clkPause(_ptoClk);
   });
-  const _ptoDoReset=()=>{timerSeconds=0;timerRunning=true;brewCompleted=false;ptoPrevActiveIdx=-1;_clkSet(_ptoClk,0);
+  const _ptoDoReset=()=>{for(let j=0;j<_ptoBase.length&&j<currentStepDurations.length;j++)currentStepDurations[j]=_ptoBase[j];_ptoPace.plus=0;_ptoPace.skip=0;timerSeconds=0;timerRunning=true;brewCompleted=false;ptoPrevActiveIdx=-1;_clkSet(_ptoClk,0);
     const _pb=document.getElementById('ptoPause');if(_pb)_pb.textContent='⏸';ov.classList.remove('pto-paused');updatePtoDisplay();};
   document.getElementById('ptoReset').addEventListener('click',()=>{
     if(timerSeconds>10&&!brewCompleted){_confirmDialog({title:'Restart the timer?',desc:'Your current progress ({t}) will be lost and cannot be undone.'.replace('{t}',_fmtT(timerSeconds)),
@@ -5668,11 +5779,11 @@ function showBrewComplete(){const _bcEx=document.getElementById('brewCompleteOve
     const el=document.getElementById('brewSuggestion');
     if(el){if(sugg.length){el.style.display='block';el.innerHTML='<div style="font-size:0.72em;color:var(--copper);letter-spacing:2px;text-transform:uppercase;margin-bottom:8px;">Adjustment Tips</div>'+sugg.map(s=>`<div style="font-size:0.85em;color:var(--text-secondary);line-height:1.6;padding:4px 0;border-bottom:1px solid var(--border);">${s}</div>`).join('')}else{el.style.display='none';}}
   }
-  function saveNote(){const note=document.getElementById('brewNoteInput')?.value?.trim();const grind=document.getElementById('brewGrindInput')?.value?.trim()||'';if(grind){try{localStorage.setItem('poLastGrind',grind)}catch(e){}}const roast=document.getElementById('roastLevel')?.value||'';const process=document.getElementById('processing')?.value||'';const temp=parseFloat(document.getElementById('currentTemp')?.value)||0;const dripper=document.getElementById('dripperType')?.value||'';const days=document.getElementById('restDaysSkipBtn')?.classList.contains('active')?7:(_restDays(0));try{const notes=_notesLoad();notes.unshift({v:BREW_NOTES_VERSION,time:new Date().toISOString(),method:selectedMethod||'',dose:d,water:tw,ratio:r,duration:timerSeconds,note:note||'',grind,ratings:{...ratings},roast,process,temp,dripper,days,bed:_bedPick(document)});if(notes.length>50)notes.pop();_notesSave(notes)}catch(e){}}
-  document.getElementById('brewSaveNoteBtn').addEventListener('click',()=>{saveNote();overlay.remove();});
+  function saveNote(){const note=document.getElementById('brewNoteInput')?.value?.trim();const grind=document.getElementById('brewGrindInput')?.value?.trim()||'';if(grind){try{localStorage.setItem('poLastGrind',grind)}catch(e){}}const roast=document.getElementById('roastLevel')?.value||'';const process=document.getElementById('processing')?.value||'';const temp=parseFloat(document.getElementById('currentTemp')?.value)||0;const dripper=document.getElementById('dripperType')?.value||'';const days=document.getElementById('restDaysSkipBtn')?.classList.contains('active')?7:(_restDays(0));try{const notes=_notesLoad();notes.unshift({v:BREW_NOTES_VERSION,time:new Date().toISOString(),method:selectedMethod||'',dose:d,water:tw,ratio:r,duration:timerSeconds,note:note||'',grind,ratings:{...ratings},roast,process,temp,dripper,days,bed:_bedPick(document),pace:_paceRec()});if(notes.length>50)notes.pop();_notesSave(notes)}catch(e){}}
+  document.getElementById('brewSaveNoteBtn').addEventListener('click',()=>{saveNote();setTimeout(_backupNudge,1600);overlay.remove();});
   document.getElementById('brewViewNotesBtn').addEventListener('click',()=>{saveNote();overlay.remove();setTimeout(()=>showBrewNotes(),100);});
   document.getElementById('brewAgainBtn').addEventListener('click',()=>{saveNote();overlay.remove();resetTimer();});
-  document.getElementById('brewDoneBtn').addEventListener('click',()=>{saveNote();overlay.remove();});
+  document.getElementById('brewDoneBtn').addEventListener('click',()=>{saveNote();setTimeout(_backupNudge,1600);overlay.remove();});
 }
 
 function startFreeTimer(){
@@ -5828,6 +5939,7 @@ function showQuickBrewNoteModal(method,dose,water,seconds){
     <div class="bco-hero"><span class="bco-hero-icon">☕</span><div class="bco-hero-title">Brew Complete!</div><div class="bco-hero-sub">${m?m.title.split(' · ')[0]:'Pour-over coffee'}</div></div>
     <div class="bco-grid"><div class="bco-cell"><div class="bco-val">${dose}g</div><div class="bco-lbl">Dose</div></div><div class="bco-cell"><div class="bco-val">${water}g</div><div class="bco-lbl">Water</div></div><div class="bco-cell"><div class="bco-val">${timeStr}</div><div class="bco-lbl">Time</div></div></div>
     <div class="bco-actions">
+      ${_paceHint(window._poPace)}
       ${_drawdownHtml()}
       ${_bedHtml()}
       <div class="bco-taste-section">
@@ -5915,8 +6027,8 @@ function showQuickBrewNoteModal(method,dose,water,seconds){
       });
     });
   });
-  function saveQbn(){const note=document.getElementById('qbnInput')?.value?.trim();const grind=document.getElementById('qbnGrind')?.value?.trim()||'';if(grind){try{localStorage.setItem('poLastGrind',grind)}catch(e){}}try{const notes=_notesLoad();notes.unshift({v:BREW_NOTES_VERSION,time:new Date().toISOString(),method:method||'',dose:dose,water:water,duration:seconds,note:note||'',grind,taste:qbnTaste||'',dd:_qbnDd(),ratings:{...qbnRatings},bed:_bedPick(document)});if(notes.length>50)notes.pop();_notesSave(notes)}catch(e){}}
-  document.getElementById('qbnSave').addEventListener('click',()=>{saveQbn();modal.remove();showCompareToast('Saved to brew log ✓');});
+  function saveQbn(){const note=document.getElementById('qbnInput')?.value?.trim();const grind=document.getElementById('qbnGrind')?.value?.trim()||'';if(grind){try{localStorage.setItem('poLastGrind',grind)}catch(e){}}try{const notes=_notesLoad();notes.unshift({v:BREW_NOTES_VERSION,time:new Date().toISOString(),method:method||'',dose:dose,water:water,duration:seconds,note:note||'',grind,taste:qbnTaste||'',dd:_qbnDd(),ratings:{...qbnRatings},bed:_bedPick(document),pace:_paceRec()});if(notes.length>50)notes.pop();_notesSave(notes)}catch(e){}}
+  document.getElementById('qbnSave').addEventListener('click',()=>{saveQbn();setTimeout(_backupNudge,1600);modal.remove();showCompareToast('Saved to brew log ✓');});
   document.getElementById('qbnViewAll').addEventListener('click',()=>{saveQbn();modal.remove();setTimeout(()=>showBrewNotes(),100);});
   // Straight back to picking another method: save, then return to the quick-brew grid
   document.getElementById('qbnBackList')?.addEventListener('click',()=>{saveQbn();modal.remove();window.location.hash='#quick';
@@ -5927,6 +6039,29 @@ function showQuickBrewNoteModal(method,dose,water,seconds){
     modal.remove();});
   modal.addEventListener('click',e=>{if(e.target===modal)modal.remove();});
 }
+// ===== 回訪捷徑：首頁「再沖一次」＋ 沖前確認精簡 =====
+// 首頁三張路線卡是給第一次來的人看的；沖過的人直接拿上一筆紀錄的沖法與粉量，一鍵進計時。
+function _rebrewRender(){const slot=document.getElementById('rebrewSlot');if(!slot)return;let r=null;
+  try{r=_notesLoad().find(x=>x&&x.method&&BREW_METHODS[x.method]&&Number(x.dose)>0)}catch(e){}
+  if(!r){slot.innerHTML='';return}
+  const name=String(BREW_METHODS[r.method].title||'').split(' · ')[0],d=_clampDose(r.dose);
+  slot.innerHTML='<button type="button" class="rebrew-btn" id="rebrewBtn" data-k="'+r.method+'" data-d="'+d+'"><span class="rebrew-ic">☕</span><span class="rebrew-tx"><span class="rebrew-t">Brew it again</span><span class="rebrew-s">'+name+' · '+d+'g</span></span><span class="rebrew-go">Start now →</span></button>';}
+function _rebrewGo(k,d){if(!BREW_METHODS[k])return;currentQuickMethod=k;
+  const _qd=document.getElementById('quickDoseInput');if(_qd&&d)_qd.value=d;
+  window.location.hash='#quick';
+  setTimeout(()=>{try{
+    document.querySelectorAll('.quick-method-card').forEach(c=>c.classList.toggle('active',c.dataset.method===k));
+    document.querySelectorAll('#quickDoseBtns .dose-btn').forEach(b=>b.classList.toggle('active',parseFloat(b.dataset.dose)===parseFloat(d)));
+    updateQuickBrewResults();updateQuickFlowSteps(2);startQuickTimer();
+  }catch(e){_logErr('rebrew',e)}},240);}
+document.addEventListener('click',e=>{const b=e.target.closest&&e.target.closest('#rebrewBtn');if(b)_rebrewGo(b.dataset.k,parseFloat(b.dataset.d))});
+// 同一支沖法沖過 3 次以上，沖前確認收成一行；勾「下次直接開始」就整個略過（開始鈕下方可以恢復）
+const PBC_SKIP_KEY='pol_pbcSkip';
+function _pbcSkipGet(){try{const o=JSON.parse(localStorage.getItem(PBC_SKIP_KEY)||'{}');return o&&typeof o==='object'?o:{}}catch(e){return{}}}
+function _pbcSkipSet(k,on){try{const o=_pbcSkipGet();if(on)o[k]=1;else delete o[k];localStorage.setItem(PBC_SKIP_KEY,JSON.stringify(o))}catch(e){}}
+function _brewCount(k){try{return _notesLoad().filter(x=>x&&x.method===k).length}catch(e){return 0}}
+function _pbcSkipNote(k){return _pbcSkipGet()[k]?'<div class="pbc-skip-note">Pre-brew checklist skipped · <button type="button" class="pbc-skip-undo" id="pbcSkipUndo">Restore</button></div>':''}
+document.addEventListener('click',e=>{if(e.target&&e.target.id==='pbcSkipUndo'){_pbcSkipSet(currentQuickMethod,false);const n=e.target.closest('.pbc-skip-note');if(n)n.remove();showCompareToast('Pre-brew checklist restored')}});
 function showPreBrewChecklist(onConfirm){
   const existing=document.getElementById('preBrewChecklist');if(existing)existing.remove();
   const m=BREW_METHODS[currentQuickMethod];
@@ -5936,10 +6071,12 @@ function showPreBrewChecklist(onConfirm){
     {icon:'💧',label:'Filter rinsed',hint:'Rinse with hot water and discard the rinse water'},
     {icon:'☕',label:'Coffee ground',hint:'Start brewing soon after grinding'},
   ];
-  const el=document.createElement('div');el.id='preBrewChecklist';
+  const _pbcCompact=_brewCount(currentQuickMethod)>=3;
+  const el=document.createElement('div');el.id='preBrewChecklist';if(_pbcCompact)el.classList.add('pbc-compact');
   el.innerHTML=`<div class="pbc-card">
     <div class="pbc-header"><span class="pbc-icon">☑️</span><div class="pbc-title">Pre-Brew Checklist</div><div class="pbc-sub">${m?m.title.split(' · ')[0]:'Pour-Over Coffee'} · Confirm ready, then start</div></div>
     ${_fbBlock(currentQuickMethod)}<div class="pbc-items">${items.map((it,i)=>`<div class="pbc-item checked" data-idx="${i}"><span class="pbc-item-icon">${it.icon}</span><div class="pbc-item-text"><div class="pbc-item-label">${it.label}</div><div class="pbc-item-hint">${it.hint}</div></div><span class="pbc-item-check">✓</span></div>`).join('')}</div>
+    ${_pbcCompact?'<label class="pbc-skip"><input type="checkbox" id="pbcSkipNext"> Start right away next time for this method</label>':''}
     <button class="pbc-start-btn ready" id="pbcStartBtn">Confirm all, start timer →</button>
     <button class="pbc-cancel-btn" id="pbcCancelBtn">Cancel, not yet</button>
   </div>`;
@@ -5955,17 +6092,19 @@ function showPreBrewChecklist(onConfirm){
     it.addEventListener('click',tog);
     it.addEventListener('keydown',e=>{if(e.key==='Enter'||e.key===' '){e.preventDefault();tog()}});});
   document.getElementById('pbcCancelBtn').addEventListener('click',_pbcClose);
-  document.getElementById('pbcStartBtn').addEventListener('click',()=>{_fbMark(currentQuickMethod);_pbcClose();onConfirm();});
+  document.getElementById('pbcStartBtn').addEventListener('click',()=>{if(document.getElementById('pbcSkipNext')?.checked)_pbcSkipSet(currentQuickMethod,true);_fbMark(currentQuickMethod);_pbcClose();onConfirm();});
 }
 function startQuickTimer(){
   const method=BREW_METHODS[currentQuickMethod];
   if(!method){showErrorToast('Select a brewing method first');return}
+  if(_pbcSkipGet()[currentQuickMethod]){_doStartQuickTimer();return}
   showPreBrewChecklist(()=>_doStartQuickTimer());
 }
 function _doStartQuickTimer(){
   const existing=document.getElementById('quickTimerOverlay');
   if(existing)existing.remove();
   document.getElementById('quickTimerDot')?.classList.add('active');
+  _track('brew-quick/'+currentQuickMethod);
   updateQuickFlowSteps(3);
   // Hide floating timer button (duplicates overlay)
   const fg=document.getElementById('quickFloatGroup');
@@ -5986,12 +6125,13 @@ function _doStartQuickTimer(){
   const overlay=document.createElement('div');
   overlay.id='quickTimerOverlay';
   const stepTotal=allSteps.length;
-  overlay.innerHTML='<div class="qt-header"><button class="qt-exit" id="qtExit">✕ End</button><div class="qt-method-name">'+method.title+'</div></div><div class="qt-timer-section"><div class="qt-ring-wrap">'+_ringSvg('qt','qtRingProgress')+'<div class="qt-ring-inner"><div class="qt-step-indicator" id="qtStepInd">STEP 1/'+stepTotal+'</div><div class="qt-time" id="qtTime">0:00</div><div class="qt-label" id="qtLabel">Ready for bloom pour</div></div></div><div class="qt-current" id="qtCurrent"></div><div class="qt-controls"><button class="qt-ctrl-btn" id="qtPause" aria-label="Pause or resume">⏸</button><button class="qt-ctrl-btn" id="qtReset" aria-label="Restart timer">⟲</button>'+_sfxBtnHtml('qt-ctrl-btn')+'</div></div>';
+  overlay.innerHTML='<div class="qt-header"><button class="qt-exit" id="qtExit">✕ End</button><div class="qt-method-name">'+method.title+'</div></div><div class="qt-timer-section"><div class="qt-ring-wrap">'+_ringSvg('qt','qtRingProgress')+'<div class="qt-ring-inner"><div class="qt-step-indicator" id="qtStepInd">STEP 1/'+stepTotal+'</div><div class="qt-time" id="qtTime">0:00</div><div class="qt-label" id="qtLabel">Ready for bloom pour</div></div></div><div class="qt-current" id="qtCurrent"></div><div class="qt-controls has-pace">'+_tmPaceBtns('qt')[0]+'<button class="qt-ctrl-btn" id="qtPause" aria-label="Pause or resume">⏸</button><button class="qt-ctrl-btn" id="qtReset" aria-label="Restart timer">⟲</button>'+_sfxBtnHtml('qt-ctrl-btn')+_tmPaceBtns('qt')[1]+'</div></div>';
   document.body.appendChild(overlay);
   // Scroll page so step list is visible below the compact overlay
   setTimeout(()=>{const ov=document.getElementById('quickTimerOverlay');const activeEl=document.querySelector('#quickBrewResults .quick-step-row.active');if(activeEl&&ov){const ovH=ov.getBoundingClientRect().bottom;const elTop=activeEl.getBoundingClientRect().top+window.scrollY;window.scrollTo({top:Math.max(0,elTop-ovH-16),behavior:_scrollBehavior()});}else if(activeEl){activeEl.scrollIntoView({behavior:_scrollBehavior(),block:'start'});}},400);
   let seconds=0,running=true,completed=false,qtInterval=null,prevActiveIdx=-1,currentActiveIdx=0;
   const _qtClk=_clkNew();
+  const _qtBase=qtDurations.slice(),_qtPace={plus:0,skip:0};window._poPace=_qtPace;
   requestWakeLock();
   const STEP_TIPS_QT={bloom:'Blooming',pour:'Pouring',wait:'Draining',final:'Almost done',shake:'Swirl'};
   function updateQtDisplay(){
@@ -6012,7 +6152,7 @@ function _doStartQuickTimer(){
       if(prevActiveIdx>=0)_sfx('step');
       const cur2=document.getElementById('qtCurrent');
       if(cur2&&prevActiveIdx>=0){cur2.classList.add('step-flash');setTimeout(()=>cur2.classList.remove('step-flash'),550);}
-      {const _a=allSteps[activeIdx];if(_a)_announce('Step {n}: '.replace('{n}',activeIdx+1)+_a.title+(_a.water>0?' — pour to '+_a.cum+'g':''));}
+      {const _a=allSteps[activeIdx];if(_a&&!completed)_sayStep(_a);if(_a)_announce('Step {n}: '.replace('{n}',activeIdx+1)+_a.title+(_a.water>0?' — pour to '+_a.cum+'g':''));}
       prevActiveIdx=activeIdx;
     }
     currentActiveIdx=activeIdx;
@@ -6057,7 +6197,7 @@ function _doStartQuickTimer(){
     cur.innerHTML='<div class="qt-cur-title">'+step.title+'</div>'+_qtTempBadge+focusHtml+waterHtml+waitHtml+actionHtml;
     const _nx=allSteps[activeIdx+1];if(_nx&&!completed){cur.innerHTML+='<div class="qt-next"><span class="qt-next-lbl">Next</span><span class="qt-next-at">'+_fmtT(qtDurations[activeIdx])+'</span>'+(_nx.water>0?'<b>pour to '+_nx.cum+'g</b>':'<span class="qt-next-title">'+_nx.title+'</span>')+'</div>';}
     if(!completed&&seconds>=qtDurations[qtDurations.length-1]){
-      completed=true;clearInterval(qtInterval);running=false;_sfx('done');
+      completed=true;clearInterval(qtInterval);running=false;_sfx('done');_say('Brew complete',700);
       document.getElementById('quickTimerDot')?.classList.remove('active');
       if(navigator.vibrate&&!_reduceMotion())navigator.vibrate([200,100,200,100,300]);
       document.getElementById('qtLabel').textContent='Brew complete!';_announce('Brew complete');
@@ -6068,6 +6208,13 @@ function _doStartQuickTimer(){
   }
   updateQtDisplay();
   overlay.addEventListener('click',e=>{
+    const _pb=e.target.closest&&e.target.closest('.tm-pace');
+    if(_pb&&!completed){
+      if(_pb.id==='qtPacePlus'){_tmPaceShift(qtDurations,currentActiveIdx,10);_qtPace.plus+=10;}
+      else{const _d=qtDurations[currentActiveIdx]-seconds;if(_d>0){_tmPaceShift(qtDurations,currentActiveIdx,-_d);if(currentActiveIdx<qtDurations.length-1)_qtPace.skip+=_d;}}
+      if(navigator.vibrate)navigator.vibrate(30);
+      updateQtDisplay();return;
+    }
     if(e.target.id==='qtActionDone'){
       seconds=qtDurations[currentActiveIdx];_clkSet(_qtClk,seconds);
       updateQtDisplay();
@@ -6093,14 +6240,14 @@ function _doStartQuickTimer(){
     if(completed||seconds<=30){_qtDoExit(completed);return}
     _confirmDialog({title:'End this brew?',desc:'You are {t} in — you can save the log first.'.replace('{t}',_fmtT(seconds)),
       actions:[{label:'Save log and end',primary:true,fn:()=>_qtDoExit(true)},{label:'End without saving',danger:true,fn:()=>_qtDoExit(false)},{label:'Cancel'}]});};
-  const _qtDoReset=()=>{seconds=0;running=true;completed=false;prevActiveIdx=-1;
+  const _qtDoReset=()=>{for(let j=0;j<_qtBase.length;j++)qtDurations[j]=_qtBase[j];_qtPace.plus=0;_qtPace.skip=0;seconds=0;running=true;completed=false;prevActiveIdx=-1;
     _clkSet(_qtClk,0);overlay.classList.remove('qt-paused');
     document.getElementById('qtPause').textContent='⏸';updateQtDisplay();};
   document.getElementById('qtPause').addEventListener('click',()=>{
     if(completed){// Brew complete: tapping ✓ opens the flavor log
       _qtDoExit(true);return;
     }
-    running=!running;document.getElementById('qtPause').textContent=running?'⏸':'▶';overlay.classList.toggle('qt-paused',!running);const _qtLbl=document.getElementById('qtLabel');if(_qtLbl&&!completed)_qtLbl.textContent=running?'Timing':'Paused';
+    running=!running;if(running)_clkResume(_qtClk);else _clkPause(_qtClk);document.getElementById('qtPause').textContent=running?'⏸':'▶';overlay.classList.toggle('qt-paused',!running);const _qtLbl=document.getElementById('qtLabel');if(_qtLbl&&!completed)_qtLbl.textContent=running?'Timing':'Paused';
   });
   document.getElementById('qtReset').addEventListener('click',()=>{
     if(seconds>10&&!completed){_confirmDialog({title:'Restart the timer?',desc:'Your current progress ({t}) will be lost and cannot be undone.'.replace('{t}',_fmtT(seconds)),
@@ -6347,15 +6494,7 @@ function showBrewNotes(){
   });
   document.getElementById('bnmExport')?.addEventListener('click',e=>{
     e.stopPropagation();
-    const json=JSON.stringify(notes,null,2);
-    const blob=new Blob([json],{type:'application/json'});
-    const url=URL.createObjectURL(blob);
-    const a=document.createElement('a');
-    const date=new Date().toISOString().slice(0,10);
-    a.href=url;a.download=`pourover-notes-${date}.json`;
-    document.body.appendChild(a);a.click();
-    setTimeout(()=>{URL.revokeObjectURL(url);a.remove()},300);
-    showCompareToast('Brew log exported ✓');
+    _notesExport();
   });
   function attachFilterHandlers(){
     modal.querySelectorAll('.bnm-filter-pill').forEach(pill=>{
@@ -6687,6 +6826,7 @@ function switchTab(tabName) {
 }
 
 function handleHashChange() {
+  try{_rebrewRender()}catch(e){}
   const raw = window.location.hash.slice(1) || 'home';
   const hash = raw.split('?')[0] || 'home';
   const validTabs = ['home', 'quick', 'tools', 'knowledge'];
@@ -6782,7 +6922,7 @@ function _qwApply(k){currentQuickMethod=k;if(_qwAns.state==='guests'){const di=d
 function _wireQuickWiz(){const wiz=document.getElementById('quickWiz');if(!wiz||wiz._wired)return;wiz._wired=true;
  document.getElementById('quickWizToggle').addEventListener('click',()=>{const open=wiz.classList.toggle('open');document.getElementById('quickWizToggle').setAttribute('aria-expanded',open?'true':'false');});
  document.getElementById('quickWizBody').addEventListener('click',(e)=>{const b=e.target.closest('.qw-opt');if(b){const q=b.parentElement.dataset.q;_qwAns[q]=b.dataset.v;b.parentElement.querySelectorAll('.qw-opt').forEach(x=>x.classList.toggle('active',x===b));renderQuickWizResult();return;}const u=e.target.closest('.qw-use-btn');if(u)_qwApply(u.dataset.method);});}
-function _fbSeen(k){try{return !!(JSON.parse(localStorage.getItem('poFirstBrewSeen')||'{}')[k])}catch(e){return true}}
+function _fbSeen(k){try{if(typeof _brewCount==='function'&&_brewCount(k)>0)return true;return !!(JSON.parse(localStorage.getItem('poFirstBrewSeen')||'{}')[k])}catch(e){return true}}
 function _fbMark(k){try{const o=JSON.parse(localStorage.getItem('poFirstBrewSeen')||'{}');o[k]=1;localStorage.setItem('poFirstBrewSeen',JSON.stringify(o))}catch(e){}}
 function _fbBlock(k){const t=FIRST_BREW_TIPS[k];if(!t||_fbSeen(k))return '';return '<div class="fb-block"><div class="fb-title">🔰 First time brewing this method? Two things first</div><div class="fb-row"><span class="fb-tag">Skill to train</span>'+t.skill+'</div><div class="fb-row"><span class="fb-tag">Most common fail</span>'+t.pitfall+'</div></div>';}
 function renderQuickMethodGrid() {
@@ -6889,7 +7029,7 @@ function updateQuickBrewResults() {
     '</div>' + '<div class="qratio-row">Ratio <button class="stepper-btn qratio-btn" data-qr="-0.5" aria-label="Lower ratio">−</button><span class="qratio-val">1:' + (Math.round(qratio*10)/10) + '</span><button class="stepper-btn qratio-btn" data-qr="0.5" aria-label="Raise ratio">+</button>' + (Math.abs(qratio-method.ratio)>0.01?'<button class="qratio-reset">Reset to 1:'+method.ratio+'</button>':'') + '</div>' + _qbNotes +
     '<div class="quick-steps-summary"><h4>Brew Steps</h4>' + stepsHtml + '</div>' +
     '<div style="text-align:center;margin-top:18px;padding-bottom:110px;">' +
-    '<button class="btn-start-timer" id="quickStartTimerBtn" style="font-size:0.95em;">▶ Start Timer</button>' +
+    '<button class="btn-start-timer" id="quickStartTimerBtn" style="font-size:0.95em;">▶ Start Timer</button>' + _pbcSkipNote(currentQuickMethod) +
     '<button class="btn-start-timer" id="quickShareBtn" style="font-size:0.85em;background:transparent;border:1px solid rgba(192,138,92,0.4);color:var(--copper);margin-left:10px;">🔗 Share Recipe</button>' +
     '</div>' +
     '</div>';
