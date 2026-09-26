@@ -3289,6 +3289,62 @@ body.scrolled .top-actions:hover,body.scrolled .top-actions:focus-within,body.sc
 .pbc-skip input{width:18px;height:18px;accent-color:var(--copper);flex:0 0 auto;}
 .pbc-skip-note{margin-top:8px;font-size:0.8em;color:var(--text-secondary);text-align:center;}
 .pbc-skip-undo{background:none;border:0;padding:4px 2px;color:var(--copper-light);font:inherit;text-decoration:underline;cursor:pointer;}
+/* ===== 2026-09-26 貼實際優化：手動主導計時器／注水畫面減法／大按鈕／首屏再沖一次 ===== */
+/* 計時器標頭：模式切換鈕（跟著我／自動） */
+#quickTimerOverlay .qt-header{display:flex;align-items:center;gap:10px;}
+#quickTimerOverlay .qt-exit{flex:0 0 auto;white-space:nowrap;}
+#quickTimerOverlay .qt-method-name{flex:1 1 auto;min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;}
+.qt-mode{flex:0 0 auto;height:40px;padding:0 12px;border-radius:20px;background:rgba(192,138,92,0.12);border:1px solid rgba(192,138,92,0.45);color:var(--copper-light);font-family:inherit;font-size:0.8em;font-weight:700;letter-spacing:0.5px;cursor:pointer;white-space:nowrap;}
+.qt-mode:active{transform:scale(0.95);}
+/* 手動主導：大按鈕（濕手、手背、指節都按得到） */
+.qt-man-btn{display:block;width:100%;max-width:420px;margin:10px auto 0;min-height:64px;padding:14px 18px;border-radius:18px;border:0;background:var(--copper);color:#0F0D0A;font-family:inherit;font-size:1.15em;font-weight:700;letter-spacing:0.5px;cursor:pointer;box-shadow:0 4px 18px rgba(0,0,0,0.25);touch-action:manipulation;-webkit-tap-highlight-color:transparent;}
+.qt-man-btn:active{transform:scale(0.97);filter:brightness(1.06);}
+.qt-man-btn.qt-man-due{animation:qtManDue 1.1s ease-in-out infinite;}
+@keyframes qtManDue{0%,100%{box-shadow:0 4px 18px rgba(0,0,0,0.25);}50%{box-shadow:0 0 0 10px rgba(192,138,92,0.28);}}
+.qt-man-ref{margin-top:8px;font-size:0.8em;color:var(--text-secondary);letter-spacing:0.5px;font-family:'Space Mono',monospace;opacity:0.85;}
+.qt-man-ref.over{color:var(--copper-light);opacity:1;}
+.tm-focus.qt-man .tm-focus-water b{font-size:1.15em;}
+.tm-focus.qt-man .tm-focus-lbl{font-size:0.95em;}
+/* 手動模式下，控制列的 ＋10 秒／下一步 ▸ 由大按鈕取代 */
+.qt-manual .tm-pace{display:none;}
+/* 控制鈕加大（自動與手動皆然） */
+#quickTimerOverlay .qt-ctrl-btn{width:56px;height:56px;font-size:1.25em;}
+@media (max-height:640px){#quickTimerOverlay .qt-ctrl-btn{width:48px;height:48px;}.qt-man-btn{min-height:56px;font-size:1.05em;}}
+@media (prefers-reduced-motion:reduce){.qt-man-btn.qt-man-due{animation:none;outline:3px solid rgba(192,138,92,0.5);}}
+/* 沖完回饋：跟上次比 ＋ 下次想調什麼（其餘細節收起） */
+.bco-vs-section{margin:0 0 14px;}
+.bco-vs-title{font-size:1.02em;font-weight:700;color:var(--text-primary);margin-bottom:10px;text-align:center;}
+.bco-vs-btns{display:grid;grid-template-columns:1fr 1fr 1fr;gap:8px;}
+.bco-vs-btn{min-height:58px;padding:10px 6px;border-radius:14px;border:1px solid rgba(192,138,92,0.35);background:transparent;color:var(--text-primary);font-family:inherit;font-size:0.95em;font-weight:700;cursor:pointer;touch-action:manipulation;}
+.bco-vs-btn.active{background:var(--copper);color:#0F0D0A;border-color:var(--copper);}
+.bco-next-section{margin:0 0 14px;padding:12px;border-radius:14px;background:rgba(192,138,92,0.07);border:1px solid rgba(192,138,92,0.18);}
+.bco-next-title{font-size:0.9em;font-weight:700;color:var(--text-primary);margin-bottom:8px;}
+.bco-opt{font-size:0.85em;opacity:0.55;font-weight:400;}
+.bco-next-chips{display:flex;flex-wrap:wrap;gap:6px;margin-bottom:8px;}
+.bco-next-chip{padding:8px 12px;border-radius:999px;border:1px solid rgba(192,138,92,0.35);background:transparent;color:var(--text-secondary);font-family:inherit;font-size:0.84em;cursor:pointer;touch-action:manipulation;}
+.bco-next-chip.active{background:var(--copper);color:#0F0D0A;border-color:var(--copper);font-weight:700;}
+.bco-next-input{margin:0;min-height:0;}
+.bco-more{display:none;}
+.bco-more.open{display:block;}
+.bco-more-toggle{margin-bottom:12px;}
+/* 開始鈕旁：上次留的「下次想調」 */
+.next-tip{margin:10px auto 0;max-width:420px;padding:9px 12px;border-radius:10px;background:rgba(192,138,92,0.1);border-left:3px solid var(--copper);font-size:0.86em;line-height:1.5;color:var(--text-primary);text-align:left;}
+.rebrew-tip{display:block;font-size:0.8em;opacity:0.85;margin-top:3px;white-space:normal;line-height:1.35;}
+.bnm-next{margin-top:6px;font-size:0.82em;color:var(--text-primary);line-height:1.5;}
+.bnm-vs{font-weight:700;}
+/* 首屏「再沖一次」：有紀錄的人開站第一眼就是它，行銷文案往下退 */
+.rebrew-hero{max-width:500px;margin:18px auto 10px;text-align:left;position:relative;z-index:2;}
+.rebrew-hero:empty{display:none;margin:0;}
+.rebrew-hero .rebrew-btn{padding:20px 20px;border-radius:18px;box-shadow:0 8px 28px rgba(0,0,0,0.25);}
+.rebrew-hero .rebrew-t{font-size:1.25em;}
+.rebrew-hero .rebrew-s{font-size:0.9em;}
+.rebrew-hero .rebrew-ic{font-size:2em;}
+.rebrew-other{display:block;text-align:center;margin-top:10px;font-size:0.86em;color:var(--copper-light);text-decoration:none;opacity:0.85;padding:8px;}
+body.has-rebrew .hero{min-height:0;padding-bottom:20px;}
+body.has-rebrew .hero-tagline,body.has-rebrew .hero-sub,body.has-rebrew .scroll-hint{display:none;}
+body.has-rebrew .hero-cta-group{margin-bottom:8px;}
+body.has-rebrew .hero h1{font-size:1.6em;margin-bottom:4px;}
+body.has-rebrew .hero-en{margin-bottom:0;}
 </style>
 </head>
 <body>
@@ -3349,6 +3405,7 @@ body.scrolled .top-actions:hover,body.scrolled .top-actions:focus-within,body.sc
       </div>
       <h1>PourOver Lab</h1>
       <div class="hero-en">手沖咖啡的感官實驗室</div>
+      <div id="rebrewSlot" class="rebrew-hero"></div>
       <p class="hero-tagline">
         <span id="heroGreeting">從水溫、粉水比到萃取時間，每一次沖煮，都是一場關於味覺、時間與意念的探索。</span>
       </p>
@@ -3365,7 +3422,6 @@ body.scrolled .top-actions:hover,body.scrolled .top-actions:focus-within,body.sc
 
     <!-- ===== USER SEGMENTATION ===== -->
     <section class="section" id="segmentSection">
-      <div id="rebrewSlot"></div>
       <div class="section-label">你現在想做什麼</div>
       <div class="section-title">找到你的沖煮路線</div>
       <div class="segment-cards">
@@ -5119,9 +5175,19 @@ function _clkSet(c,sec){if(c){c.start=Date.now()-sec*1000;c.pausedTotal=0;c.paus
 // 計時器是「時間到就換段」。這兩支讓人可以反過來帶時鐘：
 //   _tmPaceShift(durs,idx,d) 把第 idx 段（含）之後的結束時間整批平移 d 秒。
 //   ＋10 秒 → d=+10；下一步 → d=-(這段剩下的秒數)。起注間隔的原法值不變，只是這一杯整批順延／提前。
+function _poursRec(){try{const p=window._poPours;if(!p)return;const o={};for(const k in p)o[k]=p[k];return Object.keys(o).length?o:undefined}catch(e){return}}
+// 「下次想調什麼」—— 這支沖法最近一筆紀錄留的話，下次開沖前顯示在開始鈕旁
+const NEXT_TIP_LABELS={'grind-coarse':'研磨粗一點','grind-fine':'研磨細一點','temp-low':'水溫低一點','temp-high':'水溫高一點','pour-slow':'注慢一點','pour-fast':'注快一點','dose-less':'粉少一點','ratio-more':'水多一點'};
+const _VS_LBL={better:'👍 更好',same:'😐 差不多',worse:'👎 更差'};
+function _nextRecText(r){try{if(!r||!r.next)return'';const a=(r.next.k||[]).map(x=>NEXT_TIP_LABELS[x]||x);if(r.next.t)a.push(r.next.t);return a.join('、')}catch(e){return''}}
+function _nextTipText(k){try{return _nextRecText(_notesLoad().find(x=>x&&x.method===k))}catch(e){return''}}
+function _nextTipHtml(k){const t=_nextTipText(k);return t?'<div class="next-tip">💬 上次說：'+_escRcp(t)+'</div>':''}
 function _paceRec(){const p=window._poPace;return(p&&(p.plus||p.skip))?{plus:p.plus|0,skip:p.skip|0}:undefined}
 function _tmPaceShift(durs,idx,d){for(let j=Math.max(0,idx);j<durs.length;j++)durs[j]+=d}
 function _tmPaceBtns(pre){return['<button type="button" class="tm-pace tm-pace-plus" id="'+pre+'PacePlus" aria-label="這一段多給 10 秒">＋10 秒</button>','<button type="button" class="tm-pace tm-pace-next" id="'+pre+'PaceNext" aria-label="這一段做完了，直接到下一步">下一步 ▸</button>']}
+// 計時器模式（2026-09-26）：預設「跟著我」—— 換段由使用者按，時間只是參考
+function _qtManualGet(){try{return localStorage.getItem('poTimerMode')!=='auto'}catch(e){return true}}
+function _qtManualSet(on){try{localStorage.setItem('poTimerMode',on?'manual':'auto')}catch(e){}}
 // 沖完回饋用：這杯多要了幾秒／提前了幾秒
 function _paceHint(pc){try{if(!pc)return'';const cal=_flowCal(),ord=['vfast','fast','std','slow'],i=ord.indexOf(cal);
   if(pc.plus>=20&&pc.plus>pc.skip){return'<div class="pace-hint">⏱ 這杯你多要了 {n} 秒。'.replace('{n}',pc.plus)+(i>=0&&i<ord.length-1?'下次把「我的流速」調慢一檔，節奏會更貼近你的手。':'')+'</div>'}
@@ -5874,13 +5940,18 @@ function showQuickBrewNoteModal(method,dose,water,seconds){
   const m=BREW_METHODS[method];
   const timeStr=_fmtClock(seconds,true);
   const modal=document.createElement('div');modal.id='quickBrewNoteModal';
+  let _hasPrev=false;try{_hasPrev=_notesLoad().some(x=>x&&x.method===method)}catch(e){}
   modal.style.cssText='position:fixed;top:0;left:0;right:0;bottom:0;background:rgba(15,13,10,0.92);backdrop-filter:blur(12px);z-index:2000;display:flex;align-items:flex-start;justify-content:center;padding:max(40px,calc(env(safe-area-inset-top,0px) + 16px)) 16px calc(80px + env(safe-area-inset-bottom,0px));overflow-y:auto;animation:fadeIn 0.3s ease;';
   const qbnRatingRowsHtml=['acidity:酸度','sweetness:甜感','bitterness:苦度','balance:平衡感'].map(s=>{const[k,lbl]=s.split(':');return`<div class="bco-rating-row"><label class="bco-rating-label">${lbl}</label><div class="bco-rating-stars" id="qbn-stars-${k}" data-key="${k}" data-val="0">${[1,2,3,4,5].map(i=>`<button class="bco-star" data-v="${i}">○</button>`).join('')}</div><span class="bco-rating-hint" id="qbn-hint-${k}"></span></div>`;}).join('');
   modal.innerHTML=`<div class="bco-card">
     <div class="bco-hero"><span class="bco-hero-icon">☕</span><div class="bco-hero-title">沖煮完成！</div><div class="bco-hero-sub">${m?m.title.split(' · ')[0]:'手沖咖啡'}</div></div>
     <div class="bco-grid"><div class="bco-cell"><div class="bco-val">${dose}g</div><div class="bco-lbl">粉量</div></div><div class="bco-cell"><div class="bco-val">${water}g</div><div class="bco-lbl">水量</div></div><div class="bco-cell"><div class="bco-val">${timeStr}</div><div class="bco-lbl">時間</div></div></div>
     <div class="bco-actions">
+      <div class="bco-vs-section"><div class="bco-vs-title">${_hasPrev?'這杯跟上次比？':'這杯怎麼樣？'}</div><div class="bco-vs-btns"><button type="button" class="bco-vs-btn" data-vs="better">${_hasPrev?'👍 更好':'👍 好喝'}</button><button type="button" class="bco-vs-btn" data-vs="same">${_hasPrev?'😐 差不多':'😐 普通'}</button><button type="button" class="bco-vs-btn" data-vs="worse">${_hasPrev?'👎 更差':'👎 不行'}</button></div></div>
+      <div class="bco-next-section"><div class="bco-next-title">下次想調什麼？<span class="bco-opt">（可選）</span></div><div class="bco-next-chips"><button type="button" class="bco-next-chip" data-next="grind-coarse">研磨粗一點</button><button type="button" class="bco-next-chip" data-next="grind-fine">研磨細一點</button><button type="button" class="bco-next-chip" data-next="temp-low">水溫低一點</button><button type="button" class="bco-next-chip" data-next="temp-high">水溫高一點</button><button type="button" class="bco-next-chip" data-next="pour-slow">注慢一點</button><button type="button" class="bco-next-chip" data-next="pour-fast">注快一點</button><button type="button" class="bco-next-chip" data-next="dose-less">粉少一點</button><button type="button" class="bco-next-chip" data-next="ratio-more">水多一點</button></div><input type="text" class="bco-textarea bco-next-input" id="qbnNextText" placeholder="或自己寫一句：例如「第三注慢一點」"></div>
       ${_paceHint(window._poPace)}
+      <button type="button" class="bco-btn-note bco-more-toggle" id="qbnMoreToggle">▾ 更多細節（滴完時間、粉床、風味）</button>
+      <div class="bco-more" id="qbnMore">
       ${_drawdownHtml()}
       ${_bedHtml()}
       <div class="bco-taste-section">
@@ -5900,6 +5971,7 @@ function showQuickBrewNoteModal(method,dose,water,seconds){
         <div class="bco-rating-section"><div class="bco-rating-title">感受評量 <span style="font-size:0.8em;opacity:0.55;font-weight:400;">（可選）</span></div>${qbnRatingRowsHtml}</div>
         <input type="text" class="bco-textarea bco-grind" id="qbnGrind" placeholder="研磨刻度（例：C24 / 小飛馬 4）"><textarea class="bco-textarea" id="qbnInput" placeholder="例：酸感明亮、花香、餘韻甜…"></textarea>
       </div></div>
+      </div>
       <button class="bco-btn-primary" id="qbnSave">儲存紀錄</button>
       <button class="bco-btn-ghost" id="qbnViewAll" style="border:1px solid rgba(192,138,92,0.2);margin-bottom:6px;">🗒 查看所有紀錄</button>
       <button class="bco-btn-ghost" id="qbnBackList" style="border:1px solid rgba(192,138,92,0.2);margin-bottom:6px;">← 回到沖法列表</button>
@@ -5909,6 +5981,11 @@ function showQuickBrewNoteModal(method,dose,water,seconds){
   document.body.appendChild(modal);
   try{const _lg=localStorage.getItem('poLastGrind');if(_lg)document.getElementById('qbnGrind').value=_lg}catch(e){}
   _wireDrawdown(modal,method);_wireBed(modal);
+  let qbnVs='';const qbnNext=new Set();
+  modal.querySelectorAll('.bco-vs-btn').forEach(b=>b.addEventListener('click',()=>{modal.querySelectorAll('.bco-vs-btn').forEach(x=>x.classList.remove('active'));b.classList.add('active');qbnVs=b.dataset.vs;if(navigator.vibrate&&!_reduceMotion())navigator.vibrate(20)}));
+  modal.querySelectorAll('.bco-next-chip').forEach(b=>b.addEventListener('click',()=>{const k=b.dataset.next;if(qbnNext.has(k)){qbnNext.delete(k);b.classList.remove('active')}else{qbnNext.add(k);b.classList.add('active')}}));
+  const _moreT=document.getElementById('qbnMoreToggle'),_moreEl=document.getElementById('qbnMore');
+  _moreT.addEventListener('click',()=>{const open=_moreEl.classList.toggle('open');_moreT.textContent=open?'▴ 收起細節':'▾ 更多細節（滴完時間、粉床、風味）';if(open)setTimeout(()=>_moreEl.scrollIntoView({behavior:_scrollBehavior(),block:'nearest'}),80)});
   // Taste buttons
   let qbnTaste='';
   const tasteAdviceEl=document.getElementById('qbnTasteAdvice');
@@ -5968,7 +6045,8 @@ function showQuickBrewNoteModal(method,dose,water,seconds){
       });
     });
   });
-  function saveQbn(){const note=document.getElementById('qbnInput')?.value?.trim();const grind=document.getElementById('qbnGrind')?.value?.trim()||'';if(grind){try{localStorage.setItem('poLastGrind',grind)}catch(e){}}try{const notes=_notesLoad();notes.unshift({v:BREW_NOTES_VERSION,time:new Date().toISOString(),method:method||'',dose:dose,water:water,duration:seconds,note:note||'',grind,taste:qbnTaste||'',dd:_qbnDd(),ratings:{...qbnRatings},bed:_bedPick(document),pace:_paceRec()});if(notes.length>50)notes.pop();_notesSave(notes)}catch(e){}}
+  function saveQbn(){const note=document.getElementById('qbnInput')?.value?.trim();const grind=document.getElementById('qbnGrind')?.value?.trim()||'';if(grind){try{localStorage.setItem('poLastGrind',grind)}catch(e){}}try{const notes=_notesLoad();notes.unshift({v:BREW_NOTES_VERSION,time:new Date().toISOString(),method:method||'',dose:dose,water:water,duration:seconds,note:note||'',grind,taste:qbnTaste||'',dd:_qbnDd(),ratings:{...qbnRatings},bed:_bedPick(document),pace:_paceRec(),vs:qbnVs||'',next:_qbnNextRec(),pours:_poursRec()});if(notes.length>50)notes.pop();_notesSave(notes)}catch(e){}}
+  function _qbnNextRec(){const t=(document.getElementById('qbnNextText')?.value||'').trim();const a=[...qbnNext];return(a.length||t)?{k:a,t:t}:undefined}
   document.getElementById('qbnSave').addEventListener('click',()=>{saveQbn();setTimeout(_backupNudge,1600);modal.remove();showCompareToast('已儲存至沖煮紀錄 ✓');});
   document.getElementById('qbnViewAll').addEventListener('click',()=>{saveQbn();modal.remove();setTimeout(()=>showBrewNotes(),100);});
   // 沖完想直接再挑一支：存檔後回到快速沖煮的沖法格
@@ -5984,9 +6062,12 @@ function showQuickBrewNoteModal(method,dose,water,seconds){
 // 首頁三張路線卡是給第一次來的人看的；沖過的人直接拿上一筆紀錄的沖法與粉量，一鍵進計時。
 function _rebrewRender(){const slot=document.getElementById('rebrewSlot');if(!slot)return;let r=null;
   try{r=_notesLoad().find(x=>x&&x.method&&BREW_METHODS[x.method]&&Number(x.dose)>0)}catch(e){}
-  if(!r){slot.innerHTML='';return}
+  if(!r){slot.innerHTML='';document.body.classList.remove('has-rebrew');return}
   const name=String(BREW_METHODS[r.method].title||'').split(' · ')[0],d=_clampDose(r.dose);
-  slot.innerHTML='<button type="button" class="rebrew-btn" id="rebrewBtn" data-k="'+r.method+'" data-d="'+d+'"><span class="rebrew-ic">☕</span><span class="rebrew-tx"><span class="rebrew-t">再沖一次</span><span class="rebrew-s">'+name+' · '+d+'g</span></span><span class="rebrew-go">直接開沖 →</span></button>';}
+  const tip=_nextTipText(r.method),ago=(typeof timeAgo==='function'&&r.time)?timeAgo(r.time):'';
+  slot.innerHTML='<button type="button" class="rebrew-btn" id="rebrewBtn" data-k="'+r.method+'" data-d="'+d+'"><span class="rebrew-ic">☕</span><span class="rebrew-tx"><span class="rebrew-t">再沖一次</span><span class="rebrew-s">'+name+' · '+d+'g'+(ago?' · 上次 '+ago:'')+'</span>'+(tip?'<span class="rebrew-tip">💬 上次說：'+_escRcp(tip)+'</span>':'')+'</span><span class="rebrew-go">直接開沖 →</span></button>'
+    +'<a href="#quick" class="rebrew-other">換沖法或粉量</a>';
+  document.body.classList.add('has-rebrew');}
 function _rebrewGo(k,d){if(!BREW_METHODS[k])return;currentQuickMethod=k;
   const _qd=document.getElementById('quickDoseInput');if(_qd&&d)_qd.value=d;
   window.location.hash='#quick';
@@ -6066,17 +6147,24 @@ function _doStartQuickTimer(){
   const overlay=document.createElement('div');
   overlay.id='quickTimerOverlay';
   const stepTotal=allSteps.length;
-  overlay.innerHTML='<div class="qt-header"><button class="qt-exit" id="qtExit">✕ 結束</button><div class="qt-method-name">'+method.title+'</div></div><div class="qt-timer-section"><div class="qt-ring-wrap">'+_ringSvg('qt','qtRingProgress')+'<div class="qt-ring-inner"><div class="qt-step-indicator" id="qtStepInd">STEP 1/'+stepTotal+'</div><div class="qt-time" id="qtTime">0:00</div><div class="qt-label" id="qtLabel">準備悶蒸注水</div></div></div><div class="qt-current" id="qtCurrent"></div><div class="qt-controls has-pace">'+_tmPaceBtns('qt')[0]+'<button class="qt-ctrl-btn" id="qtPause" aria-label="暫停或繼續">⏸</button><button class="qt-ctrl-btn" id="qtReset" aria-label="重新計時">⟲</button>'+_sfxBtnHtml('qt-ctrl-btn')+_tmPaceBtns('qt')[1]+'</div></div>';
+  overlay.innerHTML='<div class="qt-header"><button class="qt-exit" id="qtExit">✕ 結束</button><div class="qt-method-name">'+method.title+'</div><button type="button" class="qt-mode" id="qtMode" aria-label="切換：跟著我（按了才換段）／自動（時間到換段）">'+(_qtManualGet()?'👋 跟著我':'⏱ 自動')+'</button></div><div class="qt-timer-section"><div class="qt-ring-wrap">'+_ringSvg('qt','qtRingProgress')+'<div class="qt-ring-inner"><div class="qt-step-indicator" id="qtStepInd">STEP 1/'+stepTotal+'</div><div class="qt-time" id="qtTime">0:00</div><div class="qt-label" id="qtLabel">準備悶蒸注水</div></div></div><div class="qt-current" id="qtCurrent"></div><div class="qt-controls has-pace">'+_tmPaceBtns('qt')[0]+'<button class="qt-ctrl-btn" id="qtPause" aria-label="暫停或繼續">⏸</button><button class="qt-ctrl-btn" id="qtReset" aria-label="重新計時">⟲</button>'+_sfxBtnHtml('qt-ctrl-btn')+_tmPaceBtns('qt')[1]+'</div></div>';
   document.body.appendChild(overlay);
   // Scroll page so step list is visible below the compact overlay
   setTimeout(()=>{const ov=document.getElementById('quickTimerOverlay');const activeEl=document.querySelector('#quickBrewResults .quick-step-row.active');if(activeEl&&ov){const ovH=ov.getBoundingClientRect().bottom;const elTop=activeEl.getBoundingClientRect().top+window.scrollY;window.scrollTo({top:Math.max(0,elTop-ovH-16),behavior:_scrollBehavior()});}else if(activeEl){activeEl.scrollIntoView({behavior:_scrollBehavior(),block:'start'});}},400);
   let seconds=0,running=true,completed=false,qtInterval=null,prevActiveIdx=-1,currentActiveIdx=0;
   const _qtClk=_clkNew();
   const _qtBase=qtDurations.slice(),_qtPace={plus:0,skip:0};window._poPace=_qtPace;
+  // 手動主導（2026-09-26）：預定時間到了不自動換段，只提醒；換段由「注完了／下一注」決定
+  let _qtManual=_qtManualGet(),_qtHoldSec=0,_qtHoldCued=false;const _qtPoured={};window._poPours=_qtPoured;
+  overlay.classList.toggle('qt-manual',_qtManual);
   requestWakeLock();
   const STEP_TIPS_QT={bloom:'悶蒸中',pour:'注水中',wait:'等待滴濾',final:'快完成了',shake:'搖晃濾杯'};
   function updateQtDisplay(){
     const _qtT=document.getElementById('qtTime');if(!_qtT)return;
+    if(_qtManual&&!completed&&running){const _ci=currentActiveIdx;
+      if(seconds>=qtDurations[_ci]){const _d=seconds-qtDurations[_ci]+1;_tmPaceShift(qtDurations,_ci,_d);_qtPace.plus+=_d;_qtHoldSec+=_d;
+        if(!_qtHoldCued){_qtHoldCued=true;_sfx('step');if(navigator.vibrate&&!_reduceMotion())navigator.vibrate([100,50,100]);const _nx0=allSteps[_ci+1];
+          _say(_nx0?(_nx0.water>0?'該下一注了，注到 {g} 克'.replace('{g}',_nx0.cum):'該下一步了'):'預估已滴完，看濾杯');}}}
     _qtT.textContent=_fmtClock(seconds);
     const ring=document.getElementById('qtRingProgress');
     const totalTime=qtDurations[qtDurations.length-1]||180;
@@ -6087,6 +6175,7 @@ function _doStartQuickTimer(){
     document.querySelectorAll('#quickBrewResults .quick-step-row').forEach((el)=>{const idx=parseInt(el.dataset.stepIdx||'-1');el.classList.toggle('active',idx===activeIdx);el.classList.toggle('done',idx<activeIdx)});
     _stepCountdownTick(seconds,qtDurations,completed);
     if(activeIdx!==prevActiveIdx){
+      _qtHoldSec=0;_qtHoldCued=false;
       const activeEl=document.querySelector('#quickBrewResults .quick-step-row.active');
       if(activeEl){const ovEl=document.getElementById('quickTimerOverlay');if(ovEl){const ovH=ovEl.getBoundingClientRect().bottom;const elTop=activeEl.getBoundingClientRect().top+window.scrollY;window.scrollTo({top:Math.max(0,elTop-ovH-16),behavior:_scrollBehavior()});}else{activeEl.scrollIntoView({behavior:_scrollBehavior(),block:'center'});}activeEl.classList.remove('step-entered');void activeEl.offsetWidth;activeEl.classList.add('step-entered');}
       if(prevActiveIdx>=0&&navigator.vibrate)navigator.vibrate([100,50,100]);
@@ -6122,7 +6211,7 @@ function _doStartQuickTimer(){
     // 焦點區已經把「注到 Ng ／ 總 Ng」放大了，這裡就不再重複同一組數字；
     // 注水速度只在「還在注的那幾秒」留著 —— 注完之後它就只是雜訊
     const _stillPouring=step.pour?(elapsed<step.pour):true;
-    const _qtWaterInner=(focusHtml?'':'<span class="qt-water-pour"><span class="qt-pour-verb">注到</span>'+step.cum+'g</span><span class="qt-water-cum sec" style="margin-top:8px;"><span class="qt-water-cum-label">本段</span>+'+step.water+'g <span class="qt-pour-total">/ '+water+'g</span></span>')+((step.pour&&_stillPouring)?'<span class="qt-flow-hint">💧 '+_flowRate(step)+'</span>':'');
+    const _qtWaterInner=(focusHtml?'':'<span class="qt-water-pour"><span class="qt-pour-verb">注到</span>'+step.cum+'g</span><span class="qt-water-cum sec" style="margin-top:8px;"><span class="qt-water-cum-label">本段</span>+'+step.water+'g <span class="qt-pour-total">/ '+water+'g</span></span>');
     const waterHtml=step.water>0
       ?(_qtWaterInner?'<div class="qt-cur-water">'+_qtWaterInner+'</div>':'')
       :(step.cum>0&&!focusHtml)
@@ -6134,9 +6223,30 @@ function _doStartQuickTimer(){
       :'';
     const actionHtml=isActionStep?'<button class="qt-action-done" id="qtActionDone">✓ 完成動作，繼續</button>':'';
     const _qtWintonTemp=(currentQuickMethod==='winton'&&activeIdx>=3);const _qtTempBadge=_qtWintonTemp?'<div class="winton-temp-badge" style="margin-top:4px;">🌡 降溫至 88°C</div>':'';
+    if(_qtManual&&!completed){
+      const _nx=allSteps[activeIdx+1],_isLastStep=activeIdx===allSteps.length-1,_rhythm=/kasuya/.test(currentQuickMethod),_poured=!!_qtPoured[activeIdx],_over=_qtHoldSec>0;
+      let _mh='';
+      if(step.water>0&&!_poured){
+        _mh+='<div class="tm-focus pour qt-man"><div class="tm-focus-lbl">'+(_isBloom(step.title)?'悶蒸注到':'注到')+'</div><div class="tm-focus-water"><b>'+step.cum+'g</b><span class="tm-focus-sub">'+'本段 +{w}g'.replace('{w}',step.water)+'</span></div></div>';
+        _mh+='<button type="button" class="qt-man-btn" id="qtManPoured">✓ 注完了</button>';
+      }else if(isActionStep){
+        _mh+='<button type="button" class="qt-man-btn" id="qtManNext">✓ 完成動作，繼續</button>';
+      }else{
+        const _lbl=_isLastStep?'看濾杯：水滴完了嗎？':(_rhythm?'等節奏，不用等滴乾':'看濾杯：等水面落到粉床');
+        _mh+='<div class="tm-focus wait qt-man"><div class="tm-focus-lbl">'+_lbl+'</div>'+(step.cum>0?'<div class="tm-focus-water tm-focus-hold">已注 <b>'+step.cum+'g</b><span class="tm-focus-sub"> ／ 總 '+water+'g</span></div>':'')+'</div>';
+        _mh+='<button type="button" class="qt-man-btn'+(_over?' qt-man-due':'')+'" id="qtManNext">'+(_isLastStep?'☕ 滴完了，結束':(_nx&&_nx.water>0?'▶ 下一注 · 注到 {g}g'.replace('{g}',_nx.cum):'▶ 下一步'))+'</button>';
+      }
+      _mh+='<div class="qt-man-ref'+(_over?' over':'')+'">'+(_over?'預定時間已過 {n} 秒'.replace('{n}',_qtHoldSec):(_isLastStep?'預估滴完 {t}'.replace('{t}',_fmtT(qtDurations[activeIdx])):'預定 {t}（還 {n} 秒）'.replace('{t}',_fmtT(qtDurations[activeIdx])).replace('{n}',remaining)))+'</div>';
+      cur.innerHTML='<div class="qt-cur-title">'+step.title+'</div>'+_qtTempBadge+_mh;
+    }else{
     cur.innerHTML='<div class="qt-cur-title">'+step.title+'</div>'+_qtTempBadge+focusHtml+waterHtml+waitHtml+actionHtml;
     const _nx=allSteps[activeIdx+1];if(_nx&&!completed){cur.innerHTML+='<div class="qt-next"><span class="qt-next-lbl">下一步</span><span class="qt-next-at">'+_fmtT(qtDurations[activeIdx])+'</span>'+(_nx.water>0?'<b>注到 '+_nx.cum+'g</b>':'<span class="qt-next-title">'+_nx.title+'</span>')+'</div>';}
-    if(!completed&&seconds>=qtDurations[qtDurations.length-1]){
+    }
+    if(!completed&&seconds>=qtDurations[qtDurations.length-1])_qtFinish();
+  }
+  function _qtFinish(){
+    const cur=document.getElementById('qtCurrent'),stepInd=document.getElementById('qtStepInd');if(completed||!cur)return;
+    {
       completed=true;clearInterval(qtInterval);running=false;_sfx('done');_say('沖煮完成',700);
       document.getElementById('quickTimerDot')?.classList.remove('active');
       if(navigator.vibrate&&!_reduceMotion())navigator.vibrate([200,100,200,100,300]);
@@ -6159,6 +6269,22 @@ function _doStartQuickTimer(){
       seconds=qtDurations[currentActiveIdx];_clkSet(_qtClk,seconds);
       updateQtDisplay();
     }
+    if(e.target.id==='qtManPoured'&&!completed){
+      const _ss=currentActiveIdx>0?qtDurations[currentActiveIdx-1]:0;_qtPoured[currentActiveIdx]=Math.max(1,seconds-_ss);
+      if(navigator.vibrate&&!_reduceMotion())navigator.vibrate(30);updateQtDisplay();
+    }
+    if(e.target.id==='qtManNext'&&!completed){
+      if(navigator.vibrate&&!_reduceMotion())navigator.vibrate(30);
+      if(currentActiveIdx>=allSteps.length-1){seconds=qtDurations[currentActiveIdx];_clkSet(_qtClk,seconds);_qtManual=false;updateQtDisplay();_qtFinish();return}
+      const _d=qtDurations[currentActiveIdx]-seconds;if(_d>0){_tmPaceShift(qtDurations,currentActiveIdx,-_d);_qtPace.skip+=_d;}
+      currentActiveIdx=Math.min(currentActiveIdx+1,allSteps.length-1);// 先把「目前段」推進，否則同一格的保留邏輯會馬上把它推回來
+      updateQtDisplay();
+    }
+    if(e.target.id==='qtMode'&&!completed){
+      _qtManual=!_qtManual;_qtManualSet(_qtManual);overlay.classList.toggle('qt-manual',_qtManual);_qtHoldSec=0;_qtHoldCued=false;
+      e.target.textContent=_qtManual?'👋 跟著我':'⏱ 自動';
+      _sfxToast(_qtManual?'👋 跟著我：注完、滴完都由你按，時間只是參考':'⏱ 自動：時間到就換段');updateQtDisplay();
+    }
   });
   window._qtRestoreTo=(sec)=>{seconds=sec;_clkSet(_qtClk,sec);updateQtDisplay()};
   const _qtResync=()=>{const v=_clkSec(_qtClk);if(v!==seconds){seconds=v;updateQtDisplay()}if(!completed)_brewStateSave({k:currentQuickMethod,sec:seconds,at:Date.now(),mode:'quick',d:dose})};
@@ -6180,7 +6306,7 @@ function _doStartQuickTimer(){
     if(completed||seconds<=30){_qtDoExit(completed);return}
     _confirmDialog({title:'要結束這一杯嗎？',desc:'已經沖了 {t}，可以先把紀錄存下來。'.replace('{t}',_fmtT(seconds)),
       actions:[{label:'儲存紀錄並結束',primary:true,fn:()=>_qtDoExit(true)},{label:'不儲存直接結束',danger:true,fn:()=>_qtDoExit(false)},{label:'取消'}]});};
-  const _qtDoReset=()=>{for(let j=0;j<_qtBase.length;j++)qtDurations[j]=_qtBase[j];_qtPace.plus=0;_qtPace.skip=0;seconds=0;running=true;completed=false;prevActiveIdx=-1;
+  const _qtDoReset=()=>{for(let j=0;j<_qtBase.length;j++)qtDurations[j]=_qtBase[j];_qtPace.plus=0;_qtPace.skip=0;seconds=0;running=true;completed=false;prevActiveIdx=-1;_qtHoldSec=0;_qtHoldCued=false;for(const _k in _qtPoured)delete _qtPoured[_k];_qtManual=_qtManualGet();overlay.classList.toggle('qt-manual',_qtManual);
     _clkSet(_qtClk,0);overlay.classList.remove('qt-paused');
     document.getElementById('qtPause').textContent='⏸';updateQtDisplay();};
   document.getElementById('qtPause').addEventListener('click',()=>{
@@ -6379,7 +6505,7 @@ function showBrewNotes(){
     const ratingEntries=Object.entries(n.ratings||{}).filter(([,v])=>v>0);
     const hasDetail=details.length>0||ratingEntries.length>0||n.note;
     const detailHtml=hasDetail?`<div class="bnm-detail" id="bnmd-${idx}" style="display:none;">${details.length?`<div class="bnm-detail-grid">${details.map(d=>`<div class="bnm-detail-cell"><span class="bnm-detail-lbl">${d.l}</span><span class="bnm-detail-val">${d.v}</span></div>`).join('')}</div>`:''}${ratingEntries.length?`<div class="bnm-detail-ratings">${ratingEntries.map(([k,v])=>`<div class="bnm-rating-row"><span class="bnm-rating-lbl">${RATING_LBL[k]||k}</span><span class="bnm-rating-dots">${'●'.repeat(v)+'○'.repeat(5-v)}</span></div>`).join('')}</div>`:''}${n.note?`<div class="bnm-item-note">${_escRcp(n.note)}</div>`:''}</div>`:'';
-    return`<div class="bnm-item${hasDetail?' bnm-expandable':''}" data-idx="${idx}"><div class="bnm-item-header"><span class="bnm-item-method">${methodNames[n.method]||n.method||'手沖咖啡'}</span><div style="display:flex;align-items:center;gap:4px;"><span class="bnm-item-date">${dateStr}</span>${hasDetail?`<span class="bnm-expand-arrow" id="bnma-${idx}">›</span>`:''}<button class="bnm-delete" data-time="${n.time}" title="刪除">🗑</button></div></div><div class="bnm-item-stats"><span class="bnm-stat">粉 ${n.dose}g</span><span class="bnm-stat">水 ${n.water}g</span>${dur?`<span class="bnm-stat">${dur}</span>`:''}</div>${detailHtml}</div>`;
+    return`<div class="bnm-item${hasDetail?' bnm-expandable':''}" data-idx="${idx}"><div class="bnm-item-header"><span class="bnm-item-method">${methodNames[n.method]||n.method||'手沖咖啡'}</span><div style="display:flex;align-items:center;gap:4px;"><span class="bnm-item-date">${dateStr}</span>${hasDetail?`<span class="bnm-expand-arrow" id="bnma-${idx}">›</span>`:''}<button class="bnm-delete" data-time="${n.time}" title="刪除">🗑</button></div></div><div class="bnm-item-stats"><span class="bnm-stat">粉 ${n.dose}g</span><span class="bnm-stat">水 ${n.water}g</span>${dur?`<span class="bnm-stat">${dur}</span>`:''}${n.vs&&_VS_LBL[n.vs]?`<span class="bnm-stat bnm-vs">${_VS_LBL[n.vs]}</span>`:''}</div>${_nextRecText(n)?`<div class="bnm-next">💬 下次：${_escRcp(_nextRecText(n))}</div>`:''}${detailHtml}</div>`;
   }).join('');
   const modal=document.createElement('div');modal.id='brewNotesModal';
   modal.style.cssText='position:fixed;top:0;left:0;right:0;bottom:0;background:rgba(15,13,10,0.9);backdrop-filter:blur(12px);z-index:2000;display:flex;align-items:flex-start;justify-content:center;padding:max(16px,env(safe-area-inset-top,0px)) 16px calc(24px + env(safe-area-inset-bottom,0px));overflow-y:auto;overscroll-behavior:contain;animation:fadeIn 0.2s ease;';
@@ -6588,123 +6714,46 @@ document.getElementById('segPro')?.addEventListener('click',()=>_segGo('#tools',
 document.getElementById('heroBeginnerCta')?.addEventListener('click',()=>_segGo('#quick','quickWizToggle','quickWiz','quickWizToggle',''));
 
 if('serviceWorker' in navigator){
-  // 有新版本時顯示提示，讓使用者自己決定什麼時候更新
-  // （以前 Service Worker 會無條件 skipWaiting，可能在正在沖煮時把版本抽換掉）
-  var _swUpdShown=false,_swReg=null,_swReloaded=false,_swSkipping=false,_swDeferT=null;
-  // 第一次造訪時頁面本來就沒有 Service Worker，接手時不必重新載入（以前第一次打開會整頁載兩次）
-  var _swHadCtrl=!!navigator.serviceWorker.controller;
-  function _swGet(k){try{return localStorage.getItem(k)}catch(e){return null}}
-  function _swSet(k,v){try{localStorage.setItem(k,v)}catch(e){}}
-  // 每個版本只問一次（關掉重開也記得）。按過更新就把那個版本記進 poSwAck，
-  // 之後同一個版本再被通知就不再打擾。
-  function _swAcked(b){return !!b&&_swGet('poSwAck')===b}
-  // 自癒：已經按過更新、卻又被通知同一個版本 → 代表換版沒有真的生效。
-  // 這時候直接把 Service Worker 註銷再重載一次，強制回到乾淨狀態。
-  // 每個版本最多做一次（poSwHeal 記著），所以不可能變成迴圈。
-  function _swHardReset(b){
-    if(!b||_swGet('poSwHeal')===b)return;
-    _swSet('poSwHeal',b);
-    // 2026-09-26：連網頁快取一起清掉（字型快取保留）—— 只註銷不清快取，舊副本還會留著
-    try{navigator.serviceWorker.getRegistrations().then(function(rs){
-      return Promise.all(rs.map(function(r){return r.unregister()}))
-    }).then(function(){return window.caches?caches.keys().then(function(ks){return Promise.all(ks.filter(function(k){return k.indexOf('pourover-app-')===0}).map(function(k){return caches.delete(k)}))}):0}).then(_swReload)['catch'](_swReload)}catch(e){_swReload()}
-  }
-  // 問等待中的 Service Worker「你是哪一版」，用來當提示的鑰匙
-  function _swAskVersion(worker){return new Promise(function(res){
-    if(!worker||typeof MessageChannel==='undefined')return res(null);
-    try{var ch=new MessageChannel(),done=false;
-      var to=setTimeout(function(){if(!done){done=true;res(null)}},1000);
-      ch.port1.onmessage=function(ev){if(done)return;done=true;clearTimeout(to);res((ev.data&&ev.data.version)||null)};
-      worker.postMessage({type:'SW_VERSION'},[ch.port2]);
-    }catch(e){res(null)}
-  })}
-  function _swUpdateToast(build,onTap){
-    if(_swUpdShown)return;
-    // 剛按過更新、重新載入後的 30 秒內，不再冒同一個提示（2026-09-15 修：以前要連點兩三次）
-    var _just=+(function(){try{return sessionStorage.getItem('poSwJust')}catch(e){return 0}})()||0;
-    if(_just&&Date.now()-_just<30000)return;
-    if(_swAcked(build)){_swHardReset(build);return}
-    // 正在沖煮時先不打擾 —— 按了會重新載入，等計時器關掉再提示
-    if(document.body.classList.contains('timer-open')){
-      if(!_swDeferT)_swDeferT=setInterval(function(){if(!document.body.classList.contains('timer-open')){clearInterval(_swDeferT);_swDeferT=null;_swUpdateToast(build,onTap)}},4000);
-      return;
-    }
-    _swUpdShown=true;
-    var t=document.createElement('button');t.id='swUpdateToast';t.type='button';
+  // 2026-09-26 重寫：「有新版本」只有一個來源 —— sw.js 的版號變了、新的 Service Worker 裝好在等。
+  // 沒有比對網頁內容、沒有 ETag、沒有指紋，所以不可能有假警報；
+  // 提示按下去 = skipWaiting → 新版接手 → 重新載入，就這樣。
+  var _swReg=null,_swReloaded=false,_swToast=null;
+  var _swHadCtrl=!!navigator.serviceWorker.controller; // 第一次造訪不用重載
+  function _swReload(){if(_swReloaded)return;_swReloaded=true;location.reload()}
+  function _swShowToast(){
+    if(_swToast)return;
+    // 正在沖煮時先不打擾，等計時器關掉再提示
+    if(document.body.classList.contains('timer-open')){setTimeout(_swShowToast,4000);return}
+    var t=document.createElement('button');t.id='swUpdateToast';t.type='button';_swToast=t;
     t.textContent='✨ 有新版本，點一下更新';
     t.style.cssText='position:fixed;left:50%;transform:translateX(-50%);bottom:calc(84px + env(safe-area-inset-bottom,0px));z-index:3200;padding:11px 18px;border-radius:999px;border:1px solid rgba(192,138,92,0.5);background:rgba(28,20,14,0.96);color:#F3EBDD;font-family:inherit;font-size:0.82em;letter-spacing:0.04em;cursor:pointer;box-shadow:0 4px 18px rgba(0,0,0,0.35);white-space:nowrap;';
     t.addEventListener('click',function(){
       if(t.disabled)return;
-      // 按下去立刻有反應：鈕留著、改成「更新中…」，做完才重新載入
       t.disabled=true;t.style.opacity='0.85';t.style.cursor='default';t.textContent='更新中…';
-      _swSet('poSwAck',build||'');onTap();
+      var w=_swReg&&_swReg.waiting;
+      if(!w){_swReload();return}
+      // 新版接手（controllerchange）就重載；4 秒沒動靜也重載，不讓鈕卡住
+      setTimeout(_swReload,4000);
+      w.postMessage({type:'SKIP_WAITING'});
     });
     document.body.appendChild(t);
-    setTimeout(function(){if(t.parentNode&&!t.disabled)t.style.opacity='0.75'},9000);
   }
-  function _swReload(fromTap){if(_swReloaded)return;_swReloaded=true;if(fromTap){try{sessionStorage.setItem('poSwJust',String(Date.now()))}catch(e){}}location.reload()}
-  function _swWait(ms){return new Promise(function(r){setTimeout(r,ms)})}
-  // 等「正在安裝的新版 Service Worker」裝好（最多 ms 毫秒）
-  function _swWaitInstalled(reg,ms){return new Promise(function(res){
-    var w=reg&&reg.installing;if(!w)return res();
-    var to=setTimeout(res,ms);
-    w.addEventListener('statechange',function(){if(w.state!=='installing'){clearTimeout(to);res()}});
-  })}
-  // 請 Service Worker 直接從伺服器重抓一份網頁外殼放進快取，回報好了再重新載入
-  function _swRefreshShell(){return new Promise(function(res){
-    var c=navigator.serviceWorker.controller;
-    if(!c||typeof MessageChannel==='undefined')return res();
-    try{var ch=new MessageChannel(),to=setTimeout(res,5000);
-      ch.port1.onmessage=function(){clearTimeout(to);res()};
-      c.postMessage({type:'REFRESH_SHELL',url:location.href},[ch.port2]);
-    }catch(e){res()}
-  })}
-  // 按下更新（2026-09-15 重寫）：
-  // 以前「網頁內容換版」與「sw.js 換版」是兩個各自的提示，按完第一個重新載入後，
-  // 第二個又冒出來，看起來就像「一直點都沒反應」。現在一次做完全部：
-  //   1. 先問伺服器有沒有新的 sw.js，有就等它裝好
-  //   2. 有等待中的新版就換上，等它接手
-  //   3. 請 Service Worker 從伺服器重抓網頁放進快取（不經瀏覽器的 HTTP 快取）
-  //   4. 重新載入 —— 載入後 30 秒內不再重複提示
-  function _swApplyUpdate(){
-    var reg=_swReg;
-    Promise.resolve().then(function(){
-      if(navigator.serviceWorker.controller)navigator.serviceWorker.controller.postMessage({type:'UPDATE_TAKEN'});
-      return reg?Promise.race([reg.update(),_swWait(4000)])['catch'](function(){}):null;
-    }).then(function(){return _swWaitInstalled(reg,6000)}).then(function(){
-      if(!(reg&&reg.waiting))return;
-      _swSkipping=true;
-      return new Promise(function(res){
-        var done=false,fin=function(){if(!done){done=true;res()}};
-        navigator.serviceWorker.addEventListener('controllerchange',fin);
-        setTimeout(fin,4000);
-        reg.waiting.postMessage({type:'SKIP_WAITING'});
-      });
-    }).then(_swRefreshShell)['catch'](function(){}).then(function(){_swReload(true)});
-  }
-  function _swWorkerToast(worker){_swAskVersion(worker).then(function(v){_swUpdateToast('sw:'+(v||'?'),_swApplyUpdate)})}
   navigator.serviceWorker.register('sw.js').then(function(reg){
     _swReg=reg;
-    // (0) 註冊時就已經有等待中的新版（上一次造訪裝好、還沒換上）——
-    //     這種情況不會再觸發 updatefound，要自己補一次提示，否則它會一直卡在那裡
-    if(reg.waiting&&navigator.serviceWorker.controller)_swWorkerToast(reg.waiting);
-    // (1) sw.js 本身換了新版 —— 等使用者點了再 skipWaiting
+    // 上一次造訪就裝好、還沒換上的新版
+    if(reg.waiting&&navigator.serviceWorker.controller)_swShowToast();
+    // 這次造訪才發現的新版：裝好就提示
     reg.addEventListener('updatefound',function(){
       var nw=reg.installing;if(!nw)return;
       nw.addEventListener('statechange',function(){
-        if(nw.state==='installed'&&navigator.serviceWorker.controller)_swWorkerToast(nw);
+        if(nw.state==='installed'&&navigator.serviceWorker.controller)_swShowToast();
       });
     });
+    // 從背景切回來時順便問一次伺服器（瀏覽器自己也會在導覽時問，這只是補強）
+    document.addEventListener('visibilitychange',function(){if(document.visibilityState==='visible'){try{reg.update()}catch(e){}}});
   })['catch'](function(){});
-  // (2) 只有網頁內容換了新版（sw.js 沒動）—— Service Worker 會傳訊息過來
-  navigator.serviceWorker.addEventListener('message',function(e){
-    if(!e.data)return;
-    if(e.data.type==='update-ready')_swUpdateToast(e.data.build,_swApplyUpdate);
-  });
-  // 只有「我們自己按了更新」才跟著換版重新載入；更新流程裡的重新載入由 _swApplyUpdate 負責
-  navigator.serviceWorker.addEventListener('controllerchange',function(){if(!_swSkipping&&_swHadCtrl)_swReload()});
-  // 主動問一次 —— 導覽的 fetch 常常在這頁的 JS 跑起來之前就結束了，光靠推播會漏掉
-  setTimeout(function(){try{if(navigator.serviceWorker.controller)navigator.serviceWorker.controller.postMessage({type:'CHECK_UPDATE'})}catch(e){}},1200);
+  // 新版接手就重載（第一次造訪除外）
+  navigator.serviceWorker.addEventListener('controllerchange',function(){if(_swHadCtrl)_swReload()});
 }
 applyTheme(document.documentElement.getAttribute('data-theme')||'dark');
 document.getElementById('themeToggleBtn')?.addEventListener('click',toggleTheme);
@@ -6970,7 +7019,7 @@ function updateQuickBrewResults() {
     '</div>' + '<div class="qratio-row">粉水比 <button class="stepper-btn qratio-btn" data-qr="-0.5" aria-label="降低粉水比">−</button><span class="qratio-val">1:' + (Math.round(qratio*10)/10) + '</span><button class="stepper-btn qratio-btn" data-qr="0.5" aria-label="提高粉水比">+</button>' + (Math.abs(qratio-method.ratio)>0.01?'<button class="qratio-reset">回預設 1:'+method.ratio+'</button>':'') + '</div>' + _qbNotes +
     '<div class="quick-steps-summary"><h4>沖煮步驟</h4>' + stepsHtml + '</div>' +
     '<div style="text-align:center;margin-top:18px;padding-bottom:110px;">' +
-    '<button class="btn-start-timer" id="quickStartTimerBtn" style="font-size:0.95em;">▶ 開始計時</button>' + _pbcSkipNote(currentQuickMethod) +
+    '<button class="btn-start-timer" id="quickStartTimerBtn" style="font-size:0.95em;">▶ 開始計時</button>' + _pbcSkipNote(currentQuickMethod) + _nextTipHtml(currentQuickMethod) +
     '<button class="btn-start-timer" id="quickShareBtn" style="font-size:0.85em;background:transparent;border:1px solid rgba(192,138,92,0.4);color:var(--copper);margin-left:10px;">🔗 分享配方</button>' +
     '</div>' +
     '</div>';
