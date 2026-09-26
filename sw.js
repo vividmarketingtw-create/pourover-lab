@@ -15,7 +15,7 @@
 //   4. 版號由 sync.js 在 index.html 有改時自動 +1，不會忘。
 //
 // 字型另存一個永不清除的快取，改版時不會被連帶清掉。
-const CACHE_NAME = 'pourover-app-v78';
+const CACHE_NAME = 'pourover-app-v80';
 const FONT_CACHE = 'pourover-fonts-v2';
 
 // 少了就等於 App 壞掉的檔案 —— 必須全部成功
