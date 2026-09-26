@@ -1,6 +1,6 @@
 // PourOver Lab Service Worker
 // App 快取隨版本更新；字型另存一個永不清除的快取，改版時不會被連帶清掉。
-const CACHE_NAME = 'pourover-app-v73';
+const CACHE_NAME = 'pourover-app-v74';
 const FONT_CACHE = 'pourover-fonts-v2'; // v2：自架 Noto Sans TC 子集也放這裡（fonts/ 路徑），改版不清
 
 // 少了就等於 App 壞掉的檔案 —— 必須全部成功
@@ -70,7 +70,8 @@ self.addEventListener('message', e => {
         try {
           const cu = new URL(e.data.url); cu.hash = ''; cu.search = '';
           const base = new URL('./', self.registration.scope).href;
-          if (cu.href !== base && cu.href !== base + 'en/') jobs.push(put(cache, cu.href, cu.href));
+          const k = navKey(cu.href);
+          if (k !== base && k !== base + 'en/') jobs.push(put(cache, k, cu.href));
         } catch (_) {}
       }
       return Promise.all(jobs);
@@ -107,6 +108,18 @@ function cacheFallback(req) {
       Promise.resolve(null)
     );
   });
+}
+
+/* 導覽頁的快取鑰匙（2026-09-26 修「更新鈕一直出現」的真正原因）：
+   一律去掉 ?參數 與 #，index.html 視同資料夾本身，一個頁面只存一份。
+   舊版用「原網址」當鑰匙存、再用 ignoreSearch 找 —— 只要從 FB／LINE／分享連結
+   （?fbclid=…、?openExternalBrowser=1…）開過一次，快取裡就多一份帶參數的副本，
+   而 cache.put 會把被覆寫的那份移到最後，之後 ignoreSearch 永遠先找到那份舊的：
+   畫面一直是舊版、每次都判定「有新版本」，按了更新也換不掉。 */
+function navKey(u) {
+  const x = new URL(u); x.search = ''; x.hash = '';
+  x.pathname = x.pathname.replace(/index\.html$/, '');
+  return x.href;
 }
 
 function tellClients(msg) {
@@ -147,7 +160,7 @@ self.addEventListener('fetch', e => {
   // 時要等滿 2.56 秒才看得到畫面，而完整的離線副本其實就躺在快取裡。
   if (req.mode === 'navigate') {
     e.respondWith(
-      caches.match(req, { ignoreSearch: true }).then(cached => {
+      caches.match(navKey(req.url)).then(cached => {
         const beforeKey = stampKey(cached);
         // 這一次送出去的快取副本就是先前通知過的那一版 → 更新已經生效，旗標當場清掉
         if (pendingKey && beforeKey === pendingKey) { pendingKey = null; pendingFp = null; }
@@ -162,7 +175,7 @@ self.addEventListener('fetch', e => {
             const afterKey = stampKey(response);
             const forCache = response.clone();
             const forHash = cachedCopy ? response.clone() : null;
-            caches.open(CACHE_NAME).then(cache => cache.put(req, forCache));
+            caches.open(CACHE_NAME).then(cache => cache.put(navKey(req.url), forCache));
             if (!cachedCopy || (beforeKey && afterKey && beforeKey === afterKey)) {
               pendingKey = null; pendingFp = null;       // 戳記一樣就一定沒換版
             } else {

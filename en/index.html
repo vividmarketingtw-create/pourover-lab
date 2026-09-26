@@ -6651,6 +6651,8 @@ if('serviceWorker' in navigator){
   // 有新版本時顯示提示，讓使用者自己決定什麼時候更新
   // （以前 Service Worker 會無條件 skipWaiting，可能在正在沖煮時把版本抽換掉）
   var _swUpdShown=false,_swReg=null,_swReloaded=false,_swSkipping=false,_swDeferT=null;
+  // 第一次造訪時頁面本來就沒有 Service Worker，接手時不必重新載入（以前第一次打開會整頁載兩次）
+  var _swHadCtrl=!!navigator.serviceWorker.controller;
   function _swGet(k){try{return localStorage.getItem(k)}catch(e){return null}}
   function _swSet(k,v){try{localStorage.setItem(k,v)}catch(e){}}
   // 每個版本只問一次（關掉重開也記得）。按過更新就把那個版本記進 poSwAck，
@@ -6662,9 +6664,10 @@ if('serviceWorker' in navigator){
   function _swHardReset(b){
     if(!b||_swGet('poSwHeal')===b)return;
     _swSet('poSwHeal',b);
+    // 2026-09-26：連網頁快取一起清掉（字型快取保留）—— 只註銷不清快取，舊副本還會留著
     try{navigator.serviceWorker.getRegistrations().then(function(rs){
       return Promise.all(rs.map(function(r){return r.unregister()}))
-    }).then(_swReload)['catch'](_swReload)}catch(e){_swReload()}
+    }).then(function(){return window.caches?caches.keys().then(function(ks){return Promise.all(ks.filter(function(k){return k.indexOf('pourover-app-')===0}).map(function(k){return caches.delete(k)}))}):0}).then(_swReload)['catch'](_swReload)}catch(e){_swReload()}
   }
   // 問等待中的 Service Worker「你是哪一版」，用來當提示的鑰匙
   function _swAskVersion(worker){return new Promise(function(res){
@@ -6759,7 +6762,7 @@ if('serviceWorker' in navigator){
     if(e.data.type==='update-ready')_swUpdateToast(e.data.build,_swApplyUpdate);
   });
   // 只有「我們自己按了更新」才跟著換版重新載入；更新流程裡的重新載入由 _swApplyUpdate 負責
-  navigator.serviceWorker.addEventListener('controllerchange',function(){if(!_swSkipping)_swReload()});
+  navigator.serviceWorker.addEventListener('controllerchange',function(){if(!_swSkipping&&_swHadCtrl)_swReload()});
   // 主動問一次 —— 導覽的 fetch 常常在這頁的 JS 跑起來之前就結束了，光靠推播會漏掉
   setTimeout(function(){try{if(navigator.serviceWorker.controller)navigator.serviceWorker.controller.postMessage({type:'CHECK_UPDATE'})}catch(e){}},1200);
 }
