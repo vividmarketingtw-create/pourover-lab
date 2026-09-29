@@ -5242,9 +5242,9 @@ function _nextTipHtml(k){const t=_nextTipText(k);return t?'<div class="next-tip"
 function _paceRec(){const p=window._poPace;return(p&&(p.plus||p.skip))?{plus:p.plus|0,skip:p.skip|0}:undefined}
 function _tmPaceShift(durs,idx,d){for(let j=Math.max(0,idx);j<durs.length;j++)durs[j]+=d}
 function _tmPaceBtns(pre){return['<button type="button" class="tm-pace tm-pace-plus" id="'+pre+'PacePlus" aria-label="這一段多給 10 秒">＋10 秒</button>','<button type="button" class="tm-pace tm-pace-next" id="'+pre+'PaceNext" aria-label="這一段做完了，直接到下一步">下一步 ▸</button>']}
-// 計時器模式（2026-09-26）：預設「跟著我」—— 換段由使用者按，時間只是參考
-function _qtManualGet(){try{return localStorage.getItem('poTimerMode')!=='auto'}catch(e){return true}}
-function _qtManualSet(on){try{localStorage.setItem('poTimerMode',on?'manual':'auto')}catch(e){}}
+// 計時器模式（2026-09-29 改）：每杯一律從「自動」開始（時間到換段）；節奏不對時按右上角切成「跟著我」，只算這一杯，下一杯又回到自動
+function _qtManualGet(){return false}
+function _qtManualSet(on){try{localStorage.removeItem('poTimerMode')}catch(e){}}
 // 沖完回饋用：這杯多要了幾秒／提前了幾秒
 function _paceHint(pc){try{if(!pc)return'';const cal=_flowCal(),ord=['vfast','fast','std','slow'],i=ord.indexOf(cal);
   if(pc.plus>=20&&pc.plus>pc.skip){return'<div class="pace-hint">⏱ 這杯你多要了 {n} 秒。'.replace('{n}',pc.plus)+(i>=0&&i<ord.length-1?'下次把「我的流速」調慢一檔，節奏會更貼近你的手。':'')+'</div>'}
